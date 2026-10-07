@@ -17,6 +17,7 @@
         'security/easyocr_security.xml',
         'security/ir.model.access.csv',
         'views/easyocr_document_views.xml',
+        'views/easyocr_template_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
