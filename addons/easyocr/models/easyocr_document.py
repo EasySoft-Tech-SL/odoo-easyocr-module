@@ -77,6 +77,17 @@ class EasyocrDocument(models.Model):
         for document in self:
             document.state = 'processed'
 
+    def action_open_viewer(self):
+        """Open the full screen viewer on this document."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'easyocr.document_viewer',
+            'name': _('Document Viewer'),
+            'params': {'document_id': self.id},
+            'target': 'fullscreen',
+        }
+
     def action_reset_to_draft(self):
         for document in self:
             document.state = 'draft'

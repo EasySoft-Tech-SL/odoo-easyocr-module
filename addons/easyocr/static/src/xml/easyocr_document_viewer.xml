@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="easyocr.DocumentViewer">
+        <div class="o_easyocr_viewer">
+            <div class="o_easyocr_viewer_pdf" t-ref="pdfContainer">
+                <div t-if="state.loading" class="o_easyocr_viewer_message">
+                    <i class="fa fa-spinner fa-spin me-2"/>Loading the document...
+                </div>
+                <div t-if="state.error" class="o_easyocr_viewer_message text-danger">
+                    <i class="fa fa-exclamation-triangle me-2"/>
+                    This document has no file attached, or the file could not be read.
+                </div>
+            </div>
+            <div class="o_easyocr_viewer_data">
+                <h4 t-esc="state.documentName"/>
+                <p class="text-muted">
+                    <t t-if="state.pages">
+                        <span t-esc="state.pages"/> page(s)
+                    </t>
+                </p>
+            </div>
+        </div>
+    </t>
+
+</templates>

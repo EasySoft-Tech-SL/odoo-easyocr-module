@@ -18,6 +18,13 @@
         'security/ir.model.access.csv',
         'views/easyocr_document_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'easyocr/static/src/xml/*.xml',
+            'easyocr/static/src/js/*.js',
+            'easyocr/static/src/scss/*.scss',
+        ],
+    },
     'installable': True,
     'application': True,
     'auto_install': False,

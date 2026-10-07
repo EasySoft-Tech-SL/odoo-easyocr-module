@@ -1,0 +1,36 @@
+.o_easyocr_viewer {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+
+    .o_easyocr_viewer_pdf {
+        // A flex child with overflow shrinks to zero without this.
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: auto;
+        padding: 1rem;
+        background-color: #525659; // the grey every PDF reader uses
+        text-align: center;
+    }
+
+    .o_easyocr_page {
+        display: block;
+        margin: 0 auto 1rem auto;
+        background-color: #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        max-width: 100%;
+    }
+
+    .o_easyocr_viewer_data {
+        flex: 0 0 360px;
+        overflow: auto;
+        padding: 1rem;
+        border-left: 1px solid var(--o-easyocr-border, #dee2e6);
+        background-color: var(--body-bg, #fff);
+    }
+
+    .o_easyocr_viewer_message {
+        padding: 2rem;
+        color: #fff;
+    }
+}
