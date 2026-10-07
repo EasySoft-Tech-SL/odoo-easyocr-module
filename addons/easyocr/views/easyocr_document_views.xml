@@ -42,7 +42,7 @@
                         string="Read with AI"
                         class="btn-secondary"
                         invisible="not attachment_id"
-                        groups="group_easyocr_manager"
+                        groups="easyocr.group_easyocr_manager"
                     />
                     <button
                         name="action_create_bill"

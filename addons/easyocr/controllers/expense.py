@@ -1,0 +1,305 @@
+# Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+# License OPL-1 (see LICENSE file).
+
+import io
+import logging
+import os
+
+from PIL import Image, ImageOps, UnidentifiedImageError
+
+from odoo import _, http
+from odoo.exceptions import UserError
+from odoo.http import request
+
+from odoo.addons.easyocr.models.easyocr_inbox import MAX_SIZE_MB
+
+_logger = logging.getLogger(__name__)
+
+# The name the tray shows as the origin of the file, next to easyscan or a mail
+# gateway: whoever opens the inbox can see the photo came from a phone.
+CAPTURE_ORIGIN = 'expense-capture'
+
+# The same ceiling the inbox applies, taken from there so the two can never
+# drift apart. The browser resize keeps a photo well under it.
+MAX_UPLOAD_BYTES = MAX_SIZE_MB * 1024 * 1024
+
+# What a phone camera and a screenshot produce. HEIC is left out on purpose: it
+# is what an iPhone writes, but the browser re-encodes the photo as JPEG before
+# uploading, and reading HEIC on the server would need a decoder we would have
+# to add as a dependency.
+IMAGE_MIMETYPES = ('image/jpeg', 'image/png', 'image/webp')
+
+# The resolution the page is written at. A phone photo carries no page size, and
+# the default of 72 dots per inch would turn a 1600 px picture into a 22 inch
+# sheet. 150 puts it at a size a PDF reader opens without zooming out.
+PDF_RESOLUTION = 150
+
+# The web app icon, drawn here rather than shipped as a file: the module already
+# has an icon, but it is 32 px and an installable app needs something that
+# survives a home screen. An SVG carries its own size, so one entry is enough.
+APP_ICON = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#2c3e50"/>
+  <path d="M170 154h172a34 34 0 0 1 34 34v170a34 34 0 0 1-34 34H170a34 34 0 0 1-34-34V188a34 34
+           0 0 1 34-34z" fill="none" stroke="#ffffff" stroke-width="22"/>
+  <circle cx="256" cy="262" r="58" fill="none" stroke="#ffffff" stroke-width="22"/>
+  <path d="M214 154l18-30h48l18 30" fill="none" stroke="#ffffff" stroke-width="22" stroke-linejoin="round"/>
+</svg>
+'''
+
+# Network-first: the page is always fetched from the server when there is one,
+# and the cache is only what is shown when the phone has no signal. A request
+# that is not a GET is never answered from the cache, which is what keeps an
+# upload from being replayed with a stale answer.
+SERVICE_WORKER = '''// EasyOCR mobile capture service worker.
+const CACHE = 'easyocr-capture-v1';
+
+self.addEventListener('install', () => self.skipWaiting());
+
+self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
+
+self.addEventListener('fetch', (event) => {
+    const request = event.request;
+    // Only a GET is cached. Answering a POST from the cache would report a
+    // photo as sent when it never left the phone.
+    if (request.method !== 'GET' || !request.url.startsWith('http')) {
+        return;
+    }
+    event.respondWith(
+        fetch(request)
+            .then((response) => {
+                const copy = response.clone();
+                caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+                return response;
+            })
+            .catch(() => caches.match(request)),
+    );
+});
+'''
+
+
+class EasyocrExpenseCapture(http.Controller):
+    """The page an employee opens on a phone to photograph a receipt.
+
+    It is the whole of phase 6: a camera button, the photo resized before it
+    leaves the phone, and the photo filed in the tray with the extraction
+    started on it. Nothing is sent anywhere the company has not turned on: the
+    AI service is only called when the company enabled it, and the page says so
+    when it is off.
+    """
+
+    # ------------------------------------------------------------------
+    # The page
+    # ------------------------------------------------------------------
+    @http.route('/easyocr/capture', type='http', auth='user', methods=['GET'])
+    def easyocr_capture_page(self, **kwargs):
+        response = request.render('easyocr.expense_capture_page', {
+            'upload_url': '/easyocr/capture/upload',
+            'manifest_url': '/easyocr/capture/manifest.json',
+            'icon_url': '/easyocr/capture/icon.svg',
+            'service_worker_url': '/easyocr/capture/sw.js',
+            'max_size_mb': MAX_SIZE_MB,
+            'ai_enabled': request.env.company.easyocr_ai_enabled,
+        })
+        return self._harden(response)
+
+    # The manifest, the icon and the worker are public on purpose: they hold
+    # nothing of anybody's, and the browser asks for a manifest without the
+    # session cookie. Behind the session they would answer a redirect to the
+    # login page, and the app would quietly stop being installable.
+    @http.route('/easyocr/capture/manifest.json', type='http', auth='public', methods=['GET'])
+    def easyocr_capture_manifest(self, **kwargs):
+        """The manifest that makes the page installable on a home screen."""
+        manifest = {
+            'name': _('EasyOCR — Capture a receipt'),
+            'short_name': _('EasyOCR'),
+            'description': _('Photograph a receipt and send it to the EasyOCR inbox.'),
+            'start_url': '/easyocr/capture',
+            'scope': '/easyocr/capture',
+            'display': 'standalone',
+            'orientation': 'portrait',
+            'background_color': '#ffffff',
+            'theme_color': '#2c3e50',
+            'icons': [{
+                'src': '/easyocr/capture/icon.svg',
+                'sizes': 'any',
+                'type': 'image/svg+xml',
+                'purpose': 'any maskable',
+            }],
+        }
+        return self._harden(request.make_json_response(
+            manifest, headers=[('Content-Type', 'application/manifest+json')],
+        ))
+
+    @http.route('/easyocr/capture/icon.svg', type='http', auth='public', methods=['GET'])
+    def easyocr_capture_icon(self, **kwargs):
+        return self._harden(request.make_response(APP_ICON, headers=[
+            ('Content-Type', 'image/svg+xml; charset=utf-8'),
+            ('Cache-Control', 'public, max-age=86400'),
+        ]))
+
+    @http.route('/easyocr/capture/sw.js', type='http', auth='public', methods=['GET'])
+    def easyocr_capture_service_worker(self, **kwargs):
+        # The script lives one level below the page, so its own directory would
+        # cap the scope at /easyocr/capture/ — which does not cover
+        # /easyocr/capture, the URL the page is opened at. The header widens it.
+        return self._harden(request.make_response(SERVICE_WORKER, headers=[
+            ('Content-Type', 'text/javascript; charset=utf-8'),
+            ('Service-Worker-Allowed', '/easyocr/capture'),
+            # Never let a cached copy of the worker outlive a deploy: a phone
+            # holding an old one would keep behaving like the old page.
+            ('Cache-Control', 'no-cache, no-store, must-revalidate'),
+        ]))
+
+    # ------------------------------------------------------------------
+    # The photo
+    # ------------------------------------------------------------------
+    @http.route(
+        '/easyocr/capture/upload',
+        type='http',
+        auth='user',
+        methods=['POST'],
+        # The framework refuses a body larger than this before it is read, as a
+        # backstop behind the check this controller makes to answer in words.
+        max_content_length=MAX_UPLOAD_BYTES + 1024 * 1024,
+    )
+    def easyocr_capture_upload(self, **kwargs):
+        upload = request.httprequest.files.get('image')
+        if upload is None or not (upload.filename or '').strip():
+            return self._fail(400, _("No photo was sent."))
+
+        mimetype = (upload.mimetype or '').split(';')[0].strip().lower()
+        if mimetype not in IMAGE_MIMETYPES:
+            return self._fail(
+                415,
+                _("That file is not a photo. Send a JPEG or a PNG."),
+            )
+
+        content = upload.read()
+        if not content:
+            return self._fail(400, _("The photo arrived empty. Take it again."))
+
+        if len(content) > MAX_UPLOAD_BYTES:
+            return self._fail(413, _(
+                "The photo is larger than the %(limit)s MB the inbox takes.",
+                limit=MAX_SIZE_MB,
+            ))
+
+        try:
+            image = self._read_image(content)
+        except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError):
+            _logger.warning("EasyOCR capture: could not read an uploaded %s", mimetype)
+            return self._fail(415, _("That file could not be read as a photo."))
+
+        filename = self._pdf_name(upload.filename)
+        result = request.env['easyocr.inbox.item'].recibir(
+            self._as_pdf(image), filename, CAPTURE_ORIGIN,
+        )
+        if not result['ok']:
+            if result['id']:
+                return self._fail(409, _(
+                    "This photo is already in the inbox. It was not sent twice."
+                ))
+            return self._fail(400, result['error'] or _("The photo could not be saved."))
+
+        item = request.env['easyocr.inbox.item'].browse(result['id'])
+        try:
+            item.action_process()
+        except UserError as error:
+            return self._fail(400, error.args[0] if error.args else str(error))
+
+        document = item.document_id
+        if request.env.company.easyocr_ai_enabled:
+            # Only when the company asked for it: with AI off the photo stays on
+            # our own server and is read by hand, which is the whole point of
+            # the setting. A failure here is written on the document, never
+            # raised, so the photo is never lost to a bad reading.
+            document.action_extract()
+
+        return self._json(self._capture_result(item, document))
+
+    # ------------------------------------------------------------------
+    # Reading the photo, in plain words
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _read_image(content):
+        """Open the photo and put it the right way up.
+
+        The browser already bakes the EXIF rotation into the pixels it sends,
+        so this only matters for a caller that skips the page; doing it here
+        means a sideways receipt can never reach the viewer.
+        """
+        image = Image.open(io.BytesIO(content))
+        image = ImageOps.exif_transpose(image)  # forces the pixels to be read
+        if image.mode not in ('RGB', 'L'):
+            image = image.convert('RGB')
+        return image
+
+    @staticmethod
+    def _as_pdf(image):
+        """Wrap the photo in a one page PDF, the only thing the tray takes.
+
+        It is also what everything downstream expects: the viewer paints the
+        document with PDF.js, and the extraction service reads a PDF the same
+        way it reads a scanned invoice.
+        """
+        buffer = io.BytesIO()
+        image.save(buffer, format='PDF', resolution=PDF_RESOLUTION)
+        return buffer.getvalue()
+
+    @staticmethod
+    def _pdf_name(filename):
+        """The name the document will carry, with the extension the file has."""
+        stem = os.path.splitext(os.path.basename(filename or ''))[0].strip()
+        return f'{stem or "receipt"}.pdf'
+
+    def _capture_result(self, item, document):
+        """The photo is filed; say what was read from it, or why nothing was."""
+        company = request.env.company
+        summary = {
+            'id': document.id,
+            'reference': document.ref or '',
+            'vendor': document.partner_name or document.partner_id.display_name or '',
+            'date': str(document.document_date or ''),
+            'total': document.amount_total or 0.0,
+            'currency': document.currency_id.name or '',
+            'state': document.state,
+            'reason': document.error_message or '',
+        }
+
+        if not company.easyocr_ai_enabled:
+            message = _(
+                "Saved. Reading with AI is off for your company, so the photo is "
+                "waiting in the inbox to be read by hand."
+            )
+            read = False
+        elif document.state == 'processed':
+            message = _("Saved and read.")
+            read = True
+        else:
+            # The photo is filed either way: what failed is the reading, and the
+            # document keeps the reason so it can be looked at or tried again.
+            message = document.error_message or _("Saved, but it could not be read.")
+            read = False
+
+        return {
+            'ok': True,
+            'read': read,
+            'message': message,
+            'inbox_item_id': item.id,
+            'document': summary,
+        }
+
+    # ------------------------------------------------------------------
+    # Answers
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _harden(response):
+        """Nothing we serve is ever sniffed into a type it does not declare."""
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        return response
+
+    def _json(self, payload, status=200):
+        return self._harden(request.make_json_response(payload, status=status))
+
+    def _fail(self, status, message):
+        return self._json({'ok': False, 'message': message}, status=status)
