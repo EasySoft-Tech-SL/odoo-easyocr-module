@@ -1,7 +1,7 @@
 import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { loadPDFJSAssets } from "@web/core/utils/pdfjs";
+import { loadJS } from "@web/core/assets";
 
 /**
  * The nine fields a box can be assigned to. The key is what gets stored and what
@@ -103,7 +103,10 @@ export class EasyocrDocumentViewer extends Component {
             return;
         }
 
-        await loadPDFJSAssets();
+        // Odoo ships PDF.js in core on both series, but 18.0 has no
+        // @web/core/utils/pdfjs wrapper, so the two files are loaded by hand.
+        await loadJS("/web/static/lib/pdfjs/build/pdf.js");
+        await loadJS("/web/static/lib/pdfjs/build/pdf.worker.js");
         const pdfjsLib = window.pdfjsLib;
         pdfjsLib.GlobalWorkerOptions.workerSrc = "/web/static/lib/pdfjs/build/pdf.worker.js";
 
