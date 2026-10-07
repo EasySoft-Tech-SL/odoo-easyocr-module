@@ -1,12 +1,15 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
+import hashlib
 import json
 import logging
 
 import requests
 
 from odoo import _, api, fields, models
+
+from .easyocr_values import to_float
 
 _logger = logging.getLogger(__name__)
 
@@ -20,14 +23,6 @@ RETRYABLE_ERROR_CODES = ('OCR_EMPTY', 'PARTIAL_DEGRADATION')
 
 class EasyocrServiceError(Exception):
     """A failure talking to the service, carrying a message fit for the user."""
-
-
-def _to_float(value, default=0.0):
-    """Read a number that may arrive as a string, without blowing up on junk."""
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        return default
 
 
 class EasyocrExtractor(models.AbstractModel):
@@ -152,7 +147,7 @@ class EasyocrExtractor(models.AbstractModel):
             return result
 
         result['raw'] = body
-        result['confidence'] = _to_float(body.get('confidence'))
+        result['confidence'] = to_float(body.get('confidence'))
 
         data = body.get('structured_data')
         if not isinstance(data, dict):
@@ -179,6 +174,38 @@ class EasyocrExtractor(models.AbstractModel):
         result['ok'] = True
         result['data'] = data
         return result
+
+    @api.model
+    def _receiver_context(self, company):
+        """Who we are, in one declarative sentence, for the service to read.
+
+        The wording matters and is deliberately short: it says who is reading the
+        document and stops there. The module this port comes from tried twice to
+        say more and both versions were harmful -- one asked the model to verify
+        its own answer before returning it, the other asserted what the document
+        contained. Against a model that answers in one pass, the first burns the
+        output budget until the call times out, and the second is simply false
+        whenever both parties are the same. So: never assert anything about the
+        document, and always leave an instruction the model can satisfy.
+        """
+        if not company.easyocr_ai_receiver_context:
+            return ''
+        name = (company.name or '').strip()
+        vat = (company.partner_id.vat or '').strip()
+        if not name and not vat:
+            return ''
+        who = ', '.join(part for part in (
+            '"%s"' % name if name else '',
+            'tax id %s' % vat if vat else '',
+        ) if part)
+        # Left in English on purpose: this sentence is read by the service, not
+        # by a person, and it is the same request whichever language the screen
+        # is in.
+        return (
+            'Context, for telling the parties apart: this document is being '
+            'processed by %s. Extract supplier and customer exactly as printed '
+            'on the document.' % who
+        )
 
     @api.model
     def _partial_reason(self, body):
@@ -208,6 +235,15 @@ class EasyocrDocument(models.Model):
         readonly=True,
         copy=False,
         help='Raw answer of the service, kept for support and troubleshooting.',
+    )
+    extraction_date = fields.Datetime(
+        string='Last Read On',
+        readonly=True,
+        copy=False,
+        help='When the file was last sent to the service. It is what the '
+             'duplicate window counts back from, so it notes the moment the call '
+             'was made and not the moment it went well: a reading that failed '
+             'cost the same.',
     )
     extraction_confidence = fields.Float(
         string='Extraction Confidence',
@@ -243,9 +279,28 @@ class EasyocrDocument(models.Model):
         if not content:
             return self._fail_extraction(_("The attached file is empty or cannot be read."))
 
+        # Doing the same reading twice costs the same and tells us nothing new, so
+        # the guard sits here: right before the call, and nowhere earlier. The
+        # fingerprint is written down on the way through, from the bytes already
+        # in hand, so a document filed before this guard existed is covered too.
+        self.file_hash = hashlib.sha256(content).hexdigest()
+        if company.easyocr_duplicate_check:
+            duplicate = self._duplicate_of()
+            if duplicate:
+                return self._extraction_notification('warning', _(
+                    "This file has already been read: %(document)s. "
+                    "Reading it again would cost the same and change nothing.",
+                    document=duplicate.display_name,
+                ))
+
+        # Noted before the call and not after: the window counts what has cost
+        # money, and a reading that came back empty cost exactly the same.
+        self.extraction_date = fields.Datetime.now()
+
         try:
             result = self.env['easyocr.extractor'].extract(
                 company, content, attachment.name or self.name,
+                custom_instructions=self.env['easyocr.extractor']._receiver_context(company),
             )
         except Exception:  # noqa: BLE001 - the user must never get a dialog
             _logger.exception('Unexpected error extracting OCR document %s', self.id)
@@ -296,12 +351,28 @@ class EasyocrDocument(models.Model):
 
         totals = data.get('totals') or {}
         if totals.get('net_subtotal') is not None:
-            values['amount_untaxed'] = _to_float(totals['net_subtotal'])
+            values['amount_untaxed'] = to_float(totals['net_subtotal'])
         if totals.get('total') is not None:
-            values['amount_total'] = _to_float(totals['total'])
+            values['amount_total'] = to_float(totals['total'])
+
+        # The lines are replaced, never merged: a second reading of the same
+        # document supersedes the first, and keeping both would double the bill.
+        self._apply_lines(data.get('items'))
 
         if values:
             self.write(values)
+
+    def _apply_lines(self, items):
+        """Write down the lines the service read, in the order it read them."""
+        self.ensure_one()
+        commands = [(5, 0, 0)]
+        if isinstance(items, list):
+            for sequence, item in enumerate(items, start=1):
+                if isinstance(item, dict):
+                    commands.append((0, 0, self.env['easyocr.document.line']._values_from_item(
+                        item, sequence,
+                    )))
+        self.line_ids = commands
 
     @api.model
     def _clean_date(self, value):

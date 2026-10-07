@@ -174,6 +174,7 @@ msgstr "Compañías"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__company_id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__company_id
@@ -205,6 +206,7 @@ msgstr "Creado"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__create_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_uid
@@ -214,6 +216,7 @@ msgstr "Creado por"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__create_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_date
@@ -223,13 +226,14 @@ msgstr "Creado el"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__currency_id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__currency_id
 msgid "Currency"
 msgstr "Moneda"
 
 #. module: easyocr
 #. odoo-python
-#: code:addons/easyocr/controllers/expense.py:0
 #. odoo-javascript
+#: code:addons/easyocr/controllers/expense.py:0
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date
 msgid "Date"
@@ -238,6 +242,7 @@ msgstr "Fecha"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__name
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__description
 msgid "Description"
 msgstr "Descripción"
@@ -275,6 +280,7 @@ msgid "Display Name"
 msgstr "Nombre para mostrar"
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__document_id
 msgid "Document"
@@ -384,7 +390,8 @@ msgstr "Instrucciones adicionales"
 
 #. module: easyocr
 #: model:ir.module.module,summary:base.module_easyocr
-msgid "Extract supplier invoices and expense receipts from PDF and image files"
+msgid ""
+"Extract supplier invoices and expense receipts from PDF and image files"
 msgstr "Extrae facturas de proveedor y tickets desde archivos PDF e imágenes"
 
 #. module: easyocr
@@ -446,6 +453,7 @@ msgstr ""
 "hasta que usted lo diga, así que una bandeja llena no cuesta nada."
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__file_hash
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__file_hash
 msgid "Fingerprint"
 msgstr "Huella"
@@ -621,6 +629,7 @@ msgstr "Última respuesta de extracción"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__write_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_uid
@@ -630,6 +639,7 @@ msgstr "Última actualización por"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__write_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_date
@@ -925,8 +935,11 @@ msgstr "Lee facturas de proveedor y recibos de gastos desde archivos."
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
-msgid "Read supplier invoices and expense receipts, and turn them into accounting entries."
-msgstr "Lea facturas de proveedor y tickets, y conviértalos en apuntes contables."
+msgid ""
+"Read supplier invoices and expense receipts, and turn them into accounting "
+"entries."
+msgstr ""
+"Lea facturas de proveedor y tickets, y conviértalos en apuntes contables."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -1320,13 +1333,18 @@ msgstr "No se ha podido enviar la foto."
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "The photo could not be sent. Check the connection and try again."
-msgstr "No se ha podido enviar la foto. Compruebe la conexión e inténtelo de nuevo."
+msgstr ""
+"No se ha podido enviar la foto. Compruebe la conexión e inténtelo de nuevo."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
-msgid "The photo is still larger than the %(limit)s MB the inbox takes. Take it from a little further away."
-msgstr "La foto sigue siendo más grande que los %(limit)s MB que admite la bandeja. Hágala desde un poco más lejos."
+msgid ""
+"The photo is still larger than the %(limit)s MB the inbox takes. Take it "
+"from a little further away."
+msgstr ""
+"La foto sigue siendo más grande que los %(limit)s MB que admite la bandeja. "
+"Hágala desde un poco más lejos."
 
 #. module: easyocr
 #. odoo-python
@@ -1391,8 +1409,8 @@ msgstr "Tiempo de espera (segundos)"
 
 #. module: easyocr
 #. odoo-python
-#: code:addons/easyocr/controllers/expense.py:0
 #. odoo-javascript
+#: code:addons/easyocr/controllers/expense.py:0
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__amount_total
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_total
@@ -1437,8 +1455,8 @@ msgstr "Usuario"
 
 #. module: easyocr
 #. odoo-python
-#: code:addons/easyocr/controllers/expense.py:0
 #. odoo-javascript
+#: code:addons/easyocr/controllers/expense.py:0
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__partner_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__partner_id
@@ -1707,3 +1725,311 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Use this photo"
 msgstr "Usar esta foto"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_allow_self_vendor
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_allow_self_vendor
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Accept our own company as vendor"
+msgstr "Aceptar nuestra propia empresa como proveedor"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_ai_receiver_context
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_ai_receiver_context
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Add our own name and tax number to the request, so the service can tell the "
+"two parties apart on the document."
+msgstr ""
+"Añadir nuestro nombre y NIF a la petición, para que el servicio distinga las"
+" dos partes del documento."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_duplicate_check
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_duplicate_check
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Before sending a file to the service, look for a document with the same "
+"content that has already been read. Reading it again would cost the same and"
+" change nothing."
+msgstr ""
+"Antes de enviar un archivo al servicio, buscar un documento con el mismo "
+"contenido que ya se haya leído. Volver a leerlo costaría lo mismo y no "
+"cambiaría nada."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_allow_self_vendor
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_allow_self_vendor
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Book a document whose tax number is ours. Off by default: it is almost "
+"always a document that was read the wrong way round."
+msgstr ""
+"Contabilizar un documento cuyo NIF sea el nuestro. Desactivado por defecto: "
+"casi siempre es un documento que se ha leído al revés."
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_bill_post
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_bill_post
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Confirm the bill automatically"
+msgstr "Confirmar la factura automáticamente"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_autocreate_product
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_autocreate_product
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Create products that do not exist"
+msgstr "Crear los productos que no existan"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Documents and bills"
+msgstr "Documentos y facturas"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_duplicate_window_days
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_duplicate_window_days
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Duplicate window (days)"
+msgstr "Ventana de duplicados (días)"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_duplicate_window_days
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_duplicate_window_days
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"How far back that check looks. 0 means no limit. Useful for a vendor whose "
+"monthly document is exactly the same file every month."
+msgstr ""
+"Hasta dónde mira esa comprobación. 0 significa sin límite. Útil para un "
+"proveedor cuyo documento mensual es exactamente el mismo archivo cada mes."
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__extraction_date
+msgid "Last Read On"
+msgstr "Leído por última vez"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_bill_post
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_bill_post
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Post the supplier bill as soon as it is created, instead of leaving it in "
+"draft for review. Off by default: posting books the bill and gives it a "
+"number."
+msgstr ""
+"Confirmar la factura de proveedor en cuanto se cree, en lugar de dejarla en "
+"borrador para revisarla. Desactivado por defecto: confirmarla la contabiliza"
+" y le da un número."
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_duplicate_check
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_duplicate_check
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Refuse a document already read"
+msgstr "Rechazar un documento ya leído"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document__file_hash
+msgid ""
+"SHA-256 of the attached file. Two documents with the same fingerprint carry "
+"exactly the same file, whatever they are called."
+msgstr ""
+"SHA-256 del archivo adjunto. Dos documentos con la misma huella llevan "
+"exactamente el mismo archivo, se llamen como se llamen."
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_ai_receiver_context
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_ai_receiver_context
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Tell the service who we are"
+msgstr "Decirle al servicio quiénes somos"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The bill was left in draft: it could not be confirmed on its own "
+"(%(error)s). Review it and confirm it by hand."
+msgstr ""
+"La factura se ha quedado en borrador: no se ha podido confirmar sola "
+"(%(error)s). Revísela y confírmela a mano."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"This file has already been read: %(document)s. Reading it again would cost "
+"the same and change nothing."
+msgstr ""
+"Este archivo ya se ha leído: %(document)s. Volver a leerlo costaría lo mismo"
+" y no cambiaría nada."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_autocreate_product
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_autocreate_product
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"When a line carries a supplier reference no product matches, create the "
+"product instead of leaving the line without one."
+msgstr ""
+"Cuando una línea trae una referencia de proveedor que no casa con ningún "
+"producto, crear el producto en lugar de dejar la línea sin él."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document__extraction_date
+msgid ""
+"When the file was last sent to the service. It is what the duplicate window "
+"counts back from, so it notes the moment the call was made and not the "
+"moment it went well: a reading that failed cost the same."
+msgstr ""
+"Cuándo se envió el archivo al servicio por última vez. Es lo que cuenta "
+"atrás la ventana de duplicados, así que anota el momento en que se hizo la "
+"llamada y no aquel en que salió bien: una lectura fallida costó lo mismo."
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__discount_percent
+msgid "Discount (%)"
+msgstr "Descuento (%)"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__discount
+msgid "Discount"
+msgstr "Descuento"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__fee
+msgid "Fee"
+msgstr "Comisión"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "Line"
+msgstr "Línea"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__item_type
+msgid "Line Type"
+msgstr "Tipo de línea"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__line_count
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__line_ids
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__document_id
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
+msgid "Lines"
+msgstr "Líneas"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__net_amount
+msgid "Net Amount"
+msgstr "Importe neto"
+
+#. module: easyocr
+#: model:ir.model,name:easyocr.model_easyocr_document_line
+msgid "OCR Document Line"
+msgstr "Línea de documento OCR"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__other
+msgid "Other"
+msgstr "Otro"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__product_id
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__product
+msgid "Product"
+msgstr "Producto"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__quantity
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__service
+msgid "Service"
+msgstr "Servicio"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__shipping
+msgid "Shipping"
+msgstr "Transporte"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__product_code
+msgid "Supplier Reference"
+msgstr "Referencia del proveedor"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__surcharge
+msgid "Surcharge"
+msgstr "Recargo"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__tax_rate
+msgid "Tax Rate"
+msgstr "Tipo de impuesto"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__unit_price
+msgid "Unit Price"
+msgstr "Precio unitario"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document_line__product_code
+msgid ""
+"Article reference the document prints. It is what the product is looked up "
+"by, and it belongs to the vendor, not to us."
+msgstr ""
+"Referencia del artículo tal como la imprime el documento. Es por donde se "
+"busca el producto, y es del proveedor, no nuestra."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document_line__name
+msgid "Description as printed on the document."
+msgstr "Descripción tal como viene impresa en el documento."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document_line__unit_price
+msgid "Price before discount, as printed."
+msgstr "Precio antes del descuento, tal como viene impreso."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document_line__tax_rate
+msgid ""
+"Rate read from the line, used to pick the purchase tax of the same rate when"
+" the bill is made."
+msgstr ""
+"Tipo leído de la línea, que sirve para elegir el impuesto de compras del "
+"mismo tipo al crear la factura."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document_line__item_type
+msgid ""
+"What the service made of the line. It decides whether a product is looked up"
+" at all, and whether a new one is a service or goods."
+msgstr ""
+"Lo que el servicio ha entendido de la línea. Decide si se busca producto y "
+"si uno nuevo es un servicio o mercancía."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document__line_ids
+msgid "What the service read line by line. The bill is built from these."
+msgstr "Lo que el servicio leyó línea a línea. La factura se arma con esto."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document_line__net_amount
+msgid ""
+"What the line comes to, discount taken off. It follows the quantity, the "
+"price and the discount, the way the bill will."
+msgstr ""
+"Lo que suma la línea, ya descontado el descuento. Sigue a la cantidad, al "
+"precio y al descuento, igual que lo hará la factura."

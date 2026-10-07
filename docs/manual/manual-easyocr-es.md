@@ -79,19 +79,31 @@ desde **Ajustes > Usuarios**, como cualquier otro permiso de Odoo.
 
 # 3. Configuración
 
-La configuración vive en **Ajustes > EasyOCR**. Son cuatro campos:
+La configuración vive en **Ajustes > EasyOCR** y viene en dos bloques.
 
 ![La sección EasyOCR en Ajustes](img/03-ajustes.png)
 
-|[tabla: Opciones de configuración de EasyOCR]|
+## Leer con IA
+
+|[tabla: Opciones del servicio de lectura]|
 |---|---|
 | **Leer con IA** | Enciende o apaga el envío de documentos al servicio. Mientras está apagado, el módulo no manda nada a ningún sitio. |
 | **URL del servicio** | La dirección del servicio de EasyOCR. Se escribe sin nada más: el módulo añade por su cuenta la parte final de la dirección. |
 | **Clave API** | La clave que identifica su cuenta ante el servicio. Se la da EasyOCR al contratar el servicio. |
 | **Tiempo de espera** | Cuántos segundos espera Odoo la respuesta antes de darse por vencido. Una página escaneada puede tardar, así que conviene dejarlo generoso. |
+| **Decirle al servicio quiénes somos** | Añade el nombre y el NIF de su empresa a la petición, para que el servicio distinga las dos partes del documento y no le devuelva su propia empresa como proveedor. |
 
-Cuando termine de rellenarlo, pulse **Guardar**. El botón **Descartar** deja
-todo como estaba.
+## Documentos y facturas
+
+|[tabla: Qué hace el módulo con lo que lee]|
+|---|---|
+| **Confirmar la factura automáticamente** | Confirma la factura en cuanto se crea, en lugar de dejarla en borrador. Apagado viene: confirmar contabiliza la factura y le pone número. Si al confirmar falla algo, la factura se queda en borrador con el motivo escrito en ella. |
+| **Crear los productos que no existan** | Cuando una línea trae una referencia de proveedor que no casa con ningún producto, lo crea. Apagado viene, para que el catálogo no crezca solo. |
+| **Aceptar nuestra propia empresa como proveedor** | Permite contabilizar un documento cuyo NIF sea el suyo. Apagado viene, porque casi siempre es un documento que se ha leído al revés. |
+| **Rechazar un documento ya leído** | Antes de enviar un archivo al servicio, busca otro documento con el mismo contenido que ya se haya leído y no lo manda. Encendido viene: leerlo otra vez costaría lo mismo y no cambiaría nada. |
+| **Ventana de duplicados** | Hasta dónde mira esa comprobación, en días. 0 significa sin límite. Sirve para un proveedor cuyo documento mensual es exactamente el mismo archivo cada mes. |
+
+Cuando termine, pulse **Guardar**. El botón **Descartar** deja todo como estaba.
 
 **Nada de esto hace falta si solo va a leer PDF que ya traen texto.** Deje
 «Leer con IA» apagado y el módulo funcionará igual.
@@ -134,9 +146,28 @@ arriba:
 | **Crear factura** | Prepara la factura de proveedor con lo que hay en la ficha. |
 | **Marcar como procesado** | Da el documento por revisado sin crear nada. |
 
-Debajo, tres pestañas: **Archivo** (el PDF), **Notas** y **Extracción** (la
-respuesta del servicio y su nivel de confianza, útil solo cuando hay que pedir
-soporte).
+Debajo, cuatro pestañas: **Líneas**, **Archivo** (el PDF), **Notas** y
+**Extracción** (la respuesta del servicio y su nivel de confianza, útil solo
+cuando hay que pedir soporte).
+
+## Las líneas que se han leído
+
+La pestaña **Líneas** es lo que el servicio ha sacado del documento, artículo a
+artículo, y es de donde sale la factura:
+
+![Las líneas leídas de un documento](img/16-lineas-leidas.png)
+
+Cada línea trae su descripción, la referencia que el documento imprime, la
+cantidad, el precio, el descuento y el tipo de IVA. **Se puede corregir
+cualquier cosa aquí**: leer un documento mal es lo normal, y arreglarlo en esta
+pestaña es más barato que arreglarlo luego en la factura. El **Importe neto** se
+recalcula solo al cambiar la cantidad, el precio o el descuento.
+
+Para quitar una línea que no debería estar, la papelera de su derecha. Para
+añadir una que el servicio no vio, **Añadir una línea**.
+
+Si el documento se lee otra vez, estas líneas se reemplazan por las de la nueva
+lectura, no se suman.
 
 # 5. El visor: dibujar de dónde se lee cada dato
 
@@ -225,14 +256,30 @@ Después prepara un borrador de factura de proveedor con esos datos:
 
 ![El borrador de factura creado desde el documento](img/12-factura-borrador.png)
 
+## Cómo se arma la factura
+
+- **Una línea de factura por cada línea leída** en la pestaña **Líneas**, con su
+  cantidad, su precio y su descuento. Un documento con cinco artículos da una
+  factura con cinco líneas, no una sola con el total.
+- **El producto** de cada línea se busca por la referencia que imprime el
+  documento: primero entre las referencias de ese proveedor, después por nuestro
+  código o código de barras. Si no aparece y tiene encendido *Crear los
+  productos que no existan*, se crea.
+- **El IVA** de cada línea sale del tipo leído en el documento, buscando el
+  impuesto de compras de ese mismo tipo. Si su empresa no tiene ninguno
+  configurado a ese tipo, la línea se queda sin impuesto: el módulo no se lo
+  inventa.
+
+Si el documento no trae líneas —porque llegó por la vía automática o porque se
+rellenó a mano—, la factura se hace con una sola línea por el importe base, sin
+impuestos, como se ha hecho siempre.
+
 ## Qué conviene revisar antes de confirmarla
 
 - **El proveedor.** Si no existía, se ha creado al vuelo. Compruebe que no se ha
   duplicado con una ficha que ya tuviera.
-- **El importe y el impuesto.** El módulo pone el importe en una sola línea, sin
-  impuestos, y deja que Odoo aplique el impuesto por defecto de compras. En la
-  imagen ha puesto el 21 %. Si la factura lleva otro tipo o varios, corríjalo
-  aquí.
+- **Las líneas y sus impuestos.** Sobre todo si el documento lleva varios tipos
+  de IVA o descuentos por línea.
 - **La fecha y la referencia.** Son las del documento original.
 
 La factura queda **en borrador**: no se ha contabilizado nada. Puede editarla

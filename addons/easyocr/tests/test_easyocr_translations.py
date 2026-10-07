@@ -64,6 +64,31 @@ HOME_STRINGS = (
     "Settings",
 )
 
+# Sentences the module builds in Python and hands to the screen as a
+# notification. They need the Python marker for the same reason the capture page
+# does: they never pass through a view, so nothing else would carry them across.
+MESSAGE_STRINGS = (
+    "This file has already been read: %(document)s. Reading it again would cost "
+    "the same and change nothing.",
+    "The bill was left in draft: it could not be confirmed on its own "
+    "(%(error)s). Review it and confirm it by hand.",
+)
+
+# The models whose terms are ours to translate.
+MODELS = (
+    'easyocr.document',
+    'easyocr.document.line',
+    'easyocr.inbox.item',
+    'easyocr.template',
+    'easyocr.template.box',
+    'easyocr.webhook.log',
+)
+
+# Fields the mail mixin brings along. Their labels belong to the mail module: a
+# reference for them here would only copy someone else's strings, and counting
+# them as missing would turn this test into noise nobody reads.
+BORROWED = ('activity_', 'message_')
+
 # The summary the Apps screen shows on the module's card.
 SUMMARY = "Extract supplier invoices and expense receipts from PDF and image files"
 
@@ -155,6 +180,65 @@ class TestEasyocrTranslations(TransactionCase):
             po = polib.pofile(os.path.join(self.i18n_path, name))
             for msgid in CAPTURE_STRINGS:
                 self._assert_reaches_python(po, msgid)
+
+    def test_the_messages_the_module_shows_are_translated(self):
+        for name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, name))
+            for msgid in MESSAGE_STRINGS:
+                self._assert_reaches_python(po, msgid)
+
+    def test_every_label_says_where_odoo_looks_for_it(self):
+        """A translation without a reference is a translation that never arrives.
+
+        Odoo reads a term through the reference it generates for the record that
+        holds it: a field label through that field's record, a selection label
+        through the record of that key. A .po entry pointed anywhere else is
+        complete, correct, and invisible -- the screen shows English or, for a
+        selection, the raw key. Both happened here, which is why every term of
+        every model is checked and not just the ones a person remembered.
+        """
+        checked = 0
+        for msgid, refs in sorted(self._expected_references().items()):
+            checked += 1
+            for name in self._po_files():
+                po = polib.pofile(os.path.join(self.i18n_path, name))
+                entry = self._entry(po, msgid)
+                self.assertTrue(
+                    entry.msgstr,
+                    "%s leaves %r without a translation" % (os.path.basename(po.fpath), msgid),
+                )
+                here = {ref for ref, _line in entry.occurrences}
+                for ref in sorted(refs - here):
+                    self.fail(
+                        "%r is translated in %s but points nowhere Odoo will look "
+                        "for it: it needs the reference %s"
+                        % (msgid, os.path.basename(po.fpath), ref)
+                    )
+        self.assertGreater(checked, 50, "Barely any term was checked at all.")
+
+    def _expected_references(self):
+        """Every term of this module, under the reference Odoo looks it up by."""
+        expected = {}
+
+        def want(msgid, ref):
+            if msgid:
+                expected.setdefault(msgid, set()).add(ref)
+
+        for model_name in MODELS:
+            model = self.env[model_name]
+            slug = model_name.replace('.', '_')
+            for field_name, field in model._fields.items():
+                if field_name in ('id', 'display_name') or field_name.startswith(BORROWED):
+                    continue
+                base = 'model:ir.model.fields,%s:easyocr.field_%s__%s'
+                want(field.string, base % ('field_description', slug, field_name))
+                want(field.help, base % ('help', slug, field_name))
+                if field.type == 'selection':
+                    for key, label in field._description_selection(self.env):
+                        want(label, 'model:ir.model.fields.selection,name:'
+                                    'easyocr.selection__%s__%s__%s' % (slug, field_name, key))
+            want(model._description, 'model:ir.model,name:easyocr.model_%s' % slug)
+        return expected
 
     def test_the_module_summary_is_translated(self):
         """The Apps screen shows it on the card, before the module is installed."""

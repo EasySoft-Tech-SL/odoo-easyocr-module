@@ -30,3 +30,27 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.easyocr_ai_timeout',
         readonly=False,
     )
+    easyocr_ai_receiver_context = fields.Boolean(
+        related='company_id.easyocr_ai_receiver_context',
+        readonly=False,
+    )
+    easyocr_bill_post = fields.Boolean(
+        related='company_id.easyocr_bill_post',
+        readonly=False,
+    )
+    easyocr_autocreate_product = fields.Boolean(
+        related='company_id.easyocr_autocreate_product',
+        readonly=False,
+    )
+    easyocr_allow_self_vendor = fields.Boolean(
+        related='company_id.easyocr_allow_self_vendor',
+        readonly=False,
+    )
+    easyocr_duplicate_check = fields.Boolean(
+        related='company_id.easyocr_duplicate_check',
+        readonly=False,
+    )
+    easyocr_duplicate_window_days = fields.Integer(
+        related='company_id.easyocr_duplicate_window_days',
+        readonly=False,
+    )
