@@ -72,9 +72,18 @@ MESSAGE_STRINGS = (
     "the same and change nothing.",
     "The bill was left in draft: it could not be confirmed on its own "
     "(%(error)s). Review it and confirm it by hand.",
+    # What a webhook writes into its own log when it goes further than filing.
+    "The bill could not be created (%(error)s).",
+    "The bill was created from it.",
+    "The bill was created, but the payment was not registered (%(reason)s).",
+    "The bill was created from it and the payment registered.",
+    "no bank account is set in the EasyOCR settings",
+    "the bill is not confirmed, so there is nothing to pay yet",
+    "the bill has nothing left to pay",
 )
 
-# The models whose terms are ours to translate.
+# The models whose terms are ours to translate. The two settings models are here
+# too, and only through their own fields: they carry a few hundred of Odoo's.
 MODELS = (
     'easyocr.document',
     'easyocr.document.line',
@@ -82,7 +91,15 @@ MODELS = (
     'easyocr.template',
     'easyocr.template.box',
     'easyocr.webhook.log',
+    'res.company',
+    'res.config.settings',
 )
+
+# For a model we only borrow fields from, the prefix that makes a field ours.
+OUR_FIELDS = {
+    'res.company': 'easyocr_',
+    'res.config.settings': 'easyocr_',
+}
 
 # Fields the mail mixin brings along. Their labels belong to the mail module: a
 # reference for them here would only copy someone else's strings, and counting
@@ -227,8 +244,11 @@ class TestEasyocrTranslations(TransactionCase):
         for model_name in MODELS:
             model = self.env[model_name]
             slug = model_name.replace('.', '_')
+            ours = OUR_FIELDS.get(model_name)
             for field_name, field in model._fields.items():
                 if field_name in ('id', 'display_name') or field_name.startswith(BORROWED):
+                    continue
+                if ours and not field_name.startswith(ours):
                     continue
                 base = 'model:ir.model.fields,%s:easyocr.field_%s__%s'
                 want(field.string, base % ('field_description', slug, field_name))

@@ -82,3 +82,31 @@ class ResCompany(models.Model):
         help='How far back that check looks. 0 means no limit. Useful for a vendor '
              'whose monthly document is exactly the same file every month.',
     )
+
+    # --------------------------------------------------------------
+    # What a webhook is allowed to do on its own
+    # --------------------------------------------------------------
+    easyocr_webhook_create_bill = fields.Boolean(
+        string='Create the bill from a webhook',
+        help='When the service says it has finished reading a document, make the '
+             'supplier bill from it without waiting for anyone. Off by default: a '
+             'webhook is a message from outside, and a bill is an accounting entry.',
+    )
+    easyocr_webhook_mark_paid = fields.Boolean(
+        string='Mark the bill as paid',
+        help='Register the payment on the bills a webhook creates, as if the money '
+             'had already gone out. It only applies to a bill that is confirmed, '
+             'because a bill in draft has nothing to pay against.',
+    )
+    easyocr_webhook_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Bank account',
+        domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', id)]",
+        help='Where the payment of a webhook bill is recorded.',
+    )
+    easyocr_webhook_payment_method_line_id = fields.Many2one(
+        comodel_name='account.payment.method.line',
+        string='Payment method',
+        help='How the payment is recorded on that bank account. Left empty, Odoo '
+             'takes the one the account has by default.',
+    )

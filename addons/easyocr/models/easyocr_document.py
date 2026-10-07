@@ -303,6 +303,65 @@ class EasyocrDocument(models.Model):
         for document in self:
             document.line_count = len(document.line_ids)
 
+    def _settle_webhook(self):
+        """Bill the document, and pay it, when the company has asked for it.
+
+        Off unless the company says so. A webhook is a message from outside, and
+        this turns it into a bill -- an accounting entry -- or even into the
+        record of money having gone out. The rule about the payment is the one
+        the module this port comes from uses: only a confirmed bill has
+        something to pay against, so a bill left in draft is not paid.
+
+        Never raises. Whatever goes wrong comes back as a sentence for the log,
+        because answering anything but 200 makes the sender send the same body
+        again and the document ends up filed twice.
+        """
+        self.ensure_one()
+        company = self.company_id
+        if not company.easyocr_webhook_create_bill:
+            return ''
+
+        try:
+            self.action_create_bill()
+        except Exception as error:  # noqa: BLE001 - the answer has to go back as text
+            _logger.warning("EasyOCR webhook: no bill for document %s: %s", self.id, error)
+            return _("The bill could not be created (%(error)s).", error=error)
+
+        if not company.easyocr_webhook_mark_paid:
+            return _("The bill was created from it.")
+
+        reason = self._register_webhook_payment(self.move_id, company)
+        if reason:
+            return _("The bill was created, but the payment was not registered (%(reason)s).",
+                     reason=reason)
+        return _("The bill was created from it and the payment registered.")
+
+    @api.model
+    def _register_webhook_payment(self, move, company):
+        """Record the payment on the bill. Says why not, or nothing at all."""
+        journal = company.easyocr_webhook_journal_id
+        if not journal:
+            return _("no bank account is set in the EasyOCR settings")
+        if move.state != 'posted':
+            return _("the bill is not confirmed, so there is nothing to pay yet")
+        if not move.amount_residual:
+            return _("the bill has nothing left to pay")
+
+        values = {'journal_id': journal.id}
+        method = company.easyocr_webhook_payment_method_line_id
+        if method:
+            values['payment_method_line_id'] = method.id
+        try:
+            wizard = self.env['account.payment.register'].with_context(
+                active_model='account.move',
+                active_ids=move.ids,
+            ).create(values)
+            wizard.action_create_payments()
+        except Exception as error:  # noqa: BLE001 - the answer has to go back as text
+            _logger.warning("EasyOCR webhook: no payment for bill %s: %s", move.id, error)
+            return str(error)
+        return ''
+
     def _confirm_bill(self, move):
         """Post the bill when the company asked for it, without ever losing it.
 

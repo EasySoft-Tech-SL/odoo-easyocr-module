@@ -54,6 +54,20 @@
                             <field name="easyocr_duplicate_window_days" class="o_light_label"/>
                         </setting>
                     </block>
+                    <block title="Webhooks" id="easyocr_webhook_block">
+                        <setting id="easyocr_webhook_create_bill" string="Create the bill from a webhook" help="When the service says it has finished reading a document, make the supplier bill from it without waiting for anyone. Off by default: a webhook is a message from outside, and a bill is an accounting entry.">
+                            <field name="easyocr_webhook_create_bill"/>
+                        </setting>
+                        <setting id="easyocr_webhook_mark_paid" string="Mark the bill as paid" help="Register the payment on the bills a webhook creates, as if the money had already gone out. It only applies to a bill that is confirmed, because a bill in draft has nothing to pay against.">
+                            <field name="easyocr_webhook_mark_paid"/>
+                        </setting>
+                        <setting id="easyocr_webhook_journal_id" string="Bank account" help="Where the payment of a webhook bill is recorded.">
+                            <field name="easyocr_webhook_journal_id"/>
+                        </setting>
+                        <setting id="easyocr_webhook_payment_method_line_id" string="Payment method" help="How the payment is recorded on that bank account. Left empty, Odoo takes the one the account has by default.">
+                            <field name="easyocr_webhook_payment_method_line_id"/>
+                        </setting>
+                    </block>
                 </app>
             </xpath>
         </field>

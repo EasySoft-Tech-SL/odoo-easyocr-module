@@ -2046,3 +2046,125 @@ msgid ""
 msgstr ""
 "Ce que totalise la ligne, remise déduite. Elle suit la quantité, le prix et "
 "la remise, comme le fera la facture."
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_journal_id
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_journal_id
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Bank account"
+msgstr "Compte bancaire"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_create_bill
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_create_bill
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Create the bill from a webhook"
+msgstr "Créer la facture depuis un webhook"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_mark_paid
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_mark_paid
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Mark the bill as paid"
+msgstr "Marquer la facture comme payée"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_payment_method_line_id
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_payment_method_line_id
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Payment method"
+msgstr "Mode de paiement"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Webhooks"
+msgstr "Webhooks"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_webhook_create_bill
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_webhook_create_bill
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"When the service says it has finished reading a document, make the supplier "
+"bill from it without waiting for anyone. Off by default: a webhook is a "
+"message from outside, and a bill is an accounting entry."
+msgstr ""
+"Lorsque le service signale qu'il a fini de lire un document, créer la "
+"facture fournisseur sans attendre personne. Désactivé par défaut : un "
+"webhook est un message extérieur et une facture est une écriture comptable."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_webhook_mark_paid
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_webhook_mark_paid
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Register the payment on the bills a webhook creates, as if the money had "
+"already gone out. It only applies to a bill that is confirmed, because a "
+"bill in draft has nothing to pay against."
+msgstr ""
+"Enregistrer le paiement sur les factures créées par un webhook, comme si "
+"l'argent était déjà sorti. Cela ne s'applique qu'à une facture confirmée, "
+"car un brouillon n'a rien contre quoi payer."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_webhook_journal_id
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_webhook_journal_id
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Where the payment of a webhook bill is recorded."
+msgstr "Où est enregistré le paiement d'une facture créée par un webhook."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_webhook_payment_method_line_id
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_webhook_payment_method_line_id
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"How the payment is recorded on that bank account. Left empty, Odoo takes the"
+" one the account has by default."
+msgstr ""
+"Comment le paiement est enregistré sur ce compte bancaire. Laissé vide, Odoo"
+" prend celui que le compte a par défaut."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "The bill could not be created (%(error)s)."
+msgstr "La facture n'a pas pu être créée (%(error)s)."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "The bill was created from it."
+msgstr "La facture a été créée à partir de celui-ci."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "The bill was created, but the payment was not registered (%(reason)s)."
+msgstr ""
+"La facture a été créée, mais le paiement n'a pas été enregistré "
+"(%(reason)s)."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "The bill was created from it and the payment registered."
+msgstr ""
+"La facture a été créée à partir de celui-ci et le paiement enregistré."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "no bank account is set in the EasyOCR settings"
+msgstr "aucun compte bancaire n'est renseigné dans les réglages d'EasyOCR"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "the bill is not confirmed, so there is nothing to pay yet"
+msgstr "la facture n'est pas confirmée, il n'y a donc encore rien à payer"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "the bill has nothing left to pay"
+msgstr "il ne reste rien à payer sur la facture"
