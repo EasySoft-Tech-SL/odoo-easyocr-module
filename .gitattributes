@@ -1,0 +1,12 @@
+# The module runs on Linux (Odoo containers), and this machine has
+# core.autocrlf=true at system level, so anything committed would otherwise
+# arrive with CRLF. A config file with CRLF breaks parsers that do not expect it.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
