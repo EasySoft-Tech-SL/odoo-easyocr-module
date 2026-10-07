@@ -90,6 +90,8 @@ class TestEasyocrExpenseCapture(HttpCase):
         self.assertIn('/web/login', response.headers.get('Location', ''))
 
     def test_the_upload_is_closed_without_a_session(self):
+        before = self.Inbox.search_count([])
+
         response = self.url_open(
             UPLOAD_URL,
             data={'csrf_token': 'not-a-token'},
@@ -98,7 +100,10 @@ class TestEasyocrExpenseCapture(HttpCase):
         )
 
         self.assertEqual(response.status_code, 303)
-        self.assertEqual(self.Inbox.search_count([('origin', '=', 'expense-capture')]), 0)
+        # Counted against what was already there: a database with files in it is
+        # the normal case, and a test that assumes an empty one only passes on a
+        # machine nobody has used.
+        self.assertEqual(self.Inbox.search_count([]), before)
 
     # ------------------------------------------------------------------
     # A photo that works
