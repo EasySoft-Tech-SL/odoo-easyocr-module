@@ -27,12 +27,14 @@ This is the screen the user recognises: the PDF on the left, the data panel on t
 
 - [x] Client action with an OWL component (a full screen of our own, not a form view).
 - [x] PDF rendered from the PDF.js copy that ships with Odoo core, one canvas per page.
-- [ ] Drag a rectangle over the page and assign it to a field
+- [x] Drag a rectangle over the page and assign it to a field
       (document date, document number, untaxed amount, total, vendor).
-- [ ] Read the text inside each rectangle from the PDF text layer.
-- [ ] Save the set of rectangles as a template for that vendor.
+- [x] Read the text inside each rectangle from the PDF text layer, cut at
+      character level so a box can take part of a line.
+- [x] Save the set of rectangles as a template for that vendor.
 - [ ] Reapply a vendor template to a new document of the same vendor.
 - [ ] Apply a template automatically when the vendor is known.
+- [ ] Move and resize a box that has already been drawn.
 
 **Why this is first:** it carries the module's identity, it is the biggest single piece
 of the port, and everything else builds on the boxes it produces.
@@ -44,6 +46,17 @@ of the port, and everything else builds on the boxes it produces.
 - [ ] Match taxes from the document lines.
 - [ ] Vendor refunds (rectificativas) vs regular bills.
 - [ ] Optionally leave the bill in draft or post it.
+
+### The extraction service, as measured
+
+The module talks to the same service the Dolibarr module uses
+(`POST /api/v1/ocr/file`, multipart, header `X-API-Key`). Two things to remember:
+
+- **A partial extraction still comes back as HTTP 200.** The body carries
+  `status: "partial"` and an `error_code`. Reading the HTTP code alone treats a
+  failure as a success.
+- `error_code` says whether retrying is worth it: `OCR_EMPTY` and
+  `PARTIAL_DEGRADATION` are worth a retry, `STRUCTURING_TRUNCATED` is not.
 
 ## Phase 3 — Extraction engines · pending
 
