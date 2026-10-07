@@ -89,10 +89,15 @@ class EasyocrInboxItem(models.Model):
     # it one: two scans of one invoice have different names and the same bytes.
     # Rows built by hand carry no fingerprint, and PostgreSQL lets a unique index
     # hold as many NULLs as it likes, so those never collide.
-    _file_company_uniq = models.Constraint(
-        'UNIQUE (company_id, file_hash)',
-        'This file is already in the inbox.',
-    )
+    # Odoo 19 declares this with models.Constraint; 18.0 still uses the
+    # _sql_constraints list, and importing the new name there fails at load.
+    _sql_constraints = [
+        (
+            'file_company_uniq',
+            'UNIQUE (company_id, file_hash)',
+            'This file is already in the inbox.',
+        ),
+    ]
 
     # ------------------------------------------------------------------
     # From another module into the tray
