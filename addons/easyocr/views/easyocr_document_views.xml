@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License OPL-1 (see LICENSE file). -->
+<odoo>
+
+    <record id="view_easyocr_document_list" model="ir.ui.view">
+        <field name="name">easyocr.document.list</field>
+        <field name="model">easyocr.document</field>
+        <field name="arch" type="xml">
+            <list
+                string="OCR Documents"
+                decoration-danger="state == 'error'"
+                decoration-success="state == 'processed'"
+            >
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="ref"/>
+                <field name="document_date"/>
+                <field name="amount_total" widget="monetary"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_easyocr_document_form" model="ir.ui.view">
+        <field name="name">easyocr.document.form</field>
+        <field name="model">easyocr.document</field>
+        <field name="arch" type="xml">
+            <form string="OCR Document">
+                <header>
+                    <button
+                        name="action_mark_processed"
+                        type="object"
+                        string="Mark as Processed"
+                        class="btn-primary"
+                        invisible="state == 'processed'"
+                    />
+                    <button
+                        name="action_reset_to_draft"
+                        type="object"
+                        string="Reset to Pending"
+                        invisible="state == 'draft'"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,processed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Reference"/>
+                        <h1><field name="name" placeholder="e.g. INV/2026/0001"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="ref"/>
+                            <field name="document_date"/>
+                        </group>
+                        <group>
+                            <field name="amount_untaxed"/>
+                            <field name="amount_total"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="File" name="file">
+                            <field name="attachment_id"/>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" placeholder="Anything worth keeping about this document..."/>
+                            <field name="error_message" invisible="not error_message"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_easyocr_document_search" model="ir.ui.view">
+        <field name="name">easyocr.document.search</field>
+        <field name="model">easyocr.document</field>
+        <field name="arch" type="xml">
+            <search string="OCR Documents">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="ref"/>
+                <filter name="filter_pending" string="Pending" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_processed" string="Processed" domain="[('state', '=', 'processed')]"/>
+                <filter name="filter_error" string="Error" domain="[('state', '=', 'error')]"/>
+                <separator/>
+                <filter name="filter_my_documents" string="My Documents" domain="[('create_uid', '=', uid)]"/>
+                <!-- Odoo 19 dropped expand/string on the search group element. -->
+                <group>
+                    <filter name="group_partner" string="Vendor" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_date" string="Document Date" context="{'group_by': 'document_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_easyocr_document" model="ir.actions.act_window">
+        <field name="name">Documents</field>
+        <field name="res_model">easyocr.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_easyocr_document_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Drop your first document
+            </p>
+            <p>
+                Upload a supplier invoice or an expense receipt and review what was read from it
+                before it becomes an accounting entry.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_easyocr_root"
+        name="EasyOCR"
+        web_icon="easyocr,static/description/icon.png"
+        groups="group_easyocr_user"
+        sequence="85"
+    />
+    <menuitem
+        id="menu_easyocr_document"
+        name="Documents"
+        parent="menu_easyocr_root"
+        action="action_easyocr_document"
+        sequence="10"
+    />
+
+</odoo>

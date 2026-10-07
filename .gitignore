@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Odoo runtime
+filestore/
+*.log
+.odoorc
+
+# Local environment overrides
+.env
+*.local.conf
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

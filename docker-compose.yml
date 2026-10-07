@@ -1,0 +1,55 @@
+# Entorno de desarrollo Odoo Community para el port del modulo EasyOCR.
+#
+# Puertos elegidos a proposito, medidos en esta maquina el 2026-10-07:
+#   80/443  httpd de Laragon          8080  nginx        5432  PostgreSQL nativo
+#   5433    reservado por docker-pg-db-1 (otro proyecto)
+#   8088    reservado por docker-pg-dolibarr-1
+# Por eso: HTTP 8069 (Odoo 19) y 8070 (Odoo 18), PostgreSQL interno en 5434.
+#
+# restart: "no" a proposito. En esta maquina ya hay 10 contenedores
+# unless-stopped que se levantan solos y se comen la RAM de la WSL.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: odoo-easyocr-db
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: postgres
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: "no"
+
+  odoo19:
+    image: odoo:19.0
+    container_name: odoo-easyocr-19
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8069:8069"
+    volumes:
+      - ./config/odoo19.conf:/etc/odoo/odoo.conf:ro
+      - ./addons:/mnt/extra-addons
+      - odoo19-data:/var/lib/odoo
+    restart: "no"
+
+  odoo18:
+    image: odoo:18.0
+    container_name: odoo-easyocr-18
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8070:8069"
+    volumes:
+      - ./config/odoo18.conf:/etc/odoo/odoo.conf:ro
+      - ./addons:/mnt/extra-addons
+      - odoo18-data:/var/lib/odoo
+    restart: "no"
+
+volumes:
+  db-data:
+  odoo19-data:
+  odoo18-data:

@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '18.0'
+      - '19.0'
+  pull_request:
+
+jobs:
+  checks:
+    name: Module checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Python syntax
+        run: python -m compileall -q addons
+
+      - name: Manifest and layout
+        run: python tools/check_module.py
+
+      - name: XML well-formedness
+        run: |
+          python - <<'PY'
+          import pathlib
+          import sys
+          import xml.etree.ElementTree as ET
+
+          failed = False
+          for path in sorted(pathlib.Path('addons').rglob('*.xml')):
+              try:
+                  ET.parse(path)
+              except ET.ParseError as error:
+                  print(f'FAIL  {path}: {error}', file=sys.stderr)
+                  failed = True
+          sys.exit(1 if failed else 0)
+          PY
