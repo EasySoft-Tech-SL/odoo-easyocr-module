@@ -121,6 +121,19 @@ class TestEasyocrInbox(TransactionCase):
         self.assertEqual(item.file_hash, hashlib.sha256(PDF_BYTES).hexdigest())
         self.assertEqual(item.file_size, len(PDF_BYTES))
 
+    def test_replacing_the_file_refreshes_the_fingerprint(self):
+        """Otherwise the tray would keep a fingerprint of a file it no longer holds."""
+        item = self.Inbox.create({
+            'name': 'scan.pdf',
+            'datas': base64.b64encode(PDF_BYTES),
+        })
+        other = b'%PDF-1.4\n% another invoice\n%%EOF\n'
+
+        item.write({'datas': base64.b64encode(other)})
+
+        self.assertEqual(item.file_hash, hashlib.sha256(other).hexdigest())
+        self.assertEqual(item.file_size, len(other))
+
     def test_the_database_refuses_a_second_copy_of_the_same_file(self):
         """The check in ``recibir`` is not enough on its own: two modules can
         hand the same scan over at the same moment."""
@@ -156,11 +169,15 @@ class TestEasyocrInbox(TransactionCase):
 
     def test_processing_twice_keeps_one_document(self):
         item = self._item()
+        # Counted against what was already there: a database with documents in
+        # it is the normal case, and a test that assumes an empty one only
+        # passes on a machine nobody has used.
+        before = self.env['easyocr.document'].search_count([])
 
         item.action_process()
         item.action_process()
 
-        self.assertEqual(self.env['easyocr.document'].search_count([]), 1)
+        self.assertEqual(self.env['easyocr.document'].search_count([]), before + 1)
 
     def test_a_discarded_item_is_not_processed(self):
         item = self._item()
