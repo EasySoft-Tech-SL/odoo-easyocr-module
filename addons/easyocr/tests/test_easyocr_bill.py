@@ -73,7 +73,8 @@ class TestEasyocrBill(TransactionCase):
 
     def test_your_own_tax_number_is_not_a_vendor(self):
         """Booking your own company as a supplier is always a mistake."""
-        self.env.company.partner_id.vat = 'B12345678'
+        # The tax number is not a real one, so the format check is skipped.
+        self.env.company.partner_id.with_context(no_vat_validation=True).vat = 'B12345678'
         document = self._document(partner_vat='B12345678')
 
         with self.assertRaises(UserError):
