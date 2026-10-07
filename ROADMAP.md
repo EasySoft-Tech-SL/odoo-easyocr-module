@@ -70,12 +70,13 @@ The module talks to the same service the Dolibarr module uses
       and says whether sending it again is worth it.
 - [ ] Choose the engine per document instead of per company.
 
-## Phase 4 — Inbox for documents from other modules · pending
+## Phase 4 — Inbox for documents from other modules · done
 
-- [ ] Model for documents handed over by other modules, with their origin.
-- [ ] Nothing is sent to the AI service on arrival; the user decides when.
-- [ ] Discard unwanted documents, with confirmation.
-- [ ] Public helper so another module can drop a file in the inbox.
+- [x] Model for documents handed over by other modules, with their origin.
+- [x] Nothing is sent to the AI service on arrival; the user decides when.
+- [x] The same file is refused twice, by fingerprint.
+- [x] Discarded documents can be brought back.
+- [x] Public helper (`recibir`) so another module can drop a file in.
 
 ## Phase 5 — Inbound API · done
 
@@ -97,11 +98,15 @@ The module talks to the same service the Dolibarr module uses
 - [ ] Per-record rules on top of the group rules.
 - [ ] Full translations, matching the eight languages of the Dolibarr module.
 
-## Phase 8 — Packaging and release · pending
+## Phase 8 — Packaging and release · in progress
 
-- [ ] Release ZIP per Odoo series, module folder at the root of the zip.
-- [ ] Packaging skill, so a release is one command and not a checklist.
-- [ ] Publish on the Odoo Apps Store (Enterprise is not required).
+- [x] Release ZIP per Odoo series, module folder at the root of the zip.
+- [x] Packaging skill, so a release is one command and not a checklist.
+- [x] Release workflow that attaches the ZIP to a GitHub Release (never an
+      artifact: the organization's artifact quota is shared and small).
+- [ ] A `LICENSE` file: the headers say OPL-1 and there is no text to point at.
+- [ ] Publish on the Odoo Apps Store. Note it is fed from the **repository**,
+      not from the ZIP: the ZIP is for the release and for installing by hand.
 - [ ] User guide published with every version.
 
 ---
