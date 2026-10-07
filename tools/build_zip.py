@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
-# License OPL-1 (see LICENSE file).
+# License LGPL-3 (see LICENSE file).
 """Build the installable ZIP of the module(s) under addons/.
 
 One ZIP per Odoo series: the branch *is* the series, and the manifest version
