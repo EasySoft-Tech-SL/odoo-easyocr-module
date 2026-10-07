@@ -4,11 +4,38 @@ import { useService } from "@web/core/utils/hooks";
 import { loadPDFJSAssets } from "@web/core/utils/pdfjs";
 
 /**
+ * The nine fields a box can be assigned to. The key is what gets stored and what
+ * extraction matches on; the colour is only how it is painted.
+ */
+export const BOX_FIELDS = [
+    { key: "document_date", label: "Date", color: "#6c3483" },
+    { key: "document_number", label: "Invoice number", color: "#2980b9" },
+    { key: "amount_untaxed", label: "Untaxed total", color: "#c0392b" },
+    { key: "amount_total", label: "Total", color: "#d4458b" },
+    { key: "tax_amount", label: "Tax", color: "#ff6b35" },
+    { key: "description", label: "Description", color: "#27ae60" },
+    { key: "partner_vat", label: "Tax number", color: "#16a085" },
+    { key: "due_date", label: "Due date", color: "#f39c12" },
+    { key: "partner_name", label: "Vendor", color: "#5d6d7e" },
+];
+
+const FIELD_BY_KEY = Object.fromEntries(BOX_FIELDS.map((field) => [field.key, field]));
+
+/** Zoom the pages are painted at. Coordinates are divided by it before saving. */
+const VIEW_SCALE = 1.5;
+
+/** A drag shorter than this, in canvas pixels, is treated as a stray click. */
+const MIN_BOX_SIZE = 10;
+
+/**
  * Full screen document viewer: the file on the left, the data panel on the right.
  *
- * The PDF is painted on canvas by the PDF.js copy that ships with Odoo core, one
- * canvas per page, stacked in a scrollable column. Drawing the boxes and reading
- * the text under them lives in the next step of phase 1.
+ * Draw a box over a part of the page, assign it to a field, and the text under
+ * that box is read from the PDF text layer. The set of boxes is saved as a
+ * template for the vendor, so the next invoice from them needs no drawing.
+ *
+ * Coordinates live in PDF points: the viewer divides by VIEW_SCALE on save and
+ * multiplies on paint, so a template is independent of zoom and screen size.
  */
 export class EasyocrDocumentViewer extends Component {
     static template = "easyocr.DocumentViewer";
@@ -19,23 +46,42 @@ export class EasyocrDocumentViewer extends Component {
 
     setup() {
         this.orm = useService("orm");
+        this.notification = useService("notification");
         this.containerRef = useRef("pdfContainer");
+
         this.state = useState({
             loading: true,
             error: false,
-            pages: 0,
             documentName: "",
+            partnerId: false,
+            pages: [],
+            boxes: [],
+            activeField: null,
+            templateName: "",
+            saving: false,
         });
+
         this.pdfDocument = null;
+        this.baseImages = [];
+        this.textCache = new Map();
+        this.pendingBox = null;
+        this.dragging = null;
+        this.nextUid = 1;
+        this.fields = BOX_FIELDS;
 
         onWillStart(() => this.loadDocument());
-        onMounted(() => this.renderPages());
+        onMounted(() => this.paintPages());
     }
 
     get documentId() {
-        return this.props.action.params?.document_id;
+        // Opening the action from a button carries the id in params; reloading the
+        // page rebuilds the action from the URL, where only the context survives.
+        return this.props.action.params?.document_id || this.props.action.context?.active_id;
     }
 
+    // ------------------------------------------------------------------
+    // Loading and painting
+    // ------------------------------------------------------------------
     async loadDocument() {
         if (!this.documentId) {
             this.state.loading = false;
@@ -46,9 +92,10 @@ export class EasyocrDocumentViewer extends Component {
         const [document] = await this.orm.read(
             "easyocr.document",
             [this.documentId],
-            ["name", "attachment_id"],
+            ["name", "partner_id", "attachment_id"],
         );
         this.state.documentName = document.name;
+        this.state.partnerId = document.partner_id ? document.partner_id[0] : false;
 
         if (!document.attachment_id) {
             this.state.loading = false;
@@ -63,34 +110,311 @@ export class EasyocrDocumentViewer extends Component {
         const fileUrl = `/web/content/${document.attachment_id[0]}?download=false`;
         this.pdfDocument = await pdfjsLib.getDocument(fileUrl).promise;
 
-        this.state.pages = this.pdfDocument.numPages;
+        const pages = [];
+        for (let number = 1; number <= this.pdfDocument.numPages; number++) {
+            // The scale-1 viewport is the page in PDF points, whatever zoom we paint at.
+            const page = await this.pdfDocument.getPage(number);
+            const points = page.getViewport({ scale: 1 });
+            pages.push({ number, width: points.width, height: points.height });
+        }
+        this.state.pages = pages;
+
         this.state.loading = false;
     }
 
-    async renderPages() {
+    /** Paint every page once, and keep the rendered image to repaint boxes over. */
+    async paintPages() {
         if (!this.pdfDocument || !this.containerRef.el) {
             return;
         }
-
         const container = this.containerRef.el;
         container.replaceChildren();
+        this.baseImages = [];
 
-        for (let pageNumber = 1; pageNumber <= this.pdfDocument.numPages; pageNumber++) {
-            const page = await this.pdfDocument.getPage(pageNumber);
-            const viewport = page.getViewport({ scale: 1.5 });
+        for (const pageInfo of this.state.pages) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "o_easyocr_page_wrapper";
 
             const canvas = document.createElement("canvas");
             canvas.className = "o_easyocr_page";
-            canvas.dataset.pageNumber = pageNumber;
+            const page = await this.pdfDocument.getPage(pageInfo.number);
+            const viewport = page.getViewport({ scale: VIEW_SCALE });
             canvas.width = viewport.width;
             canvas.height = viewport.height;
 
-            container.appendChild(canvas);
+            const overlay = document.createElement("div");
+            overlay.className = "o_easyocr_overlay";
+            overlay.dataset.page = pageInfo.number;
+            this.bindOverlay(overlay, pageInfo.number);
 
-            await page.render({
-                canvasContext: canvas.getContext("2d"),
-                viewport,
-            }).promise;
+            wrapper.append(canvas, overlay);
+            container.appendChild(wrapper);
+
+            await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
+            this.baseImages[pageInfo.number] = canvas.toDataURL();
+        }
+    }
+
+    /** Repaint one page: the rendered image, then its boxes on top. */
+    redrawPage(pageNumber) {
+        const wrapper = this.containerRef.el?.querySelector(
+            `.o_easyocr_page_wrapper:nth-child(${pageNumber})`,
+        );
+        if (!wrapper) {
+            return;
+        }
+        const canvas = wrapper.querySelector("canvas");
+        const context = canvas.getContext("2d");
+
+        const base = this.baseImages[pageNumber];
+        if (!base) {
+            return;
+        }
+        const image = new Image();
+        image.onload = () => {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(image, 0, 0);
+            for (const box of this.boxesOfPage(pageNumber)) {
+                this.paintBox(context, box);
+            }
+            if (this.pendingBox && this.pendingBox.page === pageNumber) {
+                this.paintBox(context, this.pendingBox, true);
+            }
+        };
+        image.src = base;
+    }
+
+    paintBox(context, box, isDraft = false) {
+        const field = FIELD_BY_KEY[box.field_key] || { color: "#000", label: box.field_key };
+        const x = box.x * VIEW_SCALE;
+        const y = box.y * VIEW_SCALE;
+        const width = box.width * VIEW_SCALE;
+        const height = box.height * VIEW_SCALE;
+
+        context.save();
+        context.globalAlpha = isDraft ? 0.15 : 0.25;
+        context.fillStyle = field.color;
+        context.fillRect(x, y, width, height);
+        context.globalAlpha = 1;
+        context.strokeStyle = field.color;
+        context.lineWidth = 2;
+        context.strokeRect(x, y, width, height);
+
+        if (!isDraft) {
+            const label = field.label;
+            context.font = "12px sans-serif";
+            const labelWidth = context.measureText(label).width + 8;
+            context.fillStyle = field.color;
+            context.fillRect(x, Math.max(0, y - 18), labelWidth, 18);
+            context.fillStyle = "#fff";
+            context.fillText(label, x + 4, Math.max(12, y - 5));
+        }
+        context.restore();
+    }
+
+    boxesOfPage(pageNumber) {
+        return this.state.boxes.filter((box) => box.page === pageNumber);
+    }
+
+    labelFor(key) {
+        return FIELD_BY_KEY[key]?.label || key;
+    }
+
+    // ------------------------------------------------------------------
+    // Drawing
+    // ------------------------------------------------------------------
+    setActiveField(key) {
+        this.state.activeField = this.state.activeField === key ? null : key;
+    }
+
+    bindOverlay(overlay, pageNumber) {
+        overlay.addEventListener("mousedown", (event) => {
+            if (!this.state.activeField) {
+                return;
+            }
+            this.dragging = {
+                page: pageNumber,
+                origin: this.eventToPoints(event, pageNumber),
+            };
+            this.pendingBox = null;
+            event.preventDefault();
+        });
+
+        overlay.addEventListener("mousemove", (event) => {
+            if (!this.dragging || this.dragging.page !== pageNumber) {
+                return;
+            }
+            const current = this.eventToPoints(event, pageNumber);
+            this.pendingBox = {
+                field_key: this.state.activeField,
+                page: pageNumber,
+                x: Math.min(this.dragging.origin.x, current.x),
+                y: Math.min(this.dragging.origin.y, current.y),
+                width: Math.abs(current.x - this.dragging.origin.x),
+                height: Math.abs(current.y - this.dragging.origin.y),
+            };
+            this.redrawPage(pageNumber);
+        });
+
+        const finish = async (event) => {
+            if (!this.dragging || this.dragging.page !== pageNumber) {
+                return;
+            }
+            this.dragging = null;
+            const box = this.pendingBox;
+            this.pendingBox = null;
+
+            if (!box || box.width < MIN_BOX_SIZE / VIEW_SCALE || box.height < MIN_BOX_SIZE / VIEW_SCALE) {
+                this.redrawPage(pageNumber);
+                return;
+            }
+
+            box.uid = this.nextUid++;
+            box.text = await this.readText(box);
+            this.state.boxes.push(box);
+            this.redrawPage(pageNumber);
+        };
+
+        overlay.addEventListener("mouseup", finish);
+        overlay.addEventListener("mouseleave", finish);
+    }
+
+    /** Screen coordinates to PDF points for a page. */
+    eventToPoints(event, pageNumber) {
+        const wrapper = event.currentTarget.closest(".o_easyocr_page_wrapper");
+        const canvas = wrapper.querySelector("canvas");
+        const rect = canvas.getBoundingClientRect();
+        // The canvas may be shown smaller than its pixel size.
+        const ratio = canvas.width / rect.width;
+        return {
+            page: pageNumber,
+            x: ((event.clientX - rect.left) * ratio) / VIEW_SCALE,
+            y: ((event.clientY - rect.top) * ratio) / VIEW_SCALE,
+        };
+    }
+
+    // ------------------------------------------------------------------
+    // Reading the text under a box
+    // ------------------------------------------------------------------
+    async textItems(pageNumber) {
+        if (!this.textCache.has(pageNumber)) {
+            const page = await this.pdfDocument.getPage(pageNumber);
+            const content = await page.getTextContent();
+            const viewport = page.getViewport({ scale: 1 });
+            const items = [];
+            for (const item of content.items) {
+                const text = (item.str || "").trim();
+                if (!text) {
+                    continue;
+                }
+                // PDF user space puts the origin bottom left; the box uses top left.
+                const left = item.transform[4];
+                const baseline = item.transform[5];
+                const width = (item.width || 0) || 0;
+                items.push({
+                    text,
+                    left,
+                    right: left + width,
+                    top: viewport.height - baseline - Math.abs(item.transform[0]),
+                    bottom: viewport.height - baseline,
+                    charWidth: width / Math.max(text.length, 1),
+                });
+            }
+            this.textCache.set(pageNumber, items);
+        }
+        return this.textCache.get(pageNumber);
+    }
+
+    /** The text whose characters fall inside the box, read in reading order. */
+    async readText(box) {
+        const items = await this.textItems(box.page);
+        const left = Math.min(box.x, box.x + box.width);
+        const right = Math.max(box.x, box.x + box.width);
+        const top = Math.min(box.y, box.y + box.height);
+        const bottom = Math.max(box.y, box.y + box.height);
+
+        const hits = [];
+        for (const item of items) {
+            const overlapX = Math.min(right, item.right) - Math.max(left, item.left);
+            const overlapY = Math.min(bottom, item.bottom) - Math.max(top, item.top);
+            if (overlapX <= 0 || overlapY <= 0) {
+                continue;
+            }
+            // Cut at character level so a box can take part of a line.
+            let piece = "";
+            for (let index = 0; index < item.text.length; index++) {
+                const charLeft = item.left + index * item.charWidth;
+                const charRight = charLeft + item.charWidth;
+                if (charRight > left && charLeft < right) {
+                    piece += item.text[index];
+                }
+            }
+            piece = piece.trim();
+            if (piece) {
+                hits.push({ text: piece, top: item.top, left: item.left });
+            }
+        }
+
+        hits.sort((a, b) => (Math.abs(a.top - b.top) > 5 ? a.top - b.top : a.left - b.left));
+        return hits.map((hit) => hit.text).join(" ");
+    }
+
+    async refreshAllTexts() {
+        for (const box of this.state.boxes) {
+            box.text = await this.readText(box);
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Template handling
+    // ------------------------------------------------------------------
+    clearBoxes() {
+        this.state.boxes = [];
+        for (const pageInfo of this.state.pages) {
+            this.redrawPage(pageInfo.number);
+        }
+    }
+
+    removeBox(uid) {
+        const box = this.state.boxes.find((item) => item.uid === uid);
+        this.state.boxes = this.state.boxes.filter((item) => item.uid !== uid);
+        if (box) {
+            this.redrawPage(box.page);
+        }
+    }
+
+    async saveTemplate() {
+        if (!this.state.boxes.length) {
+            this.notification.add("Draw at least one box before saving a template.", {
+                type: "warning",
+            });
+            return;
+        }
+        if (!this.state.templateName.trim()) {
+            this.notification.add("Give the template a name.", { type: "warning" });
+            return;
+        }
+
+        this.state.saving = true;
+        try {
+            await this.refreshAllTexts();
+            await this.orm.create("easyocr.template", [{
+                name: this.state.templateName,
+                partner_id: this.state.partnerId || false,
+                box_ids: this.state.boxes.map((box) => [0, 0, {
+                    page: box.page,
+                    field_key: box.field_key,
+                    x: box.x,
+                    y: box.y,
+                    width: box.width,
+                    height: box.height,
+                    text: box.text || "",
+                }]),
+            }]);
+            this.notification.add("Template saved.", { type: "success" });
+            this.state.templateName = "";
+        } finally {
+            this.state.saving = false;
         }
     }
 }

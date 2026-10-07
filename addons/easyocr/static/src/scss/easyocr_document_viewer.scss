@@ -1,10 +1,62 @@
 .o_easyocr_viewer {
     display: flex;
+    flex-direction: column;
     height: 100%;
     overflow: hidden;
 
+    .o_easyocr_toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.4rem 0.6rem;
+        border-bottom: 1px solid #dee2e6;
+        background-color: #fff;
+        flex: 0 0 auto;
+    }
+
+    .o_easyocr_field {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.2rem 0.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        background: #fff;
+        font-size: 0.8rem;
+        line-height: 1.4;
+
+        &.active {
+            border-color: var(--eo-color, #000);
+            box-shadow: inset 0 0 0 1px var(--eo-color, #000);
+            font-weight: 600;
+        }
+    }
+
+    .o_easyocr_swatch {
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 2px;
+        background: var(--eo-color, #000);
+    }
+
+    .o_easyocr_toolbar_sep {
+        flex: 1 1 auto;
+    }
+
+    .o_easyocr_template_name {
+        width: 12rem;
+    }
+
+    .o_easyocr_viewer_body {
+        display: flex;
+        flex: 1 1 auto;
+        // Without this the panes refuse to shrink and the page scrolls as a whole.
+        min-height: 0;
+    }
+
     .o_easyocr_viewer_pdf {
-        // A flex child with overflow shrinks to zero without this.
+        // A flex child with overflow shrinks to zero without min-width.
         flex: 1 1 auto;
         min-width: 0;
         overflow: auto;
@@ -13,24 +65,74 @@
         text-align: center;
     }
 
+    .o_easyocr_page_wrapper {
+        position: relative;
+        display: inline-block;
+        margin: 0 auto 1rem auto;
+    }
+
     .o_easyocr_page {
         display: block;
-        margin: 0 auto 1rem auto;
         background-color: #fff;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
         max-width: 100%;
+    }
+
+    .o_easyocr_overlay {
+        position: absolute;
+        inset: 0;
+        cursor: crosshair;
     }
 
     .o_easyocr_viewer_data {
         flex: 0 0 360px;
         overflow: auto;
         padding: 1rem;
-        border-left: 1px solid var(--o-easyocr-border, #dee2e6);
-        background-color: var(--body-bg, #fff);
+        border-left: 1px solid #dee2e6;
+        background-color: #fff;
     }
 
     .o_easyocr_viewer_message {
         padding: 2rem;
         color: #fff;
+    }
+
+    .o_easyocr_field_row {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+        padding: 0.25rem 0;
+        border-bottom: 1px solid #f1f1f1;
+        font-size: 0.85rem;
+    }
+
+    .o_easyocr_field_label {
+        flex: 0 0 6.5rem;
+        color: #6c757d;
+    }
+
+    .o_easyocr_field_value {
+        flex: 1 1 auto;
+        min-width: 0;
+        word-break: break-word;
+        font-weight: 600;
+    }
+
+    .o_easyocr_remove {
+        flex: 0 0 auto;
+        border: 0;
+        background: none;
+        color: #adb5bd;
+        cursor: pointer;
+        font-size: 1rem;
+        line-height: 1;
+
+        &:hover {
+            color: #dc3545;
+        }
+    }
+
+    .o_easyocr_hint {
+        font-size: 0.85rem;
     }
 }

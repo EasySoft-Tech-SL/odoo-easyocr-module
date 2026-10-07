@@ -3,22 +3,70 @@
 
     <t t-name="easyocr.DocumentViewer">
         <div class="o_easyocr_viewer">
-            <div class="o_easyocr_viewer_pdf" t-ref="pdfContainer">
-                <div t-if="state.loading" class="o_easyocr_viewer_message">
-                    <i class="fa fa-spinner fa-spin me-2"/>Loading the document...
-                </div>
-                <div t-if="state.error" class="o_easyocr_viewer_message text-danger">
-                    <i class="fa fa-exclamation-triangle me-2"/>
-                    This document has no file attached, or the file could not be read.
-                </div>
+            <div class="o_easyocr_toolbar">
+                <t t-foreach="fields" t-as="field" t-key="field.key">
+                    <button
+                        t-attf-class="o_easyocr_field {{ state.activeField === field.key ? 'active' : '' }}"
+                        t-attf-style="--eo-color: {{ field.color }}"
+                        t-on-click="() => this.setActiveField(field.key)"
+                        t-att-title="field.label"
+                    >
+                        <span class="o_easyocr_swatch"/>
+                        <t t-esc="field.label"/>
+                    </button>
+                </t>
+                <span class="o_easyocr_toolbar_sep"/>
+                <button class="btn btn-secondary btn-sm" t-on-click="clearBoxes">
+                    Clear
+                </button>
+                <input
+                    type="text"
+                    class="o_easyocr_template_name"
+                    placeholder="Template name"
+                    t-model="state.templateName"
+                />
+                <button
+                    class="btn btn-primary btn-sm"
+                    t-on-click="saveTemplate"
+                    t-att-disabled="state.saving"
+                >
+                    Save template
+                </button>
             </div>
-            <div class="o_easyocr_viewer_data">
-                <h4 t-esc="state.documentName"/>
-                <p class="text-muted">
-                    <t t-if="state.pages">
-                        <span t-esc="state.pages"/> page(s)
-                    </t>
-                </p>
+
+            <div class="o_easyocr_viewer_body">
+                <div class="o_easyocr_viewer_pdf" t-ref="pdfContainer">
+                    <div t-if="state.loading" class="o_easyocr_viewer_message">
+                        <i class="fa fa-spinner fa-spin me-2"/>Loading the document...
+                    </div>
+                    <div t-if="state.error" class="o_easyocr_viewer_message text-danger">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        This document has no file attached, or the file could not be read.
+                    </div>
+                </div>
+
+                <div class="o_easyocr_viewer_data">
+                    <h4 t-esc="state.documentName"/>
+                    <p class="text-muted" t-if="state.pages.length">
+                        <t t-esc="state.pages.length"/> page(s)
+                    </p>
+
+                    <div t-if="state.boxes.length" class="o_easyocr_fields">
+                        <div t-foreach="state.boxes" t-as="box" t-key="box.uid" class="o_easyocr_field_row">
+                            <span class="o_easyocr_field_label" t-esc="this.labelFor(box.field_key)"/>
+                            <span class="o_easyocr_field_value" t-esc="box.text"/>
+                            <button
+                                class="o_easyocr_remove"
+                                t-on-click="() => this.removeBox(box.uid)"
+                                t-att-title="'Remove ' + this.labelFor(box.field_key)"
+                            >&amp;times;</button>
+                        </div>
+                    </div>
+                    <p t-else="" class="text-muted o_easyocr_hint">
+                        Pick a field above and drag a box over the page. The text under the box
+                        is read straight away.
+                    </p>
+                </div>
             </div>
         </div>
     </t>
