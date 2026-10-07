@@ -1,6 +1,8 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License OPL-1 (see LICENSE file).
 
+import json
+
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -31,7 +33,13 @@ class TestEasyocrWebhook(HttpCase):
         headers = {}
         if secret is not None:
             headers['X-Webhook-Secret'] = secret
-        return self.url_open(WEBHOOK_URL, json=payload, headers=headers)
+        # On 18.0 url_open() has no json= argument, so the body is serialised and
+        # the content type declared by hand: without them the route sees no JSON.
+        return self.url_open(
+            WEBHOOK_URL,
+            data=json.dumps(payload),
+            headers={**headers, 'Content-Type': 'application/json'},
+        )
 
     def _completed_payload(self, **data_overrides):
         data = {

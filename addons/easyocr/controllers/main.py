@@ -51,50 +51,53 @@ class EasyocrWebhook(http.Controller):
     read) is answered with 200 and written to the log: a 500 here means the
     sender retries and the document ends up created twice.
 
-    The route is json2, not json. Since 19.0 type='json' is an alias of
-    jsonrpc: it expects the JSON-RPC envelope, so a plain body never reaches
-    the arguments, it wraps every answer in that envelope, and it always
-    answers 200. json2 takes the body as it was sent and lets the status code
-    through. Branch 18.0 has no json2 and reads the body by hand instead.
+    The route is type='http', not type='json'. On 18.0 type='json' is the
+    JSON-RPC dispatcher: it expects the envelope, so a plain body never reaches
+    the arguments, and it always answers 200, which would make the 400 and 403
+    below impossible. Odoo 19 replaced that with a json2 route that takes the
+    body as sent; branch 19.0 uses it. Here nothing is parsed for us, so the
+    body is read and the answer built by hand.
     """
 
     @http.route(
         '/easyocr/webhook',
-        type='json2',
+        type='http',
         auth='public',
         methods=['POST'],
         csrf=False,
         save_session=False,
     )
-    def easyocr_webhook(self, event=None, data=None, **kwargs):
+    def easyocr_webhook(self, **kwargs):
         if not self._secret_is_valid():
             _logger.warning("EasyOCR webhook: rejected a call with a bad or missing secret.")
-            return request.make_json_response(
+            return self._answer(
                 {'status': 'forbidden', 'message': 'Invalid or missing webhook secret.'},
                 status=403,
             )
 
         body = request.httprequest.get_json(silent=True)
-        if body is not None and not isinstance(body, dict):
-            return request.make_json_response(
+        if not isinstance(body, dict):
+            return self._answer(
                 {'status': 'error', 'message': 'Malformed request: the body must be a JSON object.'},
                 status=400,
             )
 
+        event = body.get('event')
+        data = body.get('data')
         if data is not None and not isinstance(data, dict):
-            return request.make_json_response(
+            return self._answer(
                 {'status': 'error', 'message': 'Malformed request: "data" must be a JSON object.'},
                 status=400,
             )
 
         if event != COMPLETED_EVENT:
             self._keep('ignored', event, data, _('Event "%s" is not handled.', event or ''))
-            return {'status': 'ignored'}
+            return self._answer({'status': 'ignored'})
 
         structured_data = (data or {}).get('structured_data')
         if not isinstance(structured_data, dict) or not structured_data:
             self._keep('ignored', event, data, _('The notification carries no structured data.'))
-            return {'status': 'ignored'}
+            return self._answer({'status': 'ignored'})
 
         try:
             values = self._document_values(structured_data, data)
@@ -103,14 +106,18 @@ class EasyocrWebhook(http.Controller):
             # A business failure: sending the same body again would fail the
             # same way, so it is answered with 200 and left in the log.
             self._keep('error', event, data, str(error))
-            return {'status': 'error', 'message': str(error)}
+            return self._answer({'status': 'error', 'message': str(error)})
 
         self._keep('ok', event, data, _('Document created from the OCR result.'), document)
-        return {'status': 'ok', 'document_id': document.id}
+        return self._answer({'status': 'ok', 'document_id': document.id})
 
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
+    @staticmethod
+    def _answer(payload, status=200):
+        return request.make_json_response(payload, status=status)
+
     @staticmethod
     def _secret_is_valid():
         """Compare the header with the configured secret, in constant time."""
