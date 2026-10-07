@@ -241,9 +241,22 @@ class EasyocrExpenseCapture(http.Controller):
         It is also what everything downstream expects: the viewer paints the
         document with PDF.js, and the extraction service reads a PDF the same
         way it reads a scanned invoice.
+
+        The two dates Pillow stamps on the file by default are left out on
+        purpose. They carry the very second the PDF was written, so the same
+        photo handed over twice a moment apart came out as two files with two
+        different fingerprints -- and the tray, which turns a file away by its
+        fingerprint, took both and filed one receipt as two documents. Without
+        them the bytes depend on the photo and on nothing else.
         """
         buffer = io.BytesIO()
-        image.save(buffer, format='PDF', resolution=PDF_RESOLUTION)
+        image.save(
+            buffer,
+            format='PDF',
+            resolution=PDF_RESOLUTION,
+            creationDate=None,
+            modDate=None,
+        )
         return buffer.getvalue()
 
     @staticmethod

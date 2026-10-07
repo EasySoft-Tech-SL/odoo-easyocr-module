@@ -30,9 +30,21 @@ addons/easyocr/             the module itself
   tests/                    tests
   i18n/                     translations
 config/                     Odoo configuration for the local environment
+docs/manual/                the user guide, with the screenshots it shows
 tools/check_module.py       manifest and layout checks, run by CI
 docker-compose.yml          local Odoo 18 + 19 + PostgreSQL
 ```
+
+## The user guide
+
+[`docs/manual/manual-easyocr-es.md`](docs/manual/manual-easyocr-es.md) is the guide a
+customer reads: installing the module, configuring the service, drawing the fields on a
+document, turning one into a supplier bill, and the mobile capture page. Its screenshots
+were taken from a running instance, not drawn.
+
+The same text is published on the company wiki. **A release is not finished until the
+guide matches it**, and the guide is updated in the same batch as the version it
+describes.
 
 ## Local development
 
@@ -59,14 +71,27 @@ docker compose exec odoo19 odoo -d odoo19 -i easyocr --stop-after-init
 Run the tests:
 
 ```bash
-docker compose exec odoo19 odoo -d odoo19 -i easyocr --test-enable --stop-after-init
+docker compose exec odoo19 odoo -d odoo19 -u easyocr --test-enable --test-tags /easyocr --stop-after-init
 ```
+
+`--test-tags /easyocr` is not optional in practice: without it Odoo also runs the core
+suites, and one of them (`base`'s `test_http_case`) hangs. `-u` rather than `-i` keeps the
+module installed and its translations reloaded.
+
+The database has to be named `odoo19`: the local configuration sets a `dbfilter` for it,
+which is what lets the web app's manifest be served without a session. The comment in
+`config/odoo19.conf` explains what happens if you point the suite somewhere else.
 
 ## Status
 
-Early. The document inbox, its status flow, its permissions and its translations are in place
-and tested. The extraction engine and the creation of supplier bills from a document are **not**
-implemented yet; see the roadmap in `addons/easysoft_ocr/README.rst`.
+Feature complete for a first release, and tested on both series. What works: the document
+viewer with its rectangle templates, extraction from the text layer of a PDF, extraction
+through the EasyOCR service, creating a supplier bill from a document, the inbox other modules
+hand files to, the inbound webhook with its log, and the mobile capture page.
+
+`ROADMAP.md` lists what is deliberately left out of this version. The one worth knowing before
+you install: **a saved template is stored but not applied yet** to the next document of the
+same vendor, so boxes are still drawn by hand on each document.
 
 ## Contributing
 

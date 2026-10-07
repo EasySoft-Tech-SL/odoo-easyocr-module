@@ -53,44 +53,56 @@ class TestEasyocrInbox(TransactionCase):
 
     def test_the_same_file_is_not_taken_twice(self):
         """The same bytes under a different name are still the same file."""
+        before = self.Inbox.search_count([])
+
         first = self._receive()
         second = self._receive(filename='rescan-of-the-same.pdf')
 
         self.assertFalse(second['ok'])
         self.assertEqual(second['id'], first['id'])
         self.assertTrue(second['error'])
-        self.assertEqual(self.Inbox.search_count([]), 1)
+        # Counted against what the tray already held. A tray with files in it is
+        # the normal case; a test that assumes an empty one only passes on a
+        # database nobody has used.
+        self.assertEqual(self.Inbox.search_count([]), before + 1)
 
     def test_a_file_that_is_not_a_pdf_is_turned_away(self):
+        before = self.Inbox.search_count([])
+
         result = self._receive(content=b'PK\x03\x04 a zip wearing a .pdf name')
 
         self.assertFalse(result['ok'])
         self.assertEqual(result['id'], 0)
         self.assertIn('PDF', result['error'])
-        self.assertEqual(self.Inbox.search_count([]), 0)
+        self.assertEqual(self.Inbox.search_count([]), before)
 
     def test_an_empty_file_is_turned_away(self):
+        before = self.Inbox.search_count([])
+
         result = self._receive(content=b'')
 
         self.assertFalse(result['ok'])
         self.assertTrue(result['error'])
-        self.assertEqual(self.Inbox.search_count([]), 0)
+        self.assertEqual(self.Inbox.search_count([]), before)
 
     def test_a_file_without_a_name_is_turned_away(self):
+        before = self.Inbox.search_count([])
+
         result = self._receive(filename='   ')
 
         self.assertFalse(result['ok'])
         self.assertTrue(result['error'])
-        self.assertEqual(self.Inbox.search_count([]), 0)
+        self.assertEqual(self.Inbox.search_count([]), before)
 
     def test_a_file_over_the_limit_is_turned_away(self):
         too_big = PDF_BYTES + b'0' * (MAX_SIZE_MB * 1024 * 1024)
+        before = self.Inbox.search_count([])
 
         result = self._receive(content=too_big)
 
         self.assertFalse(result['ok'])
         self.assertIn(str(MAX_SIZE_MB), result['error'])
-        self.assertEqual(self.Inbox.search_count([]), 0)
+        self.assertEqual(self.Inbox.search_count([]), before)
 
     def test_a_file_kept_as_base64_is_read_the_same_way(self):
         """A caller reading a binary field hands over base64, not raw bytes."""

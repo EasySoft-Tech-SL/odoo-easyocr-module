@@ -1,4 +1,5 @@
 import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { loadJS } from "@web/core/assets";
@@ -6,17 +7,20 @@ import { loadJS } from "@web/core/assets";
 /**
  * The nine fields a box can be assigned to. The key is what gets stored and what
  * extraction matches on; the colour is only how it is painted.
+ *
+ * The labels are the same strings the model uses for its selection field, run
+ * through _t so the toolbar reads in the user's language instead of English.
  */
 export const BOX_FIELDS = [
-    { key: "document_date", label: "Date", color: "#6c3483" },
-    { key: "document_number", label: "Invoice number", color: "#2980b9" },
-    { key: "amount_untaxed", label: "Untaxed total", color: "#c0392b" },
-    { key: "amount_total", label: "Total", color: "#d4458b" },
-    { key: "tax_amount", label: "Tax", color: "#ff6b35" },
-    { key: "description", label: "Description", color: "#27ae60" },
-    { key: "partner_vat", label: "Tax number", color: "#16a085" },
-    { key: "due_date", label: "Due date", color: "#f39c12" },
-    { key: "partner_name", label: "Vendor", color: "#5d6d7e" },
+    { key: "document_date", label: _t("Date"), color: "#6c3483" },
+    { key: "document_number", label: _t("Invoice number"), color: "#2980b9" },
+    { key: "amount_untaxed", label: _t("Untaxed total"), color: "#c0392b" },
+    { key: "amount_total", label: _t("Total"), color: "#d4458b" },
+    { key: "tax_amount", label: _t("Tax"), color: "#ff6b35" },
+    { key: "description", label: _t("Description"), color: "#27ae60" },
+    { key: "partner_vat", label: _t("Tax number"), color: "#16a085" },
+    { key: "due_date", label: _t("Due date"), color: "#f39c12" },
+    { key: "partner_name", label: _t("Vendor"), color: "#5d6d7e" },
 ];
 
 const FIELD_BY_KEY = Object.fromEntries(BOX_FIELDS.map((field) => [field.key, field]));
@@ -388,13 +392,13 @@ export class EasyocrDocumentViewer extends Component {
 
     async saveTemplate() {
         if (!this.state.boxes.length) {
-            this.notification.add("Draw at least one box before saving a template.", {
+            this.notification.add(_t("Draw at least one box before saving a template."), {
                 type: "warning",
             });
             return;
         }
         if (!this.state.templateName.trim()) {
-            this.notification.add("Give the template a name.", { type: "warning" });
+            this.notification.add(_t("Give the template a name."), { type: "warning" });
             return;
         }
 
@@ -414,7 +418,7 @@ export class EasyocrDocumentViewer extends Component {
                     text: box.text || "",
                 }]),
             }]);
-            this.notification.add("Template saved.", { type: "success" });
+            this.notification.add(_t("Template saved."), { type: "success" });
             this.state.templateName = "";
         } finally {
             this.state.saving = false;
