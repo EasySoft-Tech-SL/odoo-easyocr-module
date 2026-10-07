@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License OPL-1 (see LICENSE file). -->
+<odoo>
+
+    <record id="res_config_settings_view_form_easyocr" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.easyocr</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app name="easyocr" string="EasyOCR" data-string="EasyOCR" groups="easyocr.group_easyocr_manager">
+                    <block title="AI extraction" id="easyocr_ai_block">
+                        <setting id="easyocr_ai_enabled" string="Read with AI" help="Send documents to the EasyOCR service for scans and photos that carry no text layer of their own.">
+                            <field name="easyocr_ai_enabled"/>
+                        </setting>
+                        <setting id="easyocr_ai_url" string="Service URL" help="Base address of the EasyOCR service. The /api/v1/ocr/file endpoint is added automatically.">
+                            <field name="easyocr_ai_url" placeholder="https://app.easyocr.es"/>
+                        </setting>
+                        <setting id="easyocr_ai_apikey" string="API key" help="Key the service expects in the X-API-Key header.">
+                            <field name="easyocr_ai_apikey" widget="password"/>
+                        </setting>
+                        <setting id="easyocr_ai_timeout" string="Timeout" help="How long to wait for the service before giving up, in seconds. A scanned page can take a while to read, so keep this generous.">
+                            <field name="easyocr_ai_timeout" class="o_light_label"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

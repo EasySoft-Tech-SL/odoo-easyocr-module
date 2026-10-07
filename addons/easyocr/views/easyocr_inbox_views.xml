@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License OPL-1 (see LICENSE file).
+
+     Loaded after easyocr_document_views.xml: the menu hangs off
+     menu_easyocr_root, which is defined there. -->
+<odoo>
+
+    <record id="view_easyocr_inbox_list" model="ir.ui.view">
+        <field name="name">easyocr.inbox.item.list</field>
+        <field name="model">easyocr.inbox.item</field>
+        <field name="arch" type="xml">
+            <list
+                string="Inbox"
+                decoration-warning="state == 'pending'"
+                decoration-success="state == 'processed'"
+                decoration-muted="state == 'discarded'"
+            >
+                <field name="name"/>
+                <field name="origin"/>
+                <field name="create_date" string="Received"/>
+                <field name="file_size" optional="hide"/>
+                <field name="document_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_easyocr_inbox_form" model="ir.ui.view">
+        <field name="name">easyocr.inbox.item.form</field>
+        <field name="model">easyocr.inbox.item</field>
+        <field name="arch" type="xml">
+            <form string="Inbox Item">
+                <header>
+                    <button
+                        name="action_process"
+                        type="object"
+                        string="Process"
+                        class="btn-primary"
+                        invisible="state == 'processed'"
+                    />
+                    <button
+                        name="action_discard"
+                        type="object"
+                        string="Discard"
+                        invisible="state == 'discarded'"
+                        confirm="Discard this item? Nothing is deleted: the file stays on the record and you can restore it later."
+                    />
+                    <button
+                        name="action_restore"
+                        type="object"
+                        string="Restore to Pending"
+                        invisible="state != 'discarded'"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="pending,processed,discarded"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_open_document"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not document_id"
+                        >
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">OCR Document</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="File Name"/>
+                        <h1><field name="name" placeholder="e.g. scan-2026-01-31.pdf"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="origin" placeholder="e.g. easyscan"/>
+                            <field name="document_id" invisible="not document_id"/>
+                        </group>
+                        <group>
+                            <field name="file_size"/>
+                            <field name="file_hash"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="File" name="file">
+                            <field name="datas" filename="name"/>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" placeholder="Anything worth keeping about this file..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_easyocr_inbox_search" model="ir.ui.view">
+        <field name="name">easyocr.inbox.item.search</field>
+        <field name="model">easyocr.inbox.item</field>
+        <field name="arch" type="xml">
+            <search string="Inbox">
+                <field name="name"/>
+                <field name="origin"/>
+                <field name="document_id"/>
+                <!-- The counters on the left are the "waiting for you" figure:
+                     the tray is worth looking at when Pending is not zero. -->
+                <searchpanel>
+                    <field name="state" string="Status" enable_counters="1"/>
+                </searchpanel>
+                <filter name="filter_pending" string="Pending" domain="[('state', '=', 'pending')]"/>
+                <filter name="filter_processed" string="Processed" domain="[('state', '=', 'processed')]"/>
+                <filter name="filter_discarded" string="Discarded" domain="[('state', '=', 'discarded')]"/>
+                <separator/>
+                <filter name="filter_my_items" string="My Items" domain="[('create_uid', '=', uid)]"/>
+                <!-- Odoo 19 dropped expand/string on the search group element. -->
+                <group>
+                    <filter name="group_origin" string="Origin" context="{'group_by': 'origin'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_company" string="Company" context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_easyocr_inbox" model="ir.actions.act_window">
+        <field name="name">Inbox</field>
+        <field name="res_model">easyocr.inbox.item</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_easyocr_inbox_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nothing waiting
+            </p>
+            <p>
+                Files handed over by other modules, and files you bring here yourself, land in
+                the tray and stay put. Nothing is sent to the extraction service until you say
+                so, so a full tray costs nothing.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_easyocr_inbox"
+        name="Inbox"
+        parent="menu_easyocr_root"
+        action="action_easyocr_inbox"
+        sequence="30"
+    />
+
+</odoo>
