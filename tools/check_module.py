@@ -33,8 +33,11 @@ def read_manifest(path):
         raise ValueError(f'{path}: {error}') from error
 
     for node in tree.body:
-        if isinstance(node, ast.Dict):
-            return ast.literal_eval(node)
+        # A manifest is a single expression statement whose value is the dict,
+        # not a bare dict node sitting in the module body.
+        value = node.value if isinstance(node, ast.Expr) else node
+        if isinstance(value, ast.Dict):
+            return ast.literal_eval(value)
     raise ValueError(f'{path}: no dictionary literal found')
 
 
