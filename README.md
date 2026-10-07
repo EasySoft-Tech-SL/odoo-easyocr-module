@@ -77,7 +77,15 @@ implemented yet; see the roadmap in `addons/easysoft_ocr/README.rst`.
 
 ## License
 
-See `LICENSE`. The module is distributed by EasySoft Tech S.L.
+**Odoo Proprietary License v1.0 (OPL-1).** See [`LICENSE`](LICENSE).
+
+The source is readable, and a licence is what grants the right to run it. It is
+not open source: publishing, redistributing or reselling it, modified or not, is
+not allowed. Each customer gets the complete source of the version they are
+entitled to, which is what makes the module auditable and adaptable on site.
+
+Reading the code here does not grant a licence to use it. The extraction service
+the module talks to is licensed separately and is what a subscription pays for.
 
 ## Support
 
