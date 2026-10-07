@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License OPL-1 (see LICENSE file). -->
+<odoo>
+
+    <record id="view_easyocr_template_list" model="ir.ui.view">
+        <field name="name">easyocr.template.list</field>
+        <field name="model">easyocr.template</field>
+        <field name="arch" type="xml">
+            <list string="Extraction Templates">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="box_count"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_easyocr_template_form" model="ir.ui.view">
+        <field name="name">easyocr.template.form</field>
+        <field name="model">easyocr.template</field>
+        <field name="arch" type="xml">
+            <form string="Extraction Template">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1><field name="name" placeholder="e.g. Standard invoice"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="box_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fields" name="fields">
+                            <field name="box_ids">
+                                <list editable="bottom">
+                                    <field name="page"/>
+                                    <field name="field_key"/>
+                                    <field name="x"/>
+                                    <field name="y"/>
+                                    <field name="width"/>
+                                    <field name="height"/>
+                                    <field name="text"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Extra instructions" name="instructions">
+                            <field name="custom_instructions" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_easyocr_template_search" model="ir.ui.view">
+        <field name="name">easyocr.template.search</field>
+        <field name="model">easyocr.template</field>
+        <field name="arch" type="xml">
+            <search string="Extraction Templates">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter name="filter_generic" string="Without vendor" domain="[('partner_id', '=', False)]"/>
+                <group>
+                    <filter name="group_partner" string="Vendor" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_easyocr_template" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">easyocr.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_easyocr_template_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first template
+            </p>
+            <p>
+                A template remembers which part of a vendor's document holds each field,
+                so the next one is read without drawing anything again.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_easyocr_template"
+        name="Templates"
+        parent="menu_easyocr_root"
+        action="action_easyocr_template"
+        sequence="20"
+    />
+
+</odoo>
