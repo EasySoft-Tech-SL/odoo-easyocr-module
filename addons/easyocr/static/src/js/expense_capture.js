@@ -36,6 +36,12 @@ if (root) {
 function start(root) {
     const byId = (id) => root.querySelector(`#${id}`);
 
+    // The sentences this file writes, translated by the server and handed over
+    // in the page. Everything else the page says comes from the QWeb template
+    // and is translated with it; these cannot be, because they are written
+    // after the fact, and the page carries no web client to translate them.
+    const strings = readStrings();
+
     const uploadUrl = root.dataset.uploadUrl;
     // The ceiling the server applies, taken from the page so the two can never
     // disagree. Over it, the photo never leaves the phone: there is no point in
@@ -132,7 +138,7 @@ function start(root) {
         const width = video.videoWidth;
         const height = video.videoHeight;
         if (!width || !height) {
-            complain('The camera is not ready yet. Give it a second.');
+            complain(strings.cameraNotReady);
             return;
         }
         const canvas = drawInto(width, height, video);
@@ -146,7 +152,7 @@ function start(root) {
         try {
             image = await decode(file);
         } catch (reason) {
-            complain('That file could not be read as a photo.');
+            complain(strings.fileUnreadable);
             return null;
         }
         return canvasToBlob(drawInto(image.naturalWidth, image.naturalHeight, image));
@@ -164,12 +170,13 @@ function start(root) {
 
     function showPhoto(blob) {
         if (!blob) {
-            complain('The photo could not be prepared. Try again.');
+            complain(strings.photoNotPrepared);
             return;
         }
         if (maxSizeBytes && blob.size > maxSizeBytes) {
-            complain(`The photo is still larger than the ${maxSizeMb} MB the inbox takes. `
-                + 'Take it from a little further away.');
+            // The ceiling is already in the sentence, put there by the server
+            // from the same constant this check uses.
+            complain(strings.photoTooBig);
             return;
         }
         photo = blob;
@@ -189,7 +196,7 @@ function start(root) {
         }
         setBusy(true);
         complain('');
-        say('Sending the photo…');
+        say(strings.sending);
 
         const body = new FormData(form);
         body.set('image', photo, photoName());
@@ -203,7 +210,7 @@ function start(root) {
         } catch (reason) {
             setBusy(false);
             say('');
-            complain('The photo could not be sent. Check the connection and try again.');
+            complain(strings.sendFailed);
             return;
         }
 
@@ -217,8 +224,9 @@ function start(root) {
         say('');
 
         if (!answer.ok) {
-            // The server always explains itself in words: show them as they are.
-            complain(answer.message || 'The photo could not be sent.');
+            // The server always explains itself in words, already translated:
+            // show them as they are.
+            complain(answer.message || strings.sendFailedShort);
             return;
         }
         render(answer);
@@ -229,15 +237,15 @@ function start(root) {
         const document_ = answer.document || {};
         const read = Boolean(answer.read);
 
-        resultTitle.textContent = read ? 'Read from the receipt' : 'Saved to the inbox';
+        resultTitle.textContent = read ? strings.readTitle : strings.savedTitle;
         fields.replaceChildren();
 
         if (read) {
             const rows = [
-                ['Vendor', document_.vendor],
-                ['Date', document_.date],
-                ['Total', formatTotal(document_)],
-                ['Number', document_.reference],
+                [strings.labelVendor, document_.vendor],
+                [strings.labelDate, document_.date],
+                [strings.labelTotal, formatTotal(document_)],
+                [strings.labelNumber, document_.reference],
             ];
             for (const [label, value] of rows) {
                 if (value) {
@@ -281,6 +289,37 @@ function start(root) {
             closeCamera();
         }
     });
+}
+
+/** The sentences the page was rendered with, in the reader's language.
+ *
+ * The server writes them into the page (see ``_page_strings`` in
+ * ``controllers/expense.py``, which is where the translations live). The
+ * English here is only a backstop for a page rendered by an older controller:
+ * without it a missing block would print "undefined" on somebody's phone.
+ */
+function readStrings() {
+    const fallback = {
+        cameraNotReady: 'The camera is not ready yet. Give it a second.',
+        fileUnreadable: 'That file could not be read as a photo.',
+        photoNotPrepared: 'The photo could not be prepared. Try again.',
+        photoTooBig: 'The photo is too large for the inbox. Take it from further away.',
+        sending: 'Sending the photo…',
+        sendFailed: 'The photo could not be sent. Check the connection and try again.',
+        sendFailedShort: 'The photo could not be sent.',
+        readTitle: 'Read from the receipt',
+        savedTitle: 'Saved to the inbox',
+        labelVendor: 'Vendor',
+        labelDate: 'Date',
+        labelTotal: 'Total',
+        labelNumber: 'Number',
+    };
+    const block = document.getElementById('easyocr_capture_strings');
+    try {
+        return { ...fallback, ...JSON.parse(block.textContent) };
+    } catch (reason) {
+        return fallback;
+    }
 }
 
 /** Whether the browser can give us a live camera at all.

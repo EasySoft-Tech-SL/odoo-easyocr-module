@@ -3,6 +3,7 @@
 
 import base64
 import io
+import json
 import re
 import time
 from unittest.mock import patch
@@ -272,6 +273,52 @@ class TestEasyocrExpenseCapture(HttpCase):
     # ------------------------------------------------------------------
     # The bits that make it an app
     # ------------------------------------------------------------------
+    def test_the_page_carries_the_sentences_its_script_writes(self):
+        """The page has no web client behind it, so it cannot translate itself.
+
+        Whatever this block is missing is a sentence that reaches an employee's
+        phone in the wrong language -- or as "undefined", since the script reads
+        the keys off it by name.
+        """
+        self._login()
+
+        response = self.url_open(PAGE_URL)
+
+        self.assertIn('id="easyocr_capture_strings"', response.text)
+        block = re.search(
+            r'<script type="application/json" id="easyocr_capture_strings"[^>]*>(.*?)</script>',
+            response.text, re.S,
+        )
+        self.assertTrue(block, "The page carried no strings block.")
+        strings = json.loads(block.group(1))
+
+        for key in (
+            'cameraNotReady', 'fileUnreadable', 'photoNotPrepared', 'photoTooBig',
+            'sending', 'sendFailed', 'sendFailedShort', 'readTitle', 'savedTitle',
+            'labelVendor', 'labelDate', 'labelTotal', 'labelNumber',
+        ):
+            self.assertIn(key, strings, "The page left %r out." % key)
+            self.assertTrue(strings[key], "%r arrived empty." % key)
+
+    def test_the_page_loads_its_script_under_a_version_that_can_change(self):
+        """Odoo caches everything under static/ for a week.
+
+        Without something that changes in the URL, a phone that has opened the
+        page once keeps running the script it downloaded then -- across an
+        update of the module, which is when it matters most.
+        """
+        self._login()
+
+        response = self.url_open(PAGE_URL)
+
+        match = re.search(r'src="([^"]*expense_capture\.js[^"]*)"', response.text)
+        self.assertTrue(match, "The page carried no script tag.")
+        url = match.group(1)
+        self.assertIn('?v=', url, "The script is loaded without a version.")
+        version = url.split('?v=', 1)[1]
+        self.assertTrue(version.strip(), "The version in the URL is empty.")
+        self.assertNotEqual(version, '0', "The script's digest could not be read.")
+
     def test_the_manifest_is_served_without_a_session(self):
         """A browser asks for a manifest without the session cookie. Behind the
         login it would be answered with a redirect, and the page would stop

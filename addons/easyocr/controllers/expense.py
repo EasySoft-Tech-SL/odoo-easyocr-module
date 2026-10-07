@@ -1,11 +1,15 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
+import functools
+import hashlib
 import io
+import json
 import logging
 import os
 
 from PIL import Image, ImageOps, UnidentifiedImageError
+from markupsafe import Markup
 
 from odoo import _, http
 from odoo.exceptions import UserError
@@ -18,6 +22,37 @@ _logger = logging.getLogger(__name__)
 # The name the tray shows as the origin of the file, next to easyscan or a mail
 # gateway: whoever opens the inbox can see the photo came from a phone.
 CAPTURE_ORIGIN = 'expense-capture'
+
+# The script the page loads, and the module folder it sits in.
+CAPTURE_SCRIPT = '/easyocr/static/src/js/expense_capture.js'
+CAPTURE_SCRIPT_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    'static', 'src', 'js', 'expense_capture.js',
+)
+
+
+@functools.lru_cache(maxsize=1)
+def capture_script_version():
+    """A token that changes whenever the page's own script does.
+
+    Odoo serves everything under ``static/`` with a week of cache. A phone that
+    has opened the page once therefore keeps running that copy of the script
+    for seven days -- across an update of the module, which is precisely when it
+    must not: the page would talk to a newer server with an older script and
+    nothing would say so. Putting the file's own digest in the URL makes the
+    address change with the file, so the cached copy can never outlive the code.
+
+    Read once per process: the file cannot change under a running server, and a
+    restart is what picks up a deploy anyway.
+    """
+    try:
+        with open(CAPTURE_SCRIPT_PATH, 'rb') as handle:
+            return hashlib.sha1(handle.read()).hexdigest()[:12]
+    except OSError:
+        # A module installed without its script is broken in a louder way than
+        # this; the digest only has to be stable, not right.
+        _logger.warning("EasyOCR: could not read %s", CAPTURE_SCRIPT_PATH)
+        return '0'
 
 # The same ceiling the inbox applies, taken from there so the two can never
 # drift apart. The browser resize keeps a photo well under it.
@@ -99,8 +134,51 @@ class EasyocrExpenseCapture(http.Controller):
             'service_worker_url': '/easyocr/capture/sw.js',
             'max_size_mb': MAX_SIZE_MB,
             'ai_enabled': request.env.company.easyocr_ai_enabled,
+            'strings_json': self._strings_json(),
+            'script_url': '%s?v=%s' % (CAPTURE_SCRIPT, capture_script_version()),
         })
         return self._harden(response)
+
+    @staticmethod
+    def _page_strings():
+        """The sentences the page's own JavaScript writes, in the reader's language.
+
+        The page is a plain script with no Odoo web client behind it -- that is
+        the point of it, a phone on a bad connection -- so it has no ``_t`` to
+        call and cannot translate anything itself. Everything it says is
+        translated here instead and handed over as data, the same way its URLs
+        are, so the copy lives in the .po files with the rest and nowhere else.
+        """
+        return {
+            'cameraNotReady': _("The camera is not ready yet. Give it a second."),
+            'fileUnreadable': _("That file could not be read as a photo."),
+            'photoNotPrepared': _("The photo could not be prepared. Try again."),
+            'photoTooBig': _(
+                "The photo is still larger than the %(limit)s MB the inbox takes. "
+                "Take it from a little further away.",
+                limit=MAX_SIZE_MB,
+            ),
+            'sending': _("Sending the photo…"),
+            'sendFailed': _("The photo could not be sent. Check the connection and try again."),
+            'sendFailedShort': _("The photo could not be sent."),
+            'readTitle': _("Read from the receipt"),
+            'savedTitle': _("Saved to the inbox"),
+            'labelVendor': _("Vendor"),
+            'labelDate': _("Date"),
+            'labelTotal': _("Total"),
+            'labelNumber': _("Number"),
+        }
+
+    @classmethod
+    def _strings_json(cls):
+        """The same sentences, ready to be dropped into the page.
+
+        ``<`` is escaped because the block sits inside a ``<script>`` and a
+        translation carrying ``</script>`` would end it early. JSON itself has
+        no such problem: ``\\u003c`` is just a ``<`` to whoever parses it.
+        """
+        payload = json.dumps(cls._page_strings(), ensure_ascii=False)
+        return Markup(payload.replace('<', '\\u003c'))
 
     # The manifest, the icon and the worker are public on purpose: they hold
     # nothing of anybody's, and the browser asks for a manifest without the
