@@ -2,6 +2,7 @@
 # License OPL-1 (see LICENSE file).
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class EasyocrDocument(models.Model):
@@ -66,6 +67,14 @@ class EasyocrDocument(models.Model):
         string='File',
         ondelete='set null',
     )
+    partner_vat = fields.Char(string='Tax Number', help='Read from the document.')
+    partner_name = fields.Char(string='Vendor Name', help='Read from the document.')
+    move_id = fields.Many2one(
+        comodel_name='account.move',
+        string='Bill',
+        readonly=True,
+        copy=False,
+    )
     error_message = fields.Text(string='Error Detail', readonly=True)
     note = fields.Text(string='Notes')
 
@@ -76,6 +85,88 @@ class EasyocrDocument(models.Model):
         """Flag the document as read. Placeholder for the extraction result."""
         for document in self:
             document.state = 'processed'
+
+    # ------------------------------------------------------------------
+    # From the document to a supplier bill
+    # ------------------------------------------------------------------
+    @api.model
+    def _normalize_vat(self, vat):
+        """Drop what people type by hand: spaces, dashes and dots."""
+        return ''.join(character for character in (vat or '') if character.isalnum()).upper()
+
+    def _resolve_partner(self):
+        """The vendor of the document: by tax number first, by name after."""
+        self.ensure_one()
+        if self.partner_id:
+            return self.partner_id
+
+        vat_typed = (self.partner_vat or '').strip()
+        vat_clean = self._normalize_vat(vat_typed)
+        if vat_clean:
+            own_vat = self._normalize_vat(self.env.company.partner_id.vat)
+            if own_vat and own_vat == vat_clean:
+                raise UserError(_(
+                    "The tax number on this document belongs to your own company, "
+                    "so it cannot be booked as a supplier bill."
+                ))
+            partner = self.env['res.partner'].search(
+                ['|', ('vat', '=', vat_typed), ('vat', '=', vat_clean)],
+                limit=1,
+            )
+            if partner:
+                self.partner_id = partner
+                return partner
+
+        name = (self.partner_name or '').strip()
+        if name:
+            partner = self.env['res.partner'].search([('name', '=ilike', name)], limit=1)
+            if partner:
+                self.partner_id = partner
+                return partner
+
+        return self.env['res.partner']
+
+    def action_create_bill(self):
+        """Create a draft supplier bill from what was read from this document.
+
+        The amount goes on a single line, untaxed. Taxes are left for the person
+        reviewing it: guessing the wrong rate on a booked bill is worse than
+        typing it.
+        """
+        self.ensure_one()
+        if self.move_id:
+            raise UserError(_("This document already has a bill."))
+
+        partner = self._resolve_partner()
+        if not partner:
+            raise UserError(_(
+                "No vendor could be matched. Set the vendor on the document, "
+                "or make sure the tax number is on a contact."
+            ))
+
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': partner.id,
+            'ref': self.ref or self.name,
+            'invoice_date': self.document_date or fields.Date.context_today(self),
+            'currency_id': self.currency_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': self.name,
+                'quantity': 1.0,
+                'price_unit': self.amount_untaxed or self.amount_total or 0.0,
+            })],
+        })
+
+        self.move_id = move
+        self.state = 'processed'
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'res_id': move.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
     def action_open_viewer(self):
         """Open the full screen viewer on this document."""
