@@ -39,13 +39,16 @@ This is the screen the user recognises: the PDF on the left, the data panel on t
 **Why this is first:** it carries the module's identity, it is the biggest single piece
 of the port, and everything else builds on the boxes it produces.
 
-## Phase 2 — Supplier bill creation · pending
+## Phase 2 — Supplier bill creation · done
 
-- [ ] Create a `account.move` (in_invoice) from a processed document.
-- [ ] Match the vendor against `res.partner` by tax number, then by name.
-- [ ] Match taxes from the document lines.
+- [x] Create an `account.move` (in_invoice) from a processed document.
+- [x] Match the vendor against `res.partner` by tax number, then by name.
+- [x] Refuse to book your own company's tax number as a vendor.
+- [x] Refuse to bill the same document twice.
+- [ ] Put the taxes of the document on the lines, instead of leaving the
+      amount untaxed for whoever reviews it.
 - [ ] Vendor refunds (rectificativas) vs regular bills.
-- [ ] Optionally leave the bill in draft or post it.
+- [ ] Post the bill instead of leaving it in draft, per setting.
 
 ### The extraction service, as measured
 
