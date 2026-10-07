@@ -9,3 +9,4 @@ from . import test_easyocr_settings
 from . import test_easyocr_template
 from . import test_easyocr_translations
 from . import test_easyocr_webhook
+from . import test_easyocr_webhook_payment

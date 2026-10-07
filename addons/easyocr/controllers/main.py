@@ -105,7 +105,13 @@ class EasyocrWebhook(http.Controller):
             self._keep('error', event, data, str(error))
             return {'status': 'error', 'message': str(error)}
 
-        self._keep('ok', event, data, _('Document created from the OCR result.'), document)
+        # What the call may do beyond filing the document lives on the document,
+        # where it can be tested without an HTTP request in the way.
+        note = document._settle_webhook()
+        message = _('Document created from the OCR result.')
+        if note:
+            message = '%s %s' % (message, note)
+        self._keep('ok', event, data, message, document)
         return {'status': 'ok', 'document_id': document.id}
 
     # ------------------------------------------------------------------

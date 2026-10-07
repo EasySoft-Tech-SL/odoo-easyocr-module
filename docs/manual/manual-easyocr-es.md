@@ -103,6 +103,19 @@ La configuración vive en **Ajustes > EasyOCR** y viene en dos bloques.
 | **Rechazar un documento ya leído** | Antes de enviar un archivo al servicio, busca otro documento con el mismo contenido que ya se haya leído y no lo manda. Encendido viene: leerlo otra vez costaría lo mismo y no cambiaría nada. |
 | **Ventana de duplicados** | Hasta dónde mira esa comprobación, en días. 0 significa sin límite. Sirve para un proveedor cuyo documento mensual es exactamente el mismo archivo cada mes. |
 
+## Webhooks
+
+Estos tres solo importan si va a recibir documentos por la vía automática, sin
+nadie delante. De serie, un aviso del servicio **solo deja el documento**: no
+factura nada.
+
+|[tabla: Qué puede hacer un aviso del servicio por su cuenta]|
+|---|---|
+| **Crear la factura desde un webhook** | Cuando el servicio avisa de que ha terminado de leer, crear la factura sin esperar a nadie. Apagado viene: un webhook es un mensaje de fuera y una factura es un apunte contable. |
+| **Marcar la factura como pagada** | Registrar el pago en esas facturas, como si el dinero ya hubiera salido. Solo se aplica a una factura confirmada: una en borrador no tiene contra qué pagarse, y el registro lo dirá. |
+| **Cuenta bancaria** | Dónde se registra ese pago. |
+| **Forma de pago** | Cómo se registra en esa cuenta. Si se deja vacío, Odoo coge el que la cuenta tenga por defecto. |
+
 Cuando termine, pulse **Guardar**. El botón **Descartar** deja todo como estaba.
 
 **Nada de esto hace falta si solo va a leer PDF que ya traen texto.** Deje
@@ -341,6 +354,11 @@ queda registrada en **EasyOCR > Registro de webhooks**.
 Este registro es la única huella de las llamadas que no crearon nada, así que es
 lo primero que hay que mirar si un documento leído por el servicio no aparece
 por ninguna parte.
+
+La columna **Mensaje** cuenta además lo que hizo el aviso cuando se le ha dado
+permiso para ir más allá de dejar el documento: si creó la factura, si registró
+el pago y, cuando no pudo, por qué. Por ejemplo, si pidió el pago pero la
+factura se quedó en borrador, aquí lo dirá en lugar de quedarse callado.
 
 # 12. Preguntas frecuentes
 

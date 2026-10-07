@@ -54,3 +54,19 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.easyocr_duplicate_window_days',
         readonly=False,
     )
+    easyocr_webhook_create_bill = fields.Boolean(
+        related='company_id.easyocr_webhook_create_bill',
+        readonly=False,
+    )
+    easyocr_webhook_mark_paid = fields.Boolean(
+        related='company_id.easyocr_webhook_mark_paid',
+        readonly=False,
+    )
+    easyocr_webhook_journal_id = fields.Many2one(
+        related='company_id.easyocr_webhook_journal_id',
+        readonly=False,
+    )
+    easyocr_webhook_payment_method_line_id = fields.Many2one(
+        related='company_id.easyocr_webhook_payment_method_line_id',
+        readonly=False,
+    )
