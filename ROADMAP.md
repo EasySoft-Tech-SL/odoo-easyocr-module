@@ -124,32 +124,49 @@ ported is what that setting actually does and not what its name suggests.
 
 ### Screens
 
-- [ ] **Home screen** (`index.php` there, no counterpart here). Dolibarr opens
+- [x] **Home screen** (`index.php` there, no counterpart here). Dolibarr opens
       the module on a dashboard of shortcut cards with a few counters. Odoo has
       no such concept -- an app opens its main view -- so this is a first child
       menu of its own, **Inicio**, which is also where the app then lands.
+      *Done 7-oct-2026.*
+- [x] **The lines of the document** (there, the line table of `extract.php`).
+      Read line by line, they are what the bill is built from, and they are
+      editable so a bad reading is fixed before it becomes a bill. *Done
+      7-oct-2026, with the product of each line looked up by the reference the
+      document prints.*
 - [ ] **Batch processing** (`batch.php`, `webhook_batch.php`). Reading a folder
       of documents in one go, and the webhook's batch variant.
+
+### UI: native views, not a copy of Dolibarr's screens
+
+Asked on 7-oct-2026 whether Dolibarr's screens could be reproduced as they are.
+They can -- Odoo renders whatever a client action draws, and the viewer and the
+home screen are already that -- but the decision taken that day is to keep the
+module on Odoo's own views and finish the *behaviour* instead. Dolibarr's pages
+are hand-written PHP; here every screen would be a bespoke component to keep
+alive across two series, and a Dolibarr-looking screen inside Odoo reads as a
+foreign body to anyone who uses Odoo. So: native views, everything Dolibarr
+does, and a custom screen only where native cannot express it.
 
 ### Settings
 
 The four of the AI service are already here. The fourteen that follow are not.
 
-- [ ] **Bill as draft** (`EASYOCR_INVOICE_DRAFT`, read in `lib/easyocr.lib.php`
+- [x] **Bill as draft** (`EASYOCR_INVOICE_DRAFT`, read in `lib/easyocr.lib.php`
       around line 1995). There it decides between creating the invoice as a
       draft and validating it on the spot. Here it is the other way round: the
       bill is always a draft, so the setting is what posts it.
-- [ ] **Create the product** (`EASYOCR_AI_AUTOCREATE_PRODUCT`, `lib` ~1900),
+- [x] **Create the product** (`EASYOCR_AI_AUTOCREATE_PRODUCT`, `lib` ~1900),
       off by default: when no existing product matches the line, make one, with
       its reference, label, price and tax, and type product or service.
-- [ ] **Allow your own tax number** (`EASYOCR_ALLOW_SELF_SUPPLIER`, `lib`
+- [x] **Allow your own tax number** (`EASYOCR_ALLOW_SELF_SUPPLIER`, `lib`
       ~1374): there, refusing is the default and this turns the refusal off.
       Here the refusal is unconditional, so the setting has to open it.
-- [ ] **Tell the service who receives the invoice** (`EASYOCR_AI_RECEIVER_CONTEXT`,
+- [x] **Tell the service who receives the invoice** (`EASYOCR_AI_RECEIVER_CONTEXT`,
       `lib` ~621), off by default: an extra instruction block so the model does
       not read the receiver as the supplier. It changes the request sent, so it
       is off unless asked for.
-- [ ] **Duplicate check** (`EASYOCR_DUPLICATE_CHECK`, `lib` ~1043), on by
+- [x] **Duplicate check** (`EASYOCR_DUPLICATE_CHECK`, `lib` ~1043), on by
       default, and **the window in days** (`EASYOCR_DUPLICATE_WINDOW_DAYS`,
       `lib` ~1062), 0 meaning no limit: a file already read is not read again,
       so no credits are spent twice. The window is what lets a supplier's

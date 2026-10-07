@@ -23,6 +23,36 @@
                         <setting id="easyocr_ai_timeout" string="Timeout" help="How long to wait for the service before giving up, in seconds. A scanned page can take a while to read, so keep this generous.">
                             <field name="easyocr_ai_timeout" class="o_light_label"/>
                         </setting>
+                        <!-- Both string= and help= repeat the field below, word
+                             for word, on purpose. The settings block renders the
+                             view's own two attributes and nothing else: the core
+                             template paints the help only when it has a label to
+                             hang it on, so a bare <setting> shows a lone label
+                             and no explanation at all. Spelling it the same way
+                             in both places leaves Odoo one string with two
+                             references, so it is one translation and not two
+                             sentences that drift apart the first time one of
+                             them is edited. -->
+                        <setting id="easyocr_ai_receiver_context" string="Tell the service who we are" help="Add our own name and tax number to the request, so the service can tell the two parties apart on the document.">
+                            <field name="easyocr_ai_receiver_context"/>
+                        </setting>
+                    </block>
+                    <block title="Documents and bills" id="easyocr_bill_block">
+                        <setting id="easyocr_bill_post" string="Confirm the bill automatically" help="Post the supplier bill as soon as it is created, instead of leaving it in draft for review. Off by default: posting books the bill and gives it a number.">
+                            <field name="easyocr_bill_post"/>
+                        </setting>
+                        <setting id="easyocr_autocreate_product" string="Create products that do not exist" help="When a line carries a supplier reference no product matches, create the product instead of leaving the line without one.">
+                            <field name="easyocr_autocreate_product"/>
+                        </setting>
+                        <setting id="easyocr_allow_self_vendor" string="Accept our own company as vendor" help="Book a document whose tax number is ours. Off by default: it is almost always a document that was read the wrong way round.">
+                            <field name="easyocr_allow_self_vendor"/>
+                        </setting>
+                        <setting id="easyocr_duplicate_check" string="Refuse a document already read" help="Before sending a file to the service, look for a document with the same content that has already been read. Reading it again would cost the same and change nothing.">
+                            <field name="easyocr_duplicate_check"/>
+                        </setting>
+                        <setting id="easyocr_duplicate_window_days" string="Duplicate window (days)" help="How far back that check looks. 0 means no limit. Useful for a vendor whose monthly document is exactly the same file every month.">
+                            <field name="easyocr_duplicate_window_days" class="o_light_label"/>
+                        </setting>
                     </block>
                 </app>
             </xpath>

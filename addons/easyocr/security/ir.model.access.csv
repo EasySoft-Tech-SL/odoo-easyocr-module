@@ -1,4 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_easyocr_document_line_user,easyocr.document.line.user,model_easyocr_document_line,group_easyocr_user,1,1,1,0
+access_easyocr_document_line_manager,easyocr.document.line.manager,model_easyocr_document_line,group_easyocr_manager,1,1,1,1
 access_easyocr_document_user,easyocr.document.user,model_easyocr_document,group_easyocr_user,1,1,1,0
 access_easyocr_document_manager,easyocr.document.manager,model_easyocr_document,group_easyocr_manager,1,1,1,1
 access_easyocr_inbox_item_user,easyocr.inbox.item.user,model_easyocr_inbox_item,group_easyocr_user,1,1,1,0

@@ -87,6 +87,27 @@
                         </group>
                     </group>
                     <notebook>
+                        <page string="Lines" name="lines">
+                            <!-- What the service read, line by line, and what the
+                                 bill is built from. Editable: reading a document
+                                 wrong is normal, and fixing it here is cheaper
+                                 than fixing it on the bill afterwards. -->
+                            <field name="line_ids" nolabel="1">
+                                <list string="Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="product_code" optional="show"/>
+                                    <field name="item_type" optional="show"/>
+                                    <field name="quantity" optional="show"/>
+                                    <field name="unit_price" optional="show"/>
+                                    <field name="discount_percent" optional="show"/>
+                                    <field name="tax_rate" optional="show"/>
+                                    <field name="net_amount" optional="show"/>
+                                    <field name="product_id" optional="show"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="File" name="file">
                             <field name="attachment_id"/>
                             <field name="move_id" invisible="not move_id"/>
