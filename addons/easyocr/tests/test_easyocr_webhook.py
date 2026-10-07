@@ -1,5 +1,5 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
-# License OPL-1 (see LICENSE file).
+# License LGPL-3 (see LICENSE file).
 
 import json
 

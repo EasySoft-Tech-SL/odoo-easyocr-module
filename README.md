@@ -77,15 +77,18 @@ implemented yet; see the roadmap in `addons/easysoft_ocr/README.rst`.
 
 ## License
 
-**Odoo Proprietary License v1.0 (OPL-1).** See [`LICENSE`](LICENSE).
+**GNU Lesser General Public License v3.0 (LGPL-3).** See [`LICENSE`](LICENSE).
 
-The source is readable, and a licence is what grants the right to run it. It is
-not open source: publishing, redistributing or reselling it, modified or not, is
-not allowed. Each customer gets the complete source of the version they are
-entitled to, which is what makes the module auditable and adaptable on site.
+The module is free: you can use, modify and redistribute it, under the same
+license the Odoo core itself ships under. There is nothing to pay for it, and
+the complete source goes with every version.
 
-Reading the code here does not grant a licence to use it. The extraction service
-the module talks to is licensed separately and is what a subscription pays for.
+What a subscription pays for is the **extraction service** the module talks to.
+Without it the module still installs and still reads text out of digital PDFs
+that already carry a text layer; scanning paper, photographs and email
+attachments is what needs the service.
+
+`EasyOCR` is a trademark of EasySoft Tech S.L.
 
 ## Support
 

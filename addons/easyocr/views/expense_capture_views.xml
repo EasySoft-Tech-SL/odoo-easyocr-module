@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
-     License OPL-1 (see LICENSE file).
+     License LGPL-3 (see LICENSE file).
 
      The page lives here and not in static/src/xml on purpose: that folder is
      part of the web.assets_backend bundle, and every XML file in a bundle is

@@ -104,7 +104,8 @@ The module talks to the same service the Dolibarr module uses
 - [x] Packaging skill, so a release is one command and not a checklist.
 - [x] Release workflow that attaches the ZIP to a GitHub Release (never an
       artifact: the organization's artifact quota is shared and small).
-- [x] `LICENSE` file: OPL-1, shipped at the root and inside the module, because the licensed artefact is the module.
+- [x] `LICENSE` file: LGPL-3, shipped at the root and inside the module.
+- [x] The module is free; what is sold is the extraction service.
 - [ ] Publish on the Odoo Apps Store. Note it is fed from the **repository**,
       not from the ZIP: the ZIP is for the release and for installing by hand.
 - [ ] User guide published with every version.

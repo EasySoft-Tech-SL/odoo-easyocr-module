@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
-     License OPL-1 (see LICENSE file).
+     License LGPL-3 (see LICENSE file).
 
      Odoo 18 still hangs groups off res.groups.category_id. The branch 19.0
      replaced it with res.groups.privilege; see the security file there.

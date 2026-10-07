@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
-# License OPL-1 (see LICENSE file).
+# License LGPL-3 (see LICENSE file).
 """Sanity checks for every module under addons/ before it reaches a release.
 
 Runs without Odoo installed: reads the manifests, not the framework.

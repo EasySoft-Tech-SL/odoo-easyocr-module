@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
-     License OPL-1 (see LICENSE file). -->
+     License LGPL-3 (see LICENSE file). -->
 <odoo>
 
     <record id="view_easyocr_webhook_log_list" model="ir.ui.view">
