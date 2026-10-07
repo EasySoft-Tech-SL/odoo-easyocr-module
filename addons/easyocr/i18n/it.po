@@ -303,6 +303,8 @@ msgid "Document created from the OCR result."
 msgstr "Documento creato dal risultato dell'OCR."
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_document
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_document
 msgid "Documents"
@@ -504,6 +506,11 @@ msgstr ""
 " richiedere tempo, quindi sii generoso."
 
 #. module: easyocr
+#: model:ir.ui.menu,name:easyocr.menu_easyocr_home
+msgid "Home"
+msgstr "Home"
+
+#. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__extraction_confidence
 msgid "How sure the service was of what it read, from 0 to 1."
 msgstr "Quanto era sicuro il servizio di ciò che ha letto, da 0 a 1."
@@ -559,6 +566,8 @@ msgid "Ignored"
 msgstr "Ignorato"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_inbox
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_inbox
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_list
@@ -577,6 +586,12 @@ msgstr "Elemento della posta in arrivo"
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_number
 msgid "Invoice number"
 msgstr "Numero fattura"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Invoices and receipts read, or waiting to be"
+msgstr "Fatture e scontrini letti, o in attesa di lettura"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_is_follower
@@ -866,6 +881,12 @@ msgstr ""
 " la casella viene letto subito."
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Photograph one from a phone"
+msgstr "Fotografalo dal telefono"
+
+#. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "Process"
 msgstr "Elabora"
@@ -899,6 +920,12 @@ msgstr "Letto dallo scontrino"
 #: model:ir.module.category,description:easyocr.module_category_easyocr
 msgid "Read supplier invoices and expense receipts from files."
 msgstr "Legge fatture fornitore e ricevute di spesa dai file."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Read supplier invoices and expense receipts, and turn them into accounting entries."
+msgstr "Leggi fatture fornitore e scontrini e trasformali in scritture contabili."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -1020,6 +1047,12 @@ msgid "Service URL"
 msgstr "URL del servizio"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Settings"
+msgstr "Impostazioni"
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__file_size
 msgid "Size"
 msgstr "Dimensione"
@@ -1089,6 +1122,8 @@ msgid "Template saved."
 msgstr "Modello salvato."
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_template
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_template
 msgid "Templates"
@@ -1104,6 +1139,18 @@ msgstr "Il documento OCR creato da questo file, una volta elaborato."
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The attached file is empty or cannot be read."
 msgstr "Il file allegato è vuoto o non leggibile."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "The boxes saved for each vendor"
+msgstr "I riquadri salvati per ogni fornitore"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "The calls the extraction service has made"
+msgstr "Le chiamate effettuate dal servizio di estrazione"
 
 #. module: easyocr
 #. odoo-python
@@ -1139,6 +1186,12 @@ msgid ""
 msgstr ""
 "Il servizio di estrazione ha risposto con un errore imprevisto (HTTP "
 "%(status)s)."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "The extraction service and what a document becomes"
+msgstr "Il servizio di estrazione e in cosa diventa un documento"
 
 #. module: easyocr
 #. odoo-python
@@ -1411,11 +1464,19 @@ msgstr ""
 "generico."
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Waiting to be looked at, handed over by other modules"
+msgstr "In attesa di essere guardati, consegnati da altri moduli"
+
+#. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_form
 msgid "Webhook Call"
 msgstr "Chiamata webhook"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_webhook_log
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_webhook_log
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list
@@ -1521,6 +1582,8 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Capture a receipt"
 msgstr "Acquisisci una ricevuta"

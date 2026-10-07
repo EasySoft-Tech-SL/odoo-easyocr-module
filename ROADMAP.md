@@ -113,6 +113,62 @@ The module talks to the same service the Dolibarr module uses
       the source lives in the repository and the same text goes to the company
       wiki, so a release is not finished until the guide matches it.
 
+## Phase 9 — Parity with the Dolibarr module · in progress
+
+Asked for on 7-oct-2026: *«quería una paridad total al 100%»*. Measured against
+the Dolibarr module that day: **18 settings against 4**, and two screens that
+have no counterpart here. This phase closes that.
+
+Every row below was read in the Dolibarr source, in the file named, so what is
+ported is what that setting actually does and not what its name suggests.
+
+### Screens
+
+- [ ] **Home screen** (`index.php` there, no counterpart here). Dolibarr opens
+      the module on a dashboard of shortcut cards with a few counters. Odoo has
+      no such concept -- an app opens its main view -- so this is a first child
+      menu of its own, **Inicio**, which is also where the app then lands.
+- [ ] **Batch processing** (`batch.php`, `webhook_batch.php`). Reading a folder
+      of documents in one go, and the webhook's batch variant.
+
+### Settings
+
+The four of the AI service are already here. The fourteen that follow are not.
+
+- [ ] **Bill as draft** (`EASYOCR_INVOICE_DRAFT`, read in `lib/easyocr.lib.php`
+      around line 1995). There it decides between creating the invoice as a
+      draft and validating it on the spot. Here it is the other way round: the
+      bill is always a draft, so the setting is what posts it.
+- [ ] **Create the product** (`EASYOCR_AI_AUTOCREATE_PRODUCT`, `lib` ~1900),
+      off by default: when no existing product matches the line, make one, with
+      its reference, label, price and tax, and type product or service.
+- [ ] **Allow your own tax number** (`EASYOCR_ALLOW_SELF_SUPPLIER`, `lib`
+      ~1374): there, refusing is the default and this turns the refusal off.
+      Here the refusal is unconditional, so the setting has to open it.
+- [ ] **Tell the service who receives the invoice** (`EASYOCR_AI_RECEIVER_CONTEXT`,
+      `lib` ~621), off by default: an extra instruction block so the model does
+      not read the receiver as the supplier. It changes the request sent, so it
+      is off unless asked for.
+- [ ] **Duplicate check** (`EASYOCR_DUPLICATE_CHECK`, `lib` ~1043), on by
+      default, and **the window in days** (`EASYOCR_DUPLICATE_WINDOW_DAYS`,
+      `lib` ~1062), 0 meaning no limit: a file already read is not read again,
+      so no credits are spent twice. The window is what lets a supplier's
+      month after month identical invoice through.
+- [ ] **Mark the bill as paid** (`EASYOCR_WEBHOOK_MARK_PAID`,
+      `EASYOCR_WEBHOOK_BANK_ID`, `EASYOCR_WEBHOOK_PAYMENT_TYPE`,
+      `webhook_batch.php` ~363): the webhook registers the payment on a bank
+      account with a payment method. It only applies to a posted bill, which is
+      the same rule as there.
+- [ ] **Where a photographed receipt goes** (`EASYOCR_EXPENSE_TARGET`,
+      `ajax/ajax_easyocr.php` ~1074): to an expense report or to a supplier
+      bill. In Odoo that is `hr_expense`, a different app, so this one is a
+      decision and not a copy.
+- [ ] **Let the phone validate it** (`EASYOCR_EXPENSE_ALLOW_VALIDATE`, same
+      file): whether the capture page may confirm the expense and not only file
+      it.
+- [ ] **The miscellaneous expense's bank, payment method and account**
+      (`EASYOCR_EXPENSE_VARIOUS_*`): where a receipt with no supplier goes.
+
 ---
 
 ## Differences from the Dolibarr module

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License LGPL-3 (see LICENSE file). -->
+<odoo>
+
+    <!-- Odoo has no module dashboard: an app opens its main view. So the home
+         screen is an action of its own, hung off the first menu entry of the
+         app. That is also what makes the app open here rather than on the
+         document list, since Odoo opens a root menu's first child. -->
+    <record id="action_easyocr_home" model="ir.actions.client">
+        <field name="name">EasyOCR</field>
+        <field name="tag">easyocr.home</field>
+    </record>
+
+    <menuitem
+        id="menu_easyocr_home"
+        name="Home"
+        parent="menu_easyocr_root"
+        action="action_easyocr_home"
+        sequence="1"
+    />
+
+</odoo>
