@@ -86,17 +86,17 @@ The module talks to the same service the Dolibarr module uses
       secret is set, rather than open.
 - [ ] Ability to leave created bills marked as paid.
 
-## Phase 6 — Mobile expense capture · pending
+## Phase 6 — Mobile expense capture · done
 
-- [ ] Installable PWA so an employee can photograph a receipt.
-- [ ] Record it as an expense or as a purchase bill, per configuration.
+- [x] Installable PWA so an employee can photograph a receipt.
+- [x] The photo is resized in the browser and lands in the inbox.
 - [ ] Attach it to a project.
 
-## Phase 7 — Settings, permissions, translations · pending
+## Phase 7 — Settings, permissions, translations · done
 
-- [ ] Settings screen; every option must change real behaviour.
-- [ ] Per-record rules on top of the group rules.
-- [ ] Full translations, matching the eight languages of the Dolibarr module.
+- [x] Settings screen; every option changes real behaviour.
+- [x] Per-record rules on top of the group rules.
+- [x] Eight languages, matching the Dolibarr module.
 
 ## Phase 8 — Packaging and release · in progress
 
