@@ -228,11 +228,15 @@ msgid "Currency"
 msgstr "Devise"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date
 msgid "Date"
 msgstr "Date"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__description
 msgid "Description"
 msgstr "Description"
@@ -305,11 +309,19 @@ msgid "Documents"
 msgstr "Documents"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Draw at least one box before saving a template."
+msgstr "Dessinez au moins un cadre avant d'enregistrer un modèle."
+
+#. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_document
 msgid "Drop your first document"
 msgstr "Déposez votre premier document"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__due_date
 msgid "Due date"
 msgstr "Date d'échéance"
@@ -366,6 +378,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
 msgid "Extra instructions"
 msgstr "Instructions supplémentaires"
+
+#. module: easyocr
+#: model:ir.module.module,summary:base.module_easyocr
+msgid "Extract supplier invoices and expense receipts from PDF and image files"
+msgstr "Extrait les factures fournisseurs et les tickets depuis des fichiers PDF et images"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
@@ -449,6 +466,12 @@ msgstr "Abonnés (Partenaires)"
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Icône Font Awesome par ex. fa-tasks"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Give the template a name."
+msgstr "Donnez un nom au modèle."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__has_message
@@ -550,6 +573,8 @@ msgid "Inbox Item"
 msgstr "Élément de la boîte de réception"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_number
 msgid "Invoice number"
 msgstr "Numéro de facture"
@@ -1005,6 +1030,8 @@ msgstr ""
 "Planifiée : activités futures"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__tax_amount
 msgid "Tax"
 msgstr "Taxe"
@@ -1015,6 +1042,8 @@ msgid "Tax Number"
 msgstr "Numéro de TVA"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_vat
 msgid "Tax number"
 msgstr "Numéro de TVA"
@@ -1029,6 +1058,12 @@ msgstr "Modèle"
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Template name"
 msgstr "Nom du modèle"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Template saved."
+msgstr "Modèle enregistré."
 
 #. module: easyocr
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_template
@@ -1248,6 +1283,8 @@ msgid "Timeout (seconds)"
 msgstr "Délai d'attente (secondes)"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__amount_total
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_total
 msgid "Total"
@@ -1264,6 +1301,8 @@ msgid "Untaxed Amount"
 msgstr "Montant hors taxes"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_untaxed
 msgid "Untaxed total"
 msgstr "Total HT"
@@ -1288,6 +1327,8 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__partner_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__partner_id
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_name

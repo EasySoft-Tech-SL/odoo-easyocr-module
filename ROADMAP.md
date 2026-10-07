@@ -108,7 +108,10 @@ The module talks to the same service the Dolibarr module uses
 - [x] The module is free; what is sold is the extraction service.
 - [ ] Publish on the Odoo Apps Store. Note it is fed from the **repository**,
       not from the ZIP: the ZIP is for the release and for installing by hand.
-- [ ] User guide published with every version.
+- [x] User guide written from the screens themselves, in `docs/manual/`, with
+      its screenshots. Every version from now on carries its updated guide:
+      the source lives in the repository and the same text goes to the company
+      wiki, so a release is not finished until the guide matches it.
 
 ---
 

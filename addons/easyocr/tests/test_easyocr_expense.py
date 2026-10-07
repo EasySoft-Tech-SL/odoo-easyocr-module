@@ -4,6 +4,7 @@
 import base64
 import io
 import re
+import time
 from unittest.mock import patch
 
 from PIL import Image
@@ -74,7 +75,12 @@ class TestEasyocrExpenseCapture(HttpCase):
         response = self.url_open(PAGE_URL)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Take a photo', response.text)
+        # Asserted on the ids the page's own JavaScript drives, never on the
+        # wording: the copy is translated, so checking it in English passes
+        # only on an English database and fails on every other language.
+        self.assertIn('id="easyocr_capture_shoot"', response.text)
+        self.assertIn('id="easyocr_capture_pick"', response.text)
+        self.assertIn('id="easyocr_capture_form"', response.text)
         # The page is an app: without the manifest and the script it is only a
         # form, and the whole phase is gone without anything failing loudly.
         self.assertIn('rel="manifest"', response.text)
@@ -239,6 +245,29 @@ class TestEasyocrExpenseCapture(HttpCase):
         self.assertEqual(second.status_code, 409)
         self.assertFalse(second.json()['ok'])
         self.assertEqual(self.Inbox.search_count([]), before)
+
+    # ------------------------------------------------------------------
+    # The file that reaches the tray
+    # ------------------------------------------------------------------
+    def test_the_same_photo_becomes_the_same_file_every_time(self):
+        """The tray tells one file from another by its bytes, so they must not move.
+
+        Pillow stamps the moment it wrote the PDF on the file unless it is told
+        not to. Two conversions of the same photo then differ by a second, and
+        the tray -- which knows a file by its fingerprint -- files one receipt
+        as two documents.
+        """
+        first = expense.EasyocrExpenseCapture._as_pdf(
+            expense.EasyocrExpenseCapture._read_image(JPEG_BYTES),
+        )
+        # Past the second the stamp would have carried, so that a conversion
+        # that still writes one has moved on by the time of the second call.
+        time.sleep(1.1)
+        second = expense.EasyocrExpenseCapture._as_pdf(
+            expense.EasyocrExpenseCapture._read_image(JPEG_BYTES),
+        )
+
+        self.assertEqual(first, second)
 
     # ------------------------------------------------------------------
     # The bits that make it an app
