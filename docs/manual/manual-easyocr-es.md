@@ -33,7 +33,7 @@ resuelve el servicio de extracción de EasyOCR, y **hasta que no lo configure,
 los escaneos y las fotos no se leerán**. Si pulsa «Leer con IA» sin haberlo
 configurado, el módulo se lo dirá con este aviso, sin más consecuencias:
 
-!["Aviso de que la extracción con IA está desactivada"](img/09-ia-apagada.png)
+!["Aviso de que la extracción con IA está desactivada"](img/10-ia-apagada.png)
 
 Cuando eso ocurre no se pierde nada: el documento se queda donde estaba, con el
 archivo adjunto intacto, y puede leerlo a mano o volver a intentarlo más tarde.
@@ -58,12 +58,20 @@ Sobre la ficha verá el botón para instalarla. Si ya está instalada, la ficha 
 limita a ofrecerle más información, como en la imagen.
 
 Al terminar la instalación aparece una aplicación nueva llamada **EasyOCR** en
-el menú principal, con cuatro entradas:
+el menú principal. Al abrirla entra en su pantalla de inicio:
 
-- **Documentos** — los documentos leídos y por leer.
-- **Plantillas** — las casillas guardadas de cada proveedor.
-- **Bandeja de entrada** — los archivos que le han entregado otros módulos.
-- **Registro de webhooks** — las llamadas recibidas desde el servicio.
+![La pantalla de inicio de EasyOCR](img/02-inicio.png)
+
+Cada tarjeta lleva a un sitio, y las que tienen número le dicen de un vistazo
+qué hay esperando:
+
+- **Documentos** — las facturas y tickets leídos, o esperando a leerse.
+- **Bandeja de entrada** — lo que le han entregado otros módulos y todavía
+  nadie ha mirado.
+- **Plantillas** — los recuadros guardados de cada proveedor.
+- **Capturar un recibo** — la página del móvil, para fotografiar un ticket.
+- **Registro de webhooks** — las llamadas que ha hecho el servicio.
+- **Ajustes** — solo aparece si usted puede configurar el módulo.
 
 Los permisos van en dos niveles: **Usuario** (trabajar con documentos) y
 **Responsable** (además, configurar y lanzar la lectura con IA). Se asignan
@@ -73,7 +81,7 @@ desde **Ajustes > Usuarios**, como cualquier otro permiso de Odoo.
 
 La configuración vive en **Ajustes > EasyOCR**. Son cuatro campos:
 
-![La sección EasyOCR en Ajustes](img/02-ajustes.png)
+![La sección EasyOCR en Ajustes](img/03-ajustes.png)
 
 |[tabla: Opciones de configuración de EasyOCR]|
 |---|---|
@@ -104,7 +112,7 @@ abierto. Si no va a usar esta vía, no tiene que hacer nada.
 
 Todo empieza en **EasyOCR > Documentos**.
 
-![La lista de documentos, con los tres estados](img/03-documentos.png)
+![La lista de documentos, con los tres estados](img/04-documentos.png)
 
 La lista tiene una columna **Estado** con tres valores posibles:
 
@@ -119,7 +127,7 @@ proveedor, estado o fecha desde los filtros de la barra de búsqueda.
 Al abrir un documento, la ficha tiene los datos a la izquierda y los botones
 arriba:
 
-![La ficha de un documento pendiente](img/04-ficha-documento.png)
+![La ficha de un documento pendiente](img/05-ficha-documento.png)
 
 | **Abrir el visor** | Abre la pantalla grande donde se ve el documento y se dibujan las casillas. |
 | **Leer con IA** | Manda el archivo al servicio. Solo aparece si hay archivo adjunto y si tiene usted el permiso de responsable. |
@@ -135,7 +143,7 @@ soporte).
 El visor es la pantalla que da sentido al módulo. Se abre con **Abrir el visor**
 y ocupa toda la pantalla: el documento a la izquierda, los datos a la derecha.
 
-![El visor con el documento abierto y ningún campo marcado](img/05-visor-vacio.png)
+![El visor con el documento abierto y ningún campo marcado](img/06-visor-vacio.png)
 
 Arriba hay una barra con nueve botones, uno por cada dato que se puede leer. El
 color de cada botón es el color con el que se pintará el recuadro en el
@@ -153,7 +161,7 @@ documento, así que siempre se sabe qué recuadro es qué.
 Repita con los datos que le interesen. Así queda un documento con cinco campos
 marcados:
 
-![El visor con cinco campos marcados y sus valores a la derecha](img/06-visor-campos.png)
+![El visor con cinco campos marcados y sus valores a la derecha](img/07-visor-campos.png)
 
 Si un recuadro no le convence, la **×** de su derecha lo quita. El botón
 **Limpiar** borra todos de golpe.
@@ -166,12 +174,12 @@ sin teclear.
 Cuando los recuadros son los que quiere, póngale un nombre en la casilla
 **Nombre de la plantilla** y pulse **Guardar plantilla**.
 
-![El aviso de que la plantilla se ha guardado](img/07-plantilla-guardada.png)
+![El aviso de que la plantilla se ha guardado](img/08-plantilla-guardada.png)
 
 La plantilla queda guardada en **EasyOCR > Plantillas**, con las casillas y las
 coordenadas exactas de cada una:
 
-![La ficha de una plantilla y sus casillas](img/08-plantilla-ficha.png)
+![La ficha de una plantilla y sus casillas](img/09-plantilla-ficha.png)
 
 **Conviene saberlo antes de contar con ello:** en esta versión la plantilla se
 guarda, pero el módulo **todavía no la aplica solo** al siguiente documento del
@@ -210,12 +218,12 @@ datos que sí ha leído quedan puestos, y el resto se completa a mano.
 Con la ficha rellena —por la lectura con IA o a mano— el paso final es **Crear
 factura**.
 
-![La ficha del documento con los datos leídos](img/10-ficha-rellena.png)
+![La ficha del documento con los datos leídos](img/11-ficha-rellena.png)
 
 El módulo busca el proveedor por su NIF y, si no lo encuentra, por el nombre.
 Después prepara un borrador de factura de proveedor con esos datos:
 
-![El borrador de factura creado desde el documento](img/11-factura-borrador.png)
+![El borrador de factura creado desde el documento](img/12-factura-borrador.png)
 
 ## Qué conviene revisar antes de confirmarla
 
@@ -239,7 +247,7 @@ Otros módulos pueden entregarle archivos a EasyOCR sin que nadie los suba a
 mano: un lector de documentos, una pasarela de correo, la captura del móvil. Lo
 que llega por esa vía aparece en **EasyOCR > Bandeja de entrada**.
 
-![La bandeja de entrada con dos archivos pendientes](img/12-bandeja.png)
+![La bandeja de entrada con dos archivos pendientes](img/13-bandeja.png)
 
 Cada línea dice **quién lo entregó** (la columna Origen), cuándo llegó y en qué
 estado está.
@@ -259,7 +267,7 @@ Cualquiera con usuario en Odoo puede abrir la dirección `/easyocr/capture` en e
 navegador del móvil y fotografiar un ticket. Está pensada para instalarse en la
 pantalla de inicio del teléfono y usarse como una aplicación.
 
-![La página de captura en un móvil](img/13-movil.png)
+![La página de captura en un móvil](img/14-movil.png)
 
 1. **Hacer una foto** abre la cámara. También puede **elegir una foto** que ya
    tenga en el teléfono.
@@ -275,7 +283,7 @@ la foto se guarda igual y se lee a mano.
 Si el servicio de EasyOCR avisa a Odoo cuando termina una lectura, cada llamada
 queda registrada en **EasyOCR > Registro de webhooks**.
 
-![El registro de las llamadas recibidas](img/14-webhooks.png)
+![El registro de las llamadas recibidas](img/15-webhooks.png)
 
 | **Recibido el** | Cuándo llegó la llamada. |
 | **Evento** | Qué avisaba el servicio. |
