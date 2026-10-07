@@ -45,7 +45,11 @@ services:
       - "127.0.0.1:8070:8069"
     volumes:
       - ./config/odoo18.conf:/etc/odoo/odoo.conf:ro
-      - ./addons:/mnt/extra-addons
+      # Its own checkout, not ./addons: one folder cannot hold two branches at
+      # once, and Odoo refuses a module whose version does not match its series
+      # ("incompatible version, setting installable=False"). Created with:
+      #   git worktree add D:/GIT/odoo-easyocr-18 18.0
+      - ../odoo-easyocr-18/addons:/mnt/extra-addons
       - odoo18-data:/var/lib/odoo
     restart: "no"
 
