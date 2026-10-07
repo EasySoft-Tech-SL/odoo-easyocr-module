@@ -226,6 +226,8 @@ msgid "Currency"
 msgstr "Moeda"
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date
@@ -742,6 +744,12 @@ msgid "Nothing waiting"
 msgstr "Nada pendente"
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "Number"
+msgstr "Número"
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_needaction_counter
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_needaction_counter
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_needaction_counter
@@ -882,6 +890,12 @@ msgid "Read from the document."
 msgstr "Lido do documento."
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "Read from the receipt"
+msgstr "Lido do recibo"
+
+#. module: easyocr
 #: model:ir.module.category,description:easyocr.module_category_easyocr
 msgid "Read supplier invoices and expense receipts from files."
 msgstr "Le facturas de provedor e recibos de gastos desde ficheiros."
@@ -966,6 +980,12 @@ msgstr ""
 
 #. module: easyocr
 #. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "Saved to the inbox"
+msgstr "Gardado na bandexa de entrada"
+
+#. module: easyocr
+#. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "Sending it again may help."
 msgstr "Pode que volver envialo axude."
@@ -975,6 +995,12 @@ msgstr "Pode que volver envialo axude."
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "Sending it again will not change the result."
 msgstr "Volver envialo non cambiará o resultado."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "Sending the photo…"
+msgstr "Enviando a foto…"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__custom_instructions
@@ -1078,6 +1104,12 @@ msgstr "O documento OCR creado a partir deste ficheiro, unha vez procesado."
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The attached file is empty or cannot be read."
 msgstr "O ficheiro adxunto está baleiro ou non se pode ler."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "The camera is not ready yet. Give it a second."
+msgstr "A cámara aínda non está lista. Déame un segundo."
 
 #. module: easyocr
 #. odoo-python
@@ -1218,6 +1250,30 @@ msgstr ""
 
 #. module: easyocr
 #. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "The photo could not be prepared. Try again."
+msgstr "Non se puido preparar a foto. Inténteo de novo."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "The photo could not be sent."
+msgstr "Non se puido enviar a foto."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "The photo could not be sent. Check the connection and try again."
+msgstr "Non se puido enviar a foto. Comprobe a conexión e inténteo de novo."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "The photo is still larger than the %(limit)s MB the inbox takes. Take it from a little further away."
+msgstr "A foto segue sendo máis grande ca os %(limit)s MB que admite a bandexa. Fágaa desde un pouco máis lonxe."
+
+#. module: easyocr
+#. odoo-python
 #: code:addons/easyocr/controllers/main.py:0
 msgid "The value sent for %s, %s, is not a date."
 msgstr "O valor enviado para %s, %s, non é unha data."
@@ -1277,6 +1333,8 @@ msgid "Timeout (seconds)"
 msgstr "Tempo de espera (segundos)"
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__amount_total
@@ -1321,6 +1379,8 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__partner_id

@@ -21,7 +21,14 @@
                      page is plain JavaScript, and pulling the web client in
                      would put megabytes on a phone for one camera button. -->
                 <t t-call-assets="web.assets_backend" t-js="false"/>
-                <script type="module" src="/easyocr/static/src/js/expense_capture.js"/>
+                <!-- The sentences the page's script writes, translated on the
+                     server: the page carries no web client, so it has no way to
+                     translate them itself. Read where the script is written. -->
+                <script type="application/json" id="easyocr_capture_strings" t-out="strings_json"/>
+                <!-- The version in the URL is what keeps a phone from running
+                     last month's script: Odoo caches anything under static/ for
+                     a week. See capture_script_version(). -->
+                <script type="module" t-att-src="script_url"/>
             </t>
 
             <div class="o_easyocr_capture" id="easyocr_capture_root"

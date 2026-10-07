@@ -7,7 +7,10 @@ import polib
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
-from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
+from odoo.tools.translate import (
+    JAVASCRIPT_TRANSLATION_COMMENT,
+    PYTHON_TRANSLATION_COMMENT,
+)
 
 # The strings the viewer's JavaScript asks for by hand. They cannot be derived
 # from a model, so they are listed here: a new one added to the viewer without
@@ -16,6 +19,28 @@ VIEWER_STRINGS = (
     "Draw at least one box before saving a template.",
     "Give the template a name.",
     "Template saved.",
+)
+
+# The sentences the mobile capture page's JavaScript writes. They travel the
+# other way round -- the server translates them and hands them to the page, so
+# they need the Python marker rather than the JavaScript one. The list is the
+# same as ``_page_strings`` in controllers/expense.py, and a sentence added
+# there without a line here is exactly what would go unnoticed.
+CAPTURE_STRINGS = (
+    "The camera is not ready yet. Give it a second.",
+    "That file could not be read as a photo.",
+    "The photo could not be prepared. Try again.",
+    "The photo is still larger than the %(limit)s MB the inbox takes. "
+    "Take it from a little further away.",
+    "Sending the photo…",
+    "The photo could not be sent. Check the connection and try again.",
+    "The photo could not be sent.",
+    "Read from the receipt",
+    "Saved to the inbox",
+    "Vendor",
+    "Date",
+    "Total",
+    "Number",
 )
 
 # The summary the Apps screen shows on the module's card.
@@ -48,20 +73,37 @@ class TestEasyocrTranslations(TransactionCase):
         self.assertIsNotNone(entry, "%s has no entry for %r" % (os.path.basename(po.fpath), msgid))
         return entry
 
-    def _assert_reaches_the_browser(self, po, msgid):
-        """The entry exists, is translated, and is flagged as a JavaScript term."""
+    def _assert_marked(self, po, msgid, marker, hint):
+        """The entry exists, is translated, and carries the reference it needs.
+
+        Translating the string is not enough: Odoo only serves a translation to
+        the JavaScript terms it has flagged as such, and Python's ``_()`` only
+        finds the ones flagged as Python. A translated entry with the wrong
+        marker is English on screen, and nothing about it looks wrong in the
+        .po file.
+        """
         entry = self._entry(po, msgid)
         self.assertTrue(
             entry.msgstr,
             "%s leaves %r without a translation" % (os.path.basename(po.fpath), msgid),
         )
         self.assertIn(
-            JAVASCRIPT_TRANSLATION_COMMENT,
+            marker,
             entry.comment,
-            "%r is translated but never reaches the web client: %s does not flag "
-            "it as a JavaScript term, so the interface falls back to English. "
-            "Add the viewer's .js reference to its entry."
-            % (msgid, os.path.basename(po.fpath)),
+            "%r is translated but never reaches the reader: %s does not flag it "
+            "as a %s term. %s" % (msgid, os.path.basename(po.fpath), marker, hint),
+        )
+
+    def _assert_reaches_the_browser(self, po, msgid):
+        self._assert_marked(
+            po, msgid, JAVASCRIPT_TRANSLATION_COMMENT,
+            "Add the viewer's .js reference to its entry.",
+        )
+
+    def _assert_reaches_python(self, po, msgid):
+        self._assert_marked(
+            po, msgid, PYTHON_TRANSLATION_COMMENT,
+            "Add the controllers/expense.py reference to its entry.",
         )
 
     def test_every_field_label_is_translated_and_reaches_the_toolbar(self):
@@ -79,6 +121,13 @@ class TestEasyocrTranslations(TransactionCase):
             po = polib.pofile(os.path.join(self.i18n_path, name))
             for msgid in VIEWER_STRINGS:
                 self._assert_reaches_the_browser(po, msgid)
+
+    def test_the_sentences_the_capture_page_writes_are_translated(self):
+        """They are written by JavaScript but translated by the server."""
+        for name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, name))
+            for msgid in CAPTURE_STRINGS:
+                self._assert_reaches_python(po, msgid)
 
     def test_the_module_summary_is_translated(self):
         """The Apps screen shows it on the card, before the module is installed."""
