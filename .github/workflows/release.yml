@@ -1,0 +1,119 @@
+name: Release
+
+# One ZIP per Odoo series: the branch is the series (19.0 -> Odoo Community 19),
+# and the manifest version must start with it. A `v*` tag publishes the ZIP of
+# that commit; a manual run publishes the ZIP of the branch head under the tag
+# of the manifest version (useful to retry a release that failed halfway).
+#
+# The ZIP is attached to the GitHub Release and NEVER uploaded as an artifact:
+# artifacts are charged against the whole organisation's quota (500 MB, 90 days
+# of retention) and a long retention here breaks everybody else's builds with
+# "Failed to CreateArtifact: Artifact storage quota has been hit". Release
+# assets do not count against that quota.
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build the ZIP and publish it
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Full history: the script reads the branch (or the tag at HEAD) to
+          # know the series, and diffs the module folder against the commit.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Python syntax
+        # A tag can point at a commit ci.yml never saw, and a tag build skips
+        # ci.yml altogether, so the cheapest of its checks is repeated here.
+        run: python -m compileall -q addons
+
+      - name: Read the module version
+        id: module
+        run: echo "version=$(python tools/build_zip.py --print-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Check the tag against the manifest
+        if: github.ref_type == 'tag'
+        run: |
+          version="${{ steps.module.outputs.version }}"
+          if [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} does not match version ${version} in the manifest"
+            exit 1
+          fi
+
+      - name: Build the module ZIP
+        env:
+          REQUIRE_CLEAN: ${{ github.ref_type == 'tag' && '--require-clean' || '' }}
+        run: python tools/build_zip.py --output dist/ $REQUIRE_CLEAN
+
+      - name: Check the ZIP layout
+        run: |
+          set -euo pipefail
+          mapfile -t zips < <(ls dist/*.zip)
+          if [ "${#zips[@]}" -ne 1 ]; then
+            echo "::error::expected exactly 1 ZIP, found ${#zips[@]}"
+            exit 1
+          fi
+          zipfile="${zips[0]}"
+          unzip -l "$zipfile"
+
+          # The module folder sits at the root of the archive, with no wrapper
+          # folder: that is the shape the Apps Store expects and the only one
+          # Odoo finds, because its addons scan does not recurse.
+          if ! unzip -Z1 "$zipfile" | grep -qE '^[^/]+/__manifest__\.py$'; then
+            echo "::error::the ZIP does not carry the module folder at its root"
+            exit 1
+          fi
+
+          if unzip -Z1 "$zipfile" | grep -qE '__pycache__|\.py[co]$'; then
+            echo "::error::build leftovers inside the ZIP"
+            exit 1
+          fi
+
+          # CRLF inside a text file breaks parsers on Linux, and the runner
+          # cannot be trusted to be the only place where the tree was checked out.
+          # `tr` and not grep: a lone CR as a grep pattern is unreliable (it did
+          # not match at all under MSYS), and a check that silently never fires
+          # is worse than no check.
+          failed=0
+          while IFS= read -r name; do
+            case "$name" in
+              *.py|*.xml|*.csv|*.po|*.js|*.scss|*.css|*.html|*.htm|*.rst|*.md|*.txt|*.yml|*.yaml|*.json|*.conf)
+                if [ -n "$(unzip -p "$zipfile" "$name" | tr -dc '\r')" ]; then
+                  echo "::error file=$name::CRLF inside the ZIP"
+                  failed=1
+                fi ;;
+            esac
+          done < <(unzip -Z1 "$zipfile")
+          exit "$failed"
+
+      - name: Resolve the release tag
+        id: tag
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=v${{ steps.module.outputs.version }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          # On a tag push this is the tag itself; on a manual run the tag is
+          # created at the commit being built if it does not exist yet.
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          files: dist/*.zip
+          generate_release_notes: true

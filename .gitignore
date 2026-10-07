@@ -12,6 +12,10 @@ filestore/
 .env
 *.local.conf
 
+# Release artifacts
+dist/
+*.zip
+
 # Editors and OS
 .idea/
 .vscode/

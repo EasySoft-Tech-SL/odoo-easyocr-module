@@ -37,6 +37,14 @@
                         class="btn-secondary"
                     />
                     <button
+                        name="action_extract"
+                        type="object"
+                        string="Read with AI"
+                        class="btn-secondary"
+                        invisible="not attachment_id"
+                        groups="group_easyocr_manager"
+                    />
+                    <button
                         name="action_create_bill"
                         type="object"
                         string="Create Bill"
@@ -86,6 +94,10 @@
                         <page string="Notes" name="notes">
                             <field name="note" placeholder="Anything worth keeping about this document..."/>
                             <field name="error_message" invisible="not error_message"/>
+                        </page>
+                        <page string="Extraction" name="extraction">
+                            <field name="extraction_confidence"/>
+                            <field name="last_extraction" readonly="1"/>
                         </page>
                     </notebook>
                 </sheet>

@@ -18,6 +18,8 @@
         'security/ir.model.access.csv',
         'views/easyocr_document_views.xml',
         'views/easyocr_template_views.xml',
+        'views/easyocr_webhook_log_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

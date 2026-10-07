@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License OPL-1 (see LICENSE file). -->
+<odoo>
+
+    <record id="view_easyocr_webhook_log_list" model="ir.ui.view">
+        <field name="name">easyocr.webhook.log.list</field>
+        <field name="model">easyocr.webhook.log</field>
+        <field name="arch" type="xml">
+            <list
+                string="Webhook Log"
+                decoration-warning="status == 'ignored'"
+                decoration-danger="status == 'error'"
+            >
+                <field name="create_date" string="Received On"/>
+                <field name="event"/>
+                <field name="status" widget="badge"/>
+                <field name="document_id_external"/>
+                <field name="filename"/>
+                <field name="document_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="message"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_easyocr_webhook_log_form" model="ir.ui.view">
+        <field name="name">easyocr.webhook.log.form</field>
+        <field name="model">easyocr.webhook.log</field>
+        <field name="arch" type="xml">
+            <form string="Webhook Call" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="Received On"/>
+                            <field name="event"/>
+                            <field name="status" widget="badge"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="document_id_external"/>
+                            <field name="filename"/>
+                            <field name="document_id"/>
+                        </group>
+                    </group>
+                    <group string="Message" name="message">
+                        <field name="message" nolabel="1" placeholder="No message"/>
+                    </group>
+                    <notebook>
+                        <page string="Payload" name="payload">
+                            <field name="payload" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_easyocr_webhook_log_search" model="ir.ui.view">
+        <field name="name">easyocr.webhook.log.search</field>
+        <field name="model">easyocr.webhook.log</field>
+        <field name="arch" type="xml">
+            <search string="Webhook Log">
+                <field name="event"/>
+                <field name="document_id_external"/>
+                <field name="filename"/>
+                <field name="document_id"/>
+                <filter name="filter_ok" string="Created" domain="[('status', '=', 'ok')]"/>
+                <filter name="filter_ignored" string="Ignored" domain="[('status', '=', 'ignored')]"/>
+                <filter name="filter_error" string="Error" domain="[('status', '=', 'error')]"/>
+                <separator/>
+                <filter name="filter_my_calls" string="My Calls" domain="[('create_uid', '=', uid)]"/>
+                <!-- Odoo 19 dropped expand/string on the search group element. -->
+                <group>
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_event" string="Event" context="{'group_by': 'event'}"/>
+                    <filter name="group_date" string="Received On" context="{'group_by': 'create_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_easyocr_webhook_log" model="ir.actions.act_window">
+        <field name="name">Webhook Log</field>
+        <field name="res_model">easyocr.webhook.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_easyocr_webhook_log_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No calls received yet
+            </p>
+            <p>
+                Every call the OCR service makes to the webhook is recorded here,
+                whether it created a document or not.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_easyocr_webhook_log"
+        name="Webhook Log"
+        parent="menu_easyocr_root"
+        action="action_easyocr_webhook_log"
+        sequence="40"
+    />
+
+</odoo>
