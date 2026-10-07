@@ -91,8 +91,7 @@
                 <filter name="filter_error" string="Error" domain="[('state', '=', 'error')]"/>
                 <separator/>
                 <filter name="filter_my_documents" string="My Documents" domain="[('create_uid', '=', uid)]"/>
-                <!-- Odoo 19 dropped expand/string on the search group element. -->
-                <group>
+                <group expand="0" string="Group By">
                     <filter name="group_partner" string="Vendor" context="{'group_by': 'partner_id'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                     <filter name="group_date" string="Document Date" context="{'group_by': 'document_date'}"/>

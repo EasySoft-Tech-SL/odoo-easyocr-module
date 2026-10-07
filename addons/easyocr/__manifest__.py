@@ -2,7 +2,7 @@
 # License OPL-1 (see LICENSE file).
 {
     'name': 'EasyOCR',
-    'version': '19.0.1.0.0',
+    'version': '18.0.1.0.0',
     'summary': 'Extract supplier invoices and expense receipts from PDF and image files',
     'author': 'EasySoft Tech S.L.',
     'website': 'https://easysoft.es',
