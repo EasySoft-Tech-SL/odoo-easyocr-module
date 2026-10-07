@@ -61,14 +61,14 @@ The module talks to the same service the Dolibarr module uses
 - `error_code` says whether retrying is worth it: `OCR_EMPTY` and
   `PARTIAL_DEGRADATION` are worth a retry, `STRUCTURING_TRUNCATED` is not.
 
-## Phase 3 — Extraction engines · pending
+## Phase 3 — Extraction engines · done
 
-Two engines, exactly as the Dolibarr module has:
-
-- [ ] Native: text taken from the PDF text layer (no AI, no cost, everything local).
-- [ ] AI: a call to the EasyOCR microservice for scans and images without a text layer.
-- [ ] Per-company settings: service URL, credentials, engine choice.
-- [ ] The document keeps the reason when extraction fails, so it can be retried.
+- [x] Native: text taken from the PDF text layer, per box (no AI, no cost).
+- [x] AI: a call to the EasyOCR microservice for scans and images without a text layer.
+- [x] Per-company settings: enabled, service URL, key and timeout, on the settings screen.
+- [x] The document keeps the reason when extraction fails, so it can be retried,
+      and says whether sending it again is worth it.
+- [ ] Choose the engine per document instead of per company.
 
 ## Phase 4 — Inbox for documents from other modules · pending
 
@@ -77,10 +77,12 @@ Two engines, exactly as the Dolibarr module has:
 - [ ] Discard unwanted documents, with confirmation.
 - [ ] Public helper so another module can drop a file in the inbox.
 
-## Phase 5 — Inbound API · pending
+## Phase 5 — Inbound API · done
 
-- [ ] Webhook endpoint that accepts a document and creates the record.
-- [ ] Log of received calls, with the outcome of each.
+- [x] Webhook endpoint that accepts a document and creates the record.
+- [x] Log of received calls, with the outcome of each.
+- [x] Shared secret compared in constant time; the endpoint is closed when no
+      secret is set, rather than open.
 - [ ] Ability to leave created bills marked as paid.
 
 ## Phase 6 — Mobile expense capture · pending
