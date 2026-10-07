@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="easyocr.Home">
+        <div class="o_easyocr_home">
+            <div class="o_easyocr_home_head">
+                <h1 t-esc="title"/>
+                <p class="text-muted" t-esc="subtitle"/>
+            </div>
+
+            <div class="o_easyocr_home_grid">
+                <t t-foreach="cards" t-as="card" t-key="card.key">
+                    <button
+                        type="button"
+                        class="o_easyocr_card"
+                        t-attf-class="{{ card.tone ? 'o_easyocr_card_' + card.tone : '' }}"
+                        t-on-click="() => this.open(card)"
+                    >
+                        <span class="o_easyocr_card_icon" t-attf-class="fa {{ card.icon }}"/>
+                        <span class="o_easyocr_card_body">
+                            <span class="o_easyocr_card_title" t-esc="card.title"/>
+                            <span class="o_easyocr_card_note" t-esc="card.note"/>
+                        </span>
+                        <span
+                            t-if="card.count !== null"
+                            class="o_easyocr_card_count"
+                            t-esc="card.count"
+                        />
+                        <span t-else="" class="o_easyocr_card_arrow fa fa-arrow-right"/>
+                    </button>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

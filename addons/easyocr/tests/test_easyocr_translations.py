@@ -43,6 +43,27 @@ CAPTURE_STRINGS = (
     "Number",
 )
 
+# Every string the home screen's JavaScript asks for, including the ones it
+# reuses from the menus and the capture page. Those are the ones worth listing:
+# they are already translated, so nothing looks wrong in the .po -- and they
+# still arrived in English until their entries were flagged as JavaScript,
+# which is how "Capture a receipt" ended up on a Spanish screen.
+HOME_STRINGS = (
+    "Capture a receipt",
+    "Webhook Log",
+    "Documents",
+    "Templates",
+    "Inbox",
+    "Read supplier invoices and expense receipts, and turn them into accounting entries.",
+    "Invoices and receipts read, or waiting to be",
+    "Waiting to be looked at, handed over by other modules",
+    "The boxes saved for each vendor",
+    "Photograph one from a phone",
+    "The calls the extraction service has made",
+    "The extraction service and what a document becomes",
+    "Settings",
+)
+
 # The summary the Apps screen shows on the module's card.
 SUMMARY = "Extract supplier invoices and expense receipts from PDF and image files"
 
@@ -97,7 +118,7 @@ class TestEasyocrTranslations(TransactionCase):
     def _assert_reaches_the_browser(self, po, msgid):
         self._assert_marked(
             po, msgid, JAVASCRIPT_TRANSLATION_COMMENT,
-            "Add the viewer's .js reference to its entry.",
+            "Add the .js reference of whichever script asks for it.",
         )
 
     def _assert_reaches_python(self, po, msgid):
@@ -120,6 +141,12 @@ class TestEasyocrTranslations(TransactionCase):
         for name in self._po_files():
             po = polib.pofile(os.path.join(self.i18n_path, name))
             for msgid in VIEWER_STRINGS:
+                self._assert_reaches_the_browser(po, msgid)
+
+    def test_the_strings_the_home_screen_writes_are_translated(self):
+        for name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, name))
+            for msgid in HOME_STRINGS:
                 self._assert_reaches_the_browser(po, msgid)
 
     def test_the_sentences_the_capture_page_writes_are_translated(self):

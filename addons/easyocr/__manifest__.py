@@ -16,6 +16,7 @@
     'data': [
         'security/easyocr_security.xml',
         'security/ir.model.access.csv',
+        'views/easyocr_home_views.xml',
         'views/easyocr_document_views.xml',
         'views/easyocr_inbox_views.xml',
         'views/easyocr_template_views.xml',
