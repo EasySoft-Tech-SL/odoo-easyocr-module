@@ -8,18 +8,18 @@ msgstr ""
 "POT-Creation-Date: 2026-10-07 18:34+0000\n"
 "PO-Revision-Date: 2026-10-07 18:34+0000\n"
 "Last-Translator: EasySoft Tech S.L. <info@easysoft.es>\n"
-"Language-Team: Spanish (Spain) <info@easysoft.es>\n"
-"Language: es\n"
+"Language-Team: German <info@easysoft.es>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "%(message)s Try again in %(seconds)s seconds."
-msgstr "%(message)s Vuelva a intentarlo en %(seconds)s segundos."
+msgstr "%(message)s Versuchen Sie es in %(seconds)s Sekunden erneut."
 
 #. module: easyocr
 #. odoo-javascript
@@ -30,12 +30,12 @@ msgstr "&times;"
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template_box__page
 msgid "1-based page number."
-msgstr "Número de página empezando por 1."
+msgstr "Seitennummer, beginnend bei 1."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "<span class=\"o_stat_text\">OCR Document</span>"
-msgstr "<span class=\"o_stat_text\">Documento OCR</span>"
+msgstr "<span class=\"o_stat_text\">OCR-Dokument</span>"
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_template
@@ -43,93 +43,94 @@ msgid ""
 "A template remembers which part of a vendor's document holds each field,\n"
 "                so the next one is read without drawing anything again."
 msgstr ""
-"Una plantilla recuerda qué parte del documento de un proveedor contiene cada"
-" campo, de modo que el siguiente se lee sin volver a dibujar nada."
+"Eine Vorlage merkt sich, welcher Teil des Dokuments eines Lieferanten "
+"welches Feld enthält, sodass das nächste ohne erneutes Zeichnen gelesen "
+"wird."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_ai_enabled
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_ai_enabled
 msgid "AI Extraction"
-msgstr "Extracción con IA"
+msgstr "KI-Extraktion"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid "AI extraction"
-msgstr "Extracción con IA"
+msgstr "KI-Extraktion"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "AI extraction is off. Turn it on in the EasyOCR settings."
 msgstr ""
-"La extracción con IA está desactivada. Actívela en la configuración de "
-"EasyOCR."
+"Die KI-Extraktion ist ausgeschaltet. Schalten Sie sie in den EasyOCR-"
+"Einstellungen ein."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_ai_apikey
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_ai_apikey
 msgid "API Key"
-msgstr "Clave API"
+msgstr "API-Schlüssel"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid "API key"
-msgstr "Clave API"
+msgstr "API-Schlüssel"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_needaction
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_needaction
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Aktion erforderlich"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__active
 msgid "Active"
-msgstr "Activo"
+msgstr "Aktiv"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_ids
 msgid "Activities"
-msgstr "Actividades"
+msgstr "Aktivitäten"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de Actividad de Excepción"
+msgstr "Kennzeichnung von Aktivitätsausnahmen"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_state
 msgid "Activity State"
-msgstr "Estado de la actividad"
+msgstr "Status der Aktivität"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Icono de tipo de actividad"
+msgstr "Symbol des Aktivitätstyps"
 
 #. module: easyocr
 #: model:res.groups,comment:easyocr.group_easyocr_manager
 msgid "Also delete documents and change the extraction settings."
 msgstr ""
-"También puede eliminar documentos y cambiar la configuración de extracción."
+"Darf außerdem Dokumente löschen und die Extraktionseinstellungen ändern."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Anything worth keeping about this document..."
-msgstr "Cualquier cosa que merezca la pena guardar sobre este documento..."
+msgstr "Alles, was zu diesem Dokument festgehalten werden sollte ..."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "Anything worth keeping about this file..."
-msgstr "Cualquier cosa que merezca la pena guardar sobre este archivo..."
+msgstr "Alles, was zu dieser Datei festgehalten werden sollte ..."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_attachment_count
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_attachment_count
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_attachment_count
 msgid "Attachment Count"
-msgstr "Número de archivos adjuntos"
+msgstr "Anzahl Anhänge"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -137,40 +138,40 @@ msgid ""
 "Base address of the EasyOCR service. The /api/v1/ocr/file endpoint is added "
 "automatically."
 msgstr ""
-"Dirección base del servicio EasyOCR. El endpoint /api/v1/ocr/file se añade "
-"automáticamente."
+"Basisadresse des EasyOCR-Dienstes. Der Endpunkt /api/v1/ocr/file wird "
+"automatisch angehängt."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_ai_url
 #: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_ai_url
 msgid "Base address of the EasyOCR service. The endpoint is added on top."
-msgstr "Dirección base del servicio EasyOCR. El endpoint se añade después."
+msgstr "Basisadresse des EasyOCR-Dienstes. Der Endpunkt wird angehängt."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__move_id
 msgid "Bill"
-msgstr "Factura"
+msgstr "Rechnung"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_webhook_log__payload
 msgid "Body of the call, trimmed if it was too long."
-msgstr "Cuerpo de la llamada, recortado si era demasiado largo."
+msgstr "Inhalt des Aufrufs, gekürzt, falls er zu lang war."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__box_count
 msgid "Boxes"
-msgstr "Casillas"
+msgstr "Kästchen"
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Clear"
-msgstr "Limpiar"
+msgstr "Leeren"
 
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_res_company
 msgid "Companies"
-msgstr "Compañías"
+msgstr "Unternehmen"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__company_id
@@ -180,28 +181,28 @@ msgstr "Compañías"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__company_id
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Company"
-msgstr "Compañía"
+msgstr "Unternehmen"
 
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustes de configuración"
+msgstr "Konfigurationseinstellungen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Create Bill"
-msgstr "Crear factura"
+msgstr "Rechnung erstellen"
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_template
 msgid "Create your first template"
-msgstr "Cree su primera plantilla"
+msgstr "Erstellen Sie Ihre erste Vorlage"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_webhook_log__status__ok
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 msgid "Created"
-msgstr "Creado"
+msgstr "Erstellt"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__create_uid
@@ -210,7 +211,7 @@ msgstr "Creado"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_uid
 msgid "Created by"
-msgstr "Creado por"
+msgstr "Erstellt von"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__create_date
@@ -219,27 +220,27 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_date
 msgid "Created on"
-msgstr "Creado el"
+msgstr "Erstellt am"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__currency_id
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Währung"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date
 msgid "Date"
-msgstr "Fecha"
+msgstr "Datum"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__description
 msgid "Description"
-msgstr "Descripción"
+msgstr "Beschreibung"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "Discard"
-msgstr "Descartar"
+msgstr "Verwerfen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
@@ -247,14 +248,14 @@ msgid ""
 "Discard this item? Nothing is deleted: the file stays on the record and you "
 "can restore it later."
 msgstr ""
-"¿Descartar este elemento? No se elimina nada: el archivo permanece en el "
-"registro y puede restaurarlo más adelante."
+"Dieses Element verwerfen? Es wird nichts gelöscht: Die Datei bleibt am "
+"Datensatz und kann später wiederhergestellt werden."
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_inbox_item__state__discarded
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Discarded"
-msgstr "Descartado"
+msgstr "Verworfen"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__display_name
@@ -266,52 +267,52 @@ msgstr "Descartado"
 #: model:ir.model.fields,field_description:easyocr.field_res_company__display_name
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Anzeigename"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__document_id
 msgid "Document"
-msgstr "Documento"
+msgstr "Dokument"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__document_date
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 msgid "Document Date"
-msgstr "Fecha del documento"
+msgstr "Dokumentdatum"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__ref
 msgid "Document Number"
-msgstr "Número de documento"
+msgstr "Dokumentnummer"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_document.py:0
 msgid "Document Viewer"
-msgstr "Visor de documentos"
+msgstr "Dokumentenbetrachter"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/main.py:0
 msgid "Document created from the OCR result."
-msgstr "Documento creado a partir del resultado del OCR."
+msgstr "Dokument aus dem OCR-Ergebnis erstellt."
 
 #. module: easyocr
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_document
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_document
 msgid "Documents"
-msgstr "Documentos"
+msgstr "Dokumente"
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_document
 msgid "Drop your first document"
-msgstr "Suba su primer documento"
+msgstr "Laden Sie Ihr erstes Dokument hoch"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__due_date
 msgid "Due date"
-msgstr "Fecha de vencimiento"
+msgstr "Fälligkeitsdatum"
 
 #. module: easyocr
 #: model:ir.module.category,name:easyocr.module_category_easyocr
@@ -324,7 +325,7 @@ msgstr "EasyOCR"
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_easyocr_extractor
 msgid "EasyOCR Extraction Service Client"
-msgstr "Cliente del servicio de extracción EasyOCR"
+msgstr "Client des EasyOCR-Extraktionsdienstes"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document__state__error
@@ -332,24 +333,24 @@ msgstr "Cliente del servicio de extracción EasyOCR"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 msgid "Error"
-msgstr "Error"
+msgstr "Fehler"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__error_message
 msgid "Error Detail"
-msgstr "Detalle del error"
+msgstr "Fehlerdetails"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__event
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 msgid "Event"
-msgstr "Evento"
+msgstr "Ereignis"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/main.py:0
 msgid "Event \"%s\" is not handled."
-msgstr "El evento «%s» no está gestionado."
+msgstr "Das Ereignis „%s“ wird nicht verarbeitet."
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_webhook_log
@@ -357,46 +358,46 @@ msgid ""
 "Every call the OCR service makes to the webhook is recorded here,\n"
 "                whether it created a document or not."
 msgstr ""
-"Aquí se registra cada llamada que el servicio de OCR hace al webhook, haya "
-"creado un documento o no."
+"Hier wird jeder Aufruf des OCR-Dienstes an den Webhook protokolliert, ob ein"
+" Dokument erstellt wurde oder nicht."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__custom_instructions
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
 msgid "Extra instructions"
-msgstr "Instrucciones adicionales"
+msgstr "Zusätzliche Anweisungen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Extraction"
-msgstr "Extracción"
+msgstr "Extraktion"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__extraction_confidence
 msgid "Extraction Confidence"
-msgstr "Confianza de la extracción"
+msgstr "Extraktionssicherheit"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
 msgid "Extraction Template"
-msgstr "Plantilla de extracción"
+msgstr "Extraktionsvorlage"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_list
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_search
 msgid "Extraction Templates"
-msgstr "Plantillas de extracción"
+msgstr "Extraktionsvorlagen"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__field_key
 msgid "Field"
-msgstr "Campo"
+msgstr "Feld"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__box_ids
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
 msgid "Fields"
-msgstr "Campos"
+msgstr "Felder"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__attachment_id
@@ -404,14 +405,14 @@ msgstr "Campos"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "File"
-msgstr "Archivo"
+msgstr "Datei"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__name
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__filename
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "File Name"
-msgstr "Nombre del archivo"
+msgstr "Dateiname"
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_inbox
@@ -420,45 +421,46 @@ msgid ""
 "                the tray and stay put. Nothing is sent to the extraction service until you say\n"
 "                so, so a full tray costs nothing."
 msgstr ""
-"Los archivos que entregan otros módulos, y los que trae usted mismo, llegan "
-"a la bandeja y se quedan ahí. No se envía nada al servicio de extracción "
-"hasta que usted lo diga, así que una bandeja llena no cuesta nada."
+"Dateien, die andere Module übergeben, und Dateien, die Sie selbst hierher "
+"bringen, landen in der Ablage und bleiben dort. Es wird nichts an den "
+"Extraktionsdienst gesendet, bis Sie es sagen, eine volle Ablage kostet also "
+"nichts."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__file_hash
 msgid "Fingerprint"
-msgstr "Huella"
+msgstr "Fingerabdruck"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_follower_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_follower_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_follower_ids
 msgid "Followers"
-msgstr "Seguidores"
+msgstr "Follower"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_partner_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_partner_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Contactos)"
+msgstr "Follower (Partner)"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icono de Font Awesome p. ej. fa-tasks"
+msgstr "FontAwesome-Icon, z. B. fa-tasks"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__has_message
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__has_message
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__has_message
 msgid "Has Message"
-msgstr "Tiene un mensaje"
+msgstr "Hat eine Nachricht"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__height
 msgid "Height"
-msgstr "Altura"
+msgstr "Höhe"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -466,8 +468,8 @@ msgid ""
 "How long to wait for the service before giving up, in seconds. A scanned "
 "page can take a while to read, so keep this generous."
 msgstr ""
-"Cuánto tiempo se espera al servicio antes de desistir, en segundos. Una "
-"página escaneada puede tardar en leerse, así que sea generoso."
+"Wie lange auf den Dienst gewartet wird, bevor aufgegeben wird, in Sekunden. "
+"Eine gescannte Seite kann eine Weile brauchen, seien Sie also großzügig."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_ai_timeout
@@ -476,13 +478,13 @@ msgid ""
 "How long to wait for the service before giving up. A scanned page can take a"
 " while, so keep it generous."
 msgstr ""
-"Cuánto tiempo se espera al servicio antes de desistir. Una página escaneada "
-"puede tardar en leerse, así que sea generoso."
+"Wie lange auf den Dienst gewartet wird, bevor aufgegeben wird. Eine "
+"gescannte Seite kann eine Weile brauchen, seien Sie also großzügig."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__extraction_confidence
 msgid "How sure the service was of what it read, from 0 to 1."
-msgstr "Cómo de seguro estaba el servicio de lo que leyó, de 0 a 1."
+msgstr "Wie sicher der Dienst beim Gelesenen war, von 0 bis 1."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__id
@@ -499,24 +501,24 @@ msgstr "ID"
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_exception_icon
 msgid "Icon"
-msgstr "Icono"
+msgstr "Icon"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icono para indicar una actividad de excepción."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_webhook_log__document_id_external
 msgid "Identifier the OCR service gives to the document."
-msgstr "Identificador que el servicio de OCR da al documento."
+msgstr "Kennung, die der OCR-Dienst dem Dokument gibt."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__message_needaction
 #: model:ir.model.fields,help:easyocr.field_easyocr_inbox_item__message_needaction
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si está marcada, hay nuevos mensajes que requieren su atención."
+msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__message_has_error
@@ -526,13 +528,14 @@ msgstr "Si está marcada, hay nuevos mensajes que requieren su atención."
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__message_has_error
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si está marcada, algunos mensajes tienen error de envío."
+msgstr ""
+"Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_webhook_log__status__ignored
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 msgid "Ignored"
-msgstr "Ignorado"
+msgstr "Ignoriert"
 
 #. module: easyocr
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_inbox
@@ -540,42 +543,42 @@ msgstr "Ignorado"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_list
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Inbox"
-msgstr "Bandeja de entrada"
+msgstr "Posteingang"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "Inbox Item"
-msgstr "Elemento de la bandeja de entrada"
+msgstr "Posteingangselement"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_number
 msgid "Invoice number"
-msgstr "Número de factura"
+msgstr "Rechnungsnummer"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_is_follower
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_is_follower
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_is_follower
 msgid "Is Follower"
-msgstr "Es un seguidor"
+msgstr "Ist Follower"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_ai_apikey
 #: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_ai_apikey
 msgid "Key sent as the X-API-Key header. Requested from the service provider."
 msgstr ""
-"Clave que se envía en la cabecera X-API-Key. Se solicita al proveedor del "
-"servicio."
+"Schlüssel, der im Header X-API-Key gesendet wird. Wird beim Dienstanbieter "
+"angefordert."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid "Key the service expects in the X-API-Key header."
-msgstr "Clave que el servicio espera en la cabecera X-API-Key."
+msgstr "Schlüssel, den der Dienst im Header X-API-Key erwartet."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__last_extraction
 msgid "Last Extraction Response"
-msgstr "Última respuesta de extracción"
+msgstr "Letzte Extraktionsantwort"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__write_uid
@@ -584,7 +587,7 @@ msgstr "Última respuesta de extracción"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_uid
 msgid "Last Updated by"
-msgstr "Última actualización por"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__write_date
@@ -593,106 +596,106 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_date
 msgid "Last Updated on"
-msgstr "Última actualización el"
+msgstr "Zuletzt aktualisiert am"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__text
 msgid "Last read"
-msgstr "Última lectura"
+msgstr "Zuletzt gelesen"
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Loading the document..."
-msgstr "Cargando el documento..."
+msgstr "Dokument wird geladen ..."
 
 #. module: easyocr
 #: model:res.groups,name:easyocr.group_easyocr_manager
 msgid "Manager"
-msgstr "Responsable"
+msgstr "Manager"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Mark as Processed"
-msgstr "Marcar como procesado"
+msgstr "Als verarbeitet markieren"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__message
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_form
 msgid "Message"
-msgstr "Mensaje"
+msgstr "Nachricht"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_has_error
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_has_error
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de envío de mensaje"
+msgstr "Nachricht mit Zustellungsfehler"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_ids
 msgid "Messages"
-msgstr "Mensajes"
+msgstr "Nachrichten"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Fecha límite de mi actividad"
+msgstr "Frist für meine Aktivitäten"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 msgid "My Calls"
-msgstr "Mis llamadas"
+msgstr "Meine Aufrufe"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 msgid "My Documents"
-msgstr "Mis documentos"
+msgstr "Meine Dokumente"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "My Items"
-msgstr "Mis elementos"
+msgstr "Meine Elemente"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__name
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
 msgid "Name"
-msgstr "Nombre"
+msgstr "Name"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/main.py:0
 #: code:addons/easyocr/models/easyocr_document.py:0
 msgid "New"
-msgstr "Nuevo"
+msgstr "Neu"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Fecha límite de la siguiente actividad"
+msgstr "Nächste Aktivitätsfrist"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_summary
 msgid "Next Activity Summary"
-msgstr "Resumen de la siguiente actividad"
+msgstr "Zusammenfassung der nächsten Aktivität"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tipo de la siguiente actividad"
+msgstr "Nächster Aktivitätstyp"
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_webhook_log
 msgid "No calls received yet"
-msgstr "Todavía no se ha recibido ninguna llamada"
+msgstr "Noch keine Aufrufe empfangen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_form
 msgid "No message"
-msgstr "Sin mensaje"
+msgstr "Keine Nachricht"
 
 #. module: easyocr
 #. odoo-python
@@ -701,8 +704,9 @@ msgid ""
 "No vendor could be matched. Set the vendor on the document, or make sure the"
 " tax number is on a contact."
 msgstr ""
-"No se ha podido identificar ningún proveedor. Defina el proveedor en el "
-"documento, o asegúrese de que el NIF está en un contacto."
+"Es konnte kein Lieferant zugeordnet werden. Legen Sie den Lieferanten am "
+"Dokument fest oder stellen Sie sicher, dass die USt-IdNr. bei einem Kontakt "
+"hinterlegt ist."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__note
@@ -710,110 +714,110 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "Notes"
-msgstr "Notas"
+msgstr "Notizen"
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_inbox
 msgid "Nothing waiting"
-msgstr "Nada pendiente"
+msgstr "Nichts zu tun"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_needaction_counter
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_needaction_counter
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Número de acciones"
+msgstr "Anzahl Aktionen"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_has_error_counter
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_has_error_counter
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_has_error_counter
 msgid "Number of errors"
-msgstr "Número de errores"
+msgstr "Anzahl Fehler"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__message_needaction_counter
 #: model:ir.model.fields,help:easyocr.field_easyocr_inbox_item__message_needaction_counter
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Número de mensajes que requieren una acción"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__message_has_error_counter
 #: model:ir.model.fields,help:easyocr.field_easyocr_inbox_item__message_has_error_counter
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Número de mensajes con error de envío"
+msgstr "Anzahl Nachrichten mit Zustellungsfehler"
 
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_easyocr_document
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "OCR Document"
-msgstr "Documento OCR"
+msgstr "OCR-Dokument"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_list
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 msgid "OCR Documents"
-msgstr "Documentos OCR"
+msgstr "OCR-Dokumente"
 
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_easyocr_template_box
 msgid "OCR Extraction Box"
-msgstr "Casilla de extracción OCR"
+msgstr "OCR-Extraktionskästchen"
 
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_easyocr_template
 msgid "OCR Extraction Template"
-msgstr "Plantilla de extracción OCR"
+msgstr "OCR-Extraktionsvorlage"
 
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_easyocr_inbox_item
 msgid "OCR Inbox Item"
-msgstr "Elemento de la bandeja de entrada OCR"
+msgstr "OCR-Posteingangselement"
 
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_easyocr_webhook_log
 msgid "OCR Webhook Call"
-msgstr "Llamada webhook OCR"
+msgstr "OCR-Webhook-Aufruf"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "Only PDF files are accepted by the inbox."
-msgstr "La bandeja de entrada solo acepta archivos PDF."
+msgstr "Der Posteingang akzeptiert nur PDF-Dateien."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Open Viewer"
-msgstr "Abrir el visor"
+msgstr "Betrachter öffnen"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__origin
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Origin"
-msgstr "Origen"
+msgstr "Ursprung"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template_box__x
 msgid "PDF points from the left edge."
-msgstr "Puntos PDF desde el borde izquierdo."
+msgstr "PDF-Punkte vom linken Rand."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template_box__y
 msgid "PDF points from the top edge."
-msgstr "Puntos PDF desde el borde superior."
+msgstr "PDF-Punkte vom oberen Rand."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__page
 msgid "Page"
-msgstr "Página"
+msgstr "Seite"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__payload
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_form
 msgid "Payload"
-msgstr "Carga útil"
+msgstr "Nutzdaten"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document__state__draft
@@ -821,7 +825,7 @@ msgstr "Carga útil"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Pending"
-msgstr "Pendiente"
+msgstr "Ausstehend"
 
 #. module: easyocr
 #. odoo-javascript
@@ -830,13 +834,13 @@ msgid ""
 "Pick a field above and drag a box over the page. The text under the box\n"
 "                        is read straight away."
 msgstr ""
-"Elija un campo arriba y dibuje un recuadro sobre la página. El texto que hay"
-" bajo el recuadro se lee al momento."
+"Wählen Sie oben ein Feld und ziehen Sie ein Kästchen über die Seite. Der "
+"Text unter dem Kästchen wird sofort gelesen."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "Process"
-msgstr "Procesar"
+msgstr "Verarbeiten"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document__state__processed
@@ -844,82 +848,82 @@ msgstr "Procesar"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Processed"
-msgstr "Procesado"
+msgstr "Verarbeitet"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__last_extraction
 msgid "Raw answer of the service, kept for support and troubleshooting."
-msgstr "Respuesta en bruto del servicio, guardada para soporte y diagnóstico."
+msgstr "Rohantwort des Dienstes, aufbewahrt für Support und Fehlersuche."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__partner_name
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__partner_vat
 msgid "Read from the document."
-msgstr "Leído del documento."
+msgstr "Aus dem Dokument gelesen."
 
 #. module: easyocr
 #: model:ir.module.category,description:easyocr.module_category_easyocr
 msgid "Read supplier invoices and expense receipts from files."
-msgstr "Lee facturas de proveedor y recibos de gastos desde archivos."
+msgstr "Lieferantenrechnungen und Spesenbelege aus Dateien auslesen."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Read with AI"
-msgstr "Leer con IA"
+msgstr "Mit KI lesen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_list
 msgid "Received"
-msgstr "Recibido"
+msgstr "Empfangen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 msgid "Received On"
-msgstr "Recibido el"
+msgstr "Empfangen am"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__name
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Reference"
-msgstr "Referencia"
+msgstr "Referenz"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Reset to Pending"
-msgstr "Volver a pendiente"
+msgstr "Auf ausstehend zurücksetzen"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__activity_user_id
 msgid "Responsible User"
-msgstr "Usuario responsable"
+msgstr "Verantwortlicher Benutzer"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "Restore to Pending"
-msgstr "Restaurar a pendiente"
+msgstr "Wieder auf ausstehend setzen"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_inbox_item__file_hash
 msgid "SHA-256 of the file. Lets the tray turn away a file sent twice."
 msgstr ""
-"SHA-256 del archivo. Permite que la bandeja rechace un archivo enviado dos "
-"veces."
+"SHA-256 der Datei. Damit weist die Ablage eine zweimal gesendete Datei "
+"zurück."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_has_sms_error
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_has_sms_error
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de envío del SMS"
+msgstr "SMS-Zustellungsfehler"
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Save template"
-msgstr "Guardar plantilla"
+msgstr "Vorlage speichern"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -927,8 +931,8 @@ msgid ""
 "Send documents to the EasyOCR service for scans and photos that carry no "
 "text layer of their own."
 msgstr ""
-"Envía documentos al servicio EasyOCR para escaneos y fotos que no llevan "
-"capa de texto propia."
+"Sendet Dokumente an den EasyOCR-Dienst für Scans und Fotos ohne eigene "
+"Textebene."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_ai_enabled
@@ -937,48 +941,49 @@ msgid ""
 "Send documents to the EasyOCR service to read them. Off by default: nothing "
 "leaves the server until this is on."
 msgstr ""
-"Envía documentos al servicio EasyOCR para leerlos. Desactivado por defecto: "
-"nada sale del servidor hasta que se activa."
+"Sendet Dokumente zum Lesen an den EasyOCR-Dienst. Standardmäßig aus: Es "
+"verlässt nichts den Server, solange dies nicht eingeschaltet ist."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "Sending it again may help."
-msgstr "Puede que volver a enviarlo ayude."
+msgstr "Ein erneutes Senden kann helfen."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "Sending it again will not change the result."
-msgstr "Volver a enviarlo no cambiará el resultado."
+msgstr "Ein erneutes Senden ändert das Ergebnis nicht."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__custom_instructions
 msgid "Sent to the extraction service on top of the standard instructions."
 msgstr ""
-"Se envía al servicio de extracción además de las instrucciones estándar."
+"Wird zusätzlich zu den Standardanweisungen an den Extraktionsdienst "
+"gesendet."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__document_id_external
 msgid "Service Document"
-msgstr "Documento del servicio"
+msgstr "Dienst-Dokument"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_ai_url
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_ai_url
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid "Service URL"
-msgstr "URL del servicio"
+msgstr "Dienst-URL"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__file_size
 msgid "Size"
-msgstr "Tamaño"
+msgstr "Größe"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_inbox_item__file_size
 msgid "Size of the file in bytes."
-msgstr "Tamaño del archivo en bytes."
+msgstr "Größe der Datei in Bytes."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__state
@@ -988,7 +993,7 @@ msgstr "Tamaño del archivo en bytes."
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 msgid "Status"
-msgstr "Estado"
+msgstr "Status"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__activity_state
@@ -998,73 +1003,74 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Estado según las actividades\n"
-"Vencida: la fecha límite ya ha pasado\n"
-"Hoy: la fecha límite es hoy\n"
-"Planificada: actividades futuras."
+"Status basierend auf Aktivitäten\n"
+"Überfällig: Fälligkeitsdatum bereits überschritten\n"
+"Heute: Aktivität ist für heute geplant\n"
+"Geplant: zukünftige Aktivitäten."
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__tax_amount
 msgid "Tax"
-msgstr "Impuesto"
+msgstr "Steuer"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__partner_vat
 msgid "Tax Number"
-msgstr "NIF"
+msgstr "USt-IdNr."
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_vat
 msgid "Tax number"
-msgstr "NIF"
+msgstr "USt-IdNr."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__template_id
 msgid "Template"
-msgstr "Plantilla"
+msgstr "Vorlage"
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Template name"
-msgstr "Nombre de la plantilla"
+msgstr "Name der Vorlage"
 
 #. module: easyocr
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_template
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_template
 msgid "Templates"
-msgstr "Plantillas"
+msgstr "Vorlagen"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_inbox_item__document_id
 msgid "The OCR document built from this file, once it was processed."
-msgstr "El documento OCR creado a partir de este archivo, una vez procesado."
+msgstr ""
+"Das aus dieser Datei erstellte OCR-Dokument, sobald sie verarbeitet wurde."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The attached file is empty or cannot be read."
-msgstr "El archivo adjunto está vacío o no se puede leer."
+msgstr "Die angehängte Datei ist leer oder kann nicht gelesen werden."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The document could not be read."
-msgstr "No se ha podido leer el documento."
+msgstr "Das Dokument konnte nicht gelesen werden."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The document was read."
-msgstr "Se ha leído el documento."
+msgstr "Das Dokument wurde gelesen."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction failed unexpectedly. The server log has the detail."
 msgstr ""
-"La extracción ha fallado de forma inesperada. El registro del servidor tiene"
-" el detalle."
+"Die Extraktion ist unerwartet fehlgeschlagen. Details stehen im "
+"Serverprotokoll."
 
 #. module: easyocr
 #. odoo-python
@@ -1072,107 +1078,109 @@ msgstr ""
 msgid ""
 "The extraction service answered with an unexpected error (HTTP %(status)s)."
 msgstr ""
-"El servicio de extracción ha respondido con un error inesperado (HTTP "
+"Der Extraktionsdienst hat mit einem unerwarteten Fehler geantwortet (HTTP "
 "%(status)s)."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service answered with something that is not JSON."
-msgstr "El servicio de extracción ha respondido con algo que no es JSON."
+msgstr "Der Extraktionsdienst hat mit etwas geantwortet, das kein JSON ist."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service could not be reached (%(error)s)."
-msgstr "No se ha podido contactar con el servicio de extracción (%(error)s)."
+msgstr "Der Extraktionsdienst war nicht erreichbar (%(error)s)."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid ""
 "The extraction service could not make sense of the document (%(error)s)."
-msgstr ""
-"El servicio de extracción no ha podido interpretar el documento (%(error)s)."
+msgstr "Der Extraktionsdienst konnte das Dokument nicht deuten (%(error)s)."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service could not read the request."
-msgstr "El servicio de extracción no ha podido leer la petición."
+msgstr "Der Extraktionsdienst konnte die Anfrage nicht lesen."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service could only read the document in part."
-msgstr "El servicio de extracción solo ha podido leer el documento en parte."
+msgstr "Der Extraktionsdienst konnte das Dokument nur teilweise lesen."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service is down or busy."
-msgstr "El servicio de extracción está caído u ocupado."
+msgstr "Der Extraktionsdienst ist nicht erreichbar oder ausgelastet."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service rejected the API key."
-msgstr "El servicio de extracción ha rechazado la clave API."
+msgstr "Der Extraktionsdienst hat den API-Schlüssel abgelehnt."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service requires an API key, and none was sent."
 msgstr ""
-"El servicio de extracción requiere una clave API y no se ha enviado ninguna."
+"Der Extraktionsdienst verlangt einen API-Schlüssel, es wurde keiner "
+"gesendet."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service returned an unexpected response."
-msgstr "El servicio de extracción ha devuelto una respuesta inesperada."
+msgstr "Der Extraktionsdienst hat eine unerwartete Antwort zurückgegeben."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The extraction service returned no data for this document."
-msgstr "El servicio de extracción no ha devuelto datos para este documento."
+msgstr ""
+"Der Extraktionsdienst hat keine Daten für dieses Dokument zurückgegeben."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "The file could not be filed in the inbox."
-msgstr "No se ha podido archivar el archivo en la bandeja de entrada."
+msgstr "Die Datei konnte nicht im Posteingang abgelegt werden."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "The file has no name."
-msgstr "El archivo no tiene nombre."
+msgstr "Die Datei hat keinen Namen."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "The file is empty."
-msgstr "El archivo está vacío."
+msgstr "Die Datei ist leer."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "The file is larger than the %(limit)s MB the inbox takes."
-msgstr "El archivo supera los %(limit)s MB que admite la bandeja de entrada."
+msgstr ""
+"Die Datei ist größer als die %(limit)s MB, die der Posteingang annimmt."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The file is too large for the extraction service."
-msgstr "El archivo es demasiado grande para el servicio de extracción."
+msgstr "Die Datei ist zu groß für den Extraktionsdienst."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/main.py:0
 msgid "The notification carries no structured data."
-msgstr "La notificación no lleva datos estructurados."
+msgstr "Die Benachrichtigung enthält keine strukturierten Daten."
 
 #. module: easyocr
 #. odoo-python
@@ -1181,90 +1189,93 @@ msgid ""
 "The tax number on this document belongs to your own company, so it cannot be"
 " booked as a supplier bill."
 msgstr ""
-"El NIF de este documento es de su propia empresa, así que no se puede "
-"registrar como factura de proveedor."
+"Die USt-IdNr. auf diesem Dokument gehört zu Ihrem eigenen Unternehmen und "
+"kann daher nicht als Lieferantenrechnung gebucht werden."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/main.py:0
 msgid "The value sent for %s, %s, is not a date."
-msgstr "El valor enviado para %s, %s, no es una fecha."
+msgstr "Der für %s gesendete Wert %s ist kein Datum."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/main.py:0
 msgid "The value sent for %s, %s, is not a number."
-msgstr "El valor enviado para %s, %s, no es un número."
+msgstr "Der für %s gesendete Wert %s ist keine Zahl."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "There is no file on this item."
-msgstr "Este elemento no tiene ningún archivo."
+msgstr "An diesem Element hängt keine Datei."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_document.py:0
 msgid "This document already has a bill."
-msgstr "Este documento ya tiene una factura."
+msgstr "Dieses Dokument hat bereits eine Rechnung."
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "This document has no file attached, or the file could not be read."
 msgstr ""
-"Este documento no tiene ningún archivo adjunto, o no se ha podido leer."
+"An diesem Dokument hängt keine Datei, oder die Datei konnte nicht gelesen "
+"werden."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "This document has no file attached."
-msgstr "Este documento no tiene ningún archivo adjunto."
+msgstr "An diesem Dokument hängt keine Datei."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 #: model:ir.model.constraint,message:easyocr.constraint_easyocr_inbox_item_file_company_uniq
 msgid "This file is already in the inbox."
-msgstr "Este archivo ya está en la bandeja de entrada."
+msgstr "Diese Datei ist bereits im Posteingang."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "This item was discarded. Restore it before processing it."
-msgstr "Este elemento se ha descartado. Restáurelo antes de procesarlo."
+msgstr ""
+"Dieses Element wurde verworfen. Stellen Sie es wieder her, bevor Sie es "
+"verarbeiten."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid "Timeout"
-msgstr "Tiempo de espera"
+msgstr "Zeitlimit"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_ai_timeout
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_ai_timeout
 msgid "Timeout (seconds)"
-msgstr "Tiempo de espera (segundos)"
+msgstr "Zeitlimit (Sekunden)"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__amount_total
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_total
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción en el registro."
+msgstr "Typ der Ausnahmeaktivität im Datensatz."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Importe base"
+msgstr "Nettobetrag"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_untaxed
 msgid "Untaxed total"
-msgstr "Total libre de impuestos"
+msgstr "Nettobetrag"
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_document
@@ -1272,18 +1283,18 @@ msgid ""
 "Upload a supplier invoice or an expense receipt and review what was read from it\n"
 "                before it becomes an accounting entry."
 msgstr ""
-"Suba una factura de proveedor o un recibo de gasto y revise lo que se ha "
-"leído antes de que se convierta en un apunte contable."
+"Laden Sie eine Lieferantenrechnung oder einen Spesenbeleg hoch und prüfen "
+"Sie, was daraus gelesen wurde, bevor daraus ein Buchungssatz wird."
 
 #. module: easyocr
 #: model:res.groups,comment:easyocr.group_easyocr_user
 msgid "Upload documents and review what was read from them."
-msgstr "Suba documentos y revise lo que se ha leído de ellos."
+msgstr "Laden Sie Dokumente hoch und prüfen Sie, was daraus gelesen wurde."
 
 #. module: easyocr
 #: model:res.groups,name:easyocr.group_easyocr_user
 msgid "User"
-msgstr "Usuario"
+msgstr "Benutzer"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__partner_id
@@ -1292,24 +1303,24 @@ msgstr "Usuario"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_search
 msgid "Vendor"
-msgstr "Proveedor"
+msgstr "Lieferant"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__partner_name
 msgid "Vendor Name"
-msgstr "Nombre del proveedor"
+msgstr "Name des Lieferanten"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__partner_id
 msgid "Vendor this template belongs to. Leave empty for a generic template."
 msgstr ""
-"Proveedor al que pertenece esta plantilla. Déjelo vacío para una plantilla "
-"genérica."
+"Lieferant, zu dem diese Vorlage gehört. Leer lassen für eine allgemeine "
+"Vorlage."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_form
 msgid "Webhook Call"
-msgstr "Llamada webhook"
+msgstr "Webhook-Aufruf"
 
 #. module: easyocr
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_webhook_log
@@ -1317,43 +1328,43 @@ msgstr "Llamada webhook"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 msgid "Webhook Log"
-msgstr "Registro de webhooks"
+msgstr "Webhook-Protokoll"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__website_message_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__website_message_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__website_message_ids
 msgid "Website Messages"
-msgstr "Mensajes del sitio web"
+msgstr "Website-Nachrichten"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__website_message_ids
 #: model:ir.model.fields,help:easyocr.field_easyocr_inbox_item__website_message_ids
 #: model:ir.model.fields,help:easyocr.field_easyocr_template__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicación del sitio web"
+msgstr "Website-Kommunikationsverlauf"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template_box__text
 msgid "What was read the last time this box was applied, for checking."
 msgstr ""
-"Lo que se leyó la última vez que se aplicó esta casilla, para comprobarlo."
+"Was beim letzten Anwenden dieses Kästchens gelesen wurde, zur Kontrolle."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_inbox_item__origin
 msgid "Who handed the file over, for instance easyscan or a mail gateway."
 msgstr ""
-"Quién entregó el archivo, por ejemplo easyscan o una pasarela de correo."
+"Wer die Datei übergeben hat, zum Beispiel easyscan oder ein Mail-Gateway."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__width
 msgid "Width"
-msgstr "Ancho"
+msgstr "Breite"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_search
 msgid "Without vendor"
-msgstr "Sin proveedor"
+msgstr "Ohne Lieferant"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__x
@@ -1369,27 +1380,27 @@ msgstr "Y"
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "You are not allowed to add documents to the inbox."
-msgstr "No tiene permiso para añadir documentos a la bandeja de entrada."
+msgstr "Sie dürfen keine Dokumente zum Posteingang hinzufügen."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "e.g. INV/2026/0001"
-msgstr "p. ej. INV/2026/0001"
+msgstr "z. B. INV/2026/0001"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
 msgid "e.g. Standard invoice"
-msgstr "p. ej. Factura estándar"
+msgstr "z. B. Standardrechnung"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "e.g. easyscan"
-msgstr "p. ej. easyscan"
+msgstr "z. B. easyscan"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "e.g. scan-2026-01-31.pdf"
-msgstr "p. ej. scan-2026-01-31.pdf"
+msgstr "z. B. scan-2026-01-31.pdf"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -1400,7 +1411,7 @@ msgstr "https://app.easyocr.es"
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "page(s)"
-msgstr "página(s)"
+msgstr "Seite(n)"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
@@ -1409,52 +1420,54 @@ msgid ""
 "                    Take a photo"
 msgstr ""
 "<span class=\"o_easyocr_capture_shoot_icon\" aria-hidden=\"true\"/>\n"
-"                    Hacer una foto"
+"                    Foto aufnehmen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Abbrechen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Capture a receipt"
-msgstr "Capturar un recibo"
+msgstr "Beleg erfassen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Capture another receipt"
-msgstr "Capturar otro recibo"
+msgstr "Weiteren Beleg erfassen"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Choose a photo from the phone"
-msgstr "Elegir una foto del teléfono"
+msgstr "Foto vom Telefon auswählen"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "EasyOCR — Capture a receipt"
-msgstr "EasyOCR — Capturar un recibo"
+msgstr "EasyOCR — Beleg erfassen"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "No photo was sent."
-msgstr "No se ha enviado ninguna foto."
+msgstr "Es wurde kein Foto gesendet."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "Photograph a receipt and send it to the EasyOCR inbox."
-msgstr "Fotografíe un recibo y envíelo a la bandeja de entrada de EasyOCR."
+msgstr ""
+"Fotografieren Sie einen Beleg und senden Sie ihn an den EasyOCR-Posteingang."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid ""
 "Photograph the receipt and it goes straight to the inbox, read and ready."
 msgstr ""
-"Fotografíe el recibo y va directo a la bandeja de entrada, leído y listo."
+"Fotografieren Sie den Beleg, und er landet direkt im Posteingang, gelesen "
+"und bereit."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
@@ -1462,20 +1475,20 @@ msgid ""
 "Reading with AI is off for your company: the photo will be saved to the\n"
 "                    inbox and read by hand."
 msgstr ""
-"La lectura con IA está desactivada en su empresa: la foto se guardará en la "
-"bandeja de entrada y se leerá a mano."
+"Das Lesen mit KI ist für Ihr Unternehmen ausgeschaltet: Das Foto wird im "
+"Posteingang gespeichert und von Hand gelesen."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "Saved and read."
-msgstr "Guardado y leído."
+msgstr "Gespeichert und gelesen."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "Saved, but it could not be read."
-msgstr "Guardado, pero no se ha podido leer."
+msgstr "Gespeichert, aber es konnte nicht gelesen werden."
 
 #. module: easyocr
 #. odoo-python
@@ -1484,62 +1497,63 @@ msgid ""
 "Saved. Reading with AI is off for your company, so the photo is waiting in "
 "the inbox to be read by hand."
 msgstr ""
-"Guardado. La lectura con IA está desactivada en su empresa, así que la foto "
-"espera en la bandeja de entrada para leerse a mano."
+"Gespeichert. Das Lesen mit KI ist für Ihr Unternehmen ausgeschaltet, das "
+"Foto wartet also im Posteingang darauf, von Hand gelesen zu werden."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Send it"
-msgstr "Enviarla"
+msgstr "Senden"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Take another"
-msgstr "Hacer otra"
+msgstr "Neues aufnehmen"
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "That file could not be read as a photo."
-msgstr "Ese archivo no se ha podido leer como foto."
+msgstr "Diese Datei konnte nicht als Foto gelesen werden."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "That file is not a photo. Send a JPEG or a PNG."
-msgstr "Ese archivo no es una foto. Envíe un JPEG o un PNG."
+msgstr "Diese Datei ist kein Foto. Senden Sie ein JPEG oder ein PNG."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "The photo arrived empty. Take it again."
-msgstr "La foto ha llegado vacía. Hágala de nuevo."
+msgstr "Das Foto ist leer angekommen. Nehmen Sie es erneut auf."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "The photo could not be saved."
-msgstr "No se ha podido guardar la foto."
+msgstr "Das Foto konnte nicht gespeichert werden."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "The photo is larger than the %(limit)s MB the inbox takes."
-msgstr "La foto supera los %(limit)s MB que admite la bandeja de entrada."
+msgstr ""
+"Das Foto ist größer als die %(limit)s MB, die der Posteingang annimmt."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "This page needs JavaScript to photograph the receipt."
-msgstr "Esta página necesita JavaScript para fotografiar el recibo."
+msgstr "Diese Seite benötigt JavaScript, um den Beleg zu fotografieren."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "This photo is already in the inbox. It was not sent twice."
 msgstr ""
-"Esta foto ya está en la bandeja de entrada. No se ha enviado dos veces."
+"Dieses Foto ist bereits im Posteingang. Es wurde nicht zweimal gesendet."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid "Use this photo"
-msgstr "Usar esta foto"
+msgstr "Dieses Foto verwenden"

@@ -1,0 +1,185 @@
+// The phone page of EasyOCR. Everything is scoped under one class: the page
+// rides with the backend stylesheet, and nothing here may reach a backend view.
+
+.o_easyocr_capture {
+    box-sizing: border-box;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+    max-width: 32rem;
+    background: #fff;
+    color: #2c3e50;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    // The page is read on a phone, often one-handed: nothing is smaller than a
+    // thumb and nothing moves under it.
+    -webkit-text-size-adjust: 100%;
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: inherit;
+    }
+
+    // The template hides the panels it is not showing with the hidden
+    // attribute; make that win over any display a rule below sets.
+    [hidden] {
+        display: none !important;
+    }
+
+    .o_easyocr_capture_title {
+        margin: 0 0 0.25rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .o_easyocr_capture_hint {
+        margin: 0 0 1.5rem;
+        color: #6b7c8c;
+        font-size: 0.95rem;
+    }
+
+    .o_easyocr_capture_hint_ai {
+        margin-top: 1.25rem;
+        margin-bottom: 0;
+    }
+
+    // The one thing the page is for. Full width, tall, and unmistakable.
+    .o_easyocr_capture_shoot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        width: 100%;
+        min-height: 4.5rem;
+        padding: 1rem 1.25rem;
+        border: 0;
+        border-radius: 0.75rem;
+        background: #2c3e50;
+        color: #fff;
+        font-size: 1.15rem;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:active {
+            background: #1b2733;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+    }
+
+    .o_easyocr_capture_shoot_icon {
+        width: 1.6rem;
+        height: 1.35rem;
+        border: 2px solid currentColor;
+        border-radius: 0.3rem;
+        // The lens, drawn instead of loaded: one less file on a phone.
+        background:
+            radial-gradient(circle at 50% 55%, currentColor 0 0.28rem, transparent 0.3rem);
+    }
+
+    .o_easyocr_capture_pick {
+        display: block;
+        width: 100%;
+        min-height: 3rem;
+        margin-top: 0.6rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid #cfd8e0;
+        border-radius: 0.75rem;
+        background: #fff;
+        color: #2c3e50;
+        font-size: 1rem;
+        cursor: pointer;
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+    }
+
+    .o_easyocr_capture_camera,
+    .o_easyocr_capture_preview {
+        margin-top: 1.25rem;
+    }
+
+    .o_easyocr_capture_video,
+    .o_easyocr_capture_thumb {
+        display: block;
+        width: 100%;
+        max-height: 60vh;
+        border-radius: 0.75rem;
+        background: #000;
+        object-fit: contain;
+    }
+
+    .o_easyocr_capture_thumb {
+        background: #f2f4f6;
+    }
+
+    .o_easyocr_capture_camera_actions,
+    .o_easyocr_capture_preview_actions {
+        margin-top: 0.75rem;
+    }
+
+    .o_easyocr_capture_status {
+        margin-top: 1.25rem;
+        color: #6b7c8c;
+        font-size: 0.95rem;
+        text-align: center;
+    }
+
+    .o_easyocr_capture_result {
+        margin-top: 1.25rem;
+        padding: 1rem;
+        border: 1px solid #d9e6d5;
+        border-radius: 0.75rem;
+        background: #f4faf2;
+    }
+
+    .o_easyocr_capture_result_title {
+        margin: 0 0 0.5rem;
+        font-size: 1.15rem;
+        font-weight: 600;
+    }
+
+    .o_easyocr_capture_field {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.35rem 0;
+        border-bottom: 1px solid #e4eee0;
+        font-size: 0.95rem;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+
+        dt {
+            flex: 0 0 5.5rem;
+            margin: 0;
+            color: #6b7c8c;
+        }
+
+        dd {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin: 0;
+            font-weight: 600;
+            // A vendor name read from a photograph can be one long word.
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .o_easyocr_capture_error {
+        margin-top: 1.25rem;
+        padding: 0.85rem 1rem;
+        border: 1px solid #f0c9c4;
+        border-radius: 0.75rem;
+        background: #fdf3f2;
+        color: #a3352a;
+        font-size: 0.95rem;
+    }
+}

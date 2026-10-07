@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License OPL-1 (see LICENSE file).
+
+     The page lives here and not in static/src/xml on purpose: that folder is
+     part of the web.assets_backend bundle, and every XML file in a bundle is
+     read as a list of OWL templates — a file without a t-name makes the whole
+     bundle fail with "Template name is missing.". A page served by a controller
+     is a QWeb view, so it belongs with the other views of the module. -->
+<odoo>
+
+    <template id="expense_capture_page" name="Expense Capture">
+        <t t-call="web.layout">
+            <t t-set="title">Capture a receipt</t>
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+                <meta name="theme-color" content="#2c3e50"/>
+                <link rel="manifest" t-att-href="manifest_url"/>
+                <link rel="icon" t-att-href="icon_url" type="image/svg+xml"/>
+                <!-- Only the styles of the backend bundle are wanted here: the
+                     page is plain JavaScript, and pulling the web client in
+                     would put megabytes on a phone for one camera button. -->
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <script type="module" src="/easyocr/static/src/js/expense_capture.js"/>
+            </t>
+
+            <div class="o_easyocr_capture" id="easyocr_capture_root"
+                 t-att-data-upload-url="upload_url"
+                 t-att-data-service-worker-url="service_worker_url"
+                 t-att-data-max-size-mb="max_size_mb">
+
+                <h1 class="o_easyocr_capture_title">Capture a receipt</h1>
+                <p class="o_easyocr_capture_hint">
+                    Photograph the receipt and it goes straight to the inbox, read and ready.
+                </p>
+
+                <button type="button" class="o_easyocr_capture_shoot" id="easyocr_capture_shoot">
+                    <span class="o_easyocr_capture_shoot_icon" aria-hidden="true"></span>
+                    Take a photo
+                </button>
+
+                <button type="button" class="o_easyocr_capture_pick" id="easyocr_capture_pick">
+                    Choose a photo from the phone
+                </button>
+
+                <p class="o_easyocr_capture_hint o_easyocr_capture_hint_ai" t-if="not ai_enabled">
+                    Reading with AI is off for your company: the photo will be saved to the
+                    inbox and read by hand.
+                </p>
+
+                <!-- Live camera. Hidden until the browser says it can have one. -->
+                <div class="o_easyocr_capture_camera" id="easyocr_capture_camera" hidden="hidden">
+                    <video class="o_easyocr_capture_video" id="easyocr_capture_video"
+                           playsinline="playsinline" autoplay="autoplay" muted="muted"></video>
+                    <div class="o_easyocr_capture_camera_actions">
+                        <button type="button" class="o_easyocr_capture_shoot" id="easyocr_capture_snap">
+                            Use this photo
+                        </button>
+                        <button type="button" class="o_easyocr_capture_pick" id="easyocr_capture_cancel">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- The photo, already resized, before it is sent. -->
+                <div class="o_easyocr_capture_preview" id="easyocr_capture_preview" hidden="hidden">
+                    <img class="o_easyocr_capture_thumb" id="easyocr_capture_thumb" alt=""/>
+                    <div class="o_easyocr_capture_preview_actions">
+                        <button type="button" class="o_easyocr_capture_shoot" id="easyocr_capture_send">
+                            Send it
+                        </button>
+                        <button type="button" class="o_easyocr_capture_pick" id="easyocr_capture_retry">
+                            Take another
+                        </button>
+                    </div>
+                </div>
+
+                <div class="o_easyocr_capture_status" id="easyocr_capture_status"
+                     role="status" aria-live="polite" hidden="hidden"></div>
+
+                <div class="o_easyocr_capture_result" id="easyocr_capture_result" hidden="hidden">
+                    <h2 class="o_easyocr_capture_result_title" id="easyocr_capture_result_title"></h2>
+                    <dl class="o_easyocr_capture_fields" id="easyocr_capture_fields"></dl>
+                    <button type="button" class="o_easyocr_capture_pick" id="easyocr_capture_again">
+                        Capture another receipt
+                    </button>
+                </div>
+
+                <div class="o_easyocr_capture_error" id="easyocr_capture_error"
+                     role="alert" hidden="hidden"></div>
+
+                <noscript>
+                    <p class="o_easyocr_capture_error">
+                        This page needs JavaScript to photograph the receipt.
+                    </p>
+                </noscript>
+
+                <!-- The file input is the fallback the phone knows how to open
+                     straight in the camera, and it also carries the CSRF token
+                     the upload needs. -->
+                <form class="o_easyocr_capture_form" id="easyocr_capture_form" method="post"
+                      enctype="multipart/form-data" t-att-action="upload_url" hidden="hidden">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="file" id="easyocr_capture_input" name="image"
+                           accept="image/*" capture="environment"/>
+                </form>
+            </div>
+        </t>
+    </template>
+
+</odoo>
