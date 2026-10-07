@@ -37,6 +37,13 @@
                         class="btn-secondary"
                     />
                     <button
+                        name="action_create_bill"
+                        type="object"
+                        string="Create Bill"
+                        class="btn-primary"
+                        invisible="move_id"
+                    />
+                    <button
                         name="action_mark_processed"
                         type="object"
                         string="Mark as Processed"
@@ -59,6 +66,8 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
+                            <field name="partner_name" invisible="partner_id"/>
+                            <field name="partner_vat" invisible="partner_id"/>
                             <field name="ref"/>
                             <field name="document_date"/>
                         </group>
@@ -72,6 +81,7 @@
                     <notebook>
                         <page string="File" name="file">
                             <field name="attachment_id"/>
+                            <field name="move_id" invisible="not move_id"/>
                         </page>
                         <page string="Notes" name="notes">
                             <field name="note" placeholder="Anything worth keeping about this document..."/>
