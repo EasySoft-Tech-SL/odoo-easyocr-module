@@ -54,6 +54,14 @@
                             <field name="easyocr_duplicate_window_days" class="o_light_label"/>
                         </setting>
                     </block>
+                    <block title="Photographed receipts" id="easyocr_expense_block">
+                        <setting id="easyocr_expense_target" string="A photographed receipt becomes" help="Where a receipt photographed from a phone ends up. A supplier bill needs a vendor; a ticket from a petrol station is not one, so the employee expense is usually the better fit when the person taking the photo is the one who paid.">
+                            <field name="easyocr_expense_target"/>
+                        </setting>
+                        <setting id="easyocr_expense_allow_validate" string="Let the phone send the expense" help="Let whoever took the photo put the expense forward for approval at the same time, instead of leaving it in draft until they open Odoo.">
+                            <field name="easyocr_expense_allow_validate"/>
+                        </setting>
+                    </block>
                     <block title="Webhooks" id="easyocr_webhook_block">
                         <setting id="easyocr_webhook_create_bill" string="Create the bill from a webhook" help="When the service says it has finished reading a document, make the supplier bill from it without waiting for anyone. Off by default: a webhook is a message from outside, and a bill is an accounting entry.">
                             <field name="easyocr_webhook_create_bill"/>

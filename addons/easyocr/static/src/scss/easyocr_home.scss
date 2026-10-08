@@ -1,86 +1,204 @@
+// The Dolibarr module's dashboard, repainted for Odoo.
+//
+// The measurements, the colours and the behaviour are the ones of that screen's
+// own stylesheet: a white card, a hairline border, a tinted chip for the icon, a
+// coloured bar that appears along the top edge when the pointer is over it, and
+// each section with its own colour. It is written out rather than derived from
+// the Odoo theme on purpose -- matching that screen is the point, and a card
+// that takes its colour from the theme would not match anything.
+
 .o_easyocr_home {
-    max-width: 1100px;
+    max-width: 1180px;
     margin: 0 auto;
     padding: 24px 16px 48px;
 }
 
-.o_easyocr_home_head {
-    margin-bottom: 24px;
+// ── Header ───────────────────────────────────────────────────────────
+.o_easyocr_home_header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 26px;
+}
 
+.o_easyocr_home_logo {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+}
+
+.o_easyocr_home_header_text {
     h1 {
-        margin-bottom: 4px;
-        font-size: 1.75rem;
+        margin: 0 0 4px;
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: #263238;
     }
 
     p {
         margin: 0;
+        font-size: 0.85em;
+        color: #78909c;
     }
 }
 
-.o_easyocr_home_grid {
-    display: grid;
-    // Two on a phone, three on a tablet, room for four where there is space.
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+// ── Counters ─────────────────────────────────────────────────────────
+.o_easyocr_home_stats {
+    display: flex;
+    flex-wrap: wrap;
     gap: 16px;
+    margin-bottom: 30px;
 }
 
-.o_easyocr_card {
+.o_easyocr_stat {
     display: flex;
     align-items: center;
     gap: 14px;
-    // The card is a button, so the theme's own button styling has to go.
-    width: 100%;
-    padding: 18px;
-    border: 1px solid var(--o-easyocr-card-border, #dee2e6);
-    border-radius: 8px;
-    background: var(--o-easyocr-card-bg, #fff);
+    min-width: 180px;
+    padding: 16px 22px;
+    border: 1px solid #e0e4e8;
+    border-radius: 10px;
+    background: #fff;
     text-align: start;
     cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
 
     &:hover,
     &:focus-visible {
-        border-color: var(--o-easyocr-card-accent, #714b67);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        transform: translateY(-1px);
+        border-color: #90a4ae;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 }
 
-.o_easyocr_card_attention {
-    border-inline-start: 4px solid #e8a33d;
+.o_easyocr_stat_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    font-size: 1.1em;
+}
+
+.o_easyocr_stat_info {
+    strong {
+        display: block;
+        font-size: 1.4em;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #263238;
+    }
+
+    span {
+        font-size: 0.8em;
+        color: #78909c;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+}
+
+// ── Section title ────────────────────────────────────────────────────
+.o_easyocr_home_section {
+    margin-bottom: 14px;
+    font-size: 0.78em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #90a4ae;
+}
+
+// ── Cards ────────────────────────────────────────────────────────────
+.o_easyocr_home_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+}
+
+.o_easyocr_card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 22px 20px;
+    border: 1px solid #e0e4e8;
+    border-radius: 10px;
+    background: #fff;
+    text-align: start;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &:hover,
+    &:focus-visible {
+        border-color: var(--o-easyocr-c, #546e7a);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+    }
+
+    // The coloured bar along the top edge, which only shows on hover.
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 16px;
+        right: 16px;
+        height: 3px;
+        border-radius: 0 0 3px 3px;
+        background: var(--o-easyocr-c, #546e7a);
+        opacity: 0;
+        transition: opacity 0.15s;
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+        opacity: 1;
+    }
+
+    h3 {
+        margin: 0 0 6px;
+        font-size: 1em;
+        font-weight: 600;
+        color: #263238;
+    }
+
+    p {
+        flex: 1;
+        margin: 0;
+        font-size: 0.84em;
+        line-height: 1.5;
+        color: #78909c;
+    }
 }
 
 .o_easyocr_card_icon {
-    flex: 0 0 auto;
-    font-size: 1.5rem;
-    line-height: 1;
-    opacity: 0.75;
-}
-
-.o_easyocr_card_body {
     display: flex;
-    flex-direction: column;
-    min-width: 0;
-    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    font-size: 1.2em;
+    background: var(--o-easyocr-bg, #eceff1);
+    color: var(--o-easyocr-c, #546e7a);
 }
 
-.o_easyocr_card_title {
+.o_easyocr_card_footer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 16px;
+    font-size: 0.78em;
     font-weight: 600;
+    color: var(--o-easyocr-c, #546e7a);
+    opacity: 0.6;
+    transition: opacity 0.15s;
+
+    i {
+        font-size: 0.75em;
+    }
 }
 
-.o_easyocr_card_note {
-    font-size: 0.8125rem;
-    color: #6c757d;
-}
-
-.o_easyocr_card_count,
-.o_easyocr_card_arrow {
-    flex: 0 0 auto;
-    font-size: 1.25rem;
-    font-weight: 600;
-    opacity: 0.7;
-}
-
-.o_easyocr_card_arrow {
-    font-size: 0.9rem;
+.o_easyocr_card:hover .o_easyocr_card_footer,
+.o_easyocr_card:focus-visible .o_easyocr_card_footer {
+    opacity: 1;
 }

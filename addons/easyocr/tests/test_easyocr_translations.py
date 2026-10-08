@@ -54,6 +54,11 @@ HOME_STRINGS = (
     "Documents",
     "Templates",
     "Inbox",
+    "Bills",
+    "Vendor bills",
+    "What the documents became",
+    "Sections",
+    "Open",
     "Read supplier invoices and expense receipts, and turn them into accounting entries.",
     "Invoices and receipts read, or waiting to be",
     "Waiting to be looked at, handed over by other modules",
@@ -80,6 +85,12 @@ MESSAGE_STRINGS = (
     "no bank account is set in the EasyOCR settings",
     "the bill is not confirmed, so there is nothing to pay yet",
     "the bill has nothing left to pay",
+    # What the capture flow answers when the receipt becomes an expense.
+    "You have no employee record, so the receipt cannot be filed as an expense. "
+    "Ask whoever administers your Odoo to create one for you, or file it as a "
+    "supplier bill.",
+    "Filed as an expense.",
+    "It could not be filed as an expense.",
 )
 
 # The models whose terms are ours to translate. The two settings models are here

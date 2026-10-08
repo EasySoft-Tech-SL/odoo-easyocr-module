@@ -293,7 +293,39 @@ class EasyocrExpenseCapture(http.Controller):
             # raised, so the photo is never lost to a bad reading.
             document.action_extract()
 
-        return self._json(self._capture_result(item, document))
+        payload = self._capture_result(item, document)
+        self._file_as_expense(document, payload)
+        return self._json(payload)
+
+    def _file_as_expense(self, document, payload):
+        """Put the receipt in the employee's expenses, when the company says so.
+
+        Only a receipt that was actually read: filing an unread photo would push
+        a number nobody has looked at into an approval chain. Nothing here ever
+        raises, because the photo is already saved and losing it over this would
+        be the worst of both.
+        """
+        company = request.env.company
+        if company.easyocr_expense_target != 'expense':
+            return
+        if document.state != 'processed':
+            # No reading, nothing to file: the photo waits in the inbox.
+            return
+
+        try:
+            expense = document._become_expense()
+        except UserError as error:
+            reason = error.args[0] if error.args else str(error)
+        except Exception:  # noqa: BLE001 - the photo is saved; never lose it here
+            _logger.exception("EasyOCR capture: could not file document %s as an expense", document.id)
+            reason = _("It could not be filed as an expense.")
+        else:
+            payload['expense'] = {'id': expense.id, 'state': expense.state}
+            payload['message'] = '%s %s' % (payload['message'], _("Filed as an expense."))
+            return
+
+        payload['expense'] = False
+        payload['message'] = '%s %s' % (payload['message'], reason)
 
     # ------------------------------------------------------------------
     # Reading the photo, in plain words

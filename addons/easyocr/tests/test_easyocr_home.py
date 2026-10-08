@@ -46,6 +46,9 @@ class TestEasyocrHome(TransactionCase):
             'easyocr.action_easyocr_inbox',
             'easyocr.action_easyocr_template',
             'easyocr.action_easyocr_webhook_log',
+            # Odoo's own, borrowed: the cards and the counters both send the
+            # reader to the bills the documents became.
+            'account.action_move_in_invoice_type',
         ):
             action = self.env.ref(xmlid, raise_if_not_found=False)
             self.assertTrue(action, "%s is missing." % xmlid)

@@ -12,6 +12,10 @@
         'base',
         'mail',
         'account',
+        # Ships with Odoo Community, so it costs nothing to depend on, and it is
+        # what an employee's photographed receipt becomes -- which the module's
+        # own summary promises. It is what "Expense receipts" means in Odoo.
+        'hr_expense',
     ],
     'data': [
         'security/easyocr_security.xml',
