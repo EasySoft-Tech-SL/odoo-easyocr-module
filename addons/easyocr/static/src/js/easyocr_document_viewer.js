@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, onWillStart, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -137,9 +137,11 @@ export class EasyocrDocumentViewer extends Component {
             // speed a reading of that kind of document usually takes, and stops
             // short of the end so the bar never claims to be finished.
             busyPercent: 0,
-            // Why the account cannot read right now, in the reader's language,
-            // or empty when it can.
-            aiBlockMessage: "",
+            // What the service says about the account: whether it is configured,
+            // whether it can read, the plan, the quota and the wallet. The whole
+            // AI banner is drawn from this, so the button and the quota can never
+            // disagree.
+            account: null,
             // The same permission the form's button has: sending a document to
             // the service costs money, so it is not for everyone who can look
             // at one. Answered asynchronously further down -- hasGroup hands
@@ -164,6 +166,8 @@ export class EasyocrDocumentViewer extends Component {
         onWillStart(() => this.loadDocument());
         onWillStart(() => this.loadAccountState());
         onMounted(() => this.paintPages());
+        onMounted(() => this.bindKeyboard());
+        onWillUnmount(() => this.unbindKeyboard());
         // The page container only exists once there is a document, so a file
         // dropped on the screen is painted after the render that opened it and
         // not before.
@@ -175,20 +179,24 @@ export class EasyocrDocumentViewer extends Component {
     }
 
     /**
-     * What the service says about the account, for the line above the button.
+     * What the service says about the account, for the banner at the top.
      *
      * An account out of readings, or one whose subscription lapsed, cannot read
      * anything -- and the service is the one that knows. Asking costs nothing,
-     * and the answer is written by the server in the reader's language, so the
-     * same sentence serves every screen.
+     * and the answer carries the plan and the quota the banner draws, alongside
+     * the blocked sentence, all out of the one call so they stay consistent.
      */
     async loadAccountState() {
         try {
-            const answer = await this.orm.call("easyocr.document", "action_account_state", []);
-            this.state.aiBlockMessage = answer.blocked ? answer.message : "";
+            this.state.account = await this.orm.call(
+                "easyocr.document", "action_account_state", [],
+            );
         } catch {
             // No answer is not a reason to say the account is blocked.
-            this.state.aiBlockMessage = "";
+            this.state.account = {
+                ai_enabled: false, blocked: false, message: "",
+                plan: {}, quota: {}, wallet: {}, has_custom_instructions: false,
+            };
         }
     }
 
@@ -539,11 +547,85 @@ export class EasyocrDocumentViewer extends Component {
         return _t("Remove %s", this.labelFor(key));
     }
 
+    /** How much of the monthly quota is used, clamped to a bar that can show it. */
+    quotaPercent() {
+        const value = this.state.account?.quota?.usage_percentage;
+        if (value === undefined || value === null) {
+            return 0;
+        }
+        return Math.min(100, Math.max(0, value));
+    }
+
+    /** The day the quota resets, as the reader writes it. */
+    resetDateLabel() {
+        const raw = this.state.account?.quota?.reset_date;
+        if (!raw) {
+            return "";
+        }
+        const date = new Date(raw);
+        if (Number.isNaN(date.getTime())) {
+            return raw;
+        }
+        return date.toLocaleDateString();
+    }
+
+    /** The keyboard help, one sentence so it translates as one. */
+    helpLabel() {
+        return _t("Keys: 1-8 select a field, Ctrl+S saves the template, Ctrl+Enter makes the bill, Esc releases the field.");
+    }
+
     // ------------------------------------------------------------------
     // Drawing, dragging and pulling
     // ------------------------------------------------------------------
     setActiveField(key) {
         this.state.activeField = this.state.activeField === key ? null : key;
+    }
+
+    // ------------------------------------------------------------------
+    // Keyboard
+    // ------------------------------------------------------------------
+    bindKeyboard() {
+        this._keyHandler = (event) => this.onKeyDown(event);
+        document.addEventListener("keydown", this._keyHandler);
+    }
+
+    unbindKeyboard() {
+        if (this._keyHandler) {
+            document.removeEventListener("keydown", this._keyHandler);
+            this._keyHandler = null;
+        }
+    }
+
+    onKeyDown(event) {
+        if (this.state.empty) {
+            return;
+        }
+        // Typing in a box is not the shortcut for anything.
+        const tag = event.target && event.target.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
+            return;
+        }
+        if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+            event.preventDefault();
+            this.saveTemplate();
+            return;
+        }
+        if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+            event.preventDefault();
+            this.createBill();
+            return;
+        }
+        if (event.key === "Escape") {
+            this.state.activeField = null;
+            return;
+        }
+        // 1-8 arm the field of the same number, the way the chip on the button
+        // says it. The ninth field is clicked, not typed.
+        if (event.key >= "1" && event.key <= "8") {
+            event.preventDefault();
+            const field = this.fields[parseInt(event.key, 10) - 1];
+            this.state.activeField = field.key;
+        }
     }
 
     /**

@@ -38,21 +38,14 @@
                     </div>
                 </div>
 
-                <!-- The controls, in a column on the right, each group under its
-                     own heading. Everything the reader can do to the document is
-                     here, next to the data it acts on, and the page keeps the
-                     whole width for itself. -->
+                <!-- The controls, in a column on the right, the way the module
+                     this is a port of lays them out: the AI banner on top, then
+                     the fields, the template, what was read, and a fixed footer
+                     with the two actions that finish the job. -->
                 <div class="o_easyocr_sidebar">
                     <div class="o_easyocr_sidebar_head">
                         <h4 t-esc="state.documentName"/>
                         <p class="text-muted" t-if="state.pages.length" t-esc="pagesLabel()"/>
-                        <!-- El visor ocupa la pantalla entera y Odoo no pinta
-                             migas de pan encima, asi que sin esto la unica
-                             salida es el menu, que pierde el documento.
-                             Hang off state.empty and nothing else: documentId
-                             is a getter on the component and never lands on
-                             state, so a t-if reading it is false for ever and
-                             the button was in the file and on no screen. -->
                         <button
                             t-if="!state.empty"
                             class="btn btn-link btn-sm px-0"
@@ -62,130 +55,231 @@
                         </button>
                     </div>
 
-                    <!-- Nothing to do to a document that is not there yet, so
-                         the controls only appear once a file has been filed.
-                         A button that quietly does nothing is worse than no
-                         button at all. -->
-                    <div t-if="state.empty" class="o_easyocr_section">
-                        <p class="o_easyocr_section_note">
-                            No document yet. Open one, or drop it on the left, and the tools appear here.
-                        </p>
-                    </div>
+                    <div class="o_easyocr_sidebar_scroll">
 
-                    <div t-if="!state.empty" class="o_easyocr_section">
-                        <h5>Read with AI</h5>
-                        <p class="o_easyocr_section_note">
-                            Send the file to the service and fill the document in with what it reads.
-                        </p>
-                        <div t-if="state.aiBlockMessage" class="o_easyocr_blocked">
-                            <i class="fa fa-exclamation-triangle me-1"/>
-                            <t t-esc="state.aiBlockMessage"/>
-                        </div>
-                        <div t-if="state.busy" class="o_easyocr_busy">
-                            <!-- La barra solo sale cuando hay algo que medir:
-                                 leer un documento la enciende, guardar una
-                                 plantilla no, y una barra quieta en un trabajo
-                                 que no la tiene es una promesa de nada. -->
-                            <div t-if="state.busyPercent" class="o_easyocr_progress">
-                                <div
-                                    class="o_easyocr_progress_fill"
-                                    t-attf-style="width: {{ state.busyPercent }}%"
-                                />
+                        <!-- The AI banner. Always on top, two states: configured
+                             (the button, the block banner and the quota), and
+                             not configured (a short note pointing at the
+                             settings). It is the first thing the reader sees,
+                             which is where the plan and what is left belong. -->
+                        <div class="o_easyocr_section o_easyocr_ai_hero" t-if="state.account and state.account.ai_enabled">
+                            <div class="o_easyocr_ai_hero_head">
+                                <div class="o_easyocr_ai_hero_icon">
+                                    <i class="fa fa-magic"/>
+                                </div>
+                                <div>
+                                    <span class="o_easyocr_ai_hero_title">
+                                        easyOCR AI
+                                        <span class="o_easyocr_badge">PRO</span>
+                                    </span>
+                                    <p class="o_easyocr_ai_hero_hint">
+                                        Read the scan with the service and fill the document in.
+                                    </p>
+                                </div>
                             </div>
-                            <p class="text-muted mb-0">
-                                <i class="fa fa-spinner fa-spin me-1"/>
-                                <t t-esc="state.busyLabel"/>
-                            </p>
-                        </div>
-                        <div class="o_easyocr_actions">
+
+                            <!-- Reading, with its bar. -->
+                            <div t-if="state.busy" class="o_easyocr_busy">
+                                <div t-if="state.busyPercent" class="o_easyocr_progress">
+                                    <div
+                                        class="o_easyocr_progress_fill"
+                                        t-attf-style="width: {{ state.busyPercent }}%"
+                                    />
+                                </div>
+                                <p class="text-muted mb-0">
+                                    <i class="fa fa-spinner fa-spin me-1"/>
+                                    <t t-esc="state.busyLabel"/>
+                                </p>
+                            </div>
+
                             <button
                                 t-if="state.canReadWithAI"
-                                class="btn btn-secondary btn-sm w-100"
+                                class="o_easyocr_btn_ai w-100"
                                 t-on-click="readWithAI"
                                 t-att-disabled="state.busy"
                             >
+                                <i class="fa fa-magic me-1"/>
                                 Read with AI
                             </button>
-                            <button
-                                class="btn btn-primary btn-sm w-100"
-                                t-on-click="createBill"
-                                t-att-disabled="state.busy"
-                            >
-                                Create Bill
-                            </button>
-                        </div>
-                    </div>
 
-                    <div t-if="!state.empty" class="o_easyocr_section">
-                        <h5>Fields</h5>
-                        <p class="o_easyocr_section_note">
-                            Pick one, then drag a box over the page. The text under the box is read straight away. To move a box, drag it; to resize it, pull a corner.
-                        </p>
-                        <div class="o_easyocr_field_list">
-                            <t t-foreach="fields" t-as="field" t-key="field.key">
-                                <button
-                                    t-attf-class="o_easyocr_field {{ state.activeField === field.key ? 'active' : '' }}"
-                                    t-attf-style="--eo-color: {{ field.color }}"
-                                    t-on-click="() => this.setActiveField(field.key)"
-                                    t-att-title="field.label"
-                                >
-                                    <span class="o_easyocr_swatch"/>
-                                    <t t-esc="field.label"/>
-                                </button>
-                            </t>
-                        </div>
-                    </div>
+                            <div t-if="state.account.blocked" class="o_easyocr_blocked">
+                                <i class="fa fa-exclamation-triangle me-1"/>
+                                <t t-esc="state.account.message"/>
+                            </div>
 
-                    <div t-if="!state.empty" class="o_easyocr_section">
-                        <h5>Template</h5>
-                        <p class="o_easyocr_section_note">
-                            Name the boxes and keep them, so the drawing is not repeated every time.
-                        </p>
-                        <!-- Boxes that appeared on their own, with nothing
-                             saying where from, read as a mistake. -->
-                        <p t-if="state.appliedTemplate and state.boxes.length" class="o_easyocr_applied">
-                            <i class="fa fa-check-circle me-1"/><t t-esc="appliedLabel()"/>
-                        </p>
-                        <input
-                            type="text"
-                            class="o_easyocr_template_name form-control form-control-sm"
-                            placeholder="Template name"
-                            t-model="state.templateName"
-                        />
-                        <div class="o_easyocr_actions">
-                            <button
-                                class="btn btn-secondary btn-sm w-100"
-                                t-on-click="saveTemplate"
-                                t-att-disabled="state.saving"
-                            >
-                                Save template
-                            </button>
-                            <button class="btn btn-link btn-sm w-100" t-on-click="clearBoxes">
-                                Clear
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="o_easyocr_section" t-if="state.boxes.length">
-                        <h5>What it read</h5>
-                        <div class="o_easyocr_fields">
-                            <div t-foreach="state.boxes" t-as="box" t-key="box.uid" class="o_easyocr_field_row">
-                                <span class="o_easyocr_field_label" t-esc="this.labelFor(box.field_key)"/>
-                                <span class="o_easyocr_field_value" t-esc="box.text"/>
-                                <button
-                                    class="o_easyocr_remove"
-                                    t-on-click="() => this.removeBox(box.uid)"
-                                    t-att-title="this.removeLabel(box.field_key)"
-                                >&#215;</button>
+                            <!-- The plan and what is left, out of the same answer. -->
+                            <div t-if="state.account.plan.name" class="o_easyocr_quota">
+                                <div class="o_easyocr_quota_head">
+                                    <span class="o_easyocr_quota_plan">
+                                        <i class="fa fa-star me-1"/>
+                                        <t t-esc="state.account.plan.name"/>
+                                        <t t-if="state.account.plan.is_free">
+                                            <span class="o_easyocr_badge o_easyocr_badge_free">FREE</span>
+                                        </t>
+                                    </span>
+                                </div>
+                                <div t-if="state.account.quota.pages_used !== undefined" class="o_easyocr_quota_bar">
+                                    <div
+                                        class="o_easyocr_quota_fill"
+                                        t-attf-style="width: {{ quotaPercent() }}%"
+                                    />
+                                </div>
+                                <div class="o_easyocr_quota_stats">
+                                    <div class="o_easyocr_quota_stat">
+                                        <span class="o_easyocr_quota_label">Pages</span>
+                                        <span class="o_easyocr_quota_value">
+                                            <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_easyocr_quota_stat" t-if="state.account.quota.pages_remaining !== undefined">
+                                        <span class="o_easyocr_quota_label">Left</span>
+                                        <span class="o_easyocr_quota_value">
+                                            <t t-esc="state.account.quota.pages_remaining"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_easyocr_quota_stat" t-if="state.account.quota.reset_date">
+                                        <span class="o_easyocr_quota_label">Resets</span>
+                                        <span class="o_easyocr_quota_value" t-esc="resetDateLabel()"/>
+                                    </div>
+                                    <div class="o_easyocr_quota_stat" t-if="state.account.wallet.exists and state.account.wallet.balance_pages">
+                                        <span class="o_easyocr_quota_label">
+                                            <i class="fa fa-credit-card me-1"/>Wallet
+                                        </span>
+                                        <span class="o_easyocr_quota_value">
+                                            <t t-esc="state.account.wallet.balance_pages"/>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="o_easyocr_actions mt-2">
-                            <button
-                                class="btn btn-secondary btn-sm w-100"
-                                type="button"
-                                t-on-click="() => this.fillDocument()"
-                            ><t>Put it on the document</t></button>
+
+                        <!-- Not configured: point at the settings, nothing to do here. -->
+                        <div class="o_easyocr_section o_easyocr_ai_hero" t-elif="state.account">
+                            <div class="o_easyocr_ai_hero_head">
+                                <div class="o_easyocr_ai_hero_icon o_easyocr_ai_icon_promo">
+                                    <i class="fa fa-magic"/>
+                                </div>
+                                <div>
+                                    <span class="o_easyocr_ai_hero_title">
+                                        easyOCR AI
+                                        <span class="o_easyocr_badge">PRO</span>
+                                    </span>
+                                    <p class="o_easyocr_ai_hero_hint">
+                                        Configure the service to read scans and photographs.
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="o_easyocr_section_note">
+                                The button above is for the extraction service. Until it is
+                                set in Settings, only PDFs that already carry their text can be read.
+                            </p>
                         </div>
+
+                        <!-- Nothing to do to a document that is not there yet. -->
+                        <div t-if="state.empty" class="o_easyocr_section">
+                            <p class="o_easyocr_section_note">
+                                No document yet. Open one, or drop it on the left, and the tools appear here.
+                            </p>
+                        </div>
+
+                        <!-- The fields, one button per data. The number is the key
+                             that arms it: 1-8 select the first eight, the way the
+                             module this is a port of does it. -->
+                        <div t-if="!state.empty" class="o_easyocr_section">
+                            <h5>Fields <span class="o_easyocr_shortcut_hint">1-8</span></h5>
+                            <p class="o_easyocr_section_note">
+                                Pick one, then drag a box over the page. The text under the box is read straight away. To move a box, drag it; to resize it, pull a corner.
+                            </p>
+                            <div class="o_easyocr_field_list">
+                                <t t-foreach="fields" t-as="field" t-key="field.key">
+                                    <button
+                                        t-attf-class="o_easyocr_field {{ state.activeField === field.key ? 'active' : '' }}"
+                                        t-attf-style="--eo-color: {{ field.color }}"
+                                        t-on-click="() => this.setActiveField(field.key)"
+                                        t-att-title="field.label"
+                                    >
+                                        <span class="o_easyocr_field_key"><t t-esc="field_index + 1"/></span>
+                                        <span class="o_easyocr_swatch"/>
+                                        <t t-esc="field.label"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- The template: name the boxes and keep them, so the
+                             drawing is not repeated every time. Saving lives in
+                             the footer, next to the bill, which is where the
+                             module this is a port of puts it. -->
+                        <div t-if="!state.empty" class="o_easyocr_section">
+                            <h5>Template</h5>
+                            <p t-if="state.appliedTemplate and state.boxes.length" class="o_easyocr_applied">
+                                <i class="fa fa-check-circle me-1"/><t t-esc="appliedLabel()"/>
+                            </p>
+                            <input
+                                type="text"
+                                class="o_easyocr_template_name form-control form-control-sm"
+                                placeholder="Template name"
+                                t-model="state.templateName"
+                            />
+                            <button class="btn btn-link btn-sm px-0 mt-1" t-on-click="clearBoxes">
+                                Clear the boxes
+                            </button>
+                        </div>
+
+                        <!-- What the boxes read, and the one action that turns a
+                             drawn page into a filed document. -->
+                        <div class="o_easyocr_section" t-if="state.boxes.length">
+                            <h5>
+                                What it read
+                                <span class="o_easyocr_badge"><t t-esc="state.boxes.length"/></span>
+                            </h5>
+                            <div class="o_easyocr_fields">
+                                <div t-foreach="state.boxes" t-as="box" t-key="box.uid" class="o_easyocr_field_row">
+                                    <span class="o_easyocr_field_label" t-esc="this.labelFor(box.field_key)"/>
+                                    <span class="o_easyocr_field_value" t-esc="box.text"/>
+                                    <button
+                                        class="o_easyocr_remove"
+                                        t-on-click="() => this.removeBox(box.uid)"
+                                        t-att-title="this.removeLabel(box.field_key)"
+                                    >&#215;</button>
+                                </div>
+                            </div>
+                            <div class="o_easyocr_actions mt-2">
+                                <button
+                                    class="btn btn-secondary btn-sm w-100"
+                                    type="button"
+                                    t-on-click="() => this.fillDocument()"
+                                ><t>Put it on the document</t></button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- The two actions that finish the job, fixed at the bottom.
+                         Generating the bill is the whole point of the screen, so
+                         it is the primary one. -->
+                    <div class="o_easyocr_actions_footer" t-if="!state.empty">
+                        <button
+                            class="btn btn-secondary"
+                            t-on-click="saveTemplate"
+                            t-att-disabled="state.saving"
+                        >
+                            Save template
+                        </button>
+                        <button
+                            class="btn btn-primary"
+                            t-on-click="createBill"
+                            t-att-disabled="state.busy"
+                        >
+                            Generate invoice
+                        </button>
+                    </div>
+
+                    <!-- What the keyboard does. The number keys match the field
+                         chips, which is how a whole page is drawn without the
+                         mouse. One sentence, so it translates as one. -->
+                    <div class="o_easyocr_help" t-if="!state.empty">
+                        <i class="fa fa-keyboard-o me-1"/><t t-esc="helpLabel()"/>
                     </div>
                 </div>
             </div>

@@ -14,17 +14,37 @@ work was done.
 
 - **Documents.** Model with the file, the vendor, the dates and the amounts, a
   status flow (pending / received / processed), a sequence, the supplier lines
-  read from the document, and a fingerprint of the file so the same invoice is
-  not read twice.
+  read from the document, and a fingerprint of the file so a document that was
+  already read is recognised when it comes back.
+- **Reading it again, on purpose.** A file whose fingerprint was already read
+  is not read a second time behind the reader's back, and it is not refused
+  either: the module says what it knows about the earlier reading -- the file,
+  the day and the bill it became -- and asks. Yes reads it again and costs one
+  reading; leaving it alone costs nothing and leaves the document exactly as it
+  was. The question is the same from the form and from the viewer.
 - **Document inbox.** What another module hands over before anyone has looked at
   it, with its own list, form and search.
 - **The workbench.** One screen for the whole job: it opens waiting for a file --
   open it or drop it, straight from the app's first card -- and becomes the
-  viewer in place once one is chosen. The file on the left, and on the right a
-  column with everything that can be done to it: read with AI (which says so
-  when the account cannot read), create the bill, the nine fields to draw a box
-  over, the template, and the values read from each box, taken from the PDF's
-  own text layer.
+  viewer in place once one is chosen. The file on the left, and on the right the
+  column the module this is a port of has: the AI banner with the plan and what
+  is left of the monthly quota, read with AI (which says so when the account
+  cannot read), the nine fields to draw a box over, the template, the values
+  read from each box -- taken from the PDF's own text layer -- and a footer with
+  the two actions that finish the job, save the template and make the bill. It
+  keeps Odoo's own navigation around it, so the menus stay reachable, and it
+  carries a way back to the document it belongs to.
+- **Watching a reading work.** Reading a scan takes seconds and the button that
+  started it goes dead while it runs, which used to leave the screen saying
+  nothing at all. A bar walks the stages of a reading -- the file going out, the
+  text coming back, the fields being worked out -- and stops short of the end,
+  because a bar that fills before the answer arrives is a lie the reader catches.
+- **What the reading found.** A reading ends on a screen, not on a toast: what
+  the service was sure of, how long it took, what it cost in tokens and pages,
+  and the vendor details that had been read and thrown away because the document
+  has no field for them -- the address, the town, the phone, the email, the way
+  they want to be paid. From there, one button opens the document to make the
+  entry.
 - **Vendor templates.** The boxes drawn over a vendor's paperwork are kept under
   that vendor, so the next invoice from the same vendor opens with them already
   painted and their text read from the new file. The vendor is worked out on the
@@ -44,10 +64,6 @@ work was done.
   `Test the connection` button in the settings that checks the key without
   spending a reading, and plain-language messages for every way the service can
   turn a document away.
-- **Reading the same file twice.** A file that has already been read is not read
-  again by itself, and it is not refused either: the module asks, says which
-  document came out of that file and when, and reads it again if you say so.
-  Some files are the same on purpose, and a fixed monthly charge is one of them.
 - **Batches.** A folder's worth of documents handed over in one call. The files
   are chosen and named on a screen of their own and stay in the page until Send
   is pressed, which is where the readings are paid for, all of them at once. The
@@ -83,10 +99,35 @@ work was done.
   labels, help texts, selection labels, model and action names, the sentences the
   module writes at runtime, the words its own templates paint, and the labels of
   the fields it borrows from Odoo and puts on the screen.
-- **Tests.** 241 of them, covering each switch by its effect rather than by its
-  value, each one proven to fail when the thing it guards is broken.
+- **Tests.** 250 of them, covering each switch by its effect rather than by its
+  value, each one proven to fail when the thing it guards is broken. That
+  includes what a template asks a component for: a binding naming something the
+  component does not have raises no error anywhere, and one of them left a button
+  in the file and on no screen until it was measured.
 - **CI.** Python syntax, manifest and layout check, and XML well-formedness on
   both branches.
+
+### Fixed
+
+- **A clean install of a published release stopped dead.** Every menu of the
+  module hangs off the root menu that carries the module's name, and that menu
+  was declared at the bottom of the document views. The home screen hangs off it
+  too and is loaded earlier, so installing the released ZIP from scratch ended in
+  a `ParseError` while parsing the first screen of the module. An upgrade never
+  showed it, because the menu was already in the database from an earlier
+  install. The root menu now lives in a file of its own and is the first thing
+  the module loads.
+- **The way back from the viewer was in the file and on no screen.** It hung off
+  a name the component never puts on its state, so the condition was false for
+  ever and nothing was painted. Found by looking at the screen, and kept found by
+  a test that reads every binding of every template against the components.
+- **The viewer hid Odoo's menus.** It opened full-screen, so the app's own
+  navigation -- and with it every other screen -- was gone until the reader left
+  the viewer. It now opens inside Odoo with the menus still there, and its
+  sidebar is the one the module this is a port of has: the plan and what is left
+  of the quota at the top of the column, and the keyboard spelled out at the
+  bottom (1-8 pick a field, Ctrl+S saves the template, Ctrl+Enter makes the
+  bill, Esc releases the field).
 
 ### Pending
 

@@ -631,43 +631,59 @@ class EasyocrDocument(models.Model):
             ))
 
     def action_open_viewer(self):
-        """Open the full screen viewer on this document."""
+        """Open the viewer on this document, keeping Odoo's own navigation.
+
+        ``current`` and not ``fullscreen``: the module this is a port of sits
+        inside the ERP with its menus still reachable, and a reader who opened a
+        document has to be able to get to another screen without losing their way.
+        """
         self.ensure_one()
         return {
             'type': 'ir.actions.client',
             'tag': 'easyocr.document_viewer',
             'name': _('Document Viewer'),
             'params': {'document_id': self.id},
-            'target': 'fullscreen',
+            'target': 'current',
         }
 
     @api.model
     def action_account_state(self):
-        """Whether the account can read right now, and why not when it cannot.
+        """What the service says about the account, for the AI banner of the viewer.
 
-        The service knows; the screen only asks. The sentence is built here, in
-        Python, so it comes out in the reader's language like every other
-        sentence of the module -- the service answers in Spanish whatever the
-        screen is set to.
+        Two things come out of this: whether the account can read right now (and
+        why not when it cannot), and the subscription the viewer shows as its
+        banner -- the plan, how much of the monthly quota is used, what is left,
+        when it resets, and the prepaid wallet. It all comes out of the same
+        ``account/me`` answer, so the banner and the blocked sentence can never
+        disagree.
 
-        Nothing is asked when the AI is off or has no key set, and a service
-        that does not answer is not reported as a blocked account: silence is
-        not a reason to tell someone their subscription lapsed.
+        The sentences are built here, in Python, so they come out in the reader's
+        language like every other sentence of the module -- the service answers in
+        Spanish whatever the screen is set to.
+
+        Nothing is asked when the AI is off or has no key set, and a service that
+        does not answer is not reported as a blocked account: silence is not a
+        reason to tell someone their subscription lapsed.
         """
         company = self.env.company
         if not company.easyocr_ai_enabled or not company.easyocr_ai_apikey:
-            return {'blocked': False, 'message': ''}
+            return {
+                'ai_enabled': False, 'blocked': False, 'message': '',
+                'plan': {}, 'quota': {}, 'wallet': {}, 'has_custom_instructions': False,
+            }
 
         extractor = self.env['easyocr.extractor']
         try:
             account = extractor.account(company)
         except Exception as error:  # noqa: BLE001 - the screen must open anyway
             _logger.info('EasyOCR: could not ask about the account: %s', error)
-            return {'blocked': False, 'message': ''}
+            return {
+                'ai_enabled': True, 'blocked': False, 'message': '',
+                'plan': {}, 'quota': {}, 'wallet': {}, 'has_custom_instructions': False,
+            }
 
         status = account.get('status') or {}
-        if status.get('can_process', True):
-            return {'blocked': False, 'message': ''}
+        blocked = not status.get('can_process', True)
 
         known = {
             'SUBSCRIPTION_OVERDUE': _(
@@ -678,12 +694,36 @@ class EasyocrDocument(models.Model):
             'QUOTA_EXCEEDED': _("The monthly limit of the EasyOCR plan has been reached."),
             'ACCOUNT_DISABLED': _("The EasyOCR account is switched off. Contact support."),
         }
+        message = known.get(status.get('block_code'), '') if blocked else ''
+
+        # The numbers the banner shows, kept only when the service sent them: a
+        # plan that does not answer its quota shows no invented zeros.
+        plan = account.get('plan') or {}
+        quota = account.get('quota') or {}
+        wallet = account.get('wallet') or {}
+        features = account.get('features') or {}
+
         return {
-            'blocked': True,
-            'message': known.get(
-                status.get('block_code'),
-                _("The EasyOCR account cannot read documents right now."),
-            ),
+            'ai_enabled': True,
+            'blocked': blocked,
+            'message': message,
+            'block_code': status.get('block_code') or '',
+            'plan': {
+                'name': plan.get('name') or '',
+                'is_free': bool(plan.get('is_free')),
+            },
+            'quota': {
+                'pages_used': quota.get('pages_used'),
+                'pages_limit': quota.get('pages_limit'),
+                'pages_remaining': quota.get('pages_remaining'),
+                'usage_percentage': quota.get('usage_percentage'),
+                'reset_date': quota.get('reset_date') or '',
+            },
+            'wallet': {
+                'exists': bool(wallet.get('exists')),
+                'balance_pages': wallet.get('balance_pages'),
+            },
+            'has_custom_instructions': bool(features.get('custom_instructions')),
         }
 
     @api.model
