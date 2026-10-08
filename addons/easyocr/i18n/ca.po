@@ -84,6 +84,17 @@ msgid "A photographed receipt becomes"
 msgstr "Un tiquet fotografiat acaba en"
 
 #. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document__is_refund
+msgid ""
+"A rectificativa: the vendor is giving money back instead of asking for it, "
+"and the bill is made the other way round. A reading that brings a negative "
+"total turns this on by itself."
+msgstr ""
+"Una rectificativa: el proveïdor torna diners en comptes de demanar-los, i la"
+" factura es fa al revés. Una lectura que porti un total negatiu la marca "
+"tota sola."
+
+#. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_template
 msgid ""
 "A template remembers which part of a vendor's document holds each field,\n"
@@ -499,6 +510,11 @@ msgstr "Creat per"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__create_date
 msgid "Created on"
 msgstr "Creat el"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__is_refund
+msgid "Credit Note"
+msgstr "Rectificativa"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__currency_id

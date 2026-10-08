@@ -173,3 +173,86 @@ class TestEasyocrBill(TransactionCase):
 
         self.assertFalse(lines.tax_ids)
         self.assertAlmostEqual(lines.price_unit, 107.70, places=2)
+
+    # ------------------------------------------------------------------
+    # A rectificativa, which is a bill the other way round
+    # ------------------------------------------------------------------
+    def test_a_credit_note_becomes_a_credit_note(self):
+        document = self._document(
+            partner_id=self.partner.id,
+            is_refund=True,
+            amount_untaxed=-100.0,
+            amount_total=-121.0,
+        )
+
+        document.action_create_bill()
+
+        self.assertEqual(document.move_id.move_type, 'in_refund')
+
+    def test_a_bill_is_still_a_bill(self):
+        document = self._document(
+            partner_id=self.partner.id, amount_untaxed=100.0, amount_total=121.0,
+        )
+
+        document.action_create_bill()
+
+        self.assertEqual(document.move_id.move_type, 'in_invoice')
+
+    def test_the_credit_note_is_worth_what_the_paper_says(self):
+        """What says which way the money goes is the entry, not the total.
+
+        Measured on Odoo 19 and not assumed: a refund of 100 with 7,7% answers
+        with a positive 107,70 from `amount_total`, the same as a bill, and puts
+        the sign on the accounting entries instead. A credit note whose product
+        line came out in debit is a bill with a refund printed on it.
+        """
+        self._tax(self.RATE_ONLY_THIS_TEST_HAS)
+        document = self._document(
+            partner_id=self.partner.id,
+            is_refund=True,
+            amount_untaxed=-100.0,
+            amount_total=-107.70,
+        )
+
+        document.action_create_bill()
+
+        move = document.move_id
+        self.assertAlmostEqual(move.amount_untaxed, 100.0, places=2)
+        self.assertAlmostEqual(move.amount_total, 107.70, places=2)
+        self.assertLess(move.invoice_line_ids.balance, 0)
+
+    def test_the_credit_note_carries_the_tax_of_the_paper(self):
+        tax = self._tax(self.RATE_ONLY_THIS_TEST_HAS)
+        document = self._document(
+            partner_id=self.partner.id,
+            is_refund=True,
+            amount_untaxed=-100.0,
+            amount_total=-107.70,
+        )
+
+        document.action_create_bill()
+
+        self.assertEqual(document.move_id.invoice_line_ids.tax_ids, tax)
+
+    def test_a_negative_price_does_not_turn_a_credit_note_into_a_bill(self):
+        """Odoo turns a refund's lines round: carrying the sign as well undoes it."""
+        document = self._document(
+            partner_id=self.partner.id,
+            name='ABONO-1',
+            is_refund=True,
+            amount_untaxed=-100.0,
+            amount_total=-121.0,
+        )
+        document.line_ids = [(0, 0, {
+            'name': 'Devolucion de material',
+            'quantity': 1,
+            'unit_price': -100.0,
+            'tax_rate': 21.0,
+        })]
+
+        document.action_create_bill()
+
+        line = document.move_id.invoice_line_ids
+        self.assertEqual(len(line), 1)
+        self.assertAlmostEqual(line.price_unit, 100.0, places=2)
+        self.assertLess(line.balance, 0)

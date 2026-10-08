@@ -108,6 +108,41 @@ class TestEasyocrExtractor(TransactionCase):
         self.assertEqual(kwargs['headers']['X-API-Key'], 'test-key')
         self.assertIn('file', kwargs['files'])
 
+    def test_a_reading_that_comes_back_negative_is_a_credit_note(self):
+        """A rectificativa is what a vendor writes when they owe you money."""
+        body = {
+            'status': 'success',
+            'structured_data': {
+                'document_number': 'R/2026/1',
+                'supplier': {'name': 'Proveedor SL'},
+                'totals': {'net_subtotal': -100.0, 'total': -121.0},
+            },
+        }
+        document = self._document()
+
+        with mock.patch(POST, return_value=self._response(body=body)):
+            document.action_extract()
+
+        self.assertTrue(document.is_refund)
+        # What the paper says is what is kept: the sign is not tidied away.
+        self.assertAlmostEqual(document.amount_total, -121.0, places=2)
+
+    def test_a_reading_that_comes_back_positive_is_not(self):
+        body = {
+            'status': 'success',
+            'structured_data': {
+                'document_number': 'A/1',
+                'supplier': {'name': 'Proveedor SL'},
+                'totals': {'net_subtotal': 100.0, 'total': 121.0},
+            },
+        }
+        document = self._document()
+
+        with mock.patch(POST, return_value=self._response(body=body)):
+            document.action_extract()
+
+        self.assertFalse(document.is_refund)
+
     def test_a_date_the_model_cannot_store_is_skipped(self):
         """A date in an unexpected shape must not sink the whole extraction."""
         body = {

@@ -105,6 +105,12 @@ class EasyocrDocument(models.Model):
         string='Total',
         currency_field='currency_id',
     )
+    is_refund = fields.Boolean(
+        string='Credit Note',
+        help='A rectificativa: the vendor is giving money back instead of asking '
+             'for it, and the bill is made the other way round. A reading that '
+             'brings a negative total turns this on by itself.',
+    )
     attachment_id = fields.Many2one(
         comodel_name='ir.attachment',
         string='File',
@@ -265,7 +271,7 @@ class EasyocrDocument(models.Model):
             ))
 
         move = self.env['account.move'].create({
-            'move_type': 'in_invoice',
+            'move_type': 'in_refund' if self.is_refund else 'in_invoice',
             'partner_id': partner.id,
             'ref': self.ref or self.name,
             'invoice_date': self.document_date or fields.Date.context_today(self),
@@ -298,7 +304,7 @@ class EasyocrDocument(models.Model):
             return [{
                 'name': self.name,
                 'quantity': 1.0,
-                'price_unit': self.amount_untaxed or self.amount_total or 0.0,
+                'price_unit': self._as_bill_amount(self.amount_untaxed or self.amount_total or 0.0),
                 'tax_ids': [(6, 0, self._tax_from_totals().ids)],
             }]
 
@@ -307,13 +313,25 @@ class EasyocrDocument(models.Model):
             product = line._resolve_product(partner)
             values.append({
                 'name': line.name,
-                'quantity': line.quantity or 1.0,
-                'price_unit': line.unit_price,
+                'quantity': self._as_bill_amount(line.quantity or 1.0),
+                'price_unit': self._as_bill_amount(line.unit_price),
                 'discount': line.discount_percent,
                 'product_id': product.id if product else False,
                 'tax_ids': [(6, 0, line._tax_ids().ids)],
             })
         return values
+
+    def _as_bill_amount(self, amount):
+        """An amount written the way the bill it goes on expects it.
+
+        A credit note carries its own sign: Odoo turns a refund's lines round
+        when it works out the total, so a line that already came back negative
+        would turn the refund back into a bill. What the paper says is what the
+        document keeps; only the bill is written the other way round.
+        """
+        if self.is_refund:
+            return abs(amount or 0.0)
+        return amount
 
     def _compute_line_count(self):
         for document in self:
@@ -330,11 +348,15 @@ class EasyocrDocument(models.Model):
         left for whoever reviews it to finish.
         """
         self.ensure_one()
-        untaxed = self.amount_untaxed or 0.0
-        total = self.amount_total or 0.0
+        # A credit note prints its amounts negative and carries the same rate as
+        # the bill it corrects, so what the rate is a percentage of is the size
+        # of each amount and not its sign.
+        untaxed = abs(self.amount_untaxed or 0.0)
+        total = abs(self.amount_total or 0.0)
         if not untaxed or total <= untaxed:
-            # Nothing to work with, or a total below the amount before tax: that
-            # is a discount or a credit note, not a tax.
+            # Nothing to work with, or a total smaller than the amount before
+            # tax: a discount, or a paper whose numbers do not add up. Neither
+            # of those is a rate.
             return self.env['account.tax']
         rate = (total / untaxed - 1.0) * 100.0
         return self.env['account.tax'].search([

@@ -53,6 +53,10 @@ work was done.
   nothing but its two amounts still gets its tax: the rate is worked back from
   them, and used when the company has that exact tax. Optional confirmation, and
   the vendor matched by tax number.
+- **Credit notes.** A rectificativa, which is the same document with negative
+  amounts, becomes a vendor credit note instead of a bill, with its entries the
+  other way round and the tax still on the line. The reading turns it on by
+  itself when the total comes back negative, and it can be set by hand.
 - **Photographed receipts.** A capture page for a phone, which files the photo and
   hands it to the module; the receipt can end up as a supplier bill or as an
   employee expense.

@@ -84,6 +84,17 @@ msgid "A photographed receipt becomes"
 msgstr "Um recibo fotografado acaba como"
 
 #. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document__is_refund
+msgid ""
+"A rectificativa: the vendor is giving money back instead of asking for it, "
+"and the bill is made the other way round. A reading that brings a negative "
+"total turns this on by itself."
+msgstr ""
+"Uma nota de crédito: o fornecedor devolve dinheiro em vez de o pedir, e a "
+"factura é feita ao contrário. Uma leitura que traga um total negativo "
+"marca-a sozinha."
+
+#. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_template
 msgid ""
 "A template remembers which part of a vendor's document holds each field,\n"
@@ -498,6 +509,11 @@ msgstr "Criado por"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__create_date
 msgid "Created on"
 msgstr "Criado em"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__is_refund
+msgid "Credit Note"
+msgstr "Nota de crédito"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__currency_id

@@ -55,7 +55,11 @@ of the port, and everything else builds on the boxes it produces.
       exists (`easyocr_bill_post`), and a posting that fails leaves the bill in
       draft with the reason written on it: a bill that could not be confirmed is
       worth a great deal more than no bill at all.
-- [ ] Vendor refunds (rectificativas) vs regular bills.
+- [x] Vendor refunds (rectificativas) vs regular bills. A document whose reading
+      comes back with a negative total is marked as a credit note by itself, and
+      the bill is made as an `in_refund`: Odoo reports those amounts positive and
+      turns the entries round instead, so the lines of the bill are written
+      without the sign the paper carries.
 
 ### The extraction service, as measured
 

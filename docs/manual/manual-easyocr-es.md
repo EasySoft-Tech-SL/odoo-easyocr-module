@@ -394,6 +394,17 @@ más que la base, la línea lleva el 21%. Y si el porcentaje que sale de ahí no
 el de ningún impuesto de compras de su empresa, la línea se queda sin impuesto,
 igual que las demás.
 
+## Si el documento es una rectificativa
+
+Una **rectificativa** es la factura con la que un proveedor devuelve dinero en
+vez de pedirlo, y trae los importes en negativo. La ficha la marca sola cuando
+la lectura devuelve un total negativo, en la casilla **Rectificativa**, y puede
+marcarla o desmarcarla a mano.
+
+Con esa casilla puesta, **Crear factura** prepara una **rectificativa** de
+proveedor y no una factura: los apuntes van al revés, que es lo que hace que la
+deuda con ese proveedor baje en vez de subir.
+
 ## Qué conviene revisar antes de confirmarla
 
 - **El proveedor.** Si no existía, se ha creado al vuelo. Compruebe que no se ha
@@ -403,7 +414,8 @@ igual que las demás.
 - **La fecha y la referencia.** Son las del documento original.
 
 La factura queda **en borrador**: no se ha contabilizado nada. Puede editarla
-con calma y confirmarla cuando esté conforme.
+con calma y confirmarla cuando esté conforme. Si tiene encendido **Confirmar la
+factura automáticamente** en los ajustes, se confirma sola en cuanto se crea.
 
 El mismo documento no se puede facturar dos veces: si ya tiene factura, el botón
 desaparece de la ficha.
