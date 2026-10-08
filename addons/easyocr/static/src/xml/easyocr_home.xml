@@ -11,6 +11,7 @@
     -->
     <t t-name="easyocr.Home">
         <div class="o_easyocr_home">
+            <div class="o_easyocr_home_inner">
             <div class="o_easyocr_home_header">
                 <img
                     class="o_easyocr_home_logo"
@@ -65,6 +66,7 @@
                         </span>
                     </button>
                 </t>
+            </div>
             </div>
         </div>
     </t>

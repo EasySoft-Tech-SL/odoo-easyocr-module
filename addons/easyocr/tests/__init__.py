@@ -9,6 +9,7 @@ from . import test_easyocr_inbox
 from . import test_easyocr_lines
 from . import test_easyocr_settings
 from . import test_easyocr_template
+from . import test_easyocr_upload
 from . import test_easyocr_translations
 from . import test_easyocr_webhook
 from . import test_easyocr_webhook_payment

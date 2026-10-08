@@ -178,6 +178,7 @@ msgstr "Compañías"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__company_id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__company_id
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Company"
@@ -210,6 +211,7 @@ msgstr "Creado"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_uid
 msgid "Created by"
 msgstr "Creado por"
@@ -220,6 +222,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_date
 msgid "Created on"
 msgstr "Creado el"
@@ -429,6 +432,7 @@ msgstr "Campos"
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__attachment_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__datas
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__file
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "File"
@@ -436,6 +440,7 @@ msgstr "Archivo"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__name
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__filename
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__filename
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "File Name"
@@ -633,6 +638,7 @@ msgstr "Última respuesta de extracción"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
@@ -643,6 +649,7 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
@@ -961,6 +968,7 @@ msgstr "Recibido el"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__name
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__name
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Reference"
 msgstr "Referencia"
@@ -1593,6 +1601,7 @@ msgstr ""
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -2263,3 +2272,55 @@ msgstr "Factura de proveedor"
 #: model:ir.model.fields.selection,name:easyocr.selection__res_config_settings__easyocr_expense_target__expense
 msgid "Employee expense"
 msgstr "Gasto de empleado"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Upload a document"
+msgstr "Subir un documento"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Pick a PDF or a photo and open it in the viewer"
+msgstr "Elija un PDF o una foto y ábralo en el visor"
+
+#. module: easyocr
+#: model:ir.model,name:easyocr.model_easyocr_upload_wizard
+msgid "Upload a Document to Read"
+msgstr "Subir un documento para leerlo"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
+msgid "Open the viewer"
+msgstr "Abrir el visor"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_upload_wizard__name
+msgid "How this document is listed. Left empty, the file name is used."
+msgstr ""
+"Cómo aparece este documento en la lista. Si se deja vacío, se usa el nombre "
+"del archivo."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
+msgid "Left empty, the file name is used"
+msgstr "Si se deja vacío, se usa el nombre del archivo"
+
+#. module: easyocr
+#: model:ir.actions.act_window,name:easyocr.action_easyocr_upload
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
+msgid "Upload a Document"
+msgstr "Subir un documento"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_upload.py:0
+msgid "Choose a file first."
+msgstr "Elija un archivo primero."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_upload.py:0
+msgid "That kind of file cannot be read. Send a PDF or a photo."
+msgstr "Ese tipo de archivo no se puede leer. Envíe un PDF o una foto."

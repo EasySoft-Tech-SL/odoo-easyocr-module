@@ -7,7 +7,15 @@
 // the Odoo theme on purpose -- matching that screen is the point, and a card
 // that takes its colour from the theme would not match anything.
 
+// Odoo hands a client action a box of a fixed height and hides whatever sticks
+// out of it. Nothing else here scrolls, so this element has to: without it the
+// last row of cards is simply unreachable on a short window.
 .o_easyocr_home {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.o_easyocr_home_inner {
     max-width: 1180px;
     margin: 0 auto;
     padding: 24px 16px 48px;
