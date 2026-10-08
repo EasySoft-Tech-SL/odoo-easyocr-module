@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="easyocr.Batch">
+        <div class="o_easyocr_batch">
+
+            <!-- While the stack is still being put together. Choosing the files
+                 and saying how to read them happen here, and nothing leaves the
+                 machine until Send is pressed: a batch is where the readings are
+                 paid for all at once, so the decision is made once. -->
+            <div t-if="!state.sent" class="o_easyocr_batch_picker">
+                <h1>Send documents in a batch</h1>
+                <p class="text-muted">
+                    Choose the invoices you want read, or drop them here.
+                </p>
+
+                <div
+                    t-attf-class="o_easyocr_batch_drop {{ state.dragging ? 'dragging' : '' }}"
+                    t-on-click="() => this.fileInputRef.el.click()"
+                    t-on-dragover="onDragOver"
+                    t-on-dragleave="onDragLeave"
+                    t-on-drop="onDrop"
+                >
+                    <i class="fa fa-files-o"/>
+                    <p class="o_easyocr_batch_drop_title">Drop the files here, or choose them</p>
+                    <p class="o_easyocr_batch_drop_hint">PDF or photo. Several at a time.</p>
+                    <button class="btn btn-primary" type="button">Choose files</button>
+                    <input
+                        t-ref="fileInput"
+                        type="file"
+                        class="d-none"
+                        multiple="multiple"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        t-on-change="onFilesChosen"
+                    />
+                </div>
+
+                <div t-if="state.files.length" class="o_easyocr_batch_files">
+                    <!-- The count and the total weight are one sentence, so it
+                         is written as one and translated as one: a sentence
+                         glued together in the markup leaves its words in
+                         English whatever the .po says. -->
+                    <div class="o_easyocr_batch_files_head">
+                        <span t-esc="filesLabel()"/>
+                        <button class="btn btn-link btn-sm" t-on-click="clearFiles">Clear</button>
+                    </div>
+                    <div t-foreach="state.files" t-as="file" t-key="file.uid" class="o_easyocr_batch_file">
+                        <i class="fa fa-file-o"/>
+                        <span class="o_easyocr_batch_file_name" t-esc="file.name"/>
+                        <span class="o_easyocr_batch_file_size" t-esc="this.sizeLabel(file.size)"/>
+                        <button
+                            class="o_easyocr_batch_remove"
+                            t-on-click="() => this.removeFile(file.uid)"
+                            t-att-title="this.removeLabel(file.name)"
+                        >&#215;</button>
+                    </div>
+                </div>
+
+                <div class="o_easyocr_batch_form">
+                    <div class="o_easyocr_batch_field">
+                        <label for="eo_batch_name">Name</label>
+                        <input
+                            id="eo_batch_name"
+                            type="text"
+                            class="form-control"
+                            placeholder="March invoices"
+                            t-model="state.name"
+                        />
+                    </div>
+                    <div class="o_easyocr_batch_field">
+                        <label for="eo_batch_instructions">Instructions</label>
+                        <textarea
+                            id="eo_batch_instructions"
+                            class="form-control"
+                            rows="3"
+                            t-model="state.customInstructions"
+                            placeholder="Anything the service should know about these files. Leave it out and it works them out one by one."
+                        />
+                    </div>
+                    <div class="o_easyocr_batch_checks">
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" t-model="state.includeText"/>
+                            <span class="form-check-label">Keep the text it read</span>
+                        </label>
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" t-model="state.autoCorrect"/>
+                            <span class="form-check-label">Let it correct what it reads</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div t-if="state.blockMessage" class="o_easyocr_batch_blocked">
+                    <i class="fa fa-exclamation-triangle me-1"/>
+                    <t t-esc="state.blockMessage"/>
+                </div>
+
+                <div class="o_easyocr_batch_actions">
+                    <button
+                        class="btn btn-primary"
+                        t-on-click="send"
+                        t-att-disabled="state.busy || !state.files.length"
+                    ><t>Send them</t><i t-if="state.busy" class="fa fa-spinner fa-spin ms-1"/></button>
+                    <span t-if="state.busy" class="text-muted ms-2" t-esc="state.busyLabel"/>
+                </div>
+            </div>
+
+            <!-- Once it is on its way. The service reads the files one after
+                 another and can take a while, so the screen stays and says how
+                 far it has got, instead of sending the reader to a list to
+                 guess. -->
+            <div t-if="state.sent" class="o_easyocr_batch_progress">
+                <h1 t-esc="state.name || 'Batch'"/>
+                <p class="text-muted">
+                    <t t-esc="state.summary"/>
+                </p>
+
+                <div class="o_easyocr_batch_bar">
+                    <div
+                        class="o_easyocr_batch_bar_fill"
+                        t-attf-style="width: {{ state.progress }}%"
+                    />
+                </div>
+                <p class="o_easyocr_batch_counts" t-esc="countsLabel()"/>
+
+                <div t-if="state.errorMessage" class="o_easyocr_batch_blocked">
+                    <i class="fa fa-exclamation-triangle me-1"/>
+                    <t t-esc="state.errorMessage"/>
+                </div>
+
+                <div class="o_easyocr_batch_actions">
+                    <button
+                        class="btn btn-secondary"
+                        t-on-click="refresh"
+                        t-att-disabled="state.busy || state.done"
+                    >
+                        Look again
+                    </button>
+                    <button class="btn btn-link" t-on-click="openDocuments">
+                        See the documents
+                    </button>
+                    <button
+                        t-if="!state.done"
+                        class="btn btn-link text-danger"
+                        t-on-click="cancelBatch"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        t-if="state.done"
+                        class="btn btn-link"
+                        t-on-click="startAnother"
+                    >
+                        Send another batch
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+</templates>

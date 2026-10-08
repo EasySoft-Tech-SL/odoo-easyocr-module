@@ -36,6 +36,33 @@ VIEWER_STRINGS = (
     # seconds, and a button that looks dead for that long gets pressed again.
     "Reading the document. A scanned page takes a while.",
     "Preparing the bill.",
+    # Sentences the viewer builds and paints itself. The ones with a number in
+    # them are here for the same reason the others are: glued together in the
+    # markup they would never be looked up, and the number is the only part that
+    # reads right in English.
+    "%s page(s)",
+    "Remove %s",
+)
+
+# What the batch screen writes by itself. Same rule, and the same reason they
+# are listed: a sentence the JavaScript builds is invisible to every other check
+# in this file.
+BATCH_STRINGS = (
+    "%(count)s file(s), %(size)s",
+    "%(read)s of %(total)s read, %(failed)s failed",
+    "Batch of %s",
+    "Remove %s",
+    "Some of these files have already been read",
+    "%s file(s) were left out: they had already been read.",
+    "Reading them again costs the same and will not change anything.",
+    "Send them anyway",
+    "Leave them out",
+    "The batch could not be sent.",
+    "The service is reading them.",
+    "The batch was cancelled.",
+    "None of these files could be read.",
+    "Some files could not be read. The rest are ready to review.",
+    "All of them were read. Review them before they become bills.",
 )
 
 # The sentences the mobile capture page's JavaScript writes. They travel the
@@ -134,6 +161,40 @@ MESSAGE_STRINGS = (
     "%(answer)s %(pages)s pages left to read this month.",
     "no name",
     "no plan",
+    # What a batch says when it cannot be sent, and what it says when it is.
+    # The plan's ceiling is named with the number the service gave, because
+    # answering "too many" without saying how many sends the reader back to the
+    # same refusal one file smaller at a time.
+    "The EasyOCR plan reads %(ceiling)s files at a time at most, and this batch "
+    "has %(count)s. Send them in smaller batches.",
+    "The EasyOCR plan reads %(ceiling)s files at a time at most, and %(sent)s "
+    "were sent. Send them in smaller batches.",
+    "The EasyOCR plan does not read files in batches. It reads them one at a time.",
+    "The EasyOCR plan does not say how many files it reads at a time.",
+    "The EasyOCR plan does not allow a batch that large.",
+    "The batch is on its way.",
+    "The batch could not be sent.",
+    "The batch had already finished, so it and its documents were dropped at "
+    "the service.",
+    "The batch was cancelled before this file was read.",
+    "The extraction service could not read this file.",
+    "The extraction service took the files but did not say which batch they are. "
+    "Nothing here can follow them.",
+    "The file of %(name)s is empty or cannot be read.",
+    "The file arrived empty.",
+    "The same file is twice in this batch.",
+    "This file has already been read: %(document)s.",
+    "This batch has already been sent.",
+    "There is nothing to send.",
+    "No document of this batch matches %(file)s.",
+    "No batch matches %(batch)s.",
+    "Document of batch %(batch)s updated.",
+    "Batch %(batch)s is %(state)s.",
+    "No API key is set in the EasyOCR settings.",
+    "These files have already been read:\n\n%(files)s\n\nSending them again "
+    "costs the same and changes nothing. Use the batch screen to send them anyway.",
+    "Every file of this batch has already been read, so there is nothing left "
+    "to send.",
 )
 
 # Strings that live only in a view's arch, so no model term carries them and
@@ -142,11 +203,21 @@ MESSAGE_STRINGS = (
 ARCH_STRINGS = (
     ("Test the connection", 'model_terms:ir.ui.view,arch_db:'
                             'easyocr.res_config_settings_view_form_easyocr'),
+    # The batch screen's own words. Nothing but the view arch carries them, and
+    # the button is the whole feature: a reader who cannot read it will not press
+    # it. The list and the search view are here for the same reason.
+    ("Send", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form'),
+    ("Look again", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form'),
+    ("How it is read", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form'),
+    ("Batches", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_list'),
+    ("Being read", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search'),
+    ("Partly read", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search'),
 )
 
 # The models whose terms are ours to translate. The two settings models are here
 # too, and only through their own fields: they carry a few hundred of Odoo's.
 MODELS = (
+    'easyocr.batch',
     'easyocr.document',
     'easyocr.document.line',
     'easyocr.inbox.item',
@@ -247,6 +318,12 @@ class TestEasyocrTranslations(TransactionCase):
             for msgid in VIEWER_STRINGS:
                 self._assert_reaches_the_browser(po, msgid)
 
+    def test_the_strings_the_batch_screen_writes_are_translated(self):
+        for name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, name))
+            for msgid in BATCH_STRINGS:
+                self._assert_reaches_the_browser(po, msgid)
+
     def test_the_strings_the_home_screen_writes_are_translated(self):
         for name in self._po_files():
             po = polib.pofile(os.path.join(self.i18n_path, name))
@@ -305,7 +382,13 @@ class TestEasyocrTranslations(TransactionCase):
                 )
 
     def _template_literals(self):
-        """Every word the module's own templates paint, and where it is written."""
+        """Every word the module's own templates paint, and where it is written.
+
+        ``tail`` is read as well, and it is the one that gets missed: a sentence
+        written after a tag instead of before it is painted on the screen like
+        any other, and nothing about it looks like a literal. "page(s)" and
+        "Loading the document..." sat there, in English, on a Spanish screen.
+        """
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         folder = os.path.join(root, 'static', 'src', 'xml')
         found = {}
@@ -322,6 +405,8 @@ class TestEasyocrTranslations(TransactionCase):
             tree = ElementTree.parse(os.path.join(folder, name))
             for node in tree.iter():
                 want(node.text, '%s <%s>' % (where, node.tag))
+                # Words that follow a tag, up to the next one.
+                want(node.tail, '%s <%s> (after it)' % (where, node.tag))
                 for attribute in TEMPLATE_ATTRIBUTES:
                     value = node.get(attribute)
                     # t-att-* and t-esc carry a binding, not a word.

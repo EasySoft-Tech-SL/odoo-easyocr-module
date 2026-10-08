@@ -14,9 +14,17 @@ _logger = logging.getLogger(__name__)
 # and an empty one closes the endpoint instead of opening it.
 WEBHOOK_SECRET_PARAM = 'easyocr.webhook_secret'
 
-# The only event that carries a finished reading. Anything else is recorded and
-# dropped, so an event we do not handle yet never looks like a failure.
+# The event that carries a finished reading of a document sent on its own. The
+# batch ones carry the same reading, one document at a time, and the end of the
+# stack after them.
 COMPLETED_EVENT = 'document.completed'
+
+# One document of a batch coming back, and the batch itself being done. Both
+# carry the document or the batch inside `data`, which is where the service puts
+# it -- not in a `document` key, whatever the shape of the call.
+BATCH_DOCUMENT_EVENT = 'batch.document.completed'
+BATCH_DOCUMENT_FAILED_EVENT = 'batch.document.failed'
+BATCH_FINISHED_EVENT = 'batch.completed'
 
 # The body is kept to be looked at, not replayed: enough to see what arrived,
 # without turning the log table into a copy of every payload.
@@ -87,6 +95,11 @@ class EasyocrWebhook(http.Controller):
                 status=400,
             )
 
+        if event in (BATCH_DOCUMENT_EVENT, BATCH_DOCUMENT_FAILED_EVENT):
+            return self._batch_document(event, data)
+        if event == BATCH_FINISHED_EVENT:
+            return self._batch_finished(event, data)
+
         if event != COMPLETED_EVENT:
             self._keep('ignored', event, data, _('Event "%s" is not handled.', event or ''))
             return {'status': 'ignored'}
@@ -114,16 +127,67 @@ class EasyocrWebhook(http.Controller):
         self._keep('ok', event, data, message, document)
         return {'status': 'ok', 'document_id': document.id}
 
+    def _batch_document(self, event, data):
+        """One document of a batch, read or failed, as the service finishes it.
+
+        A reading that could not be made is not an error of this endpoint: it is
+        answered with 200 and written down, because the sender retrying it would
+        change nothing.
+        """
+        try:
+            note = request.env['easyocr.batch'].sudo()._settle_webhook(
+                data, self._batch_reference()
+            )
+        except ValueError as error:
+            self._keep('error', event, data, str(error))
+            return {'status': 'error', 'message': str(error)}
+        self._keep('ok', event, data, note)
+        return {'status': 'ok'}
+
+    def _batch_finished(self, event, data):
+        """The whole batch is done. Its readings come from the service itself."""
+        try:
+            note = request.env['easyocr.batch'].sudo()._finish_webhook(
+                data, self._batch_reference()
+            )
+        except ValueError as error:
+            self._keep('error', event, data, str(error))
+            return {'status': 'error', 'message': str(error)}
+        self._keep('ok', event, data, note)
+        return {'status': 'ok'}
+
+    @staticmethod
+    def _batch_reference():
+        """Which batch the call is about, out of the address it was sent to.
+
+        The address is the one we handed the service when the batch was made, so
+        it is ours and it is the batch's own name for itself. The body carries a
+        batch too, and it is the better source when it is there -- but not every
+        event carries one.
+        """
+        return request.httprequest.args.get('batch') or ''
+
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
     @staticmethod
     def _secret_is_valid():
-        """Compare the header with the configured secret, in constant time."""
+        """Compare the secret with the configured one, in constant time.
+
+        Two places, because the two callers are not the same shape. A webhook
+        set up by hand on the account can carry a header, and does. A batch made
+        from here cannot: the only thing the service is given is an address, so
+        the secret travels in it -- the same way the module this is a port of
+        carries its instance identifier.
+        """
         expected = request.env['ir.config_parameter'].sudo().get_param(WEBHOOK_SECRET_PARAM) or ''
         if not expected:
             return False
-        provided = request.httprequest.headers.get('X-Webhook-Secret') or ''
+        provided = (
+            request.httprequest.headers.get('X-Webhook-Secret')
+            or request.httprequest.args.get('secret')
+            or ''
+        )
         return hmac.compare_digest(provided.encode('utf-8'), expected.encode('utf-8'))
 
     @staticmethod

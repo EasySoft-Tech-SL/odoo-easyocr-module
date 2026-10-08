@@ -31,11 +31,10 @@
                 </div>
                 <div t-else="" class="o_easyocr_viewer_pdf" t-ref="pdfContainer">
                     <div t-if="state.loading" class="o_easyocr_viewer_message">
-                        <i class="fa fa-spinner fa-spin me-2"/>Loading the document...
+                        <i class="fa fa-spinner fa-spin me-2"/><t>Loading the document...</t>
                     </div>
                     <div t-if="state.error" class="o_easyocr_viewer_message text-danger">
-                        <i class="fa fa-exclamation-triangle me-2"/>
-                        This document has no file attached, or the file could not be read.
+                        <i class="fa fa-exclamation-triangle me-2"/><t>This document has no file attached, or the file could not be read.</t>
                     </div>
                 </div>
 
@@ -46,9 +45,7 @@
                 <div class="o_easyocr_sidebar">
                     <div class="o_easyocr_sidebar_head">
                         <h4 t-esc="state.documentName"/>
-                        <p class="text-muted" t-if="state.pages.length">
-                            <t t-esc="state.pages.length"/> page(s)
-                        </p>
+                        <p class="text-muted" t-if="state.pages.length" t-esc="pagesLabel()"/>
                     </div>
 
                     <!-- Nothing to do to a document that is not there yet, so
@@ -147,7 +144,7 @@
                                 <button
                                     class="o_easyocr_remove"
                                     t-on-click="() => this.removeBox(box.uid)"
-                                    t-att-title="'Remove ' + this.labelFor(box.field_key)"
+                                    t-att-title="this.removeLabel(box.field_key)"
                                 >&#215;</button>
                             </div>
                         </div>

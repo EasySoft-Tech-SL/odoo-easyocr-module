@@ -29,6 +29,16 @@ work was done.
   `Test the connection` button in the settings that checks the key without
   spending a reading, plain-language messages for every way the service can turn
   a document away, and a guard that refuses a file already read.
+- **Batches.** A folder's worth of documents handed over in one call. The files
+  are chosen and named on a screen of their own and stay in the page until Send
+  is pressed, which is where the readings are paid for, all of them at once. The
+  service takes the whole stack in a single request and answers straight away.
+  The screen then follows the batch, says how far it has got and what came back
+  for each file, and the readings land on the documents themselves, ready to
+  review. A file already read is held back and asked about, with the two answers
+  the buttons promise: send it anyway, or leave it out and send the rest. A batch
+  nobody is watching is collected by a scheduled job, and a webhook on the batch
+  is filed as soon as the service says so.
 - **Bills.** A draft supplier bill from what was read, one line per line read,
   with the product, discount and rate of each; optional confirmation; and the
   vendor matched by tax number.
@@ -43,15 +53,13 @@ work was done.
   Portuguese, with a test that checks every term reaches the reader -- field
   labels, help texts, selection labels, model and action names, the sentences the
   module writes at runtime, and the words its own templates paint.
-- **Tests.** 140 of them, covering each switch by its effect rather than by its
+- **Tests.** 185 of them, covering each switch by its effect rather than by its
   value, each one proven to fail when the thing it guards is broken.
 - **CI.** Python syntax, manifest and layout check, XML well-formedness, and the
   full suite on Odoo 18 and 19.
 
 ### Pending
 
-- **Batch reading.** Handing a folder of documents over in one go has no screen
-  yet.
 - **Templates are saved but not applied.** The next invoice from a vendor does not
   pick up the boxes stored for that vendor; they have to be drawn again.
 - **Spanish localisation cases.** IRPF, recargo de equivalencia and IGIC.

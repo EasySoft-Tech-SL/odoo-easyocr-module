@@ -2,7 +2,7 @@
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
 version: 19.0.1.0.0
-date: 2026-10-07
+date: 2026-10-08
 author: EasySoft Tech S.L.
 ---
 
@@ -448,7 +448,71 @@ permiso para ir más allá de dejar el documento: si creó la factura, si regist
 el pago y, cuando no pudo, por qué. Por ejemplo, si pidió el pago pero la
 factura se quedó en borrador, aquí lo dirá en lugar de quedarse callado.
 
-# 12. Preguntas frecuentes
+# 12. Enviar varios documentos de una vez
+
+Cuando llega la carpeta entera del trimestre, mandar los archivos de uno en uno
+es la parte pesada. **EasyOCR > Enviar documentos** manda un montón de golpe y
+los deja leídos y repartidos, uno por documento.
+
+![La pantalla de lotes con dos archivos elegidos](img/20-enviar-por-lotes.png)
+
+Elija los archivos —**Elegir archivos**, o arrastrarlos encima— y póngales un
+nombre que después le sirva para encontrarlos. Los archivos se quedan en la
+pantalla, sin enviarse, hasta que pulse **Enviarlos**: ahí es donde se paga la
+lectura, y por eso nada sale antes.
+
+Dos casillas, las dos apagadas de fábrica:
+
+|[tabla: Lo que se le puede pedir a un lote]|
+|---|---|
+| **Guardar el texto que leyó** | Le pide al servicio, además, el texto tal cual de cada página. No hace falta para crear la factura y el módulo no lo guarda. |
+| **Dejar que corrija lo que lee** | Deja que el servicio arregle lo que acierta a leer y marque lo que ha cambiado, en vez de devolver el documento tal cual está. |
+
+El campo **Instrucciones** es para lo que valga para todos los archivos del lote
+a la vez. Lo que no se ponga ahí, el servicio lo saca de cada documento.
+
+## Mientras se leen
+
+Al pulsar **Enviarlos**, el servicio se lleva todos los archivos en una sola
+llamada y contesta en seguida. La pantalla se queda con el lote y va diciendo por
+dónde va, sin que haya que recargar nada.
+
+![Un lote a medio leer](img/21-lote-en-curso.png)
+
+Una vez terminado dice cuántos se han leído y cuántos no:
+
+![Un lote terminado, con uno que no se pudo leer](img/22-lote-terminado.png)
+
+- **Mirar otra vez** vuelve a preguntar al servicio. Si nadie mira, el módulo lo
+  pregunta solo cada diez minutos y recoge lo que haya.
+- **Ver los documentos** abre la lista de los documentos de ese lote, que es
+  donde se revisa y se corrige cada uno antes de que sea una factura.
+- **Enviar otro lote** deja la pantalla lista para el siguiente montón.
+
+Un archivo que el servicio no ha podido leer no se pierde: queda como documento
+con el motivo escrito, y se puede volver a mandar.
+
+## Si un archivo ya se había leído
+
+Un lote es donde el dinero se va más rápido, así que el módulo mira cada archivo
+antes de enviarlo. Si alguno de los elegidos ya se había leído, no lo envía y
+pregunta:
+
+![El aviso de archivos ya leídos](img/23-lote-duplicados.png)
+
+Las dos respuestas hacen lo que dicen:
+
+- **Enviarlos de todos modos** los manda igual. Es lo que quiere quien ha
+  corregido un archivo y lo vuelve a pasar.
+- **Dejarlos fuera** los saca del lote y manda el resto. Los archivos que se
+  quedan fuera no se han leído y no se han pagado: siguen en **Documentos** como
+  pendientes, por si los quiere mandar otro día.
+
+Esta comprobación es la misma que protege al documento suelto, y respeta el
+**Margen de duplicados** de los ajustes: una factura que se repite todos los
+meses se puede volver a leer cuando pasa el tiempo que haya configurado.
+
+# 13. Preguntas frecuentes
 
 ## He instalado el módulo y no lee mis escaneos
 
@@ -497,7 +561,25 @@ borrador y vuelva a la ficha del documento: el módulo volverá a ofrecerle
 
 Solo si usted lo pide. El módulo no manda nada al servicio hasta que se pulsa
 **Leer con IA** —o hasta que llega una foto desde la captura del móvil con la
-lectura encendida—. Recibir un archivo en la bandeja de entrada no envía nada.
+lectura encendida—. Recibir un archivo en la bandeja de entrada no envía nada, y
+elegir archivos para un lote tampoco: de un lote solo sale lo que se manda al
+pulsar **Enviarlos**.
+
+## He mandado un lote y se queda en «Leyéndose»
+
+Es lo normal mientras el servicio trabaja: van uno detrás de otro, y un montón
+grande tarda. La pantalla se actualiza sola cada pocos segundos y, si la deja, el
+módulo vuelve a preguntar cada diez minutos hasta que termine. Cuando acabe, los
+documentos aparecen leídos en **EasyOCR > Documentos**.
+
+Si lleva así mucho tiempo, abra **EasyOCR > Lotes**, entre en el lote y pulse
+**Mirar otra vez**: le dirá lo que conteste el servicio.
+
+## ¿Cuántos archivos caben en un lote?
+
+Lo decide su plan de EasyOCR, y el módulo lo sabe antes de enviar. Si elige más
+de los que permite, lo dice al pulsar **Enviarlos** —sin enviar nada— y le dice
+cuántos caben.
 
 ---
 

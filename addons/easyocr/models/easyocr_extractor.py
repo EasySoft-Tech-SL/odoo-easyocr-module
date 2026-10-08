@@ -20,6 +20,11 @@ SERVICE_PATH = '/api/v1/ocr/file'
 # questions that come before sending a document at all.
 ACCOUNT_PATH = '/api/v1/me'
 
+# Many files in one call. The service takes them all in a single multipart body
+# and answers straight away with a batch to follow, so nothing here waits for a
+# reading to finish.
+BATCH_PATH = '/api/v1/batch'
+
 DEFAULT_TIMEOUT = 120
 
 # A probe is a courtesy call, not a reading: it should not sit for two minutes
@@ -100,6 +105,14 @@ class EasyocrExtractor(models.AbstractModel):
             return ''
 
     @api.model
+    def _error_details(self, response):
+        """Everything the service put next to the code, as a flat dict."""
+        try:
+            return ((response.json() or {}).get('error') or {})
+        except (ValueError, AttributeError):
+            return {}
+
+    @api.model
     def _http_error_message(self, response):
         """Turn a failure into a sentence fit for the person who has to fix it.
 
@@ -132,6 +145,23 @@ class EasyocrExtractor(models.AbstractModel):
         code = self._error_code(response)
         if code in known:
             return known[code]
+
+        # The plan's own ceiling on how many files travel together. The service
+        # says which one it is, so the number can be named instead of guessed --
+        # answering "too many" without saying how many would send the reader
+        # back to the same refusal one file smaller at a time.
+        if code == 'BATCH_TOO_LARGE':
+            details = self._error_details(response)
+            ceiling = details.get('max_batch_size')
+            sent = details.get('files_sent')
+            if ceiling and sent:
+                return _(
+                    "The EasyOCR plan reads %(ceiling)s files at a time at most, and "
+                    "%(sent)s were sent. Send them in smaller batches.",
+                    ceiling=ceiling,
+                    sent=sent,
+                )
+            return _("The EasyOCR plan does not allow a batch that large.")
 
         status = response.status_code
         if status == 401:
@@ -203,6 +233,117 @@ class EasyocrExtractor(models.AbstractModel):
             raise EasyocrServiceError(
                 _("The extraction service answered with something that is not JSON.")
             ) from error
+
+    # ------------------------------------------------------------------
+    # Many files at once
+    # ------------------------------------------------------------------
+    @api.model
+    def _batch_endpoint(self, company):
+        base = (company.easyocr_ai_url or '').strip().rstrip('/')
+        if not base:
+            raise EasyocrServiceError(
+                _("No extraction service is set in the EasyOCR settings.")
+            )
+        return base + BATCH_PATH
+
+    @api.model
+    def create_batch(self, company, files, options=None):
+        """Hand a stack of files over and come back with the batch to follow.
+
+        ``files`` is a list of ``(filename, content)``. The answer arrives before
+        anything has been read: the service queues the documents and names the
+        batch, and the readings come later -- by webhook when one is given, or by
+        asking. So this call is short whatever the stack weighs.
+        """
+        options = options or {}
+        # Several parts called `files` without brackets collapse into one on the
+        # way in and the service would read a single document out of the stack,
+        # silently. The brackets are not cosmetic.
+        multipart = [('files[]', (filename, content)) for filename, content in files]
+        for key, value in options.items():
+            if value is None or value == '':
+                continue
+            # A switch turned off has to travel as the word. Left as a Python
+            # False the multipart encoder writes "False", and a service reading
+            # "true"/"false" does not recognise it: the option is either lost or
+            # taken for on, and either way the batch is not read the way it was
+            # asked for.
+            if isinstance(value, bool):
+                value = 'true' if value else 'false'
+            multipart.append((key, value))
+
+        timeout = company.easyocr_ai_timeout or DEFAULT_TIMEOUT
+        try:
+            response = requests.post(
+                self._batch_endpoint(company),
+                headers={'X-API-Key': company.easyocr_ai_apikey or ''},
+                files=multipart,
+                timeout=timeout,
+            )
+        except requests.RequestException as error:
+            _logger.warning('EasyOCR service unreachable at %s: %s', company.easyocr_ai_url, error)
+            raise EasyocrServiceError(
+                _("The extraction service could not be reached (%(error)s).", error=error)
+            ) from error
+
+        return self._batch_body(response)
+
+    @api.model
+    def batch_status(self, company, uuid):
+        return self._batch_body(self._batch_call(company, 'get', uuid))
+
+    @api.model
+    def batch_results(self, company, uuid):
+        return self._batch_body(self._batch_call(company, 'get', uuid, suffix='/results'))
+
+    @api.model
+    def batch_cancel(self, company, uuid):
+        """Cancel a batch that is still running, or drop one that has finished.
+
+        The service reads the same call two ways depending on the batch's state:
+        a running batch is cancelled, a finished one and its documents are
+        deleted. Either way it is the batch that decides, not us.
+        """
+        return self._batch_body(self._batch_call(company, 'delete', uuid))
+
+    @api.model
+    def _batch_call(self, company, method, uuid, suffix=''):
+        url = '%s/%s%s' % (self._batch_endpoint(company), uuid, suffix)
+        timeout = company.easyocr_ai_timeout or DEFAULT_TIMEOUT
+        try:
+            response = getattr(requests, method)(
+                url,
+                headers={'X-API-Key': company.easyocr_ai_apikey or ''},
+                timeout=timeout,
+            )
+        except requests.RequestException as error:
+            _logger.warning('EasyOCR service unreachable at %s: %s', company.easyocr_ai_url, error)
+            raise EasyocrServiceError(
+                _("The extraction service could not be reached (%(error)s).", error=error)
+            ) from error
+        return response
+
+    @api.model
+    def _batch_body(self, response):
+        """The body of a batch call, or a readable error.
+
+        Unlike a reading, a batch call that fails has cost nothing: nothing was
+        queued, or the batch never started. So the message can be blunt.
+        """
+        if not 200 <= response.status_code < 300:
+            raise EasyocrServiceError(self._http_error_message(response))
+        try:
+            body = response.json()
+        except ValueError as error:
+            raise EasyocrServiceError(
+                _("The extraction service answered with something that is not JSON.")
+            ) from error
+        # A successful batch call answers with the batch itself at the top level.
+        # Some calls come wrapped; both are unwrapped here so the caller sees the
+        # same shape whichever way it arrived.
+        if isinstance(body, dict) and isinstance(body.get('data'), dict):
+            return body['data']
+        return body or {}
 
     # ------------------------------------------------------------------
     # Reading the answer

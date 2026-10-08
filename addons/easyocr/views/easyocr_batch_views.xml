@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License LGPL-3 (see LICENSE file).
+
+     Loaded after easyocr_document_views.xml: the menu hangs off
+     menu_easyocr_root, which is defined there.
+
+     Sending a stack is a screen of its own: picking files and watching them
+     come back has no native shape. Everything after it is a plain record with
+     a plain list, so what is already sent is read in the views whoever uses
+     Odoo already knows. -->
+<odoo>
+
+    <record id="view_easyocr_batch_list" model="ir.ui.view">
+        <field name="name">easyocr.batch.list</field>
+        <field name="model">easyocr.batch</field>
+        <field name="arch" type="xml">
+            <list
+                string="Batches"
+                decoration-info="state == 'processing'"
+                decoration-success="state == 'completed'"
+                decoration-warning="state == 'partial'"
+                decoration-danger="state == 'failed'"
+                decoration-muted="state == 'cancelled'"
+            >
+                <field name="name"/>
+                <field name="document_count" string="Files"/>
+                <field name="completed_count" string="Read"/>
+                <field name="failed_count" string="Failed" optional="show"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="sent_at"/>
+                <field name="finished_at" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_easyocr_batch_form" model="ir.ui.view">
+        <field name="name">easyocr.batch.form</field>
+        <field name="model">easyocr.batch</field>
+        <field name="arch" type="xml">
+            <form string="Batch">
+                <header>
+                    <button
+                        name="action_send_button"
+                        type="object"
+                        string="Send"
+                        class="btn-primary"
+                        invisible="service_uuid"
+                    />
+                    <button
+                        name="action_refresh_button"
+                        type="object"
+                        string="Look again"
+                        invisible="not service_uuid or state in ('completed', 'partial', 'failed', 'cancelled')"
+                    />
+                    <button
+                        name="action_cancel_button"
+                        type="object"
+                        string="Cancel"
+                        invisible="not service_uuid or state in ('completed', 'partial', 'failed', 'cancelled')"
+                        confirm="Cancelling stops the files that are still waiting. The ones already read are kept."
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="pending,processing,completed,partial,failed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_open_documents"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not document_count"
+                        >
+                            <field name="document_count" widget="statinfo" string="Files"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Batch name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sent_at"/>
+                            <field name="finished_at"/>
+                            <field name="service_uuid" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="completed_count"/>
+                            <field name="failed_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Files" name="documents">
+                            <field name="document_ids" readonly="service_uuid">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="partner_name" optional="show"/>
+                                    <field name="ref" optional="show"/>
+                                    <field name="amount_total" optional="show"/>
+                                    <field name="error_message" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="How it is read" name="options">
+                            <group>
+                                <field name="include_extracted_text" readonly="service_uuid"/>
+                                <field name="auto_correct" readonly="service_uuid"/>
+                            </group>
+                            <field name="custom_instructions" readonly="service_uuid" placeholder="Anything the service should know about these files"/>
+                            <field name="notify_url" readonly="service_uuid" placeholder="Leave empty to be told here"/>
+                        </page>
+                        <page string="Detail" name="detail" invisible="not error_message">
+                            <field name="error_message" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_easyocr_batch_search" model="ir.ui.view">
+        <field name="name">easyocr.batch.search</field>
+        <field name="model">easyocr.batch</field>
+        <field name="arch" type="xml">
+            <search string="Batches">
+                <field name="name"/>
+                <filter name="running" string="Being read" domain="[('state', 'in', ('pending', 'processing'))]"/>
+                <filter name="finished" string="Finished" domain="[('state', 'in', ('completed', 'partial', 'failed', 'cancelled'))]"/>
+                <separator/>
+                <filter name="partial" string="Partly read" domain="[('state', '=', 'partial')]"/>
+                <filter name="failed" string="Failed" domain="[('state', '=', 'failed')]"/>
+                <!-- Odoo 19 dropped expand/string on the search group element. -->
+                <group>
+                    <filter name="by_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_easyocr_batch" model="ir.actions.act_window">
+        <field name="name">Batches</field>
+        <field name="res_model">easyocr.batch</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_easyocr_batch_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Send a stack of documents in one go
+            </p>
+            <p>
+                Pick a folder's worth of invoices, hand them over together and review what
+                was read from each one before they become accounting entries.
+            </p>
+        </field>
+    </record>
+
+    <!-- The screen that takes the files. It is a client action, so it cannot be
+         reached from the Batches list the way a form is; it is its own menu
+         entry, and it is where the Batches menu lands first. -->
+    <record id="action_easyocr_new_batch" model="ir.actions.client">
+        <field name="name">Send documents</field>
+        <field name="tag">easyocr.batch</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="menu_easyocr_new_batch"
+        name="Send documents"
+        parent="menu_easyocr_root"
+        action="action_easyocr_new_batch"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_easyocr_batch"
+        name="Batches"
+        parent="menu_easyocr_root"
+        action="action_easyocr_batch"
+        sequence="21"
+    />
+
+</odoo>
