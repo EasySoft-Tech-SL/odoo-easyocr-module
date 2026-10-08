@@ -88,6 +88,16 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
+                    <!-- What the document belongs to, which is a project when the
+                         company keeps one per project: the analytic widget shows
+                         it by its name and is what Odoo's own lines take.
+                         Behind the core's own group: without it the widget asks
+                         for analytic plans the user is not allowed to read and
+                         the whole form comes up with an access error instead. -->
+                    <group groups="analytic.group_analytic_accounting">
+                        <field name="analytic_distribution" widget="analytic_distribution"
+                               groups="analytic.group_analytic_accounting"/>
+                    </group>
                     <notebook>
                         <page string="Lines" name="lines">
                             <!-- What the service read, line by line, and what the

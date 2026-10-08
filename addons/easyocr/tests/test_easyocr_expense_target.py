@@ -47,9 +47,37 @@ class TestEasyocrExpenseTarget(TransactionCase):
         values.setdefault('amount_total', 45.5)
         return self.Document.create(values)
 
+    def _analytic_account(self, name='Reforma del bajo'):
+        """The analytic account a project brings with it.
+
+        Nothing here depends on the Projects app: a project has one of these of
+        its own, and this is the thing both Odoo and the reader end up picking.
+        """
+        plan = self.env['account.analytic.plan'].search([], limit=1)
+        if not plan:
+            plan = self.env['account.analytic.plan'].create({'name': 'Proyectos'})
+        return self.env['account.analytic.account'].create({
+            'name': name,
+            'plan_id': plan.id,
+        })
+
     # ------------------------------------------------------------------
     # The employee's expense
     # ------------------------------------------------------------------
+    def test_a_receipt_charged_to_a_project_carries_it_to_the_expense(self):
+        account = self._analytic_account()
+
+        expense = self._document(
+            analytic_distribution={str(account.id): 100},
+        )._become_expense()
+
+        self.assertEqual(expense.analytic_distribution, {str(account.id): 100})
+
+    def test_a_receipt_with_no_project_is_left_alone(self):
+        """Nothing is invented for the nine receipts out of ten that have none."""
+        expense = self._document()._become_expense()
+
+        self.assertFalse(expense.analytic_distribution)
     def test_a_receipt_becomes_an_expense_for_the_employee_who_sent_it(self):
         document = self._document()
 

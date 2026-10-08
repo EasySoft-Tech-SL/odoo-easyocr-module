@@ -468,6 +468,20 @@ Si en **Ajustes > EasyOCR** ha puesto que un ticket fotografiado acabe en un
 quien hizo la foto, con la foto adjunta. Nada más: si quiere que además se
 presente para aprobación sin abrir Odoo, encienda la casilla de al lado.
 
+## Si el ticket es de un proyecto
+
+Si su empresa lleva contabilidad analítica, en la ficha del documento —sea el
+ticket de una foto o una factura— aparece **Distribución analítica**, y ahí puede
+poner a qué proyecto o a qué cuenta corresponde el gasto.
+
+![El campo de distribución analítica con un proyecto elegido](img/25-proyecto.png)
+
+Eso viaja con el documento: al gasto del empleado o a las líneas de la factura,
+según dónde acabe. Cada proyecto tiene ahí su cuenta con su nombre, y basta con
+elegirla. Un ticket sin proyecto se queda como está: el módulo no le inventa
+ninguno. Si su empresa no lleva analítica, el apartado no aparece y no tiene que
+hacer nada.
+
 # 11. El registro de webhooks
 
 Si el servicio de EasyOCR avisa a Odoo cuando termina una lectura, cada llamada

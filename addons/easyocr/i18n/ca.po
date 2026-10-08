@@ -202,6 +202,11 @@ msgid "Also delete documents and change the extraction settings."
 msgstr "També pot suprimir documents i canviar la configuració d'extracció."
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Distribució analítica"
+
+#. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
 msgid "Anything the service should know about these files"
 msgstr "Qualsevol cosa que el servei hagi de saber sobre aquests fitxers"

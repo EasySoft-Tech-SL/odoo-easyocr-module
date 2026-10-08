@@ -242,10 +242,23 @@ OUR_FIELDS = {
     'res.config.settings': 'easyocr_',
 }
 
-# Fields the mail mixin brings along. Their labels belong to the mail module: a
-# reference for them here would only copy someone else's strings, and counting
-# them as missing would turn this test into noise nobody reads.
-BORROWED = ('activity_', 'message_')
+# Fields the mail mixin brings along, and the ones the analytic mixin brings.
+# Their labels belong to those modules: a reference for them here would only
+# copy someone else's strings, and counting them as missing would turn this test
+# into noise nobody reads.
+BORROWED = ('activity_', 'message_', 'analytic_', 'distribution_analytic')
+
+# Except the borrowed ones this module does put on the screen. Odoo materialises
+# a field's label on every model that shows it, so a label that lives in the
+# mixin still has to be translated here, under this model's own reference, or the
+# analytic widget reads "Analytic Distribution" on a Spanish screen with
+# everything around it translated. Found in a browser, not here. The core does
+# the same: sale/i18n/es.po translates it for sale.order.line.
+SHOWN_BORROWED = {
+    'Analytic Distribution':
+        'model:ir.model.fields,field_description:'
+        'easyocr.field_easyocr_document__analytic_distribution',
+}
 
 # The summary the Apps screen shows on the module's card.
 SUMMARY = "Extract supplier invoices and expense receipts from PDF and image files"
@@ -503,3 +516,21 @@ class TestEasyocrTranslations(TransactionCase):
                 self._entry(po, SUMMARY).msgstr,
                 "%s leaves the module summary in English" % name,
             )
+
+    def test_the_borrowed_labels_we_show_are_translated(self):
+        """The other half of BORROWED: what we show, we translate."""
+        for name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, name))
+            for msgid, ref in SHOWN_BORROWED.items():
+                entry = self._entry(po, msgid)
+                self.assertTrue(
+                    entry.msgstr,
+                    "%s leaves %r in English, and that label is on the document's "
+                    "form" % (os.path.basename(po.fpath), msgid),
+                )
+                self.assertIn(
+                    ref, {reference for reference, _line in entry.occurrences},
+                    "%r is translated in %s but points nowhere Odoo will look for "
+                    "it: it needs the reference %s"
+                    % (msgid, os.path.basename(po.fpath), ref),
+                )

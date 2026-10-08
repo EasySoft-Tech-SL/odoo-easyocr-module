@@ -65,7 +65,11 @@ work was done.
   itself when the total comes back negative, and it can be set by hand.
 - **Photographed receipts.** A capture page for a phone, which files the photo and
   hands it to the module; the receipt can end up as a supplier bill or as an
-  employee expense.
+  employee expense. Either of them can be charged to a project: the document
+  carries the analytic account the project keeps, and no separate app is needed
+  for it. The field shows on the document's form for companies that keep analytic
+  accounting, which is what a project is made of in Odoo; a company that keeps
+  none never sees it, and the form opens the same.
 - **Webhooks.** A log of every call the service makes, and the option to create
   the bill and register its payment without anyone in front of the screen.
 - **Settings.** Sixteen switches over the service, what a document becomes and
@@ -73,8 +77,9 @@ work was done.
 - **Languages.** Spanish, Catalan, Galician, German, French, Italian and
   Portuguese, with a test that checks every term reaches the reader -- field
   labels, help texts, selection labels, model and action names, the sentences the
-  module writes at runtime, and the words its own templates paint.
-- **Tests.** 200 of them, covering each switch by its effect rather than by its
+  module writes at runtime, the words its own templates paint, and the labels of
+  the fields it borrows from Odoo and puts on the screen.
+- **Tests.** 241 of them, covering each switch by its effect rather than by its
   value, each one proven to fail when the thing it guards is broken.
 - **CI.** Python syntax, manifest and layout check, and XML well-formedness on
   both branches.
