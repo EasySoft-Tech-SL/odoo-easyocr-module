@@ -25,6 +25,11 @@ work was done.
   when the account cannot read), create the bill, the nine fields to draw a box
   over, the template, and the values read from each box, taken from the PDF's
   own text layer.
+- **Vendor templates.** The boxes drawn over a vendor's paperwork are kept under
+  that vendor, so the next invoice from the same vendor opens with them already
+  painted and their text read from the new file. The vendor is worked out on the
+  server, by tax number and then by name, since a document has none of its own
+  until it becomes a bill.
 - **Reading with the service.** Client for the EasyOCR extraction service, with a
   `Test the connection` button in the settings that checks the key without
   spending a reading, plain-language messages for every way the service can turn
@@ -53,15 +58,13 @@ work was done.
   Portuguese, with a test that checks every term reaches the reader -- field
   labels, help texts, selection labels, model and action names, the sentences the
   module writes at runtime, and the words its own templates paint.
-- **Tests.** 185 of them, covering each switch by its effect rather than by its
+- **Tests.** 200 of them, covering each switch by its effect rather than by its
   value, each one proven to fail when the thing it guards is broken.
 - **CI.** Python syntax, manifest and layout check, XML well-formedness, and the
   full suite on Odoo 18 and 19.
 
 ### Pending
 
-- **Templates are saved but not applied.** The next invoice from a vendor does not
-  pick up the boxes stored for that vendor; they have to be drawn again.
 - **Spanish localisation cases.** IRPF, recargo de equivalencia and IGIC.
 - **The three `EASYOCR_EXPENSE_VARIOUS_*` settings** of the module this is a port
   of are not here: the object they file against does not exist in Odoo, so

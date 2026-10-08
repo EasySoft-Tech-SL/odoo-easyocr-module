@@ -640,6 +640,7 @@ msgstr "Dokumente und Rechnungen"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+#: code:addons/easyocr/models/easyocr_template.py:0
 msgid "Draw at least one box before saving a template."
 msgstr ""
 "Zeichnen Sie mindestens ein Rechteck, bevor Sie eine Vorlage speichern."
@@ -887,6 +888,7 @@ msgstr "FontAwesome-Icon, z. B. fa-tasks"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+#: code:addons/easyocr/models/easyocr_template.py:0
 msgid "Give the template a name."
 msgstr "Geben Sie der Vorlage einen Namen."
 
@@ -2106,6 +2108,12 @@ msgstr "Name der Vorlage"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Template saved for %s."
+msgstr "Vorlage für %s gespeichert."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Template saved."
 msgstr "Vorlage gespeichert."
 
@@ -2837,6 +2845,12 @@ msgstr "Dieses Foto verwenden"
 #: model:res.groups,name:easyocr.group_easyocr_user
 msgid "User"
 msgstr "Benutzer"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Using the boxes of %s."
+msgstr "Die Felder von %s werden verwendet."
 
 #. module: easyocr
 #. odoo-javascript

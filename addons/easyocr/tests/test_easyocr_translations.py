@@ -42,6 +42,9 @@ VIEWER_STRINGS = (
     # reads right in English.
     "%s page(s)",
     "Remove %s",
+    # Where the boxes on the page came from, and what was kept of them.
+    "Using the boxes of %s.",
+    "Template saved for %s.",
 )
 
 # What the batch screen writes by itself. Same rule, and the same reason they

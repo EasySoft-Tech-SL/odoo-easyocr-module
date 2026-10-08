@@ -2,6 +2,7 @@
 # License LGPL-3 (see LICENSE file).
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 # The nine fields a template can mark on a page. The key is what gets stored and
 # what the extraction code matches on; the colour is only how it is painted, and
@@ -70,6 +71,115 @@ class EasyocrTemplate(models.Model):
                 template.display_name = f'{template.name} ({template.partner_id.display_name})'
             else:
                 template.display_name = template.name
+
+
+class EasyocrDocument(models.Model):
+    """What a document needs to reuse the boxes saved for its vendor.
+
+    A template only works if it can be found again, and finding it means knowing
+    whose it is. That is the whole of this block: work out the vendor of the
+    document, keep the boxes under it, and hand them back when the same vendor
+    sends another document.
+    """
+
+    _inherit = 'easyocr.document'
+
+    def _vendor_for_boxes(self):
+        """The vendor these boxes belong to, without making a bill of it.
+
+        The document has no vendor of its own until it becomes a bill, so it is
+        worked out the way the bill works it out: tax number first, name after.
+        A document that has neither, or that carries our own tax number, has no
+        vendor and so no boxes of its own.
+        """
+        self.ensure_one()
+        if self.partner_id:
+            return self.partner_id
+        try:
+            return self._resolve_partner()
+        except UserError:
+            # Our own tax number as the vendor: the bill refuses it, and there
+            # is no template of ours to apply either.
+            return self.env['res.partner']
+
+    def _template_for_boxes(self, partner):
+        """The newest template with boxes saved for that vendor."""
+        self.ensure_one()
+        if not partner:
+            return self.env['easyocr.template']
+        return self.env['easyocr.template'].search([
+            ('partner_id', '=', partner.id),
+            ('company_id', '=', self.company_id.id),
+            ('box_ids', '!=', False),
+        ], order='write_date desc, id desc', limit=1)
+
+    def action_template_for_reading(self):
+        """The saved boxes to paint on this document, or nothing.
+
+        Answers with what the screen needs and nothing more: the boxes, and the
+        name of the template they came from so it can say where they came from
+        instead of drawing them out of thin air.
+        """
+        self.ensure_one()
+        partner = self._vendor_for_boxes()
+        template = self._template_for_boxes(partner)
+        if not template:
+            return {'template': False, 'name': '', 'label': '', 'vendor': '', 'boxes': []}
+        return {
+            'template': template.id,
+            'name': template.name,
+            # The name and the vendor together, because a vendor can have more
+            # than one template and "the boxes" alone would not say which.
+            'label': template.display_name,
+            'vendor': partner.display_name or '',
+            'boxes': [{
+                'page': box.page,
+                'field_key': box.field_key,
+                'x': box.x,
+                'y': box.y,
+                'width': box.width,
+                'height': box.height,
+            } for box in template.box_ids],
+        }
+
+    def action_save_template(self, name, boxes):
+        """Keep these boxes for this document's vendor.
+
+        The vendor is worked out here and not on the screen: the screen has no
+        way to know it, and a template saved without one is a template nothing
+        can ever find again. That is what the first one of these was, and it is
+        why this moved to the server.
+        """
+        self.ensure_one()
+        name = (name or '').strip()
+        if not name:
+            raise UserError(_("Give the template a name."))
+        if not boxes:
+            raise UserError(_("Draw at least one box before saving a template."))
+
+        partner = self._vendor_for_boxes()
+        template = self.env['easyocr.template'].create({
+            'name': name,
+            'partner_id': partner.id,
+            'company_id': self.company_id.id,
+            'box_ids': [(0, 0, self._box_values(box)) for box in boxes],
+        })
+        return {
+            'template': template.id,
+            'name': template.name,
+            'label': template.display_name,
+            'vendor': partner.display_name or '',
+            'saved': len(template.box_ids),
+        }
+
+    @api.model
+    def _box_values(self, box):
+        """One box, with only the keys a template box knows how to keep."""
+        return {
+            key: box[key]
+            for key in ('page', 'field_key', 'x', 'y', 'width', 'height', 'text')
+            if box.get(key) not in (None, '')
+        }
 
 
 class EasyocrTemplateBox(models.Model):

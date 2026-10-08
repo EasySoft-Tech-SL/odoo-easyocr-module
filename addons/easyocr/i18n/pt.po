@@ -637,6 +637,7 @@ msgstr "Documentos e faturas"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+#: code:addons/easyocr/models/easyocr_template.py:0
 msgid "Draw at least one box before saving a template."
 msgstr "Desenhe pelo menos uma caixa antes de guardar um modelo."
 
@@ -882,6 +883,7 @@ msgstr "ícone do Font awesome ex. fa-tasks"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+#: code:addons/easyocr/models/easyocr_template.py:0
 msgid "Give the template a name."
 msgstr "Dê um nome ao modelo."
 
@@ -2095,6 +2097,12 @@ msgstr "Nome do modelo"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Template saved for %s."
+msgstr "Modelo guardado para %s."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Template saved."
 msgstr "Modelo guardado."
 
@@ -2813,6 +2821,12 @@ msgstr "Usar esta foto"
 #: model:res.groups,name:easyocr.group_easyocr_user
 msgid "User"
 msgstr "Utilizador"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Using the boxes of %s."
+msgstr "A usar os retângulos de %s."
 
 #. module: easyocr
 #. odoo-javascript

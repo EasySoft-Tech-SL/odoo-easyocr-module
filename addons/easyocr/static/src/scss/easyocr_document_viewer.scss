@@ -140,6 +140,17 @@
         gap: 0.35rem;
     }
 
+    // Where the boxes on the page came from. Boxes that paint themselves and
+    // nothing saying why read as a mistake, so this says whose they are.
+    .o_easyocr_applied {
+        margin: 0 0 0.5rem;
+        padding: 0.35rem 0.5rem;
+        border-radius: 0.25rem;
+        background: rgba(39, 174, 96, 0.15);
+        color: #2e7d5b;
+        font-size: 0.78rem;
+    }
+
     .o_easyocr_field_list {
         display: flex;
         flex-direction: column;

@@ -32,8 +32,8 @@ This is the screen the user recognises: the PDF on the left, the data panel on t
 - [x] Read the text inside each rectangle from the PDF text layer, cut at
       character level so a box can take part of a line.
 - [x] Save the set of rectangles as a template for that vendor.
-- [ ] Reapply a vendor template to a new document of the same vendor.
-- [ ] Apply a template automatically when the vendor is known.
+- [x] Reapply a vendor template to a new document of the same vendor.
+- [x] Apply a template automatically when the vendor is known.
 - [ ] Move and resize a box that has already been drawn.
 
 **Why this is first:** it carries the module's identity, it is the biggest single piece
@@ -176,6 +176,15 @@ Closed the same day, after using the module against the real service:
   the whole batch away, and the promise on the button was that it would send the
   rest. It does now: the files already read come out of the batch, stay in the
   documents list unread and unpaid, and the stack goes without them.
+- **The template was saved without a vendor, and so was never found again.** The
+  record existed and the boxes were in it, but every one of them had
+  `partner_id` empty: the screen saved the vendor from the document's own field,
+  which is empty until a bill is made. The guide promises the boxes come back on
+  the next invoice from that vendor, and they could not. The vendor is worked out
+  on the server now -- tax number first, name after, the way the bill works it
+  out -- and the same method is asked again after a reading, because a reading is
+  what usually gives a nameless file a tax number. The only template in the
+  development database had no vendor at all, which is how the gap was found.
 
 Every row below was read in the Dolibarr source, in the file named, so what is
 ported is what that setting actually does and not what its name suggests.

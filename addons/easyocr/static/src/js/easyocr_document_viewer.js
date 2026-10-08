@@ -69,12 +69,17 @@ export class EasyocrDocumentViewer extends Component {
             empty: !this.documentId,
             dragging: false,
             documentName: "",
-            partnerId: false,
             pages: [],
             boxes: [],
             activeField: null,
             templateName: "",
             saving: false,
+            // The template whose boxes are on the page, and the vendor it was
+            // saved for. Kept so the screen can say where the boxes came from:
+            // boxes that appear on their own and nothing explaining them read
+            // as a mistake.
+            appliedTemplate: "",
+            appliedVendor: "",
             busy: false,
             busyLabel: "",
             // Why the account cannot read right now, in the reader's language,
@@ -261,10 +266,9 @@ export class EasyocrDocumentViewer extends Component {
         const [document] = await this.orm.read(
             "easyocr.document",
             [this.documentId],
-            ["name", "partner_id", "attachment_id"],
+            ["name", "attachment_id"],
         );
         this.state.documentName = document.name;
-        this.state.partnerId = document.partner_id ? document.partner_id[0] : false;
 
         if (!document.attachment_id) {
             this.state.loading = false;
@@ -291,7 +295,48 @@ export class EasyocrDocumentViewer extends Component {
         }
         this.state.pages = pages;
 
+        // The boxes saved for whoever sent this document, painted before the
+        // reader has to draw anything. On a fresh document there is nothing
+        // drawn yet, so this is the first thing on the page.
+        await this.loadVendorTemplate();
+
         this.state.loading = false;
+    }
+
+    /**
+     * Paint the boxes saved for this document's vendor, if there are any.
+     *
+     * What is kept is where the boxes are, not what they read: the text belongs
+     * to the document it was read from, so every box is read again from this one
+     * before it is shown. Doing nothing when there is nothing to do is the
+     * point, so a document whose vendor has no template opens as it always did.
+     */
+    async loadVendorTemplate() {
+        if (!this.documentId || this.state.boxes.length) {
+            // Drawn by hand already: those boxes are the reader's, and painting
+            // a template over them would throw away the work.
+            return;
+        }
+        try {
+            const answer = await this.orm.call(
+                "easyocr.document", "action_template_for_reading", [[this.documentId]],
+            );
+            if (!answer.boxes.length) {
+                return;
+            }
+            this.state.boxes = answer.boxes.map((box) => ({
+                ...box, uid: this.nextUid++, text: "",
+            }));
+            this.state.appliedTemplate = answer.label || answer.name;
+            this.state.appliedVendor = answer.vendor;
+            await this.refreshAllTexts();
+            for (const pageInfo of this.state.pages) {
+                this.redrawPage(pageInfo.number);
+            }
+        } catch {
+            // A template that cannot be read is not worth a message: the reader
+            // draws the boxes, which is what they would have done anyway.
+        }
     }
 
     /** Paint every page once, and keep the rendered image to repaint boxes over. */
@@ -325,6 +370,15 @@ export class EasyocrDocumentViewer extends Component {
 
             await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
             this.baseImages[pageInfo.number] = canvas.toDataURL();
+        }
+
+        // Whatever boxes there are go on top of the pages just painted, which
+        // is the only moment they can be drawn: a template applied while the
+        // pages were still being rendered had nothing to draw over.
+        for (const pageInfo of this.state.pages) {
+            if (this.boxesOfPage(pageInfo.number).length) {
+                this.redrawPage(pageInfo.number);
+            }
         }
     }
 
@@ -391,6 +445,24 @@ export class EasyocrDocumentViewer extends Component {
 
     labelFor(key) {
         return FIELD_BY_KEY[key]?.label || key;
+    }
+
+    /** Where the boxes on the page came from. */
+    appliedLabel() {
+        return _t(
+            "Using the boxes of %s.",
+            this.withoutFinalStop(this.state.appliedVendor || this.state.appliedTemplate),
+        );
+    }
+
+    /**
+     * A name, ready to go inside a sentence that already ends in a full stop.
+     *
+     * "Ferretería Industrial del Norte, S.L." is the name and keeps its dot;
+     * the sentence brings its own, and together they read as two.
+     */
+    withoutFinalStop(name) {
+        return (name || "").replace(/\.$/, "");
     }
 
     /** How long the document is, in one sentence of its own. */
@@ -556,6 +628,10 @@ export class EasyocrDocumentViewer extends Component {
             "action_extract",
             _t("Reading the document. A scanned page takes a while."),
         );
+        // The reading is what usually says who sent the document, and the boxes
+        // are kept under that name. This is the first moment they can be found,
+        // so it is asked again here and not only when the document opens.
+        await this.loadVendorTemplate();
     }
 
     /** Turn what was read into a draft supplier bill, and open it. */
@@ -597,6 +673,10 @@ export class EasyocrDocumentViewer extends Component {
     // ------------------------------------------------------------------
     clearBoxes() {
         this.state.boxes = [];
+        // Nothing is left of the template either: an empty page still claiming
+        // to be using somebody's boxes would be the screen lying.
+        this.state.appliedTemplate = "";
+        this.state.appliedVendor = "";
         for (const pageInfo of this.state.pages) {
             this.redrawPage(pageInfo.number);
         }
@@ -610,6 +690,14 @@ export class EasyocrDocumentViewer extends Component {
         }
     }
 
+    /**
+     * Keep the boxes for this document's vendor.
+     *
+     * The whole save is the server's, including working out whose boxes these
+     * are. Saving them from here once produced a template with no vendor at all,
+     * because the document has none of its own until it becomes a bill, so the
+     * boxes were kept under a name nothing would ever look them up by.
+     */
     async saveTemplate() {
         if (!this.state.boxes.length) {
             this.notification.add(_t("Draw at least one box before saving a template."), {
@@ -625,10 +713,10 @@ export class EasyocrDocumentViewer extends Component {
         this.state.saving = true;
         try {
             await this.refreshAllTexts();
-            await this.orm.create("easyocr.template", [{
-                name: this.state.templateName,
-                partner_id: this.state.partnerId || false,
-                box_ids: this.state.boxes.map((box) => [0, 0, {
+            const answer = await this.orm.call("easyocr.document", "action_save_template", [
+                [this.documentId],
+                this.state.templateName,
+                this.state.boxes.map((box) => ({
                     page: box.page,
                     field_key: box.field_key,
                     x: box.x,
@@ -636,10 +724,19 @@ export class EasyocrDocumentViewer extends Component {
                     width: box.width,
                     height: box.height,
                     text: box.text || "",
-                }]),
-            }]);
-            this.notification.add(_t("Template saved."), { type: "success" });
+                })),
+            ]);
+            this.state.appliedTemplate = answer.label || answer.name;
+            this.state.appliedVendor = answer.vendor;
+            this.notification.add(
+                answer.vendor
+                    ? _t("Template saved for %s.", this.withoutFinalStop(answer.vendor))
+                    : _t("Template saved."),
+                { type: "success" },
+            );
             this.state.templateName = "";
+        } catch (error) {
+            this.notification.add(this.failureMessage(error), { type: "danger" });
         } finally {
             this.state.saving = false;
         }
