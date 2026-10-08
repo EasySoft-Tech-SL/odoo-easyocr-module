@@ -91,12 +91,16 @@ class TestEasyocrSettings(TransactionCase):
         response.status_code = 200
         response.headers = {}
         response.json.return_value = body if body is not None else {
-            'success': True,
             'data': {
                 'account': {'name': 'EasySoft Tech SL'},
-                'plan': {'name': 'Professional'},
+                'plan': {'name': 'Professional', 'is_free': False},
                 'status': {'can_process': True, 'block_code': None, 'block_message': None},
-                'quota': {'pages_available_now': 480},
+                'quota': {
+                    'pages_used': 120, 'pages_limit': 600, 'pages_remaining': 480,
+                    'usage_percentage': 20, 'reset_date': '2026-11-01T00:00:00+01:00',
+                },
+                'wallet': {'exists': True, 'balance_pages': 0},
+                'features': {'custom_instructions': True},
             },
         }
         return response
@@ -402,7 +406,7 @@ class TestEasyocrSettings(TransactionCase):
             with mock.patch(POST) as post:
                 settings.action_easyocr_test_connection()
 
-        self.assertTrue(get.call_args.args[0].endswith('/api/v1/me'))
+        self.assertTrue(get.call_args.args[0].endswith('/api/v1/account/me'))
         post.assert_not_called()
 
     def test_the_connection_button_reports_a_key_the_service_does_not_know(self):
@@ -478,6 +482,48 @@ class TestEasyocrSettings(TransactionCase):
 
         self.assertIn('action_easyocr_test_connection', arch)
         self.assertIn('Test the connection', arch)
+
+    # ------------------------------------------------------------------
+    # The account, as the viewer's banner reads it
+    # ------------------------------------------------------------------
+    def test_the_viewer_is_told_the_plan_and_the_quota(self):
+        """The banner shows the plan and the quota, straight from the service."""
+        with mock.patch(GET, return_value=self._account_response()):
+            state = self.Document.action_account_state()
+
+        self.assertFalse(state['blocked'])
+        self.assertEqual(state['plan']['name'], 'Professional')
+        self.assertFalse(state['plan']['is_free'])
+        self.assertEqual(state['quota']['pages_used'], 120)
+        self.assertEqual(state['quota']['pages_limit'], 600)
+        self.assertEqual(state['quota']['pages_remaining'], 480)
+        self.assertEqual(state['quota']['usage_percentage'], 20)
+        self.assertTrue(state['wallet']['exists'])
+        self.assertTrue(state['has_custom_instructions'])
+
+    def test_the_viewer_is_told_when_the_account_cannot_read(self):
+        """A blocked account is named, with the reason the service gives."""
+        blocked = self._account_response({
+            'data': {
+                'account': {'name': 'EasySoft Tech SL'},
+                'plan': {'name': 'Professional'},
+                'status': {
+                    'can_process': False,
+                    'block_code': 'QUOTA_EXCEEDED',
+                    'block_message': 'Has alcanzado el límite.',
+                },
+                'quota': {'pages_used': 600, 'pages_limit': 600, 'pages_remaining': 0},
+                'wallet': {'exists': True, 'balance_pages': 0},
+                'features': {},
+            },
+        })
+
+        with mock.patch(GET, return_value=blocked):
+            state = self.Document.action_account_state()
+
+        self.assertTrue(state['blocked'])
+        self.assertEqual(state['block_code'], 'QUOTA_EXCEEDED')
+        self.assertIn('monthly limit', state['message'])
 
     def test_the_identity_sent_says_what_it_is_and_nothing_more(self):
         """Facts, never a procedure: an instruction the model cannot satisfy

@@ -118,11 +118,11 @@ class ResConfigSettings(models.TransientModel):
             account=(account.get('account') or {}).get('name') or _("no name"),
             plan=(account.get('plan') or {}).get('name') or _("no plan"),
         )
-        if quota.get('pages_available_now') is not None:
+        if quota.get('pages_remaining') is not None:
             answer = _(
                 "%(answer)s %(pages)s pages left to read this month.",
                 answer=answer,
-                pages=quota['pages_available_now'],
+                pages=quota['pages_remaining'],
             )
         return self._easyocr_answer('success', answer)
 

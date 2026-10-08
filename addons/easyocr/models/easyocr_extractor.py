@@ -18,7 +18,12 @@ SERVICE_PATH = '/api/v1/ocr/file'
 # Who the key belongs to and what is left. It sits behind the key check but not
 # behind the plan limiter, so asking costs nothing while answering the two
 # questions that come before sending a document at all.
-ACCOUNT_PATH = '/api/v1/me'
+# The full endpoint is /account/me, the one the module this is a port of reads
+# its subscription widget from: it carries the plan, the quota (pages used,
+# limit, remaining, reset date), the wallet and the features, where /me only
+# says who the key is. The same call is what the viewer uses to draw the plan
+# and the quota, so it has to be the full one.
+ACCOUNT_PATH = '/api/v1/account/me'
 
 # Many files in one call. The service takes them all in a single multipart body
 # and answers straight away with a batch to follow, so nothing here waits for a
