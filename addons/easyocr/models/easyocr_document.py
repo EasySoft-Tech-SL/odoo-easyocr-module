@@ -667,14 +667,20 @@ class EasyocrDocument(models.Model):
         """
         company = self.env.company
         if not company.easyocr_ai_enabled or not company.easyocr_ai_apikey:
-            return {'blocked': False, 'message': '', 'plan': {}, 'quota': {}, 'wallet': {}}
+            return {
+                'ai_enabled': False, 'blocked': False, 'message': '',
+                'plan': {}, 'quota': {}, 'wallet': {}, 'has_custom_instructions': False,
+            }
 
         extractor = self.env['easyocr.extractor']
         try:
             account = extractor.account(company)
         except Exception as error:  # noqa: BLE001 - the screen must open anyway
             _logger.info('EasyOCR: could not ask about the account: %s', error)
-            return {'blocked': False, 'message': '', 'plan': {}, 'quota': {}, 'wallet': {}}
+            return {
+                'ai_enabled': True, 'blocked': False, 'message': '',
+                'plan': {}, 'quota': {}, 'wallet': {}, 'has_custom_instructions': False,
+            }
 
         status = account.get('status') or {}
         blocked = not status.get('can_process', True)
@@ -698,6 +704,7 @@ class EasyocrDocument(models.Model):
         features = account.get('features') or {}
 
         return {
+            'ai_enabled': True,
             'blocked': blocked,
             'message': message,
             'block_code': status.get('block_code') or '',

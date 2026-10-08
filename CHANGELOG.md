@@ -26,12 +26,14 @@ work was done.
   it, with its own list, form and search.
 - **The workbench.** One screen for the whole job: it opens waiting for a file --
   open it or drop it, straight from the app's first card -- and becomes the
-  viewer in place once one is chosen. The file on the left, and on the right a
-  column with everything that can be done to it: read with AI (which says so
-  when the account cannot read), create the bill, the nine fields to draw a box
-  over, the template, and the values read from each box, taken from the PDF's
-  own text layer. It covers the whole screen, so it carries its own way back to
-  the document it belongs to.
+  viewer in place once one is chosen. The file on the left, and on the right the
+  column the module this is a port of has: the AI banner with the plan and what
+  is left of the monthly quota, read with AI (which says so when the account
+  cannot read), the nine fields to draw a box over, the template, the values
+  read from each box -- taken from the PDF's own text layer -- and a footer with
+  the two actions that finish the job, save the template and make the bill. It
+  keeps Odoo's own navigation around it, so the menus stay reachable, and it
+  carries a way back to the document it belongs to.
 - **Watching a reading work.** Reading a scan takes seconds and the button that
   started it goes dead while it runs, which used to leave the screen saying
   nothing at all. A bar walks the stages of a reading -- the file going out, the
@@ -119,6 +121,13 @@ work was done.
   a name the component never puts on its state, so the condition was false for
   ever and nothing was painted. Found by looking at the screen, and kept found by
   a test that reads every binding of every template against the components.
+- **The viewer hid Odoo's menus.** It opened full-screen, so the app's own
+  navigation -- and with it every other screen -- was gone until the reader left
+  the viewer. It now opens inside Odoo with the menus still there, and its
+  sidebar is the one the module this is a port of has: the plan and what is left
+  of the quota at the top of the column, and the keyboard spelled out at the
+  bottom (1-8 pick a field, Ctrl+S saves the template, Ctrl+Enter makes the
+  bill, Esc releases the field).
 
 ### Pending
 

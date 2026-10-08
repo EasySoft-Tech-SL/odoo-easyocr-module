@@ -22,8 +22,9 @@ TEMPLATE_ATTRIBUTES = ('string', 'title', 'placeholder', 'alt')
 NOT_A_SENTENCE = re.compile(r'^[^\w]*$')
 
 # Written into a template and never translated, on purpose: it is the product's
-# name, and a translated one would be a different product.
-NEVER_TRANSLATED = ('EasyOCR',)
+# name, and a translated one would be a different product. "1-8" is the key
+# hint next to the fields, not a word.
+NEVER_TRANSLATED = ('EasyOCR', 'easyOCR AI', 'PRO', '1-8')
 
 # The strings the viewer's JavaScript asks for by hand. They cannot be derived
 # from a model, so they are listed here: a new one added to the viewer without
@@ -68,6 +69,8 @@ VIEWER_STRINGS = (
     "Writing what was read on the document.",
     "None of the boxes could be read as the field they were drawn for.",
     "%s field(s) written on the document.",
+    # The keyboard help, one sentence.
+    "Keys: 1-8 select a field, Ctrl+S saves the template, Ctrl+Enter makes the bill, Esc releases the field.",
 )
 
 # What the batch screen writes by itself. Same rule, and the same reason they

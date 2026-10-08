@@ -3448,3 +3448,77 @@ msgstr "la factura no está confirmada, así que todavía no hay nada que pagar"
 msgid ""
 "Extract supplier invoices and expense receipts from PDF and image files"
 msgstr "Extrae facturas de proveedor y tickets desde archivos PDF e imágenes"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Clear the boxes"
+msgstr "Limpiar los recuadros"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Configure the service to read scans and photographs."
+msgstr "Configure el servicio para leer escaneos y fotografías."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "FREE"
+msgstr "GRATIS"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Generate invoice"
+msgstr "Generar factura"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid ""
+"Keys: 1-8 select a field, Ctrl+S saves the template, Ctrl+Enter makes the "
+"bill, Esc releases the field."
+msgstr ""
+"Teclas: 1-8 eligen un campo, Ctrl+S guarda la plantilla, Ctrl+Enter crea la "
+"factura, Esc suelta el campo."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Left"
+msgstr "Restantes"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Pages"
+msgstr "Páginas"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Read the scan with the service and fill the document in."
+msgstr "Lea el escaneo con el servicio y rellene el documento."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Resets"
+msgstr "Se renueva"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid ""
+"The button above is for the extraction service. Until it is\n"
+"                                set in Settings, only PDFs that already carry their text can be read."
+msgstr ""
+"El botón de arriba es del servicio de extracción. Hasta que se configure en "
+"Ajustes, solo se pueden leer los PDF que ya traen su texto."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Wallet"
+msgstr "Monedero"
