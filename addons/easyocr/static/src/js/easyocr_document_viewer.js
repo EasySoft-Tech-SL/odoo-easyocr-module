@@ -774,6 +774,59 @@ export class EasyocrDocumentViewer extends Component {
     }
 
     /**
+     * Put what the boxes read on the document itself.
+     *
+     * The reading is free and it has already happened: the boxes are over the
+     * right words and the text came out of the file. Until now it only lived in
+     * this column, and everything else in the module reads the document, so
+     * this is what turns a drawn page into a filed one without paying anyone.
+     */
+    async fillDocument() {
+        if (this.state.busy || !this.documentId) {
+            return;
+        }
+        const values = {};
+        for (const box of this.state.boxes) {
+            if (box.text) {
+                values[box.field_key] = box.text;
+            }
+        }
+        if (!Object.keys(values).length) {
+            this.notification.add(_t("There is nothing read to put on the document."), {
+                type: "warning",
+            });
+            return;
+        }
+
+        this.state.busy = true;
+        this.state.busyLabel = _t("Writing what was read on the document.");
+        try {
+            const written = await this.orm.call(
+                "easyocr.document", "action_apply_reading", [[this.documentId], values],
+            );
+            const count = Object.keys(written || {}).length;
+            if (!count) {
+                // Every box was drawn over something that is not the field it
+                // was assigned to, which is worth saying out loud instead of
+                // answering with a green tick and changing nothing.
+                this.notification.add(
+                    _t("None of the boxes could be read as the field they were drawn for."),
+                    { type: "warning" },
+                );
+                return;
+            }
+            this.notification.add(
+                _t("%s field(s) written on the document.", count), { type: "success" },
+            );
+        } catch (error) {
+            this.notification.add(this.failureMessage(error), { type: "danger" });
+        } finally {
+            this.state.busy = false;
+            this.state.busyLabel = "";
+        }
+    }
+
+    /**
      * Call a button of the document from here and show whatever it answers.
      *
      * Both methods return an action rather than raising: a notification when

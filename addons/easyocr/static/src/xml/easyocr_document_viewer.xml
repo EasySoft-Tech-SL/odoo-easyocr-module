@@ -153,6 +153,13 @@
                                 >&#215;</button>
                             </div>
                         </div>
+                        <div class="o_easyocr_actions mt-2">
+                            <button
+                                class="btn btn-secondary btn-sm w-100"
+                                type="button"
+                                t-on-click="() => this.fillDocument()"
+                            ><t>Put it on the document</t></button>
+                        </div>
                     </div>
                 </div>
             </div>

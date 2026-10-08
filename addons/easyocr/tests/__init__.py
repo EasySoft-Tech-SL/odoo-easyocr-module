@@ -1,3 +1,4 @@
+from . import test_easyocr_apply_boxes
 from . import test_easyocr_bill
 from . import test_easyocr_batch
 from . import test_easyocr_document
