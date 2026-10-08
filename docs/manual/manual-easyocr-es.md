@@ -111,6 +111,8 @@ La configuración vive en **Ajustes > EasyOCR** y viene en dos bloques.
 Antes de leer el primer documento, pulse **Probar la conexión**. Pregunta al
 servicio a nombre de quién va esa clave, y contesta una de estas cosas:
 
+|[tabla: Qué contesta la comprobación de la conexión]|
+|---|---|
 | **La cuenta y el plan** | La clave vale. Además dice cuántas páginas le quedan este mes. |
 | **El servicio ha rechazado la clave API** | La clave no es válida, o es de otra cuenta. Cópiela otra vez desde el panel de EasyOCR. |
 | **El servicio no se ha podido alcanzar** | La dirección del servicio no es correcta o no hay conexión. |
@@ -208,6 +210,8 @@ arriba:
 
 ![La ficha de un documento pendiente](img/05-ficha-documento.png)
 
+|[tabla: Los botones de la ficha de un documento]|
+|---|---|
 | **Abrir el visor** | Abre la pantalla grande donde se ve el documento y se dibujan las casillas. |
 | **Leer con IA** | Manda el archivo al servicio. Solo aparece si hay archivo adjunto y si tiene usted el permiso de responsable. |
 | **Crear factura** | Prepara la factura de proveedor con lo que hay en la ficha. |
@@ -267,6 +271,8 @@ Si un recuadro no le convence, la **×** de su derecha lo quita. El botón
 A la derecha de la barra están los dos botones que cierran el trabajo, para que
 no haya que salir del visor:
 
+|[tabla: Los dos botones del visor]|
+|---|---|
 | **Leer con IA** | Manda el documento al servicio y rellena la ficha con lo que lea. Es lo mismo que el botón de la ficha del documento. |
 | **Crear factura** | Prepara la factura de proveedor con lo que hay en la ficha y la abre. |
 
@@ -414,6 +420,8 @@ queda registrada en **EasyOCR > Registro de webhooks**.
 
 ![El registro de las llamadas recibidas](img/15-webhooks.png)
 
+|[tabla: Lo que guarda cada línea del registro de webhooks]|
+|---|---|
 | **Recibido el** | Cuándo llegó la llamada. |
 | **Evento** | Qué avisaba el servicio. |
 | **Estado** | **Creado** si dio lugar a un documento, **Ignorado** si el aviso no era de los que se atienden, **Error** si el aviso llegó bien pero traía un valor ilegible. |
