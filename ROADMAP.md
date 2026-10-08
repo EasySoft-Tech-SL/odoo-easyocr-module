@@ -113,16 +113,16 @@ The module talks to the same service the Dolibarr module uses
       the source lives in the repository and the same text goes to the company
       wiki, so a release is not finished until the guide matches it.
 
-## Phase 9 — Parity with the Dolibarr module · in progress
+## Phase 9 — Parity with the Dolibarr module · done
 
 Asked for on 7-oct-2026: *«quería una paridad total al 100%»*. Measured against
 the Dolibarr module that day: **18 settings against 4**, and two screens that
 have no counterpart here. This phase closes that.
 
-State on 8-oct-2026: **every setting is accounted for** -- eleven of the
-fourteen are in, and the three that are not are the miscellaneous-payment ones,
-which are not portable because the object they feed does not exist in Odoo. Of
-the screens, the home screen is done and **batch processing is not built yet**.
+State on 8-oct-2026: **the phase is closed.** Every setting is accounted for --
+eleven of the fourteen are in, and the three that are not are the
+miscellaneous-payment ones, which are not portable because the object they feed
+does not exist in Odoo -- and both screens have their counterpart here.
 
 Closed the same day, after using the module against the real service:
 
@@ -159,7 +159,23 @@ Closed the same day, after using the module against the real service:
   "Create Bill" already existed in the `.po` as the form's button labels, which
   is a different kind of reference, and on a Spanish screen they came out in
   English. `tests/test_easyocr_translations.py` now walks the templates and
-  demands a code reference for every literal in them.
+  demands a code reference for every literal in them -- **and their tails**,
+  which is where "page(s)" and "Loading the document..." had been sitting in
+  English since the beginning, out of sight of the check because they are
+  written after a tag instead of inside one.
+- **What the browser found that the suite could not.** Driving the batch screen
+  for real turned up four things no unit test would have: `orm.create` answers
+  with a *list* of ids and taking it for an id kills every call after it;
+  `doAction` needs `views` in the action or it throws on the way in; a sentence
+  glued together in the markup is never translated, however good the `.po` is;
+  and the summary said "all of them were read" while the line under it said "1
+  failed", because it was reading the service's word and the counts are ours.
+  The summary is read off the counts now, and the picker does not give way to
+  the progress screen until the send has actually been decided.
+- **The duplicate question had two buttons that lied.** "Leave them out" threw
+  the whole batch away, and the promise on the button was that it would send the
+  rest. It does now: the files already read come out of the batch, stay in the
+  documents list unread and unpaid, and the stack goes without them.
 
 Every row below was read in the Dolibarr source, in the file named, so what is
 ported is what that setting actually does and not what its name suggests.
@@ -176,8 +192,17 @@ ported is what that setting actually does and not what its name suggests.
       editable so a bad reading is fixed before it becomes a bill. *Done
       7-oct-2026, with the product of each line looked up by the reference the
       document prints.*
-- [ ] **Batch processing** (`batch.php`, `webhook_batch.php`). Reading a folder
-      of documents in one go, and the webhook's batch variant.
+- [x] **Batch processing** (`batch.php`, `webhook_batch.php`). Reading a folder
+      of documents in one go, and the webhook's batch variant. *Done
+      8-oct-2026: a screen that takes the files, a `easyocr.batch` record that
+      follows them, the readings landing on their own documents, and the three
+      events the service sends for a batch -- one document read, one failed, and
+      the whole stack done.* What the module does **not** copy is how the
+      original sends them: there, one file per call, because PHP's
+      `max_file_uploads` forces it. Here they all travel in one request, which
+      is what the service is built for. And the `language` option the original
+      fills in is not sent at all: its own SDK drops it in silence, because it
+      is not part of the batch contract.
 
 **Known difference:** the viewer has no zoom. Dolibarr's has `+` / `−` buttons
 and a page indicator in the toolbar; here the page is painted at a fixed scale
@@ -197,13 +222,16 @@ way on 8-oct-2026 before the check existed.
 ### UI: native views, not a copy of Dolibarr's screens
 
 Asked on 7-oct-2026 whether Dolibarr's screens could be reproduced as they are.
-They can -- Odoo renders whatever a client action draws, and the viewer and the
-home screen are already that -- but the decision taken that day is to keep the
-module on Odoo's own views and finish the *behaviour* instead. Dolibarr's pages
-are hand-written PHP; here every screen would be a bespoke component to keep
-alive across two series, and a Dolibarr-looking screen inside Odoo reads as a
-foreign body to anyone who uses Odoo. So: native views, everything Dolibarr
-does, and a custom screen only where native cannot express it.
+They can -- Odoo renders whatever a client action draws, and the viewer, the
+home screen and the batch screen are already that -- but the decision taken that
+day is to keep the module on Odoo's own views and finish the *behaviour*
+instead. Dolibarr's pages are hand-written PHP; here every screen would be a
+bespoke component to keep alive across two series, and a Dolibarr-looking screen
+inside Odoo reads as a foreign body to anyone who uses Odoo. So: native views,
+everything Dolibarr does, and a custom screen only where native cannot express
+it. Where that line falls has held: of the three screens of this phase, the
+batch *list* is a plain Odoo list with its own search view, and only the picking
+and the following of a live batch needed a screen of its own.
 
 ### Settings
 

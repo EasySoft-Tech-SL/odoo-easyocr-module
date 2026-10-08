@@ -393,6 +393,15 @@ export class EasyocrDocumentViewer extends Component {
         return FIELD_BY_KEY[key]?.label || key;
     }
 
+    /** How long the document is, in one sentence of its own. */
+    pagesLabel() {
+        return _t("%s page(s)", this.state.pages.length);
+    }
+
+    removeLabel(key) {
+        return _t("Remove %s", this.labelFor(key));
+    }
+
     // ------------------------------------------------------------------
     // Drawing
     // ------------------------------------------------------------------

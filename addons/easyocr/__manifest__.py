@@ -22,12 +22,14 @@
         'security/ir.model.access.csv',
         'views/easyocr_home_views.xml',
         'views/easyocr_document_views.xml',
+        'views/easyocr_batch_views.xml',
         'views/easyocr_inbox_views.xml',
         'views/easyocr_template_views.xml',
         'views/easyocr_webhook_log_views.xml',
         'views/easyocr_upload_views.xml',
         'views/expense_capture_views.xml',
         'views/res_config_settings_views.xml',
+        'data/easyocr_cron.xml',
     ],
     'assets': {
         'web.assets_backend': [

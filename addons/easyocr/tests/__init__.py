@@ -1,4 +1,5 @@
 from . import test_easyocr_bill
+from . import test_easyocr_batch
 from . import test_easyocr_document
 from . import test_easyocr_expense
 from . import test_easyocr_expense_target
