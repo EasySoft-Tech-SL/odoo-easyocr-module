@@ -21,7 +21,7 @@ Status: `done` · `in progress` · `pending`
 - [x] Tests that fail when the status flow breaks.
 - [x] Branch checks in CI: manifest, layout, Python syntax, XML well-formedness.
 
-## Phase 1 — Document viewer with rectangle templates · in progress
+## Phase 1 — Document viewer with rectangle templates · done
 
 This is the screen the user recognises: the PDF on the left, the data panel on the right.
 
@@ -34,7 +34,7 @@ This is the screen the user recognises: the PDF on the left, the data panel on t
 - [x] Save the set of rectangles as a template for that vendor.
 - [x] Reapply a vendor template to a new document of the same vendor.
 - [x] Apply a template automatically when the vendor is known.
-- [ ] Move and resize a box that has already been drawn.
+- [x] Move and resize a box that has already been drawn.
 
 **Why this is first:** it carries the module's identity, it is the biggest single piece
 of the port, and everything else builds on the boxes it produces.
@@ -176,6 +176,11 @@ Closed the same day, after using the module against the real service:
   the whole batch away, and the promise on the button was that it would send the
   rest. It does now: the files already read come out of the batch, stay in the
   documents list unread and unpaid, and the stack goes without them.
+- **A box cannot be dragged off the page.** The original lets one go, and a box
+  that has left the page reads nothing and cannot be grabbed back, because there
+  is nothing under the mouse to grab. This one stops at the edge. The four
+  corners are painted as small squares of the field's colour, which is what says
+  a box can still be changed once it has been drawn.
 - **The template was saved without a vendor, and so was never found again.** The
   record existed and the boxes were in it, but every one of them had
   `partner_id` empty: the screen saved the vendor from the document's own field,

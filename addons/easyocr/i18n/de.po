@@ -1587,10 +1587,11 @@ msgstr ""
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid ""
 "Pick one, then drag a box over the page. The text under the box is read "
-"straight away."
+"straight away. To move a box, drag it; to resize it, pull a corner."
 msgstr ""
 "Eines wählen und ein Rechteck über die Seite ziehen. Der Text darin wird "
-"sofort gelesen."
+"sofort gelesen. Zum Verschieben ziehen Sie es; zum Ändern der Größe ziehen "
+"Sie an einer Ecke."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_bill_post
