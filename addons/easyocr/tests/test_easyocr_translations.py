@@ -45,6 +45,11 @@ VIEWER_STRINGS = (
     # Where the boxes on the page came from, and what was kept of them.
     "Using the boxes of %s.",
     "Template saved for %s.",
+    # Putting what was read on the document itself, which is the free reading.
+    "There is nothing read to put on the document.",
+    "Writing what was read on the document.",
+    "None of the boxes could be read as the field they were drawn for.",
+    "%s field(s) written on the document.",
 )
 
 # What the batch screen writes by itself. Same rule, and the same reason they

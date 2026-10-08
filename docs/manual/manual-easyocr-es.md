@@ -282,6 +282,12 @@ para cambiarle el tamaño. Al soltar, el módulo vuelve a leer el texto que ha
 quedado dentro, así que **Lo que ha leído** siempre es lo que hay debajo del
 recuadro.
 
+Cuando esté conforme, pulse **Llevarlo a la ficha**: los valores que ha leído
+pasan a los campos del documento, y ya puede crear la factura sin teclear nada.
+Esta lectura **no cuesta nada**, porque el texto estaba en el propio archivo; la
+de **Leer con IA** es la que se paga. Si un recuadro cogió lo que no era, ese
+campo se queda como estaba y los demás se rellenan igual.
+
 Arriba del todo de la columna están los dos botones que cierran el trabajo, para
 que no haya que salir del visor:
 

@@ -8,7 +8,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
-from .easyocr_values import to_float
+from .easyocr_values import to_amount, to_date, to_float
 
 _logger = logging.getLogger(__name__)
 
@@ -97,6 +97,10 @@ class EasyocrDocument(models.Model):
     )
     ref = fields.Char(string='Document Number')
     document_date = fields.Date(string='Document Date')
+    due_date = fields.Date(
+        string='Due Date',
+        help='The day the vendor wants to be paid, as printed on the document.',
+    )
     amount_untaxed = fields.Monetary(
         string='Untaxed Amount',
         currency_field='currency_id',
@@ -270,14 +274,21 @@ class EasyocrDocument(models.Model):
                 "or make sure the tax number is on a contact."
             ))
 
-        move = self.env['account.move'].create({
+        values = {
             'move_type': 'in_refund' if self.is_refund else 'in_invoice',
             'partner_id': partner.id,
             'ref': self.ref or self.name,
             'invoice_date': self.document_date or fields.Date.context_today(self),
             'currency_id': self.currency_id.id,
-            'invoice_line_ids': [(0, 0, values) for values in self._bill_line_values(partner)],
-        })
+            'invoice_line_ids': [
+                (0, 0, line) for line in self._bill_line_values(partner)
+            ],
+        }
+        if self.due_date:
+            # Only when the paper says one: left out, Odoo works it out from the
+            # payment terms of the vendor, which is better than a blank.
+            values['invoice_date_due'] = self.due_date
+        move = self.env['account.move'].create(values)
 
         self.move_id = move
         self.state = 'processed'
@@ -336,6 +347,51 @@ class EasyocrDocument(models.Model):
     def _compute_line_count(self):
         for document in self:
             document.line_count = len(document.line_ids)
+
+    # ------------------------------------------------------------------
+    # From the boxes drawn on the page to the fields of the document
+    # ------------------------------------------------------------------
+    # What a rectangle fills in. The key is the one the viewer stores and the
+    # one a template keeps; the rest is the field of this record it writes to,
+    # and how to read what came out of the box when the paper prints it the way
+    # a person reads it instead of the way a database keeps it.
+    BOX_DESTINATIONS = {
+        'document_number': ('ref', None),
+        'document_date': ('document_date', to_date),
+        'due_date': ('due_date', to_date),
+        'amount_untaxed': ('amount_untaxed', to_amount),
+        'amount_total': ('amount_total', to_amount),
+        'partner_vat': ('partner_vat', None),
+        'partner_name': ('partner_name', None),
+    }
+
+    def action_apply_reading(self, values):
+        """Fill the document with what the boxes read, without calling anyone.
+
+        This is the free reading, and the one that needs no account: the boxes
+        are already over the right words and the text came out of the file's own
+        text layer, so the only thing missing was putting it where the rest of
+        the module can use it. A box whose text cannot be read as the field it
+        was drawn for is left alone, and the others are not held back by it:
+        one rectangle over the wrong part of the page is not a reason to lose
+        the four that are right.
+
+        Answers with what it wrote, so the screen can say so.
+        """
+        self.ensure_one()
+        written = {}
+        for key, text in (values or {}).items():
+            destination = self.BOX_DESTINATIONS.get(key)
+            if not destination or not isinstance(text, str) or not text.strip():
+                continue
+            field_name, reader = destination
+            value = reader(text) if reader else text.strip()
+            if value is None or value is False or value == '':
+                continue
+            written[field_name] = value
+        if written:
+            self.write(written)
+        return written
 
     def _tax_from_totals(self):
         """The purchase tax the document's own two amounts imply.

@@ -79,7 +79,14 @@ The module talks to the same service the Dolibarr module uses
 - [x] Per-company settings: enabled, service URL, key and timeout, on the settings screen.
 - [x] The document keeps the reason when extraction fails, so it can be retried,
       and says whether sending it again is worth it.
-- [ ] Choose the engine per document instead of per company.
+- [x] Choose the engine per document instead of per company. The choice was
+      always per document, made by what the reader does: the boxes read the
+      file's own text layer for nothing, and the button reads it with the
+      service and costs a reading. What was missing was the end of the free
+      path, which filled nothing, so the document now takes what the boxes read
+      and the rate, the date and the amounts become fields of their own. No PDF
+      library had to be added on the server for it: the text layer is read where
+      it is already read, in the browser.
 
 ## Phase 4 — Inbox for documents from other modules · done
 

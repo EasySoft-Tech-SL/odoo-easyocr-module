@@ -34,6 +34,12 @@ work was done.
   inside to move it, or pulled by one of the squares on its corners to change its
   size, and the text under it is read again on letting go. A box cannot leave the
   page: off it there is nothing to read and nothing left to grab.
+- **Reading without the service.** The boxes drawn over a page fill the document
+  with what they read, which costs nothing because the text was already in the
+  file: an amount printed "320,77 EUR" and a date printed 30/09/2026 are read as
+  such, and a box that read nothing leaves its field alone instead of emptying
+  it. The date the vendor wants to be paid, which the service has always returned
+  and nothing kept, is stored now and goes on the bill.
 - **Reading with the service.** Client for the EasyOCR extraction service, with a
   `Test the connection` button in the settings that checks the key without
   spending a reading, plain-language messages for every way the service can turn

@@ -41,6 +41,12 @@ msgstr "%(read)s de %(total)s lidos, %(failed)s con erro"
 
 #. module: easyocr
 #. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "%s field(s) written on the document."
+msgstr "%s campo(s) escritos na ficha."
+
+#. module: easyocr
+#. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_batch.js:0
 msgid "%s file(s) were left out: they had already been read."
 msgstr "%s ficheiro(s) deixáronse fóra: xa se lían lido."
@@ -666,6 +672,11 @@ msgstr "Arrastre os ficheiros aquí, ou escóll aos"
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_document
 msgid "Drop your first document"
 msgstr "Suba o seu primeiro documento"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__due_date
+msgid "Due Date"
+msgstr "Data de vencemento"
 
 #. module: easyocr
 #. odoo-javascript
@@ -1379,6 +1390,12 @@ msgstr ""
 
 #. module: easyocr
 #. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "None of the boxes could be read as the field they were drawn for."
+msgstr "Non se puido ler ningún recadro como o campo para o que se debuxou."
+
+#. module: easyocr
+#. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_batch.js:0
 msgid "None of these files could be read."
 msgstr "Non se puido ler ningún destes ficheiros."
@@ -1645,6 +1662,12 @@ msgstr "Produto"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__progress
 msgid "Progress"
 msgstr "Progreso"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Put it on the document"
+msgstr "Levalo á ficha"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__quantity
@@ -2368,6 +2391,12 @@ msgid "The camera is not ready yet. Give it a second."
 msgstr "A cámara aínda non está lista. Déame un segundo."
 
 #. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document__due_date
+msgid "The day the vendor wants to be paid, as printed on the document."
+msgstr ""
+"O día en que o provedor quere cobrar, tal e como vén impreso no documento."
+
+#. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "The document could not be read."
@@ -2640,6 +2669,12 @@ msgstr "O valor enviado para %s, %s, non é un número."
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "There is no file on this item."
 msgstr "Este elemento non ten ningún ficheiro."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "There is nothing read to put on the document."
+msgstr "Non hai nada lido que levar á ficha."
 
 #. module: easyocr
 #. odoo-python
@@ -3056,6 +3091,12 @@ msgstr "Largo"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_search
 msgid "Without vendor"
 msgstr "Sen provedor"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Writing what was read on the document."
+msgstr "Escribindo na ficha o que se leu."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__x

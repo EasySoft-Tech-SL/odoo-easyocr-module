@@ -78,6 +78,7 @@
                             <field name="partner_vat" invisible="partner_id"/>
                             <field name="ref"/>
                             <field name="document_date"/>
+                            <field name="due_date"/>
                         </group>
                         <group>
                             <field name="amount_untaxed"/>

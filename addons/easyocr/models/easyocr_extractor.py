@@ -586,6 +586,15 @@ class EasyocrDocument(models.Model):
         if document_date:
             values['document_date'] = document_date
 
+        # The service puts it under the payment, and it is the day the vendor
+        # wants the money: it was being read and thrown away.
+        payment = data.get('payment') or {}
+        due_date = self._clean_date(
+            data.get('due_date') or payment.get('due_date'),
+        )
+        if due_date:
+            values['due_date'] = due_date
+
         totals = data.get('totals') or {}
         if totals.get('net_subtotal') is not None:
             values['amount_untaxed'] = to_float(totals['net_subtotal'])
