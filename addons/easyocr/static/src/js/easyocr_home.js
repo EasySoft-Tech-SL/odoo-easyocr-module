@@ -8,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 // comes from so the two screens are recognisably the same. An accent for the
 // icon and the border, and a tint to sit behind the icon.
 const PDF = { accent: "#1565c0", bg: "#e3f2fd" };
+const DOCUMENTS = { accent: "#3949ab", bg: "#e8eaf6" };
 const INBOX = { accent: "#2e7d32", bg: "#e8f5e9" };
 const SCAN = { accent: "#5b3cc4", bg: "#ede7f6" };
 const TEMPLATES = { accent: "#5e35b1", bg: "#ede7f6" };
@@ -94,12 +95,22 @@ export class EasyocrHome extends Component {
     get cards() {
         const cards = [
             {
-                key: "documents",
+                // First, as it is in the module this is a port of: uploading a
+                // file and landing in the viewer is what most visits are for.
+                key: "upload",
                 icon: "fa-file-pdf-o",
+                title: _t("Upload a document"),
+                note: _t("Pick a PDF or a photo and open it in the viewer"),
+                action: "easyocr.action_easyocr_upload",
+                ...PDF,
+            },
+            {
+                key: "documents",
+                icon: "fa-file-text-o",
                 title: _t("Documents"),
                 note: _t("Invoices and receipts read, or waiting to be"),
                 action: "easyocr.action_easyocr_document",
-                ...PDF,
+                ...DOCUMENTS,
             },
             {
                 key: "inbox",

@@ -42,6 +42,7 @@ class TestEasyocrHome(TransactionCase):
     def test_the_home_screen_offers_every_screen_the_module_has(self):
         """A card the component names but that does not exist is a dead click."""
         for xmlid in (
+            'easyocr.action_easyocr_upload',
             'easyocr.action_easyocr_document',
             'easyocr.action_easyocr_inbox',
             'easyocr.action_easyocr_template',

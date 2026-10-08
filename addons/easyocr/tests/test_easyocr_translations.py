@@ -59,6 +59,8 @@ HOME_STRINGS = (
     "What the documents became",
     "Sections",
     "Open",
+    "Upload a document",
+    "Pick a PDF or a photo and open it in the viewer",
     "Read supplier invoices and expense receipts, and turn them into accounting entries.",
     "Invoices and receipts read, or waiting to be",
     "Waiting to be looked at, handed over by other modules",
@@ -102,6 +104,7 @@ MODELS = (
     'easyocr.template',
     'easyocr.template.box',
     'easyocr.webhook.log',
+    'easyocr.upload.wizard',
     'res.company',
     'res.config.settings',
 )

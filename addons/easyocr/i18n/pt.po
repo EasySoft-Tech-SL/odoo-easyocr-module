@@ -177,6 +177,7 @@ msgstr "Empresas"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__company_id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__company_id
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Company"
@@ -209,6 +210,7 @@ msgstr "Criada"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_uid
 msgid "Created by"
 msgstr "Criado por"
@@ -219,6 +221,7 @@ msgstr "Criado por"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_date
 msgid "Created on"
 msgstr "Criado em"
@@ -429,6 +432,7 @@ msgstr "Campos"
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__attachment_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__datas
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__file
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "File"
@@ -436,6 +440,7 @@ msgstr "Ficheiro"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__name
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__filename
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__filename
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 msgid "File Name"
@@ -632,6 +637,7 @@ msgstr "Última resposta de extração"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_uid
 msgid "Last Updated by"
 msgstr "Última Atualização por"
@@ -642,6 +648,7 @@ msgstr "Última Atualização por"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_date
 msgid "Last Updated on"
 msgstr "Última Atualização em"
@@ -961,6 +968,7 @@ msgstr "Recebido em"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__name
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__name
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Reference"
 msgstr "Referência"
@@ -1588,6 +1596,7 @@ msgstr ""
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -2258,3 +2267,56 @@ msgstr "Fatura de fornecedor"
 #: model:ir.model.fields.selection,name:easyocr.selection__res_config_settings__easyocr_expense_target__expense
 msgid "Employee expense"
 msgstr "Despesa de empregado"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Upload a document"
+msgstr "Carregar um documento"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Pick a PDF or a photo and open it in the viewer"
+msgstr "Escolha um PDF ou uma fotografia e abra-o no visualizador"
+
+#. module: easyocr
+#: model:ir.model,name:easyocr.model_easyocr_upload_wizard
+msgid "Upload a Document to Read"
+msgstr "Carregar um documento para ler"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
+msgid "Open the viewer"
+msgstr "Abrir o visualizador"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_upload_wizard__name
+msgid "How this document is listed. Left empty, the file name is used."
+msgstr ""
+"Como este documento aparece na lista. Deixado vazio, usa-se o nome do "
+"ficheiro."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
+msgid "Left empty, the file name is used"
+msgstr "Deixado vazio, usa-se o nome do ficheiro"
+
+#. module: easyocr
+#: model:ir.actions.act_window,name:easyocr.action_easyocr_upload
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
+msgid "Upload a Document"
+msgstr "Carregar um documento"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_upload.py:0
+msgid "Choose a file first."
+msgstr "Escolha primeiro um ficheiro."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_upload.py:0
+msgid "That kind of file cannot be read. Send a PDF or a photo."
+msgstr ""
+"Esse tipo de ficheiro não pode ser lido. Envie um PDF ou uma fotografia."

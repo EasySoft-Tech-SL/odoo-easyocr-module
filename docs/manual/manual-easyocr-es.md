@@ -68,6 +68,8 @@ también un atajo: púlselo y va a su lista.
 
 Debajo, cada tarjeta lleva a un sitio:
 
+- **Subir un documento** — elige un PDF o una foto y el visor se abre con él
+  dentro. Es el camino corto para meter una factura a mano.
 - **Documentos** — las facturas y tickets leídos, o esperando a leerse.
 - **Bandeja de entrada** — lo que le han entregado otros módulos y todavía
   nadie ha mirado.
@@ -154,7 +156,24 @@ abierto. Si no va a usar esta vía, no tiene que hacer nada.
 
 # 4. Dónde viven los documentos
 
-Todo empieza en **EasyOCR > Documentos**.
+## Meter un documento: un paso
+
+Desde la pantalla de inicio, **Subir un documento** es el camino corto: elige
+el PDF o la foto y **el visor se abre con el documento dentro**. No hay que
+crear una ficha, ni adjuntar el archivo, ni guardar antes.
+
+![El diálogo de subir un documento](img/17-subir-documento.png)
+
+La **Referencia** se rellena sola con el nombre del archivo; cámbiela si quiere
+otra cosa. Al pulsar **Abrir el visor**, el documento queda guardado y ya está
+en el visor, listo para dibujar los recuadros o para mandarlo leer.
+
+Esto **no llama al servicio**: abrir un archivo no es pedir que se lea.
+
+## La lista de documentos
+
+Lo mismo se puede hacer desde **EasyOCR > Documentos**, que es donde están
+todos los documentos y donde se vuelve a ellos después.
 
 ![La lista de documentos, con los tres estados](img/04-documentos.png)
 
