@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0-20260926\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 09:21+0000\n"
-"PO-Revision-Date: 2026-10-08 09:21+0000\n"
+"POT-Creation-Date: 2026-10-08 09:40+0000\n"
+"PO-Revision-Date: 2026-10-08 09:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,6 +82,17 @@ msgstr "Un PDF o una foto di una fattura o di uno scontrino."
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid "A photographed receipt becomes"
 msgstr "Uno scontrino fotografato finisce come"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document__is_refund
+msgid ""
+"A rectificativa: the vendor is giving money back instead of asking for it, "
+"and the bill is made the other way round. A reading that brings a negative "
+"total turns this on by itself."
+msgstr ""
+"Una nota di credito: il fornitore restituisce denaro invece di chiederlo, e "
+"la fattura viene creata al contrario. Una lettura che riporta un totale "
+"negativo la attiva da sola."
 
 #. module: easyocr
 #: model_terms:ir.actions.act_window,help:easyocr.action_easyocr_template
@@ -501,6 +512,11 @@ msgid "Created on"
 msgstr "Data creazione"
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__is_refund
+msgid "Credit Note"
+msgstr "Nota di credito"
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__currency_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__currency_id
 msgid "Currency"
@@ -637,8 +653,9 @@ msgstr "Documenti e fatture"
 
 #. module: easyocr
 #. odoo-javascript
-#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+#. odoo-python
 #: code:addons/easyocr/models/easyocr_template.py:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Draw at least one box before saving a template."
 msgstr "Disegna almeno un riquadro prima di salvare un modello."
 
@@ -883,8 +900,9 @@ msgstr "Icona Font Awesome es. fa-tasks"
 
 #. module: easyocr
 #. odoo-javascript
-#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+#. odoo-python
 #: code:addons/easyocr/models/easyocr_template.py:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Give the template a name."
 msgstr "Dai un nome al modello."
 

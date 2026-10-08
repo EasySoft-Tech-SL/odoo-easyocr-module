@@ -592,6 +592,14 @@ class EasyocrDocument(models.Model):
         if totals.get('total') is not None:
             values['amount_total'] = to_float(totals['total'])
 
+        # A rectificativa is the one kind of vendor document that comes back
+        # negative, and it is the writing on the paper that decides what the
+        # bill becomes. Nothing is turned round here: the document keeps what
+        # the paper says, and only says which way the bill goes.
+        total = values.get('amount_total', self.amount_total)
+        if total is not None and total < 0:
+            values['is_refund'] = True
+
         # The lines are replaced, never merged: a second reading of the same
         # document supersedes the first, and keeping both would double the bill.
         self._apply_lines(data.get('items'))
