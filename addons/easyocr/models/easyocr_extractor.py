@@ -14,7 +14,17 @@ from .easyocr_values import to_float
 _logger = logging.getLogger(__name__)
 
 SERVICE_PATH = '/api/v1/ocr/file'
+
+# Who the key belongs to and what is left. It sits behind the key check but not
+# behind the plan limiter, so asking costs nothing while answering the two
+# questions that come before sending a document at all.
+ACCOUNT_PATH = '/api/v1/me'
+
 DEFAULT_TIMEOUT = 120
+
+# A probe is a courtesy call, not a reading: it should not sit for two minutes
+# because the timeout was raised for long scans.
+PROBE_TIMEOUT = 30
 
 # error_code values that mean "send it again". STRUCTURING_TRUNCATED is left out
 # on purpose: the model stopped for a reason that will be the same next time.
@@ -82,18 +92,63 @@ class EasyocrExtractor(models.AbstractModel):
             ) from error
 
     @api.model
+    def _error_code(self, response):
+        """The service's own code for what went wrong, or nothing."""
+        try:
+            return ((response.json() or {}).get('error') or {}).get('code') or ''
+        except (ValueError, AttributeError):
+            return ''
+
+    @api.model
     def _http_error_message(self, response):
-        """Turn a failure status into a sentence the user can act on."""
+        """Turn a failure into a sentence fit for the person who has to fix it.
+
+        The service says why in the body, and the status code on its own is not
+        enough to go on: a 401 covers both "no key was sent" and "the key was
+        rejected", which send the reader to two different places. Reading the
+        code first is what keeps a rejected key from being reported as a missing
+        one -- which is precisely what this used to say.
+        """
+        known = {
+            'MISSING_API_KEY': _(
+                "The extraction service needs an API key, and none is set in the EasyOCR settings."
+            ),
+            'INVALID_API_KEY': _(
+                "The extraction service rejected the API key. Check it in the EasyOCR "
+                "settings: it may belong to another account, or have been switched off."
+            ),
+            'API_KEY_INACTIVE': _("That API key is switched off in the EasyOCR account."),
+            'API_KEY_EXPIRED': _("That API key has expired."),
+            'ACCOUNT_DISABLED': _("The EasyOCR account is switched off. Contact support."),
+            'IP_NOT_ALLOWED': _("This server's address is not allowed to use that API key."),
+            'DOMAIN_NOT_ALLOWED': _("This server's domain is not allowed to use that API key."),
+            'WALLET_EMPTY': _(
+                "The EasyOCR account has no readings left. Top it up to keep reading documents."
+            ),
+            'QUOTA_EXCEEDED': _("The monthly limit of the EasyOCR plan has been reached."),
+            'KEY_QUOTA_EXCEEDED': _("This API key has reached its monthly limit."),
+            'FEATURE_NOT_AVAILABLE': _("The EasyOCR plan does not include that feature."),
+        }
+        code = self._error_code(response)
+        if code in known:
+            return known[code]
+
         status = response.status_code
         if status == 401:
-            return _("The extraction service requires an API key, and none was sent.")
+            # With no code to read, a 401 means the key did not get through. Of
+            # the two reasons the service has for saying that, a refused key is
+            # the one worth naming by default: the other one is set up once, and
+            # the module will not even call without a key.
+            return _("The extraction service rejected the API key.")
+        if status == 402:
+            return _("The EasyOCR account has no readings left.")
         if status == 403:
             return _("The extraction service rejected the API key.")
         if status == 413:
             return _("The file is too large for the extraction service.")
         if status == 422:
             return _("The extraction service could not read the request.")
-        if status == 503:
+        if status in (429, 503):
             message = _("The extraction service is down or busy.")
             retry_after = response.headers.get('Retry-After') if response.headers else None
             if retry_after:
@@ -107,6 +162,47 @@ class EasyocrExtractor(models.AbstractModel):
             "The extraction service answered with an unexpected error (HTTP %(status)s).",
             status=status,
         )
+
+    # ------------------------------------------------------------------
+    # Asking about the account
+    # ------------------------------------------------------------------
+    @api.model
+    def account(self, company):
+        """Who the key belongs to and how much is left, without reading anything.
+
+        This is the only way to tell a key that was mistyped from a service that
+        is down *before* sending a document, because a reading that comes back
+        refused has already been paid for on the way out. Answers with the
+        service's own view of the account: plan, quota and whether it is in a
+        position to process at all.
+        """
+        base = (company.easyocr_ai_url or '').strip().rstrip('/')
+        if not base:
+            raise EasyocrServiceError(
+                _("No extraction service is set in the EasyOCR settings.")
+            )
+
+        try:
+            response = requests.get(
+                base + ACCOUNT_PATH,
+                headers={'X-API-Key': company.easyocr_ai_apikey or ''},
+                timeout=PROBE_TIMEOUT,
+            )
+        except requests.RequestException as error:
+            _logger.warning('EasyOCR service unreachable at %s: %s', base, error)
+            raise EasyocrServiceError(
+                _("The extraction service could not be reached (%(error)s).", error=error)
+            ) from error
+
+        if not 200 <= response.status_code < 300:
+            raise EasyocrServiceError(self._http_error_message(response))
+
+        try:
+            return (response.json() or {}).get('data') or {}
+        except ValueError as error:
+            raise EasyocrServiceError(
+                _("The extraction service answered with something that is not JSON.")
+            ) from error
 
     # ------------------------------------------------------------------
     # Reading the answer

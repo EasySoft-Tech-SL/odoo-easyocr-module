@@ -13,11 +13,14 @@ import base64
 from datetime import timedelta
 from unittest import mock
 
+import requests
+
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 POST = 'odoo.addons.easyocr.models.easyocr_extractor.requests.post'
+GET = 'odoo.addons.easyocr.models.easyocr_extractor.requests.get'
 
 # The same bytes for every document in a test is the whole point of the
 # duplicate guard, so they are written once here.
@@ -81,6 +84,26 @@ class TestEasyocrSettings(TransactionCase):
             'structured_data': {'document_number': 'A/1', 'totals': {'total': 121.0}},
         }
         return response
+
+    def _account_response(self, body=None):
+        response = mock.Mock()
+        response.status_code = 200
+        response.headers = {}
+        response.json.return_value = body if body is not None else {
+            'success': True,
+            'data': {
+                'account': {'name': 'EasySoft Tech SL'},
+                'plan': {'name': 'Professional'},
+                'status': {'can_process': True, 'block_code': None, 'block_message': None},
+                'quota': {'pages_available_now': 480},
+            },
+        }
+        return response
+
+    def _settings(self, company=None):
+        return self.env['res.config.settings'].create({
+            'company_id': (company or self.company).id,
+        })
 
     # ------------------------------------------------------------------
     # Confirming the bill
@@ -222,6 +245,110 @@ class TestEasyocrSettings(TransactionCase):
         sent = post.call_args.kwargs['data']['custom_instructions']
         self.assertIn(self.company.name, sent)
         self.assertIn('B12345678', sent)
+
+    # ------------------------------------------------------------------
+    # Asking the service about the account before sending anything
+    # ------------------------------------------------------------------
+    def test_the_connection_button_says_who_the_key_belongs_to(self):
+        """The answer to "is this key any good", in one press and no invoice."""
+        settings = self._settings()
+
+        with mock.patch(GET, return_value=self._account_response()):
+            answer = settings.action_easyocr_test_connection()
+
+        self.assertEqual(answer['params']['type'], 'success')
+        self.assertIn('EasySoft Tech SL', answer['params']['message'])
+        self.assertIn('Professional', answer['params']['message'])
+        self.assertIn('480', answer['params']['message'])
+
+    def test_asking_about_the_account_does_not_spend_a_reading(self):
+        """The whole point of the button: it costs nothing to be told no.
+
+        A reading that comes back refused was paid for on the way out, so the
+        check has to go to the endpoint that only asks who the key is.
+        """
+        settings = self._settings()
+
+        with mock.patch(GET, return_value=self._account_response()) as get:
+            with mock.patch(POST) as post:
+                settings.action_easyocr_test_connection()
+
+        self.assertTrue(get.call_args.args[0].endswith('/api/v1/me'))
+        post.assert_not_called()
+
+    def test_the_connection_button_reports_a_key_the_service_does_not_know(self):
+        settings = self._settings()
+        refused = self._account_response({
+            'success': False,
+            'error': {'code': 'INVALID_API_KEY', 'message': 'API Key inválida o revocada.'},
+        })
+        refused.status_code = 401
+
+        with mock.patch(GET, return_value=refused):
+            answer = settings.action_easyocr_test_connection()
+
+        self.assertEqual(answer['params']['type'], 'warning')
+        self.assertIn('rejected the API key', answer['params']['message'])
+
+    def test_the_connection_button_says_when_there_is_nothing_left_to_read_with(self):
+        """A key can be perfectly good and the account still unable to read."""
+        settings = self._settings()
+        blocked = self._account_response({
+            'success': True,
+            'data': {
+                'account': {'name': 'EasySoft Tech SL'},
+                'plan': {'name': 'Professional'},
+                'status': {
+                    'can_process': False,
+                    'block_code': 'QUOTA_EXCEEDED',
+                    'block_message': 'Has alcanzado el límite de 500 páginas/mes.',
+                },
+                'quota': {'pages_available_now': 0},
+            },
+        })
+
+        with mock.patch(GET, return_value=blocked):
+            answer = settings.action_easyocr_test_connection()
+
+        self.assertEqual(answer['params']['type'], 'warning')
+        self.assertIn('500', answer['params']['message'])
+
+    def test_the_connection_button_says_when_the_service_does_not_answer(self):
+        settings = self._settings()
+
+        with mock.patch(GET, side_effect=requests.exceptions.ConnectionError('no route')):
+            answer = settings.action_easyocr_test_connection()
+
+        self.assertEqual(answer['params']['type'], 'warning')
+        self.assertIn('could not be reached', answer['params']['message'])
+
+    def test_the_connection_button_checks_the_company_of_the_screen(self):
+        """Not the one the user happens to be working in.
+
+        The settings screen is opened *for* a company, and checking the other one
+        would answer about a key nobody asked about.
+        """
+        other = self.env['res.company'].create({
+            'name': 'Sociedad de pruebas',
+            'easyocr_ai_url': 'https://otra.example.test',
+            'easyocr_ai_apikey': 'otra-clave',
+        })
+        self.assertNotEqual(other, self.env.company)
+        settings = self._settings(other)
+
+        with mock.patch(GET, return_value=self._account_response()) as get:
+            settings.action_easyocr_test_connection()
+
+        self.assertIn('otra.example.test', get.call_args.args[0])
+        self.assertEqual(get.call_args.kwargs['headers']['X-API-Key'], 'otra-clave')
+
+    def test_the_connection_button_is_on_the_settings_screen(self):
+        """A method nobody can press is a method that does not exist."""
+        view = self.env.ref('easyocr.res_config_settings_view_form_easyocr')
+        arch = view.arch
+
+        self.assertIn('action_easyocr_test_connection', arch)
+        self.assertIn('Test the connection', arch)
 
     def test_the_identity_sent_says_what_it_is_and_nothing_more(self):
         """Facts, never a procedure: an instruction the model cannot satisfy

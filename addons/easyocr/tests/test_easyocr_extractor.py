@@ -189,6 +189,45 @@ class TestEasyocrExtractor(TransactionCase):
         self.assertEqual(document.state, 'error')
         self.assertIn('API key', document.error_message)
 
+    def test_a_key_that_was_refused_is_not_reported_as_a_key_that_was_missing(self):
+        """Both arrive as 401, and they send the reader to different places.
+
+        One is "paste your key"; the other is "that key is not mine". Reporting
+        the second as the first is how a perfectly good-looking key ends up
+        being pasted again and again.
+        """
+        document = self._document()
+        body = {'success': False, 'error': {'code': 'INVALID_API_KEY', 'message': 'no'}}
+
+        with mock.patch(POST, return_value=self._response(status_code=401, body=body)):
+            document.action_extract()
+
+        self.assertEqual(document.state, 'error')
+        self.assertIn('rejected the API key', document.error_message)
+        self.assertNotIn('none is set', document.error_message)
+
+    def test_a_request_without_a_key_says_so(self):
+        document = self._document()
+        body = {'success': False, 'error': {'code': 'MISSING_API_KEY', 'message': 'no'}}
+
+        with mock.patch(POST, return_value=self._response(status_code=401, body=body)):
+            document.action_extract()
+
+        self.assertEqual(document.state, 'error')
+        self.assertIn('none is set', document.error_message)
+
+    def test_an_account_with_nothing_left_says_what_to_do(self):
+        """A quota problem is not a mistake in the settings, and saying so saves
+        the reader from going over the key once more."""
+        document = self._document()
+        body = {'success': False, 'error': {'code': 'QUOTA_EXCEEDED', 'message': 'no'}}
+
+        with mock.patch(POST, return_value=self._response(status_code=429, body=body)):
+            document.action_extract()
+
+        self.assertEqual(document.state, 'error')
+        self.assertIn('monthly limit', document.error_message)
+
     # ------------------------------------------------------------------
     # Settings are honoured
     # ------------------------------------------------------------------

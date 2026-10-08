@@ -3,6 +3,10 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { loadJS } from "@web/core/assets";
+// Not a service: `user` is an object the web client fills from the session.
+// Asking the service registry for it throws "Service user is not available"
+// and takes the whole viewer down with it.
+import { user } from "@web/core/user";
 
 /**
  * The nine fields a box can be assigned to. The key is what gets stored and what
@@ -51,6 +55,7 @@ export class EasyocrDocumentViewer extends Component {
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.actionService = useService("action");
         this.containerRef = useRef("pdfContainer");
 
         this.state = useState({
@@ -63,6 +68,13 @@ export class EasyocrDocumentViewer extends Component {
             activeField: null,
             templateName: "",
             saving: false,
+            busy: false,
+            busyLabel: "",
+            // The same permission the form's button has: sending a document to
+            // the service costs money, so it is not for everyone who can look
+            // at one. Answered asynchronously further down -- hasGroup hands
+            // back a promise, and a promise is true whatever it resolves to.
+            canReadWithAI: false,
         });
 
         this.pdfDocument = null;
@@ -73,8 +85,20 @@ export class EasyocrDocumentViewer extends Component {
         this.nextUid = 1;
         this.fields = BOX_FIELDS;
 
+        onWillStart(() => this.loadPermission());
         onWillStart(() => this.loadDocument());
         onMounted(() => this.paintPages());
+    }
+
+    /** Whether the reader may send documents to the service. */
+    async loadPermission() {
+        try {
+            this.state.canReadWithAI = await user.hasGroup("easyocr.group_easyocr_manager");
+        } catch {
+            // A viewer that refuses to open because a permission could not be
+            // asked about is worse than the same viewer without the button.
+            this.state.canReadWithAI = false;
+        }
     }
 
     get documentId() {
@@ -369,6 +393,51 @@ export class EasyocrDocumentViewer extends Component {
     async refreshAllTexts() {
         for (const box of this.state.boxes) {
             box.text = await this.readText(box);
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // What the document becomes
+    // ------------------------------------------------------------------
+    /** Send the file to the service and fill the document with what it reads. */
+    async readWithAI() {
+        await this.runDocumentAction(
+            "action_extract",
+            _t("Reading the document. A scanned page takes a while."),
+        );
+    }
+
+    /** Turn what was read into a draft supplier bill, and open it. */
+    async createBill() {
+        await this.runDocumentAction("action_create_bill", _t("Preparing the bill."));
+    }
+
+    /**
+     * Call a button of the document from here and show whatever it answers.
+     *
+     * Both methods return an action rather than raising: a notification when
+     * something went wrong, the bill itself when it went right. Calling them
+     * from a component means nothing runs that action for us, so it is run by
+     * hand -- otherwise the call would look like it did nothing at all, which
+     * is the worst way for a button to fail.
+     *
+     * The reading can take minutes on a long scan, so the toolbar says what it
+     * is waiting for and stops taking clicks meanwhile.
+     */
+    async runDocumentAction(method, label) {
+        if (this.state.busy || !this.documentId) {
+            return;
+        }
+        this.state.busy = true;
+        this.state.busyLabel = label;
+        try {
+            const result = await this.orm.call("easyocr.document", method, [[this.documentId]]);
+            if (result) {
+                await this.actionService.doAction(result);
+            }
+        } finally {
+            this.state.busy = false;
+            this.state.busyLabel = "";
         }
     }
 

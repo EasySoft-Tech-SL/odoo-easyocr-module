@@ -2,6 +2,8 @@
 # License LGPL-3 (see LICENSE file).
 
 import os
+import re
+import xml.etree.ElementTree as ElementTree
 
 import polib
 
@@ -12,6 +14,17 @@ from odoo.tools.translate import (
     PYTHON_TRANSLATION_COMMENT,
 )
 
+# Attributes an OWL template paints as they are written. A literal in any of
+# them is a term the reader sees.
+TEMPLATE_ATTRIBUTES = ('string', 'title', 'placeholder', 'alt')
+
+# Text that is punctuation, an entity or a lone symbol rather than a sentence.
+NOT_A_SENTENCE = re.compile(r'^[^\w]*$')
+
+# Written into a template and never translated, on purpose: it is the product's
+# name, and a translated one would be a different product.
+NEVER_TRANSLATED = ('EasyOCR',)
+
 # The strings the viewer's JavaScript asks for by hand. They cannot be derived
 # from a model, so they are listed here: a new one added to the viewer without
 # a translation is what this list is meant to catch.
@@ -19,6 +32,10 @@ VIEWER_STRINGS = (
     "Draw at least one box before saving a template.",
     "Give the template a name.",
     "Template saved.",
+    # What the toolbar says while the service is thinking. A reading takes
+    # seconds, and a button that looks dead for that long gets pressed again.
+    "Reading the document. A scanned page takes a while.",
+    "Preparing the bill.",
 )
 
 # The sentences the mobile capture page's JavaScript writes. They travel the
@@ -93,6 +110,38 @@ MESSAGE_STRINGS = (
     "supplier bill.",
     "Filed as an expense.",
     "It could not be filed as an expense.",
+    # Why the service turned a document away. The service says it with a code
+    # of its own, and the code is what the module turns into a sentence: a key
+    # that was refused and a key that was never set arrive as the same HTTP 401,
+    # so a sentence that guesses between them sends the reader to the wrong fix.
+    "The extraction service needs an API key, and none is set in the EasyOCR settings.",
+    "The extraction service rejected the API key. Check it in the EasyOCR "
+    "settings: it may belong to another account, or have been switched off.",
+    "That API key is switched off in the EasyOCR account.",
+    "That API key has expired.",
+    "The EasyOCR account is switched off. Contact support.",
+    "This server's address is not allowed to use that API key.",
+    "This server's domain is not allowed to use that API key.",
+    "The EasyOCR account has no readings left. Top it up to keep reading documents.",
+    "The EasyOCR account has no readings left.",
+    "The monthly limit of the EasyOCR plan has been reached.",
+    "This API key has reached its monthly limit.",
+    "The EasyOCR plan does not include that feature.",
+    "No extraction service is set in the EasyOCR settings.",
+    # What the connection check on the settings screen answers.
+    "The EasyOCR account cannot read documents right now.",
+    "The service answered. Account: %(account)s, plan: %(plan)s.",
+    "%(answer)s %(pages)s pages left to read this month.",
+    "no name",
+    "no plan",
+)
+
+# Strings that live only in a view's arch, so no model term carries them and
+# nothing else in this file would notice them going untranslated. The button is
+# the whole feature: a reader who cannot read it will not press it.
+ARCH_STRINGS = (
+    ("Test the connection", 'model_terms:ir.ui.view,arch_db:'
+                            'easyocr.res_config_settings_view_form_easyocr'),
 )
 
 # The models whose terms are ours to translate. The two settings models are here
@@ -217,6 +266,86 @@ class TestEasyocrTranslations(TransactionCase):
             po = polib.pofile(os.path.join(self.i18n_path, name))
             for msgid in MESSAGE_STRINGS:
                 self._assert_reaches_python(po, msgid)
+
+    def test_every_literal_in_a_template_reaches_the_browser(self):
+        """A template's own words need a code reference, not a view one.
+
+        The web client is handed the terms flagged as code and nothing else, so
+        a sentence written straight into an OWL template is looked up in a map
+        that holds only those. A term that exists in the .po with a view
+        reference -- because a button on a form says the same thing -- is
+        translated everywhere except there, and _t hands back the English word
+        without a word of complaint. That is how the viewer's two buttons stayed
+        in English on a Spanish screen while the field they were read from was
+        translated.
+        """
+        terms = self._template_literals()
+        self.assertGreater(len(terms), 4, "Barely any literal was found at all.")
+
+        for name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, name))
+            for msgid, where in sorted(terms.items()):
+                entry = self._entry(po, msgid)
+                self.assertTrue(
+                    entry.msgstr,
+                    "%s leaves %r without a translation (%s)"
+                    % (os.path.basename(po.fpath), msgid, where),
+                )
+                self.assertIn(
+                    JAVASCRIPT_TRANSLATION_COMMENT, entry.comment,
+                    "%r is written into %s and the web client will never receive "
+                    "its translation: %s does not flag it as a JavaScript term. "
+                    "Add the .js reference of the component that paints it."
+                    % (msgid, where, os.path.basename(po.fpath)),
+                )
+                self.assertTrue(
+                    any(ref.startswith('code:addons/easyocr/') for ref, _line in entry.occurrences),
+                    "%r needs a code reference under code:addons/easyocr/, the only "
+                    "kind the client is given (%s)"
+                    % (msgid, os.path.basename(po.fpath)),
+                )
+
+    def _template_literals(self):
+        """Every word the module's own templates paint, and where it is written."""
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        folder = os.path.join(root, 'static', 'src', 'xml')
+        found = {}
+
+        def want(text, where):
+            text = (text or '').strip()
+            if text and text not in NEVER_TRANSLATED and not NOT_A_SENTENCE.match(text):
+                found.setdefault(text, where)
+
+        for name in sorted(os.listdir(folder)):
+            if not name.endswith('.xml'):
+                continue
+            where = 'static/src/xml/%s' % name
+            tree = ElementTree.parse(os.path.join(folder, name))
+            for node in tree.iter():
+                want(node.text, '%s <%s>' % (where, node.tag))
+                for attribute in TEMPLATE_ATTRIBUTES:
+                    value = node.get(attribute)
+                    # t-att-* and t-esc carry a binding, not a word.
+                    if value and '{{' not in value and value.isprintable():
+                        want(value, '%s <%s %s=>' % (where, node.tag, attribute))
+        return found
+
+    def test_the_strings_that_live_only_in_a_view_are_translated(self):
+        """Nothing else carries these: they are text in the view and nowhere else."""
+        for name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, name))
+            for msgid, ref in ARCH_STRINGS:
+                entry = self._entry(po, msgid)
+                self.assertTrue(
+                    entry.msgstr,
+                    "%s leaves %r in English" % (os.path.basename(po.fpath), msgid),
+                )
+                self.assertIn(
+                    ref, {reference for reference, _line in entry.occurrences},
+                    "%r is translated in %s but points nowhere Odoo will look for "
+                    "it: it needs the reference %s"
+                    % (msgid, os.path.basename(po.fpath), ref),
+                )
 
     def test_every_label_says_where_odoo_looks_for_it(self):
         """A translation without a reference is a translation that never arrives.
