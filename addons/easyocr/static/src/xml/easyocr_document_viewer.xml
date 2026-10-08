@@ -3,58 +3,33 @@
 
     <t t-name="easyocr.DocumentViewer">
         <div class="o_easyocr_viewer">
-            <div class="o_easyocr_toolbar">
-                <t t-foreach="fields" t-as="field" t-key="field.key">
-                    <button
-                        t-attf-class="o_easyocr_field {{ state.activeField === field.key ? 'active' : '' }}"
-                        t-attf-style="--eo-color: {{ field.color }}"
-                        t-on-click="() => this.setActiveField(field.key)"
-                        t-att-title="field.label"
-                    >
-                        <span class="o_easyocr_swatch"/>
-                        <t t-esc="field.label"/>
-                    </button>
-                </t>
-                <span class="o_easyocr_toolbar_sep"/>
-                <span t-if="state.busy" class="o_easyocr_busy text-muted">
-                    <i class="fa fa-spinner fa-spin me-1"/>
-                    <t t-esc="state.busyLabel"/>
-                </span>
-                <button
-                    t-if="state.canReadWithAI"
-                    class="btn btn-secondary btn-sm"
-                    t-on-click="readWithAI"
-                    t-att-disabled="state.busy"
-                >
-                    Read with AI
-                </button>
-                <button
-                    class="btn btn-primary btn-sm"
-                    t-on-click="createBill"
-                    t-att-disabled="state.busy"
-                >
-                    Create Bill
-                </button>
-                <button class="btn btn-link btn-sm" t-on-click="clearBoxes">
-                    Clear
-                </button>
-                <input
-                    type="text"
-                    class="o_easyocr_template_name"
-                    placeholder="Template name"
-                    t-model="state.templateName"
-                />
-                <button
-                    class="btn btn-secondary btn-sm"
-                    t-on-click="saveTemplate"
-                    t-att-disabled="state.saving"
-                >
-                    Save template
-                </button>
-            </div>
-
             <div class="o_easyocr_viewer_body">
-                <div class="o_easyocr_viewer_pdf" t-ref="pdfContainer">
+                <div t-if="state.empty" class="o_easyocr_viewer_pdf">
+                    <!-- The screen waiting for a file: click or drop, the way
+                         the module this is a port of opens. -->
+                    <div
+                        t-attf-class="o_easyocr_empty {{ state.dragging ? 'dragging' : '' }}"
+                        t-on-click="() => this.fileInputRef.el.click()"
+                        t-on-dragover="onDragOver"
+                        t-on-dragleave="onDragLeave"
+                        t-on-drop="onDrop"
+                    >
+                        <i class="fa fa-file-pdf-o"/>
+                        <p class="o_easyocr_empty_title">Open a PDF, or drop one here</p>
+                        <p class="o_easyocr_empty_hint">A PDF or a photo of an invoice or a receipt.</p>
+                        <button class="btn btn-primary" type="button">
+                            Choose a file
+                        </button>
+                        <input
+                            t-ref="fileInput"
+                            type="file"
+                            class="d-none"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            t-on-change="onFileChosen"
+                        />
+                    </div>
+                </div>
+                <div t-else="" class="o_easyocr_viewer_pdf" t-ref="pdfContainer">
                     <div t-if="state.loading" class="o_easyocr_viewer_message">
                         <i class="fa fa-spinner fa-spin me-2"/>Loading the document...
                     </div>
@@ -64,27 +39,119 @@
                     </div>
                 </div>
 
-                <div class="o_easyocr_viewer_data">
-                    <h4 t-esc="state.documentName"/>
-                    <p class="text-muted" t-if="state.pages.length">
-                        <t t-esc="state.pages.length"/> page(s)
-                    </p>
+                <!-- The controls, in a column on the right, each group under its
+                     own heading. Everything the reader can do to the document is
+                     here, next to the data it acts on, and the page keeps the
+                     whole width for itself. -->
+                <div class="o_easyocr_sidebar">
+                    <div class="o_easyocr_sidebar_head">
+                        <h4 t-esc="state.documentName"/>
+                        <p class="text-muted" t-if="state.pages.length">
+                            <t t-esc="state.pages.length"/> page(s)
+                        </p>
+                    </div>
 
-                    <div t-if="state.boxes.length" class="o_easyocr_fields">
-                        <div t-foreach="state.boxes" t-as="box" t-key="box.uid" class="o_easyocr_field_row">
-                            <span class="o_easyocr_field_label" t-esc="this.labelFor(box.field_key)"/>
-                            <span class="o_easyocr_field_value" t-esc="box.text"/>
+                    <!-- Nothing to do to a document that is not there yet, so
+                         the controls only appear once a file has been filed.
+                         A button that quietly does nothing is worse than no
+                         button at all. -->
+                    <div t-if="state.empty" class="o_easyocr_section">
+                        <p class="o_easyocr_section_note">
+                            No document yet. Open one, or drop it on the left, and the tools appear here.
+                        </p>
+                    </div>
+
+                    <div t-if="!state.empty" class="o_easyocr_section">
+                        <h5>Read with AI</h5>
+                        <p class="o_easyocr_section_note">
+                            Send the file to the service and fill the document in with what it reads.
+                        </p>
+                        <div t-if="state.aiBlockMessage" class="o_easyocr_blocked">
+                            <i class="fa fa-exclamation-triangle me-1"/>
+                            <t t-esc="state.aiBlockMessage"/>
+                        </div>
+                        <div t-if="state.busy" class="o_easyocr_busy text-muted">
+                            <i class="fa fa-spinner fa-spin me-1"/>
+                            <t t-esc="state.busyLabel"/>
+                        </div>
+                        <div class="o_easyocr_actions">
                             <button
-                                class="o_easyocr_remove"
-                                t-on-click="() => this.removeBox(box.uid)"
-                                t-att-title="'Remove ' + this.labelFor(box.field_key)"
-                            >&#215;</button>
+                                t-if="state.canReadWithAI"
+                                class="btn btn-secondary btn-sm w-100"
+                                t-on-click="readWithAI"
+                                t-att-disabled="state.busy"
+                            >
+                                Read with AI
+                            </button>
+                            <button
+                                class="btn btn-primary btn-sm w-100"
+                                t-on-click="createBill"
+                                t-att-disabled="state.busy"
+                            >
+                                Create Bill
+                            </button>
                         </div>
                     </div>
-                    <p t-else="" class="text-muted o_easyocr_hint">
-                        Pick a field above and drag a box over the page. The text under the box
-                        is read straight away.
-                    </p>
+
+                    <div t-if="!state.empty" class="o_easyocr_section">
+                        <h5>Fields</h5>
+                        <p class="o_easyocr_section_note">
+                            Pick one, then drag a box over the page. The text under the box is read straight away.
+                        </p>
+                        <div class="o_easyocr_field_list">
+                            <t t-foreach="fields" t-as="field" t-key="field.key">
+                                <button
+                                    t-attf-class="o_easyocr_field {{ state.activeField === field.key ? 'active' : '' }}"
+                                    t-attf-style="--eo-color: {{ field.color }}"
+                                    t-on-click="() => this.setActiveField(field.key)"
+                                    t-att-title="field.label"
+                                >
+                                    <span class="o_easyocr_swatch"/>
+                                    <t t-esc="field.label"/>
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div t-if="!state.empty" class="o_easyocr_section">
+                        <h5>Template</h5>
+                        <p class="o_easyocr_section_note">
+                            Name the boxes and keep them, so the drawing is not repeated every time.
+                        </p>
+                        <input
+                            type="text"
+                            class="o_easyocr_template_name form-control form-control-sm"
+                            placeholder="Template name"
+                            t-model="state.templateName"
+                        />
+                        <div class="o_easyocr_actions">
+                            <button
+                                class="btn btn-secondary btn-sm w-100"
+                                t-on-click="saveTemplate"
+                                t-att-disabled="state.saving"
+                            >
+                                Save template
+                            </button>
+                            <button class="btn btn-link btn-sm w-100" t-on-click="clearBoxes">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="o_easyocr_section" t-if="state.boxes.length">
+                        <h5>What it read</h5>
+                        <div class="o_easyocr_fields">
+                            <div t-foreach="state.boxes" t-as="box" t-key="box.uid" class="o_easyocr_field_row">
+                                <span class="o_easyocr_field_label" t-esc="this.labelFor(box.field_key)"/>
+                                <span class="o_easyocr_field_value" t-esc="box.text"/>
+                                <button
+                                    class="o_easyocr_remove"
+                                    t-on-click="() => this.removeBox(box.uid)"
+                                    t-att-title="'Remove ' + this.labelFor(box.field_key)"
+                                >&#215;</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

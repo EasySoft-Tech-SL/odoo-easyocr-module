@@ -153,7 +153,6 @@ MODELS = (
     'easyocr.template',
     'easyocr.template.box',
     'easyocr.webhook.log',
-    'easyocr.upload.wizard',
     'res.company',
     'res.config.settings',
 )

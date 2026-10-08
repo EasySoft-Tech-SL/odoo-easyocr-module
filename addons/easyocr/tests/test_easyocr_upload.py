@@ -1,11 +1,12 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
-"""Uploading a file and landing in the viewer.
+"""Filing the file the screen was handed.
 
-What is checked here is the whole point of the screen: one file in, the tool
-with the document open. Anything that leaves the reader on a record with an
-attachment to find is the three-step path this exists to replace.
+The screen that waits for a PDF is the start of the module's own flow: one file
+in, the viewer open on it. What is checked here is the step between the two --
+turning what the browser sends into a document with its attachment, under the
+rules the module already has.
 """
 
 import base64
@@ -14,76 +15,72 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-PDF = base64.b64encode(b'%PDF-1.4 a supplier invoice')
+FILE_BYTES = b'%PDF-1.4 a supplier invoice'
+PDF = base64.b64encode(FILE_BYTES)
 
 
 @tagged('post_install', '-at_install')
 class TestEasyocrUpload(TransactionCase):
-    """One file in, the viewer out."""
+    """One file in, a document with its file out."""
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.Wizard = cls.env['easyocr.upload.wizard']
+        cls.Document = cls.env['easyocr.document']
 
-    def _wizard(self, **values):
-        values.setdefault('file', PDF)
-        values.setdefault('filename', 'factura.pdf')
-        return self.Wizard.create(values)
+    def test_the_file_is_filed_with_its_name_as_the_reference(self):
+        document = self.Document.browse(
+            self.Document.action_file_upload('factura.pdf', PDF)
+        )
 
-    def test_the_file_is_filed_and_the_viewer_opens_on_it(self):
-        wizard = self._wizard(name='FAC-2026-0100')
-
-        action = wizard.action_read()
-
-        self.assertEqual(action['tag'], 'easyocr.document_viewer')
-        self.assertEqual(action['target'], 'fullscreen')
-        document = self.env['easyocr.document'].browse(action['params']['document_id'])
-        self.assertEqual(document.name, 'FAC-2026-0100')
-        self.assertTrue(document.attachment_id)
-        # Nothing was read: opening a file is not asking for it to be sent
-        # anywhere, and the viewer has its own button for that.
-        self.assertEqual(document.last_extraction, False)
-
-    def test_the_attachment_keeps_the_name_of_the_chosen_file(self):
-        action = self._wizard().action_read()
-
-        document = self.env['easyocr.document'].browse(action['params']['document_id'])
-
+        self.assertEqual(document.name, 'factura.pdf')
         self.assertEqual(document.attachment_id.name, 'factura.pdf')
+        self.assertEqual(document.attachment_id.raw, FILE_BYTES)
+        self.assertEqual(document.attachment_id.res_model, 'easyocr.document')
+        self.assertEqual(document.attachment_id.res_id, document.id)
 
-    def test_the_file_name_is_used_when_no_reference_is_typed(self):
-        action = self._wizard(filename='ticket-gasolinera.pdf').action_read()
+    def test_the_reference_given_wins_over_the_file_name(self):
+        document = self.Document.browse(
+            self.Document.action_file_upload('factura.pdf', PDF, name='FAC-2026-0100')
+        )
 
-        document = self.env['easyocr.document'].browse(action['params']['document_id'])
+        self.assertEqual(document.name, 'FAC-2026-0100')
 
-        self.assertEqual(document.name, 'ticket-gasolinera.pdf')
+    def test_nothing_is_read_just_because_a_file_was_chosen(self):
+        """Opening a document is not asking for it to be sent anywhere."""
+        document = self.Document.browse(
+            self.Document.action_file_upload('factura.pdf', PDF)
+        )
 
-    def test_the_reference_is_filled_in_from_the_file_as_it_is_chosen(self):
-        """So nobody has to type the same thing twice."""
-        wizard = self._wizard(name=False)
-
-        wizard._onchange_file()
-
-        self.assertEqual(wizard.name, 'factura.pdf')
-
-    def test_a_kind_of_file_that_cannot_be_read_is_turned_away(self):
-        wizard = self._wizard(filename='hoja-de-calculo.xlsx')
-
-        with self.assertRaises(UserError):
-            wizard.action_read()
-
-    def test_without_a_file_nothing_is_filed(self):
-        wizard = self._wizard(file=False)
-
-        with self.assertRaises(UserError):
-            wizard.action_read()
-
-        self.assertFalse(self.env['easyocr.document'].search([('name', '=', 'factura.pdf')]))
+        self.assertFalse(document.last_extraction)
+        self.assertEqual(document.state, 'draft')
 
     def test_a_photo_is_taken_as_well_as_a_pdf(self):
-        action = self._wizard(filename='ticket.jpg').action_read()
-
-        document = self.env['easyocr.document'].browse(action['params']['document_id'])
+        document = self.Document.browse(
+            self.Document.action_file_upload('ticket.jpg', PDF)
+        )
 
         self.assertTrue(document.attachment_id)
+
+    def test_a_kind_of_file_that_cannot_be_read_is_turned_away(self):
+        with self.assertRaises(UserError):
+            self.Document.action_file_upload('hoja-de-calculo.xlsx', PDF)
+
+        self.assertFalse(self.Document.search([('name', '=', 'hoja-de-calculo.xlsx')]))
+
+    def test_without_content_nothing_is_filed(self):
+        with self.assertRaises(UserError):
+            self.Document.action_file_upload('factura.pdf', False)
+
+        self.assertFalse(self.Document.search([('name', '=', 'factura.pdf')]))
+
+    def test_the_action_the_home_screen_opens_waits_for_a_file(self):
+        """It is the viewer's own action, opened with nothing in it.
+
+        The card on the home screen has to land on the screen that waits for a
+        file, not on a dialog that files one and sends the reader elsewhere.
+        """
+        action = self.env.ref('easyocr.action_easyocr_new_document')
+
+        self.assertEqual(action.type, 'ir.actions.client')
+        self.assertEqual(action.tag, 'easyocr.document_viewer')

@@ -18,13 +18,13 @@ work was done.
   not read twice.
 - **Document inbox.** What another module hands over before anyone has looked at
   it, with its own list, form and search.
-- **The viewer.** Full screen, the file on the left and the data on the right.
-  Nine fields to draw a box over, the text under each box read from the PDF's own
-  text layer, boxes saved as a template for a vendor, and the two buttons that
-  finish the job -- read with AI and create the bill -- without leaving the
-  screen.
-- **Uploading a document.** One file in, the viewer out, straight from the app's
-  first screen.
+- **The workbench.** One screen for the whole job: it opens waiting for a file --
+  open it or drop it, straight from the app's first card -- and becomes the
+  viewer in place once one is chosen. The file on the left, and on the right a
+  column with everything that can be done to it: read with AI (which says so
+  when the account cannot read), create the bill, the nine fields to draw a box
+  over, the template, and the values read from each box, taken from the PDF's
+  own text layer.
 - **Reading with the service.** Client for the EasyOCR extraction service, with a
   `Test the connection` button in the settings that checks the key without
   spending a reading, plain-language messages for every way the service can turn

@@ -420,8 +420,10 @@ msgid "Field"
 msgstr "Campo"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__box_ids
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Fields"
 msgstr "Campos"
 
@@ -1126,7 +1128,9 @@ msgid "Tax number"
 msgstr "NIF"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__template_id
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Template"
 msgstr "Plantilla"
 
@@ -2313,13 +2317,15 @@ msgstr "Subir un documento"
 
 #. module: easyocr
 #. odoo-python
-#: code:addons/easyocr/models/easyocr_upload.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "Choose a file first."
 msgstr "Elija un archivo primero."
 
 #. module: easyocr
 #. odoo-python
-#: code:addons/easyocr/models/easyocr_upload.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "That kind of file cannot be read. Send a PDF or a photo."
 msgstr "Ese tipo de archivo no se puede leer. Envíe un PDF o una foto."
 
@@ -2358,6 +2364,7 @@ msgstr "Esa clave API ha caducado."
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "The EasyOCR account is switched off. Contact support."
 msgstr "La cuenta de EasyOCR está desactivada. Contacte con soporte."
 
@@ -2387,12 +2394,14 @@ msgstr ""
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "The EasyOCR account has no readings left."
 msgstr "La cuenta de EasyOCR no tiene lecturas disponibles."
 
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_extractor.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "The monthly limit of the EasyOCR plan has been reached."
 msgstr "Se ha alcanzado el límite mensual del plan de EasyOCR."
 
@@ -2418,6 +2427,7 @@ msgstr ""
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/res_config_settings.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "The EasyOCR account cannot read documents right now."
 msgstr "La cuenta de EasyOCR no puede leer documentos ahora mismo."
 
@@ -2461,3 +2471,85 @@ msgstr "Preparando la factura."
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid "Test the connection"
 msgstr "Probar la conexión"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "What it read"
+msgstr "Lo que ha leído"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid ""
+"Send the file to the service and fill the document in with what it reads."
+msgstr "Manda el archivo al servicio y rellena la ficha con lo que lea."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid ""
+"Pick one, then drag a box over the page. The text under the box is read "
+"straight away."
+msgstr ""
+"Elija uno y dibuje un recuadro sobre la página. El texto que quede dentro se"
+" lee al momento."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid ""
+"Name the boxes and keep them, so the drawing is not repeated every time."
+msgstr ""
+"Póngale nombre a los recuadros y guárdelos, para no volver a dibujarlos cada"
+" vez."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Open a PDF, or drop one here"
+msgstr "Abra un PDF o suéltelo aquí"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "A PDF or a photo of an invoice or a receipt."
+msgstr "Un PDF o una foto de una factura o de un ticket."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Choose a file"
+msgstr "Elegir un archivo"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "That file could not be opened."
+msgstr "No se ha podido abrir ese archivo."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "That file could not be read."
+msgstr "No se ha podido leer ese archivo."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The EasyOCR subscription is overdue, so the service will not read anything "
+"until it is brought up to date."
+msgstr ""
+"La suscripción de EasyOCR está vencida, así que el servicio no leerá nada "
+"hasta que se ponga al día."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid ""
+"No document yet. Open one, or drop it on the left, and the tools appear "
+"here."
+msgstr ""
+"Todavía no hay documento. Abra uno, o suéltelo a la izquierda, y las "
+"herramientas aparecerán aquí."

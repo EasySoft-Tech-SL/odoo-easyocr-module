@@ -68,8 +68,8 @@ también un atajo: púlselo y va a su lista.
 
 Debajo, cada tarjeta lleva a un sitio:
 
-- **Subir un documento** — elige un PDF o una foto y el visor se abre con él
-  dentro. Es el camino corto para meter una factura a mano.
+- **Subir un documento** — abre la pantalla de trabajo, que espera el PDF o la foto.
+  Es el camino corto para meter una factura a mano.
 - **Documentos** — las facturas y tickets leídos, o esperando a leerse.
 - **Bandeja de entrada** — lo que le han entregado otros módulos y todavía
   nadie ha mirado.
@@ -176,15 +176,19 @@ abierto. Si no va a usar esta vía, no tiene que hacer nada.
 
 ## Meter un documento: un paso
 
-Desde la pantalla de inicio, **Subir un documento** es el camino corto: elige
-el PDF o la foto y **el visor se abre con el documento dentro**. No hay que
-crear una ficha, ni adjuntar el archivo, ni guardar antes.
+Desde la pantalla de inicio, **Subir un documento** es el camino corto: lleva a
+la pantalla de trabajo con el documento todavía sin elegir.
 
-![El diálogo de subir un documento](img/17-subir-documento.png)
+![La pantalla esperando un archivo](img/19-abrir-documento.png)
 
-La **Referencia** se rellena sola con el nombre del archivo; cámbiela si quiere
-otra cosa. Al pulsar **Abrir el visor**, el documento queda guardado y ya está
-en el visor, listo para dibujar los recuadros o para mandarlo leer.
+Ahí tiene dos maneras de meter el archivo, y dan lo mismo:
+
+- Pulsar **Elegir un archivo** y buscarlo.
+- **Arrastrarlo** desde el escritorio y soltarlo encima.
+
+En cuanto suelta el archivo, la misma pantalla se convierte en el visor, con el
+documento dentro. No hay que crear una ficha, ni adjuntar nada, ni guardar
+antes, y el documento se llama como el archivo.
 
 Esto **no llama al servicio**: abrir un archivo no es pedir que se lea.
 
@@ -243,13 +247,17 @@ lectura, no se suman.
 # 5. El visor: dibujar de dónde se lee cada dato
 
 El visor es la pantalla que da sentido al módulo. Se abre con **Abrir el visor**
-y ocupa toda la pantalla: el documento a la izquierda, los datos a la derecha.
+y ocupa toda la pantalla: el documento a la izquierda y, en una columna a la
+derecha, todo lo que se puede hacer con él.
 
 ![El visor con el documento abierto y ningún campo marcado](img/06-visor-vacio.png)
 
-Arriba hay una barra con nueve botones, uno por cada dato que se puede leer. El
-color de cada botón es el color con el que se pintará el recuadro en el
-documento, así que siempre se sabe qué recuadro es qué.
+La columna tiene cuatro apartados, de arriba abajo:
+
+| **Leer con IA** | El botón que manda el documento al servicio, y el de crear la factura. |
+| **Campos** | Los nueve datos que se pueden leer, uno por botón. El color de cada botón es el color con el que se pintará su recuadro, así que siempre se sabe qué recuadro es qué. |
+| **Plantilla** | Ponerle nombre a los recuadros y guardarlos. |
+| **Lo que ha leído** | Los valores que van saliendo de cada recuadro. Aparece en cuanto hay uno. |
 
 ## El paso a paso
 
@@ -257,28 +265,31 @@ documento, así que siempre se sabe qué recuadro es qué.
 2. Con el botón pulsado, arrastre el ratón sobre el documento para dibujar un
    recuadro alrededor de ese dato. Como el recuadro se lee del texto que hay
    debajo, puede ajustarlo a una parte de la línea si le conviene.
-3. Al soltar, el texto que ha quedado dentro aparece a la derecha, en la lista
-   de datos.
+3. Al soltar, el texto que ha quedado dentro aparece abajo, en **Lo que ha
+   leído**.
 
-Repita con los datos que le interesen. Así queda un documento con cinco campos
+Repita con los datos que le interesen. Así queda un documento con cuatro campos
 marcados:
 
-![El visor con cinco campos marcados y sus valores a la derecha](img/07-visor-campos.png)
+![El visor con cuatro campos marcados y sus valores a la derecha](img/07-visor-campos.png)
 
 Si un recuadro no le convence, la **×** de su derecha lo quita. El botón
 **Limpiar** borra todos de golpe.
 
-A la derecha de la barra están los dos botones que cierran el trabajo, para que
-no haya que salir del visor:
+Arriba del todo de la columna están los dos botones que cierran el trabajo, para
+que no haya que salir del visor:
 
 |[tabla: Los dos botones del visor]|
 |---|---|
 | **Leer con IA** | Manda el documento al servicio y rellena la ficha con lo que lea. Es lo mismo que el botón de la ficha del documento. |
 | **Crear factura** | Prepara la factura de proveedor con lo que hay en la ficha y la abre. |
 
-Mientras el servicio está leyendo, la barra lo dice y los botones quedan
+Mientras el servicio está leyendo, la columna lo dice y los botones quedan
 bloqueados: una página escaneada tarda unos segundos, y es mejor saber que está
 trabajando que pulsar dos veces.
+
+Si la cuenta no puede leer —cuota agotada, suscripción vencida—, el módulo lo
+avisa aquí arriba en cuanto se abre el visor, antes de que nadie lo intente.
 
 Con esto ya tiene lo importante: los datos del proveedor leídos del documento,
 sin teclear.
@@ -460,7 +471,7 @@ documento.
 
 Ese botón es de **responsable**. Pídale a quien administra su Odoo que le asigne
 el permiso, o que lance él la lectura. En el visor aparece junto a **Crear
-factura**, a la derecha de la barra.
+factura**, arriba del todo de la columna de la derecha.
 
 ## He puesto la clave API y sigue sin leer
 

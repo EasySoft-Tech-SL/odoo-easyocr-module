@@ -36,6 +36,11 @@ SERVICE_TYPES = ('service', 'shipping', 'fee')
 # the others when a receipt needs one and nobody said which.
 EXPENSE_PRODUCT_CODE = 'EXP_GEN'
 
+# What can be handed to the service. A PDF or a photo; anything else is turned
+# away where it is chosen, with a sentence saying so, instead of being filed and
+# then failing at the service.
+READABLE_EXTENSIONS = ('.pdf', '.jpg', '.jpeg', '.png')
+
 
 class EasyocrDocument(models.Model):
     """A file dropped into the OCR inbox, plus whatever was read from it.
@@ -489,6 +494,84 @@ class EasyocrDocument(models.Model):
             'params': {'document_id': self.id},
             'target': 'fullscreen',
         }
+
+    @api.model
+    def action_account_state(self):
+        """Whether the account can read right now, and why not when it cannot.
+
+        The service knows; the screen only asks. The sentence is built here, in
+        Python, so it comes out in the reader's language like every other
+        sentence of the module -- the service answers in Spanish whatever the
+        screen is set to.
+
+        Nothing is asked when the AI is off or has no key set, and a service
+        that does not answer is not reported as a blocked account: silence is
+        not a reason to tell someone their subscription lapsed.
+        """
+        company = self.env.company
+        if not company.easyocr_ai_enabled or not company.easyocr_ai_apikey:
+            return {'blocked': False, 'message': ''}
+
+        extractor = self.env['easyocr.extractor']
+        try:
+            account = extractor.account(company)
+        except Exception as error:  # noqa: BLE001 - the screen must open anyway
+            _logger.info('EasyOCR: could not ask about the account: %s', error)
+            return {'blocked': False, 'message': ''}
+
+        status = account.get('status') or {}
+        if status.get('can_process', True):
+            return {'blocked': False, 'message': ''}
+
+        known = {
+            'SUBSCRIPTION_OVERDUE': _(
+                "The EasyOCR subscription is overdue, so the service will not read "
+                "anything until it is brought up to date."
+            ),
+            'WALLET_EMPTY': _("The EasyOCR account has no readings left."),
+            'QUOTA_EXCEEDED': _("The monthly limit of the EasyOCR plan has been reached."),
+            'ACCOUNT_DISABLED': _("The EasyOCR account is switched off. Contact support."),
+        }
+        return {
+            'blocked': True,
+            'message': known.get(
+                status.get('block_code'),
+                _("The EasyOCR account cannot read documents right now."),
+            ),
+        }
+
+    @api.model
+    def action_file_upload(self, filename, datas, name=False):
+        """File a file handed over by the screen and answer with its document.
+
+        The screen is where a PDF is dropped on, so it is the screen that has to
+        turn it into a document and an attachment. Both are made here rather
+        than from the browser, so the rules -- which files are readable, what
+        the document is called -- are the same rules the tests check, and not a
+        second copy of them written in JavaScript.
+
+        Returns the id of the new document, which the viewer then opens on.
+        """
+        filename = (filename or '').strip()
+        if not datas:
+            raise UserError(_("Choose a file first."))
+        if not filename.lower().endswith(READABLE_EXTENSIONS):
+            raise UserError(_(
+                "That kind of file cannot be read. Send a PDF or a photo."
+            ))
+
+        document = self.create({
+            'name': name or filename or _('New'),
+            'company_id': self.env.company.id,
+            'currency_id': self.env.company.currency_id.id,
+        })
+        document.attachment_id = self.env['ir.attachment'].create({
+            'name': filename or document.name,
+            'datas': datas,
+            'res_model': 'easyocr.document',
+            'res_id': document.id,
+        }).id
+        return document.id
 
     def action_reset_to_draft(self):
         for document in self:

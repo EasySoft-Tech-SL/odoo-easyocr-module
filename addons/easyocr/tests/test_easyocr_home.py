@@ -42,7 +42,6 @@ class TestEasyocrHome(TransactionCase):
     def test_the_home_screen_offers_every_screen_the_module_has(self):
         """A card the component names but that does not exist is a dead click."""
         for xmlid in (
-            'easyocr.action_easyocr_upload',
             'easyocr.action_easyocr_document',
             'easyocr.action_easyocr_inbox',
             'easyocr.action_easyocr_template',
@@ -54,6 +53,13 @@ class TestEasyocrHome(TransactionCase):
             action = self.env.ref(xmlid, raise_if_not_found=False)
             self.assertTrue(action, "%s is missing." % xmlid)
             self.assertEqual(action.type, 'ir.actions.act_window')
+
+    def test_the_first_card_opens_the_screen_that_waits_for_a_file(self):
+        """Not a list, not a dialog: the screen the module works on."""
+        action = self.env.ref('easyocr.action_easyocr_new_document')
+
+        self.assertEqual(action.type, 'ir.actions.client')
+        self.assertEqual(action.tag, 'easyocr.document_viewer')
 
     def test_the_home_screen_is_the_first_thing_in_the_menu_bar(self):
         """It sits before the documents, so the bar reads in the order of use."""

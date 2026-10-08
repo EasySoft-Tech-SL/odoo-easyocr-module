@@ -101,7 +101,7 @@ export class EasyocrHome extends Component {
                 icon: "fa-file-pdf-o",
                 title: _t("Upload a document"),
                 note: _t("Pick a PDF or a photo and open it in the viewer"),
-                action: "easyocr.action_easyocr_upload",
+                action: "easyocr.action_easyocr_new_document",
                 ...PDF,
             },
             {
