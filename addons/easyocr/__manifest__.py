@@ -8,6 +8,18 @@
     'website': 'https://easysoft.es',
     'license': 'LGPL-3',
     'category': 'Accounting/Accounting',
+    'support': 'info@easysoft.es',
+    # Lo que la tienda de Odoo ensena: la primera es la portada de la ficha en el
+    # catalogo, y las demas van en la galeria. Los ficheros viven dentro del
+    # modulo (rutas relativas): la tienda lee el repositorio, no el ZIP.
+    'images': [
+        'static/description/cover.png',
+        'static/description/shot-1-workbench.jpg',
+        'static/description/shot-2-reading.jpg',
+        'static/description/shot-3-document.jpg',
+        'static/description/shot-4-bill.jpg',
+        'static/description/shot-5-settings.jpg',
+    ],
     'depends': [
         'base',
         'mail',
@@ -26,6 +38,7 @@
         'views/easyocr_home_views.xml',
         'views/easyocr_document_views.xml',
         'views/easyocr_reprocess_wizard_views.xml',
+        'views/easyocr_reading_result_views.xml',
         'views/easyocr_batch_views.xml',
         'views/easyocr_inbox_views.xml',
         'views/easyocr_template_views.xml',
