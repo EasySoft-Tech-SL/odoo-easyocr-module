@@ -136,8 +136,16 @@ The module talks to the same service the Dolibarr module uses
       artifact: the organization's artifact quota is shared and small).
 - [x] `LICENSE` file: LGPL-3, shipped at the root and inside the module.
 - [x] The module is free; what is sold is the extraction service.
-- [ ] Publish on the Odoo Apps Store. Note it is fed from the **repository**,
-      not from the ZIP: the ZIP is for the release and for installing by hand.
+- [ ] Publish on the Odoo Apps Store. It is fed from the **repository**, not
+      from the ZIP: the ZIP is for the release and for installing by hand.
+      The repository side is ready as of 8-oct-2026 -- `static/description/
+      index.html` written from the real screens and the real steps, the icon at
+      the 100x100 and 512x512 the official modules ship, a cover and five
+      screenshots declared in the manifest's `images` key, and `support`. What
+      is left is the submission itself, which needs the store account: the
+      repository, the branch, and the two branches become one card with two
+      versions. Steps and the rules that cost a rejection are in
+      `docs/PUBLICAR-EN-ODOO-APPS.md`.
 - [x] User guide written from the screens themselves, in `docs/manual/`, with
       its screenshots. Every version from now on carries its updated guide:
       the source lives in the repository and the same text goes to the company

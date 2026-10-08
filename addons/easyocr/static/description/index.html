@@ -1,13 +1,29 @@
 <section class="oe_container">
     <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">EasyOCR</h2>
-        <h3 class="oe_slogan">Turn a PDF invoice into an accounting entry, without retyping it</h3>
+        <h2 class="oe_slogan" style="color: #002c3c;">EasyOCR</h2>
+        <h3 class="oe_slogan">A supplier invoice becomes an accounting entry without anyone retyping it</h3>
         <div class="oe_span12">
             <p class="oe_mt32">
                 Drop a supplier invoice or an expense receipt and review what was read from it
-                before it becomes an entry in Odoo. The document stays visible from the moment
-                it is uploaded, so a file that fails to be read can be retried instead of
-                disappearing.
+                before it becomes an entry. The file stays on the screen the whole time, so a
+                document that was read badly is corrected where it was read, and one that failed
+                is sent again instead of being lost.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <img src="shot-1-workbench.jpg" class="img-fluid" alt="Reading a supplier invoice in the viewer"/>
+        </div>
+        <div class="oe_span12">
+            <p class="oe_mt32">
+                The workbench: the document on the left, and on the right everything that can be
+                done to it. Draw a rectangle over each field once and the text under it is read
+                from the file itself, which costs nothing. Save the rectangles under that
+                supplier and their next invoice opens with them already in place.
             </p>
         </div>
     </div>
@@ -16,18 +32,27 @@
 <section class="oe_container oe_dark">
     <div class="oe_row oe_spaced">
         <h2 class="oe_slogan">What it does</h2>
-        <div class="oe_span6">
+        <div class="oe_span4">
             <h3>Reads the document</h3>
             <p>
-                Supplier, tax number, document number, date and totals are read from the file
-                and offered for review. Nothing is posted without a person looking at it.
+                Supplier, tax number, document number, dates, totals and lines are read from the
+                file. Nothing is posted behind your back: the values are offered for review and a
+                person confirms them.
             </p>
         </div>
-        <div class="oe_span6">
+        <div class="oe_span4">
             <h3>Remembers each supplier</h3>
             <p>
-                Some suppliers send the same layout every month. Once a layout is recognised,
-                the same fields are read from it again, so the review gets shorter over time.
+                A supplier that sends the same layout every month only has to be set up once. The
+                same fields are read from it again, so the review gets shorter over time.
+            </p>
+        </div>
+        <div class="oe_span4">
+            <h3>Builds the entry</h3>
+            <p>
+                One click turns the document into a draft supplier bill, with its lines, its
+                taxes and the supplier matched by tax number. A credit note becomes a vendor
+                credit note instead.
             </p>
         </div>
     </div>
@@ -35,12 +60,56 @@
 
 <section class="oe_container">
     <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">Works on Odoo Community</h2>
+        <h2 class="oe_slogan">A reading ends on the screen that says what was read</h2>
+        <div class="oe_span12">
+            <img src="shot-2-reading.jpg" class="img-fluid" alt="What the reading found"/>
+        </div>
         <div class="oe_span12">
             <p class="oe_mt32">
-                Installs on Odoo Community 18.0 and 19.0. It does not require Odoo Enterprise
-                and it does not need you to open an account with an AI provider: the module is
-                configured once and works from there.
+                The confidence, the time it took, and the supplier details the document has no
+                field for: the address, the town, the phone, the email, the way they want to be
+                paid. From there, one button opens the document to make the entry.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">From the file to the entry</h2>
+        <div class="oe_span6">
+            <img src="shot-3-document.jpg" class="img-fluid" alt="A document with the values read from it"/>
+            <p class="oe_mt32">
+                The document keeps what was read, next to the fields it came from, so anything
+                wrong is fixed here and not on the bill afterwards.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <img src="shot-4-bill.jpg" class="img-fluid" alt="The draft supplier bill created from the document"/>
+            <p class="oe_mt32">
+                And the draft supplier bill, with one line per line read, its products, its
+                discounts and its taxes.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">What you need</h2>
+        <div class="oe_span12">
+            <p class="oe_mt32">
+                <b>Odoo Community 18.0 or 19.0.</b> Odoo Enterprise is not required, and no other
+                module has to be bought.
+            </p>
+            <p>
+                <b>A PDF that already carries its text</b> is read inside your browser, with no
+                service and no cost.
+            </p>
+            <p>
+                <b>Scans and photographs</b> need the EasyOCR extraction service, configured once
+                in the settings with its address and an API key. The extraction is what is paid
+                for, per document; this module is free and stays free.
             </p>
         </div>
     </div>
@@ -49,12 +118,23 @@
 <section class="oe_container oe_dark">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
+            <img src="shot-5-settings.jpg" class="img-fluid" alt="The module settings"/>
+            <p class="oe_mt32">
+                Sixteen switches over the service, over what a document becomes and over what a
+                webhook may do on its own, and a button that checks your key without spending a
+                reading.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
             <h4>Need help?</h4>
             <p>
-                Write to
-                <a href="mailto:info@easysoft.es">info@easysoft.es</a>.
-                Developed by
-                <a href="https://easysoft.es">EasySoft Tech S.L.</a>
+                Write to <a href="mailto:info@easysoft.es">info@easysoft.es</a>.
+                Made by <a href="https://easysoft.es">EasySoft Tech S.L.</a>
             </p>
         </div>
     </div>
