@@ -3,40 +3,15 @@
      License LGPL-3 (see LICENSE file). -->
 <odoo>
 
-    <record id="view_easyocr_upload_form" model="ir.ui.view">
-        <field name="name">easyocr.upload.wizard.form</field>
-        <field name="model">easyocr.upload.wizard</field>
-        <field name="arch" type="xml">
-            <form string="Upload a Document">
-                <group>
-                    <!-- filename= is what makes the browser hand the chosen
-                         name over with the bytes: without it the attachment is
-                         filed as "file" and the document loses its name. -->
-                    <field name="file" filename="filename"/>
-                    <field name="filename" invisible="1"/>
-                    <field name="name" placeholder="Left empty, the file name is used"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </group>
-                <footer>
-                    <button
-                        name="action_read"
-                        type="object"
-                        string="Open the viewer"
-                        class="btn-primary"
-                    />
-                    <button string="Cancel" class="btn-secondary" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
-
-    <!-- No res_id: the dialog is opened to choose a file, not to look at one. -->
-    <record id="action_easyocr_upload" model="ir.actions.act_window">
+    <!-- The screen that waits for a file.
+         The same client action the viewer is, opened without a document: it
+         shows the drop area, and once a file is chosen it becomes the viewer in
+         place. One screen for the whole job, which is how the module this is a
+         port of opens. -->
+    <record id="action_easyocr_new_document" model="ir.actions.client">
         <field name="name">Upload a Document</field>
-        <field name="res_model">easyocr.upload.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_easyocr_upload_form"/>
-        <field name="target">new</field>
+        <field name="tag">easyocr.document_viewer</field>
+        <field name="target">fullscreen</field>
     </record>
 
 </odoo>

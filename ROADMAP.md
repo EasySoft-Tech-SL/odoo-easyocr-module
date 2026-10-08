@@ -126,11 +126,23 @@ the screens, the home screen is done and **batch processing is not built yet**.
 
 Closed the same day, after using the module against the real service:
 
+- **One screen for the whole job** (there, `extract.php`). It opens waiting for a
+  file -- click or drop, which is how Dolibarr opens -- and becomes the viewer in
+  place once one is chosen. Asked for on 8-oct-2026: *«el botón del hub de upload
+  a document tiene que llevarme a esa página donde espera un botón para abrir pdf
+  o arrastrarlo»*. The upload dialog that used to sit in the way is gone, and the
+  rules about what can be read live on the server, where the tests are.
+- **The controls are a column on the right**, under the headings Dolibarr uses --
+  read with AI, fields, template, what was read -- instead of a row of buttons
+  across the top. Asked for the same day: *«los botones no salen en columna a la
+  derecha»*. The heading of the AI section says when the account cannot read
+  (quota, overdue subscription) before anyone tries, out of the same account
+  check the settings screen uses.
 - **The viewer carries the two buttons that finish the job.** Reading with the
   service and creating the bill lived only on the record's form, so opening a
   document in the viewer meant leaving it to act on what you were looking at.
-  Both are now in the toolbar, with the same permission the form's button has,
-  and the toolbar says what it is waiting for while a scan is read.
+  Both are in the column now, with the same permission the form's button has,
+  and it says what is being waited for while a scan is read.
 - **The settings screen checks the key.** A key that the service does not
   recognise is indistinguishable from a key that was never sent -- both arrive
   as HTTP 401 -- and a reading that comes back refused has already been paid
@@ -166,6 +178,12 @@ ported is what that setting actually does and not what its name suggests.
       document prints.*
 - [ ] **Batch processing** (`batch.php`, `webhook_batch.php`). Reading a folder
       of documents in one go, and the webhook's batch variant.
+
+**Known difference:** the viewer has no zoom. Dolibarr's has `+` / `−` buttons
+and a page indicator in the toolbar; here the page is painted at a fixed scale
+and the PDF area scrolls. Adding it means making the paint scale a thing the
+component carries rather than a constant, which touches the arithmetic of every
+box -- worth doing, but not folded into the rework above.
 
 ### Icons
 

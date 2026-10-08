@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -57,10 +57,17 @@ export class EasyocrDocumentViewer extends Component {
         this.notification = useService("notification");
         this.actionService = useService("action");
         this.containerRef = useRef("pdfContainer");
+        this.fileInputRef = useRef("fileInput");
 
         this.state = useState({
             loading: true,
             error: false,
+            // No document yet: the screen is waiting for a file. It opens this
+            // way from the app's first card, and becomes the viewer in place
+            // once a file is chosen -- one screen for the whole job, the way
+            // the module this is a port of does it.
+            empty: !this.documentId,
+            dragging: false,
             documentName: "",
             partnerId: false,
             pages: [],
@@ -70,6 +77,9 @@ export class EasyocrDocumentViewer extends Component {
             saving: false,
             busy: false,
             busyLabel: "",
+            // Why the account cannot read right now, in the reader's language,
+            // or empty when it can.
+            aiBlockMessage: "",
             // The same permission the form's button has: sending a document to
             // the service costs money, so it is not for everyone who can look
             // at one. Answered asynchronously further down -- hasGroup hands
@@ -84,10 +94,40 @@ export class EasyocrDocumentViewer extends Component {
         this.dragging = null;
         this.nextUid = 1;
         this.fields = BOX_FIELDS;
+        // Set when a file is dropped on the screen, so the same component then
+        // shows the document it just filed.
+        this.openedDocumentId = null;
 
         onWillStart(() => this.loadPermission());
         onWillStart(() => this.loadDocument());
+        onWillStart(() => this.loadAccountState());
         onMounted(() => this.paintPages());
+        // The page container only exists once there is a document, so a file
+        // dropped on the screen is painted after the render that opened it and
+        // not before.
+        onPatched(() => {
+            if (this.pdfDocument && !this.painted) {
+                this.paintPages();
+            }
+        });
+    }
+
+    /**
+     * What the service says about the account, for the line above the button.
+     *
+     * An account out of readings, or one whose subscription lapsed, cannot read
+     * anything -- and the service is the one that knows. Asking costs nothing,
+     * and the answer is written by the server in the reader's language, so the
+     * same sentence serves every screen.
+     */
+    async loadAccountState() {
+        try {
+            const answer = await this.orm.call("easyocr.document", "action_account_state", []);
+            this.state.aiBlockMessage = answer.blocked ? answer.message : "";
+        } catch {
+            // No answer is not a reason to say the account is blocked.
+            this.state.aiBlockMessage = "";
+        }
     }
 
     /** Whether the reader may send documents to the service. */
@@ -104,7 +144,107 @@ export class EasyocrDocumentViewer extends Component {
     get documentId() {
         // Opening the action from a button carries the id in params; reloading the
         // page rebuilds the action from the URL, where only the context survives.
-        return this.props.action.params?.document_id || this.props.action.context?.active_id;
+        return this.openedDocumentId
+            || this.props.action.params?.document_id
+            || this.props.action.context?.active_id;
+    }
+
+    // ------------------------------------------------------------------
+    // Waiting for a file
+    // ------------------------------------------------------------------
+    async onFileChosen(event) {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            await this.openFile(file);
+        }
+    }
+
+    onDragOver(event) {
+        event.preventDefault();
+        this.state.dragging = true;
+    }
+
+    onDragLeave() {
+        this.state.dragging = false;
+    }
+
+    async onDrop(event) {
+        event.preventDefault();
+        this.state.dragging = false;
+        const file = event.dataTransfer?.files && event.dataTransfer.files[0];
+        if (file) {
+            await this.openFile(file);
+        }
+    }
+
+    /**
+     * Hand a chosen file to the server and show what comes back.
+     *
+     * The document and its attachment are made server-side: the rules about
+     * what can be read and what the document is called live there, where they
+     * are tested, and not in a second copy written in JavaScript.
+     */
+    async openFile(file) {
+        // A second file dropped on top of the first while it is being filed
+        // would make two documents out of one gesture.
+        if (this.filing) {
+            return;
+        }
+        this.filing = true;
+        this.state.loading = true;
+        let filed = false;
+        try {
+            const data = await this.readAsBase64(file);
+            this.openedDocumentId = await this.orm.call(
+                "easyocr.document", "action_file_upload", [file.name, data],
+            );
+            filed = true;
+            this.state.error = false;
+            // Swapped to the viewer first, so the container is there when the
+            // pages arrive; onPatched does the painting.
+            this.painted = false;
+            this.state.empty = false;
+            await this.loadDocument();
+        } catch (error) {
+            this.state.loading = false;
+            if (filed) {
+                // The document was filed and it is what cannot be shown. Saying
+                // so beats a grey rectangle with nothing in it: that is a
+                // failure nobody can tell from a slow load.
+                this.state.error = true;
+            } else {
+                // Back to waiting for a file: the file never became a document.
+                this.state.empty = true;
+            }
+            this.notification.add(this.failureMessage(error), { type: "danger" });
+        } finally {
+            this.filing = false;
+        }
+    }
+
+    /** What to tell the reader when filing a file did not work. */
+    failureMessage(error) {
+        // A refusal the module wrote itself -- a file that cannot be read --
+        // arrives as the message of the exception, which is the sentence to
+        // show. Anything else is a technical string, and the reader gets the
+        // sentence written for them instead.
+        const refused = error?.data?.name === "odoo.exceptions.UserError";
+        if (refused && error.data.message) {
+            return error.data.message;
+        }
+        return _t("That file could not be opened.");
+    }
+
+    readAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                // The data URL carries the base64 after the comma.
+                resolve(String(reader.result).split(",", 2)[1] || "");
+            };
+            reader.onerror = () => reject(new Error(_t("That file could not be read.")));
+            reader.readAsDataURL(file);
+        });
     }
 
     // ------------------------------------------------------------------
@@ -112,8 +252,9 @@ export class EasyocrDocumentViewer extends Component {
     // ------------------------------------------------------------------
     async loadDocument() {
         if (!this.documentId) {
+            // Nothing to show yet: the screen is the one that waits for a file.
             this.state.loading = false;
-            this.state.error = true;
+            this.state.empty = true;
             return;
         }
 
@@ -161,6 +302,7 @@ export class EasyocrDocumentViewer extends Component {
         const container = this.containerRef.el;
         container.replaceChildren();
         this.baseImages = [];
+        this.painted = true;
 
         for (const pageInfo of this.state.pages) {
             const wrapper = document.createElement("div");
