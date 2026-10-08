@@ -1582,10 +1582,11 @@ msgstr ""
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid ""
 "Pick one, then drag a box over the page. The text under the box is read "
-"straight away."
+"straight away. To move a box, drag it; to resize it, pull a corner."
 msgstr ""
 "Trieu-ne un i dibuixeu un rectangle sobre la pàgina. El text que hi quedi "
-"dins es llegeix a l'instant."
+"dins es llegeix a l'instant. Per moure'l, arrossegueu-lo; per canviar-ne la "
+"mida, estireu-ne una cantonada."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_bill_post

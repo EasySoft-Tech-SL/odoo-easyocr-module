@@ -268,13 +268,19 @@ La columna tiene cuatro apartados, de arriba abajo:
 3. Al soltar, el texto que ha quedado dentro aparece abajo, en **Lo que ha
    leído**.
 
-Repita con los datos que le interesen. Así queda un documento con cuatro campos
-marcados:
+Repita con los datos que le interesen. Así queda un documento con los campos que
+haya marcado:
 
-![El visor con cuatro campos marcados y sus valores a la derecha](img/07-visor-campos.png)
+![El visor con cinco campos marcados y sus valores a la derecha](img/07-visor-campos.png)
 
 Si un recuadro no le convence, la **×** de su derecha lo quita. El botón
 **Limpiar** borra todos de golpe.
+
+Un recuadro ya dibujado se puede colocar mejor sin borrarlo: arrástrelo desde
+dentro para moverlo, o tire de una de sus esquinas —los cuadraditos de color—
+para cambiarle el tamaño. Al soltar, el módulo vuelve a leer el texto que ha
+quedado dentro, así que **Lo que ha leído** siempre es lo que hay debajo del
+recuadro.
 
 Arriba del todo de la columna están los dos botones que cierran el trabajo, para
 que no haya que salir del visor:

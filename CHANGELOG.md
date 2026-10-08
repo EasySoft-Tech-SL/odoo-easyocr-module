@@ -30,6 +30,10 @@ work was done.
   painted and their text read from the new file. The vendor is worked out on the
   server, by tax number and then by name, since a document has none of its own
   until it becomes a bill.
+- **Boxes that can be moved and resized.** A box already drawn is dragged from
+  inside to move it, or pulled by one of the squares on its corners to change its
+  size, and the text under it is read again on letting go. A box cannot leave the
+  page: off it there is nothing to read and nothing left to grab.
 - **Reading with the service.** Client for the EasyOCR extraction service, with a
   `Test the connection` button in the settings that checks the key without
   spending a reading, plain-language messages for every way the service can turn

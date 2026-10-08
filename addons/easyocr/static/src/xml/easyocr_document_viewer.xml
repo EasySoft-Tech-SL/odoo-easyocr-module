@@ -93,7 +93,7 @@
                     <div t-if="!state.empty" class="o_easyocr_section">
                         <h5>Fields</h5>
                         <p class="o_easyocr_section_note">
-                            Pick one, then drag a box over the page. The text under the box is read straight away.
+                            Pick one, then drag a box over the page. The text under the box is read straight away. To move a box, drag it; to resize it, pull a corner.
                         </p>
                         <div class="o_easyocr_field_list">
                             <t t-foreach="fields" t-as="field" t-key="field.key">

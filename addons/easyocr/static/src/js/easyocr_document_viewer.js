@@ -8,6 +8,15 @@ import { loadJS } from "@web/core/assets";
 // and takes the whole viewer down with it.
 import { user } from "@web/core/user";
 
+import {
+    anchorOf,
+    boxAt,
+    handleAt,
+    movedTo,
+    rectangleBetween,
+    resizedTo,
+} from "./easyocr_box_geometry";
+
 /**
  * The nine fields a box can be assigned to. The key is what gets stored and what
  * extraction matches on; the colour is only how it is painted.
@@ -34,6 +43,20 @@ const VIEW_SCALE = 1.5;
 
 /** A drag shorter than this, in canvas pixels, is treated as a stray click. */
 const MIN_BOX_SIZE = 10;
+
+/** How close to a corner, in canvas pixels, counts as holding it. */
+const HANDLE_SIZE = 10;
+
+/** The little square painted on each corner, in canvas pixels. */
+const HANDLE_DOT = 6;
+
+/** What the pointer says a corner is for. */
+const CORNER_CURSORS = {
+    nw: "nwse-resize",
+    ne: "nesw-resize",
+    sw: "nesw-resize",
+    se: "nwse-resize",
+};
 
 /**
  * Full screen document viewer: the file on the left, the data panel on the right.
@@ -96,7 +119,9 @@ export class EasyocrDocumentViewer extends Component {
         this.baseImages = [];
         this.textCache = new Map();
         this.pendingBox = null;
-        this.dragging = null;
+        // What the mouse is doing right now: drawing a new box, dragging one
+        // that is already there, or pulling one of its corners.
+        this.gesture = null;
         this.nextUid = 1;
         this.fields = BOX_FIELDS;
         // Set when a file is dropped on the screen, so the same component then
@@ -435,6 +460,14 @@ export class EasyocrDocumentViewer extends Component {
             context.fillRect(x, Math.max(0, y - 18), labelWidth, 18);
             context.fillStyle = "#fff";
             context.fillText(label, x + 4, Math.max(12, y - 5));
+
+            // A square on each corner, which is both what they are for and what
+            // says the box can still be changed after it has been drawn.
+            const dot = HANDLE_DOT / 2;
+            for (const corner of [[x, y], [x + width, y], [x, y + height], [x + width, y + height]]) {
+                context.fillStyle = field.color;
+                context.fillRect(corner[0] - dot, corner[1] - dot, HANDLE_DOT, HANDLE_DOT);
+            }
         }
         context.restore();
     }
@@ -475,62 +508,163 @@ export class EasyocrDocumentViewer extends Component {
     }
 
     // ------------------------------------------------------------------
-    // Drawing
+    // Drawing, dragging and pulling
     // ------------------------------------------------------------------
     setActiveField(key) {
         this.state.activeField = this.state.activeField === key ? null : key;
     }
 
-    bindOverlay(overlay, pageNumber) {
-        overlay.addEventListener("mousedown", (event) => {
-            if (!this.state.activeField) {
-                return;
-            }
-            this.dragging = {
+    /**
+     * What a press on the page starts.
+     *
+     * A corner first, so a box can be pulled without disarming anything. Then
+     * the armed field, which is what a drag means while a field is waiting to
+     * be drawn: a reader who wants to drag a box has the field unarmed.
+     */
+    beginGesture(event, pageNumber) {
+        const point = this.eventToPoints(event, pageNumber);
+        const tolerance = HANDLE_SIZE / VIEW_SCALE;
+        const boxes = this.boxesOfPage(pageNumber);
+
+        const held = handleAt(boxes, point, tolerance);
+        if (held) {
+            const box = this.boxOf(held.uid);
+            this.gesture = {
+                kind: "resize",
                 page: pageNumber,
-                origin: this.eventToPoints(event, pageNumber),
+                uid: held.uid,
+                // Taken now, from the box as it is: read back later it would
+                // have already moved, and would creep with every mouse move.
+                anchor: anchorOf(box, held.corner),
             };
+            event.preventDefault();
+            return;
+        }
+
+        if (this.state.activeField) {
+            this.gesture = { kind: "draw", page: pageNumber, origin: point };
             this.pendingBox = null;
             event.preventDefault();
-        });
+            return;
+        }
 
-        overlay.addEventListener("mousemove", (event) => {
-            if (!this.dragging || this.dragging.page !== pageNumber) {
-                return;
-            }
-            const current = this.eventToPoints(event, pageNumber);
+        const touched = boxAt(boxes, point);
+        if (touched) {
+            this.gesture = {
+                kind: "move",
+                page: pageNumber,
+                uid: touched.uid,
+                offset: { x: point.x - touched.x, y: point.y - touched.y },
+            };
+            event.preventDefault();
+        }
+    }
+
+    /** Follow the mouse for as long as the gesture lasts. */
+    followGesture(point, pageNumber) {
+        const bounds = this.pageBounds(pageNumber);
+        if (this.gesture.kind === "draw") {
             this.pendingBox = {
                 field_key: this.state.activeField,
                 page: pageNumber,
-                x: Math.min(this.dragging.origin.x, current.x),
-                y: Math.min(this.dragging.origin.y, current.y),
-                width: Math.abs(current.x - this.dragging.origin.x),
-                height: Math.abs(current.y - this.dragging.origin.y),
+                ...rectangleBetween(this.gesture.origin, point),
             };
-            this.redrawPage(pageNumber);
-        });
-
-        const finish = async (event) => {
-            if (!this.dragging || this.dragging.page !== pageNumber) {
+        } else {
+            const box = this.boxOf(this.gesture.uid);
+            if (!box) {
                 return;
             }
-            this.dragging = null;
-            const box = this.pendingBox;
-            this.pendingBox = null;
+            const landed = this.gesture.kind === "move"
+                ? movedTo(box, point, this.gesture.offset, bounds)
+                : resizedTo(this.gesture.anchor, point, bounds);
+            Object.assign(box, landed);
+        }
+        this.redrawPage(pageNumber);
+    }
 
-            if (!box || box.width < MIN_BOX_SIZE / VIEW_SCALE || box.height < MIN_BOX_SIZE / VIEW_SCALE) {
+    /** What the pointer says the next press would do. */
+    pointCursor(point, pageNumber) {
+        const held = handleAt(
+            this.boxesOfPage(pageNumber), point, HANDLE_SIZE / VIEW_SCALE,
+        );
+        if (held) {
+            return CORNER_CURSORS[held.corner];
+        }
+        if (this.state.activeField) {
+            return "crosshair";
+        }
+        return boxAt(this.boxesOfPage(pageNumber), point) ? "move" : "default";
+    }
+
+    bindOverlay(overlay, pageNumber) {
+        overlay.addEventListener("mousedown", (event) => {
+            this.beginGesture(event, pageNumber);
+        });
+
+        overlay.addEventListener("mousemove", (event) => {
+            const point = this.eventToPoints(event, pageNumber);
+            if (this.gesture && this.gesture.page === pageNumber) {
+                this.followGesture(point, pageNumber);
+                return;
+            }
+            overlay.style.cursor = this.pointCursor(point, pageNumber);
+        });
+
+        /**
+         * Let go: the gesture is over, and what it changed is read again.
+         *
+         * A box that has been dragged or pulled is over different text than it
+         * was, and the whole point of the box is the text under it, so it is
+         * read again from the page that is open.
+         */
+        const finish = async (event) => {
+            const gesture = this.gesture;
+            if (!gesture) {
+                return;
+            }
+            // Whatever it was, it is over. Letting go on another page, or off
+            // the page altogether, ends the gesture all the same: one left
+            // armed keeps dragging the box around with the button up.
+            this.gesture = null;
+            const draft = this.pendingBox;
+            this.pendingBox = null;
+            if (gesture.page !== pageNumber) {
+                return;
+            }
+
+            if (gesture.kind === "draw") {
+                if (!draft || draft.width < MIN_BOX_SIZE / VIEW_SCALE
+                    || draft.height < MIN_BOX_SIZE / VIEW_SCALE) {
+                    this.redrawPage(pageNumber);
+                    return;
+                }
+                draft.uid = this.nextUid++;
+                draft.text = await this.readText(draft);
+                this.state.boxes.push(draft);
                 this.redrawPage(pageNumber);
                 return;
             }
 
-            box.uid = this.nextUid++;
-            box.text = await this.readText(box);
-            this.state.boxes.push(box);
+            const box = this.boxOf(gesture.uid);
+            if (box) {
+                box.text = await this.readText(box);
+            }
             this.redrawPage(pageNumber);
         };
 
         overlay.addEventListener("mouseup", finish);
         overlay.addEventListener("mouseleave", finish);
+    }
+
+    /** The box with that identifier, wherever on the page it is. */
+    boxOf(uid) {
+        return this.state.boxes.find((box) => box.uid === uid);
+    }
+
+    /** The size of a page, in the points the boxes are kept in. */
+    pageBounds(pageNumber) {
+        const page = this.state.pages.find((info) => info.number === pageNumber);
+        return page ? { width: page.width, height: page.height } : null;
     }
 
     /** Screen coordinates to PDF points for a page. */
