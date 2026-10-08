@@ -247,17 +247,22 @@ lectura, no se suman.
 # 5. El visor: dibujar de dónde se lee cada dato
 
 El visor es la pantalla que da sentido al módulo. Se abre con **Abrir el visor**
-y ocupa toda la pantalla: el documento a la izquierda y, en una columna a la
-derecha, todo lo que se puede hacer con él.
+y se queda dentro de Odoo, con los menús a la vista: el documento a la izquierda
+y, en una columna a la derecha, todo lo que se puede hacer con él.
 
 ![El visor con el documento abierto y ningún campo marcado](img/06-visor-vacio.png)
 
-La columna tiene cuatro apartados, de arriba abajo:
+La columna, de arriba abajo, tiene estos apartados:
 
-| **Leer con IA** | El botón que manda el documento al servicio, y el de crear la factura. |
+| **Cuenta** | El botón **Leer con IA** y, debajo, lo que tiene contratado: el plan y lo que le queda de la cuota del mes —cuántas páginas ha usado, cuántas le quedan, cuándo se renuevan y el saldo del monedero—. |
 | **Campos** | Los nueve datos que se pueden leer, uno por botón. El color de cada botón es el color con el que se pintará su recuadro, así que siempre se sabe qué recuadro es qué. |
 | **Plantilla** | Ponerle nombre a los recuadros y guardarlos. |
 | **Lo que ha leído** | Los valores que van saliendo de cada recuadro. Aparece en cuanto hay uno. |
+
+Abajo del todo quedan los dos botones que cierran el trabajo —**Guardar
+plantilla** y **Generar factura**—, y una línea con los atajos de teclado: las
+teclas 1 a 8 eligen el campo, Ctrl+S guarda la plantilla, Ctrl+Enter crea la
+factura y Esc suelta el campo.
 
 ## El paso a paso
 
@@ -274,7 +279,7 @@ haya marcado:
 ![El visor con cinco campos marcados y sus valores a la derecha](img/07-visor-campos.png)
 
 Si un recuadro no le convence, la **×** de su derecha lo quita. El botón
-**Limpiar** borra todos de golpe.
+**Limpiar los recuadros** borra todos de golpe.
 
 Un recuadro ya dibujado se puede colocar mejor sin borrarlo: arrástrelo desde
 dentro para moverlo, o tire de una de sus esquinas —los cuadraditos de color—
@@ -288,26 +293,24 @@ Esta lectura **no cuesta nada**, porque el texto estaba en el propio archivo; la
 de **Leer con IA** es la que se paga. Si un recuadro cogió lo que no era, ese
 campo se queda como estaba y los demás se rellenan igual.
 
-Arriba del todo de la columna están los dos botones que cierran el trabajo, para
-que no haya que salir del visor:
-
-|[tabla: Los dos botones del visor]|
-|---|---|
-| **Leer con IA** | Manda el documento al servicio y rellena la ficha con lo que lea. Es lo mismo que el botón de la ficha del documento. |
-| **Crear factura** | Prepara la factura de proveedor con lo que hay en la ficha y la abre. |
+El botón **Leer con IA** —dentro del apartado **Cuenta**— manda el documento al
+servicio y rellena la ficha con lo que lea; es el mismo de la ficha del
+documento. **Generar factura**, en el pie de la columna, prepara la factura de
+proveedor con lo que hay en la ficha y la abre.
 
 Mientras el servicio está leyendo, la columna lo dice con una barra y los
 botones quedan bloqueados: una página escaneada tarda unos segundos, y es mejor
 saber que está trabajando que pulsar dos veces.
 
-El visor ocupa la pantalla entera, así que lleva su propia salida: **Volver a la
-ficha**, arriba del todo de la columna, devuelve a la ficha del documento que
-estaba mirando. Si ha dibujado recuadros y los quiere para la próxima vez,
+El visor se queda dentro de Odoo, con los menús a la vista; para volver a la
+ficha del documento que estaba mirando, use **Volver a la ficha**, arriba del
+todo de la columna. Si ha dibujado recuadros y los quiere para la próxima vez,
 guárdelos como plantilla antes de salir: lo que no se guarda se va con la
 pantalla.
 
 Si la cuenta no puede leer —cuota agotada, suscripción vencida—, el módulo lo
-avisa aquí arriba en cuanto se abre el visor, antes de que nadie lo intente.
+avisa en el apartado **Cuenta** en cuanto se abre el visor, antes de que nadie lo
+intente.
 
 Con esto ya tiene lo importante: los datos del proveedor leídos del documento,
 sin teclear.
