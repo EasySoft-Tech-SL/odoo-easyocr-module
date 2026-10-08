@@ -60,8 +60,8 @@ work was done.
   module writes at runtime, and the words its own templates paint.
 - **Tests.** 200 of them, covering each switch by its effect rather than by its
   value, each one proven to fail when the thing it guards is broken.
-- **CI.** Python syntax, manifest and layout check, XML well-formedness, and the
-  full suite on Odoo 18 and 19.
+- **CI.** Python syntax, manifest and layout check, and XML well-formedness on
+  both branches.
 
 ### Pending
 
