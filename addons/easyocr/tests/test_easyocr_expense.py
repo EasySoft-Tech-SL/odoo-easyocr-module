@@ -143,6 +143,9 @@ class TestEasyocrExpenseCapture(HttpCase):
         """Nothing leaves the company until it says so: the photo is filed, and
         the page says as much instead of pretending it was read."""
         self._login()
+        # Turned off here and not assumed: the setting lives on the company, and
+        # a test that trusts the default is testing the database it runs on.
+        self.env.company.easyocr_ai_enabled = False
         self.assertFalse(self.env.company.easyocr_ai_enabled)
 
         response = self._upload()

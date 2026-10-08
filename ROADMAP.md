@@ -119,9 +119,10 @@ Asked for on 7-oct-2026: *«quería una paridad total al 100%»*. Measured again
 the Dolibarr module that day: **18 settings against 4**, and two screens that
 have no counterpart here. This phase closes that.
 
-State on 8-oct-2026: **11 of the 14 settings are in, and one of the two screens
-is not portable as such**. What is left is batch processing and the two expense
-settings, which need `hr_expense` and are a feature before they are a switch.
+State on 8-oct-2026: **every setting is accounted for** -- eleven of the
+fourteen are in, and the three that are not are the miscellaneous-payment ones,
+which are not portable because the object they feed does not exist in Odoo. Of
+the screens, the home screen is done and **batch processing is not built yet**.
 
 Every row below was read in the Dolibarr source, in the file named, so what is
 ported is what that setting actually does and not what its name suggests.
@@ -140,6 +141,15 @@ ported is what that setting actually does and not what its name suggests.
       document prints.*
 - [ ] **Batch processing** (`batch.php`, `webhook_batch.php`). Reading a folder
       of documents in one go, and the webhook's batch variant.
+
+### Icons
+
+Every icon the module names is checked against the FontAwesome Odoo actually
+ships (`tests/test_easyocr_icons.py`). Odoo ships version 4 and the Dolibarr
+module draws from version 5, so a name copied from there -- `fa-file-invoice-dollar`,
+`fa-satellite-dish`, `fa-layer-group`, `fa-receipt` -- is not an error anywhere:
+it paints nothing, and the card keeps an empty chip. Two of them shipped that
+way on 8-oct-2026 before the check existed.
 
 ### UI: native views, not a copy of Dolibarr's screens
 
@@ -182,17 +192,22 @@ The four of the AI service are already here. The fourteen that follow are not.
       the same rule as there. *Done 8-oct-2026, with a switch of its own to
       create the bill from a webhook, because here a webhook filed a document
       and made no bill at all.*
-- [ ] **Where a photographed receipt goes** (`EASYOCR_EXPENSE_TARGET`,
+- [x] **Where a photographed receipt goes** (`EASYOCR_EXPENSE_TARGET`,
       `ajax/ajax_easyocr.php` ~1074). There it has three values; only two have a
       counterpart here, and the third is **not ported**: Odoo has no
       miscellaneous payment, and the nearest thing -- a manual journal entry --
       is a different object that nobody can review or approve, which is what
       makes the original useful. Decided on 8-oct-2026. So: an employee expense
-      (`hr_expense`, a different app, only when it is installed) or a supplier
-      bill.
-- [ ] **Let the phone validate it** (`EASYOCR_EXPENSE_ALLOW_VALIDATE`, same
+      (`hr_expense`) or a supplier bill, the bill by default. *Done 8-oct-2026.
+      `hr_expense` became a dependency of the module: it ships with Odoo
+      Community and costs nothing, and "expense receipts" is what the module's
+      own summary promises, so it is not a stray dependency.*
+- [x] **Let the phone validate it** (`EASYOCR_EXPENSE_ALLOW_VALIDATE`, same
       file): whether the capture page may confirm the expense and not only file
-      it.
+      it. *Done 8-oct-2026, as far as handing it over. There the phone could go
+      all the way to validating it; here that would mean the person who spent
+      the money approving it, which is the one thing Odoo's approval chain
+      exists to prevent, so the phone submits and the approver approves.*
 - [x] **The miscellaneous expense's bank, payment method and account**
       (`EASYOCR_EXPENSE_VARIOUS_*`): they only existed to feed the destination
       that is not ported, so they go with it. *Not ported, 8-oct-2026.*

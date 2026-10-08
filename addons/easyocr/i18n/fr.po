@@ -2168,3 +2168,115 @@ msgstr "la facture n'est pas confirmée, il n'y a donc encore rien à payer"
 #: code:addons/easyocr/models/easyocr_document.py:0
 msgid "the bill has nothing left to pay"
 msgstr "il ne reste rien à payer sur la facture"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Bills"
+msgstr "Factures"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Open"
+msgstr "Ouvrir"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Sections"
+msgstr "Sections"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Vendor bills"
+msgstr "Factures fournisseur"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "What the documents became"
+msgstr "Ce que les documents sont devenus"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_expense_target
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_expense_target
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "A photographed receipt becomes"
+msgstr "Un reçu photographié finit en"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_expense_allow_validate
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_expense_allow_validate
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Let the phone send the expense"
+msgstr "Laisser le téléphone envoyer la note de frais"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Photographed receipts"
+msgstr "Reçus photographiés"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_expense_target
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_expense_target
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Where a receipt photographed from a phone ends up. A supplier bill needs a "
+"vendor; a ticket from a petrol station is not one, so the employee expense "
+"is usually the better fit when the person taking the photo is the one who "
+"paid."
+msgstr ""
+"Où finit un reçu photographié depuis un téléphone. Une facture fournisseur "
+"exige un fournisseur ; un ticket de station-service n'en est pas un, donc la"
+" note de frais convient mieux quand la personne qui photographie est celle "
+"qui a payé."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_expense_allow_validate
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_expense_allow_validate
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Let whoever took the photo put the expense forward for approval at the same "
+"time, instead of leaving it in draft until they open Odoo."
+msgstr ""
+"Permettre à la personne qui a photographié le reçu de présenter la note pour"
+" approbation tout de suite, au lieu de la laisser en brouillon jusqu'à sa "
+"prochaine connexion à Odoo."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"You have no employee record, so the receipt cannot be filed as an expense. "
+"Ask whoever administers your Odoo to create one for you, or file it as a "
+"supplier bill."
+msgstr ""
+"Vous n'avez pas de fiche employé, le reçu ne peut donc pas être classé en "
+"note de frais. Demandez à l'administration de votre Odoo de vous en créer "
+"une, ou classez-le comme facture fournisseur."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "Filed as an expense."
+msgstr "Classé en note de frais."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "It could not be filed as an expense."
+msgstr "Il n'a pas pu être classé en note de frais."
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__res_company__easyocr_expense_target__bill
+#: model:ir.model.fields.selection,name:easyocr.selection__res_config_settings__easyocr_expense_target__bill
+msgid "Supplier bill"
+msgstr "Facture fournisseur"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__res_company__easyocr_expense_target__expense
+#: model:ir.model.fields.selection,name:easyocr.selection__res_config_settings__easyocr_expense_target__expense
+msgid "Employee expense"
+msgstr "Note de frais"

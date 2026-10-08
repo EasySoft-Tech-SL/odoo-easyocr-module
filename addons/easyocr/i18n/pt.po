@@ -2147,3 +2147,114 @@ msgstr "a fatura não está confirmada, por isso ainda não há nada a pagar"
 #: code:addons/easyocr/models/easyocr_document.py:0
 msgid "the bill has nothing left to pay"
 msgstr "não resta nada a pagar na fatura"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Bills"
+msgstr "Faturas"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Open"
+msgstr "Abrir"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Sections"
+msgstr "Secções"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Vendor bills"
+msgstr "Faturas de fornecedor"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "What the documents became"
+msgstr "No que os documentos se tornaram"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_expense_target
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_expense_target
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "A photographed receipt becomes"
+msgstr "Um recibo fotografado acaba como"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_expense_allow_validate
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_expense_allow_validate
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Let the phone send the expense"
+msgstr "Deixar que o telemóvel envie a despesa"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Photographed receipts"
+msgstr "Recibos fotografados"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_expense_target
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_expense_target
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Where a receipt photographed from a phone ends up. A supplier bill needs a "
+"vendor; a ticket from a petrol station is not one, so the employee expense "
+"is usually the better fit when the person taking the photo is the one who "
+"paid."
+msgstr ""
+"Onde acaba um recibo fotografado a partir do telemóvel. Uma fatura de "
+"fornecedor precisa de um fornecedor; um recibo de gasolineira não o é, por "
+"isso a despesa de empregado costuma encaixar melhor quando quem tira a foto "
+"é quem pagou."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_expense_allow_validate
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_expense_allow_validate
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Let whoever took the photo put the expense forward for approval at the same "
+"time, instead of leaving it in draft until they open Odoo."
+msgstr ""
+"Permitir que quem tirou a foto apresente a despesa para aprovação de "
+"imediato, em vez de a deixar em rascunho até entrar no Odoo."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"You have no employee record, so the receipt cannot be filed as an expense. "
+"Ask whoever administers your Odoo to create one for you, or file it as a "
+"supplier bill."
+msgstr ""
+"Não tem ficha de empregado, por isso o recibo não pode ser arquivado como "
+"despesa. Peça a quem administra o seu Odoo que lhe crie uma, ou arquive-o "
+"como fatura de fornecedor."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "Filed as an expense."
+msgstr "Arquivado como despesa."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "It could not be filed as an expense."
+msgstr "Não foi possível arquivá-lo como despesa."
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__res_company__easyocr_expense_target__bill
+#: model:ir.model.fields.selection,name:easyocr.selection__res_config_settings__easyocr_expense_target__bill
+msgid "Supplier bill"
+msgstr "Fatura de fornecedor"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__res_company__easyocr_expense_target__expense
+#: model:ir.model.fields.selection,name:easyocr.selection__res_config_settings__easyocr_expense_target__expense
+msgid "Employee expense"
+msgstr "Despesa de empregado"

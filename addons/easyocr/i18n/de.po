@@ -2171,3 +2171,114 @@ msgstr "die Rechnung ist nicht bestätigt, es gibt also noch nichts zu zahlen"
 #: code:addons/easyocr/models/easyocr_document.py:0
 msgid "the bill has nothing left to pay"
 msgstr "bei der Rechnung ist nichts mehr zu zahlen"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Bills"
+msgstr "Rechnungen"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Open"
+msgstr "Öffnen"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Sections"
+msgstr "Bereiche"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Vendor bills"
+msgstr "Lieferantenrechnungen"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "What the documents became"
+msgstr "Was aus den Dokumenten geworden ist"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_expense_target
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_expense_target
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "A photographed receipt becomes"
+msgstr "Ein fotografierter Beleg landet als"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_expense_allow_validate
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_expense_allow_validate
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Let the phone send the expense"
+msgstr "Das Handy darf den Beleg einreichen"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Photographed receipts"
+msgstr "Fotografierte Belege"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_expense_target
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_expense_target
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Where a receipt photographed from a phone ends up. A supplier bill needs a "
+"vendor; a ticket from a petrol station is not one, so the employee expense "
+"is usually the better fit when the person taking the photo is the one who "
+"paid."
+msgstr ""
+"Wohin ein vom Handy fotografierter Beleg geht. Eine Lieferantenrechnung "
+"braucht einen Lieferanten; ein Tankstellenbeleg ist keiner, deshalb passt "
+"der Mitarbeiterbeleg meist besser, wenn die fotografierende Person auch "
+"bezahlt hat."
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_expense_allow_validate
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_expense_allow_validate
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Let whoever took the photo put the expense forward for approval at the same "
+"time, instead of leaving it in draft until they open Odoo."
+msgstr ""
+"Die fotografierende Person kann den Beleg gleich zur Genehmigung einreichen,"
+" statt ihn bis zum nächsten Odoo-Besuch im Entwurf zu lassen."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"You have no employee record, so the receipt cannot be filed as an expense. "
+"Ask whoever administers your Odoo to create one for you, or file it as a "
+"supplier bill."
+msgstr ""
+"Sie haben keinen Mitarbeitereintrag, der Beleg kann also nicht als Beleg "
+"abgelegt werden. Bitten Sie die Administration Ihres Odoo, einen anzulegen, "
+"oder legen Sie ihn als Lieferantenrechnung ab."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "Filed as an expense."
+msgstr "Als Beleg abgelegt."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/expense.py:0
+msgid "It could not be filed as an expense."
+msgstr "Er konnte nicht als Beleg abgelegt werden."
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__res_company__easyocr_expense_target__bill
+#: model:ir.model.fields.selection,name:easyocr.selection__res_config_settings__easyocr_expense_target__bill
+msgid "Supplier bill"
+msgstr "Lieferantenrechnung"
+
+#. module: easyocr
+#: model:ir.model.fields.selection,name:easyocr.selection__res_company__easyocr_expense_target__expense
+#: model:ir.model.fields.selection,name:easyocr.selection__res_config_settings__easyocr_expense_target__expense
+msgid "Employee expense"
+msgstr "Mitarbeiterbeleg"

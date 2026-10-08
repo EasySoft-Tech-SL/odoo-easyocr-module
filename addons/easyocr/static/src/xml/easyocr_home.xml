@@ -1,32 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+    <!--
+        The shape is the one the Dolibarr module's index.php has, down to the
+        order of the pieces: a header with the module's mark, a row of counters,
+        a section title, and then the cards. Each card carries its own colour,
+        the icon sits in a tinted chip, and the arrow says the whole card is the
+        way in. Reproduced and not invented: anyone coming from that module
+        should recognise the screen.
+    -->
     <t t-name="easyocr.Home">
         <div class="o_easyocr_home">
-            <div class="o_easyocr_home_head">
-                <h1 t-esc="title"/>
-                <p class="text-muted" t-esc="subtitle"/>
+            <div class="o_easyocr_home_header">
+                <img
+                    class="o_easyocr_home_logo"
+                    t-att-src="logoSrc"
+                    alt="EasyOCR"
+                />
+                <div class="o_easyocr_home_header_text">
+                    <h1 t-esc="title"/>
+                    <p t-esc="subtitle"/>
+                </div>
             </div>
+
+            <div class="o_easyocr_home_stats">
+                <t t-foreach="stats" t-as="stat" t-key="stat.key">
+                    <button
+                        type="button"
+                        class="o_easyocr_stat"
+                        t-on-click="() => this.open(stat)"
+                    >
+                        <span
+                            class="o_easyocr_stat_icon"
+                            t-attf-style="background: {{ stat.bg }}; color: {{ stat.accent }}"
+                        >
+                            <i t-attf-class="fa {{ stat.icon }}"/>
+                        </span>
+                        <span class="o_easyocr_stat_info">
+                            <strong t-esc="stat.count === null ? '—' : stat.count"/>
+                            <span t-esc="stat.label"/>
+                        </span>
+                    </button>
+                </t>
+            </div>
+
+            <div class="o_easyocr_home_section" t-esc="sectionTitle"/>
 
             <div class="o_easyocr_home_grid">
                 <t t-foreach="cards" t-as="card" t-key="card.key">
                     <button
                         type="button"
                         class="o_easyocr_card"
-                        t-attf-class="{{ card.tone ? 'o_easyocr_card_' + card.tone : '' }}"
+                        t-attf-style="--o-easyocr-c: {{ card.accent }}; --o-easyocr-bg: {{ card.bg }}"
                         t-on-click="() => this.open(card)"
                     >
-                        <span class="o_easyocr_card_icon" t-attf-class="fa {{ card.icon }}"/>
-                        <span class="o_easyocr_card_body">
-                            <span class="o_easyocr_card_title" t-esc="card.title"/>
-                            <span class="o_easyocr_card_note" t-esc="card.note"/>
+                        <span class="o_easyocr_card_icon">
+                            <i t-attf-class="fa {{ card.icon }}"/>
                         </span>
-                        <span
-                            t-if="card.count !== null"
-                            class="o_easyocr_card_count"
-                            t-esc="card.count"
-                        />
-                        <span t-else="" class="o_easyocr_card_arrow fa fa-arrow-right"/>
+                        <h3 t-esc="card.title"/>
+                        <p t-esc="card.note"/>
+                        <span class="o_easyocr_card_footer">
+                            <span t-esc="openLabel"/>
+                            <i class="fa fa-arrow-right"/>
+                        </span>
                     </button>
                 </t>
             </div>

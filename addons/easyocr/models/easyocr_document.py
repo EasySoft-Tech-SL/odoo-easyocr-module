@@ -32,6 +32,10 @@ NO_PRODUCT_TYPES = ('discount', 'surcharge', 'other', '')
 # created as a service.
 SERVICE_TYPES = ('service', 'shipping', 'fee')
 
+# The code Odoo gives its generic expense category. Used only to prefer it over
+# the others when a receipt needs one and nobody said which.
+EXPENSE_PRODUCT_CODE = 'EXP_GEN'
+
 
 class EasyocrDocument(models.Model):
     """A file dropped into the OCR inbox, plus whatever was read from it.
@@ -302,6 +306,94 @@ class EasyocrDocument(models.Model):
     def _compute_line_count(self):
         for document in self:
             document.line_count = len(document.line_ids)
+
+    # ------------------------------------------------------------------
+    # From the document to an employee expense
+    # ------------------------------------------------------------------
+    def _become_expense(self, user=None):
+        """Hand this document to the employee's expenses, and return the expense.
+
+        This is what a receipt photographed from a phone becomes when the
+        company says so. It is not a supplier bill: nobody is a vendor of a
+        ticket from a petrol station, and Odoo already keeps an employee's own
+        receipts, with their approval, in ``hr.expense``.
+
+        Raises UserError with a sentence fit for the phone when it cannot, which
+        is the same shape the rest of the capture flow answers in.
+        """
+        self.ensure_one()
+        user = user or self.env.user
+        employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
+        if not employee:
+            raise UserError(_(
+                "You have no employee record, so the receipt cannot be filed as "
+                "an expense. Ask whoever administers your Odoo to create one for "
+                "you, or file it as a supplier bill."
+            ))
+
+        # hr.expense has no field for the document's own number, so it goes into
+        # the name the approver reads, next to who the receipt is from.
+        title = self.partner_name or self.name
+        if self.ref and self.ref not in title:
+            title = '%s - %s' % (title, self.ref)
+
+        expense = self.env['hr.expense'].create({
+            'name': title,
+            'employee_id': employee.id,
+            'company_id': self.company_id.id,
+            'date': self.document_date or fields.Date.context_today(self),
+            'total_amount': self.amount_total or self.amount_untaxed or 0.0,
+            'product_id': self._expense_product().id,
+            'vendor_id': self.partner_id.id,
+            'description': self.note or False,
+        })
+
+        # The photo goes with the expense: the person approving it has to be
+        # able to see the paper it came from, and the document is not where they
+        # will look.
+        if self.attachment_id:
+            self.attachment_id.copy({
+                'res_model': 'hr.expense',
+                'res_id': expense.id,
+            })
+
+        if self.company_id.easyocr_expense_allow_validate:
+            # Put it forward, not approve it: approving your own expense is what
+            # Odoo's own controls are there to stop, so it stays with the
+            # approver. Off, the expense waits in draft like any other.
+            #
+            # In the module this port comes from the phone could go all the way
+            # to validating the expense. Doing that here would mean the person
+            # who spent the money also approving it, which is the one thing
+            # Odoo's approval chain exists to prevent, so the phone goes as far
+            # as handing it over and no further.
+            #
+            # 18.0 still calls this action_submit_expenses and 19.0 shortened
+            # it. Branching is cheaper than a version check and says out loud
+            # that the two series disagree.
+            if hasattr(expense, 'action_submit'):
+                expense.action_submit()
+            else:
+                expense.action_submit_expenses()
+
+        return expense
+
+    @api.model
+    def _expense_product(self):
+        """The category Odoo files a receipt under when nobody picked one.
+
+        The same rule Odoo itself uses when it turns an attachment into an
+        expense: the generic category if the chart has one, and otherwise
+        whichever category the company made expensable. A company with none gets
+        an expense without a category, which Odoo allows and the approver fills
+        in.
+        """
+        products = self.env['product.product'].search([('can_be_expensed', '=', True)])
+        if not products:
+            return self.env['product.product']
+        return products.filtered(
+            lambda product: product.default_code == EXPENSE_PRODUCT_CODE
+        )[:1] or products[:1]
 
     def _settle_webhook(self):
         """Bill the document, and pay it, when the company has asked for it.

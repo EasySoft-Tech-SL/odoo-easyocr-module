@@ -62,16 +62,24 @@ el menú principal. Al abrirla entra en su pantalla de inicio:
 
 ![La pantalla de inicio de EasyOCR](img/02-inicio.png)
 
-Cada tarjeta lleva a un sitio, y las que tienen número le dicen de un vistazo
-qué hay esperando:
+Arriba del todo están los números: cuántos **documentos** hay, cuántos han
+acabado en **factura** y cuántas **plantillas** tiene guardadas. Cada uno es
+también un atajo: púlselo y va a su lista.
+
+Debajo, cada tarjeta lleva a un sitio:
 
 - **Documentos** — las facturas y tickets leídos, o esperando a leerse.
 - **Bandeja de entrada** — lo que le han entregado otros módulos y todavía
   nadie ha mirado.
-- **Plantillas** — los recuadros guardados de cada proveedor.
 - **Capturar un recibo** — la página del móvil, para fotografiar un ticket.
+- **Plantillas** — los recuadros guardados de cada proveedor.
+- **Facturas de proveedor** — las facturas de compra, donde han ido a parar los
+  documentos que ha facturado.
 - **Registro de webhooks** — las llamadas que ha hecho el servicio.
 - **Ajustes** — solo aparece si usted puede configurar el módulo.
+
+El **Abrir** de cada tarjeta, con su flecha, indica que la tarjeta entera se
+pulsa; no hay que apuntarle a nada en concreto.
 
 Los permisos van en dos niveles: **Usuario** (trabajar con documentos) y
 **Responsable** (además, configurar y lanzar la lectura con IA). Se asignan
@@ -102,6 +110,17 @@ La configuración vive en **Ajustes > EasyOCR** y viene en dos bloques.
 | **Aceptar nuestra propia empresa como proveedor** | Permite contabilizar un documento cuyo NIF sea el suyo. Apagado viene, porque casi siempre es un documento que se ha leído al revés. |
 | **Rechazar un documento ya leído** | Antes de enviar un archivo al servicio, busca otro documento con el mismo contenido que ya se haya leído y no lo manda. Encendido viene: leerlo otra vez costaría lo mismo y no cambiaría nada. |
 | **Ventana de duplicados** | Hasta dónde mira esa comprobación, en días. 0 significa sin límite. Sirve para un proveedor cuyo documento mensual es exactamente el mismo archivo cada mes. |
+
+## Tickets fotografiados
+
+|[tabla: Dónde acaba un ticket fotografiado desde el móvil]|
+|---|---|
+| **Un ticket fotografiado acaba en** | **Factura de proveedor** (viene así) o **gasto de empleado**. Una factura de proveedor necesita un proveedor; un ticket de gasolinera no lo es, así que el gasto de empleado suele encajar mejor cuando quien hace la foto es quien ha pagado. |
+| **Dejar que el móvil envíe el gasto** | Permite que quien hizo la foto presente el gasto para aprobación en ese momento, en lugar de dejarlo en borrador hasta que entre en Odoo. Aprobar sigue siendo cosa de quien aprueba: nadie aprueba su propio gasto. |
+
+Para el gasto de empleado hace falta que quien fotografía tenga **ficha de
+empleado** en Odoo. Si no la tiene, el ticket se guarda igual y la página del
+móvil se lo dirá, en lugar de perderse.
 
 ## Webhooks
 
@@ -337,6 +356,11 @@ pantalla de inicio del teléfono y usarse como una aplicación.
 Si la lectura con IA está encendida, además se lee en el acto y la propia página
 le enseña lo que se ha sacado del ticket. Si está apagada —como en la imagen—,
 la foto se guarda igual y se lee a mano.
+
+Si en **Ajustes > EasyOCR** ha puesto que un ticket fotografiado acabe en un
+**gasto de empleado**, la página lo dirá y el gasto quedará creado a nombre de
+quien hizo la foto, con la foto adjunta. Nada más: si quiere que además se
+presente para aprobación sin abrir Odoo, encienda la casilla de al lado.
 
 # 11. El registro de webhooks
 

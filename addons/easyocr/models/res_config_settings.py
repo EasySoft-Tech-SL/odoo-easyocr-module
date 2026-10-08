@@ -54,6 +54,14 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.easyocr_duplicate_window_days',
         readonly=False,
     )
+    easyocr_expense_target = fields.Selection(
+        related='company_id.easyocr_expense_target',
+        readonly=False,
+    )
+    easyocr_expense_allow_validate = fields.Boolean(
+        related='company_id.easyocr_expense_allow_validate',
+        readonly=False,
+    )
     easyocr_webhook_create_bill = fields.Boolean(
         related='company_id.easyocr_webhook_create_bill',
         readonly=False,

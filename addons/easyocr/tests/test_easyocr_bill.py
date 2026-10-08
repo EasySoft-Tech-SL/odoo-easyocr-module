@@ -39,6 +39,10 @@ class TestEasyocrBill(TransactionCase):
         self.assertEqual(document.partner_id, self.partner)
 
     def test_creating_a_bill_brings_the_reading_across(self):
+        # Set here and not assumed: this switch lives on the company, so a test
+        # that trusts the shipped default is really testing the database it runs
+        # against, and goes red the moment somebody turns it on.
+        self.env.company.easyocr_bill_post = False
         document = self._document(
             partner_id=self.partner.id,
             ref='A/123',

@@ -84,6 +84,27 @@ class ResCompany(models.Model):
     )
 
     # --------------------------------------------------------------
+    # What a photographed receipt becomes
+    # --------------------------------------------------------------
+    easyocr_expense_target = fields.Selection(
+        selection=[
+            ('bill', 'Supplier bill'),
+            ('expense', 'Employee expense'),
+        ],
+        string='A photographed receipt becomes',
+        default='bill',
+        help='Where a receipt photographed from a phone ends up. A supplier bill '
+             'needs a vendor; a ticket from a petrol station is not one, so the '
+             'employee expense is usually the better fit when the person taking '
+             'the photo is the one who paid.',
+    )
+    easyocr_expense_allow_validate = fields.Boolean(
+        string='Let the phone send the expense',
+        help='Let whoever took the photo put the expense forward for approval at '
+             'the same time, instead of leaving it in draft until they open Odoo.',
+    )
+
+    # --------------------------------------------------------------
     # What a webhook is allowed to do on its own
     # --------------------------------------------------------------
     easyocr_webhook_create_bill = fields.Boolean(
