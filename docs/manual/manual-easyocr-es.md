@@ -388,8 +388,11 @@ Después prepara un borrador de factura de proveedor con esos datos:
   inventa.
 
 Si el documento no trae líneas —porque llegó por la vía automática o porque se
-rellenó a mano—, la factura se hace con una sola línea por el importe base, sin
-impuestos, como se ha hecho siempre.
+rellenó a mano—, la factura se hace con una sola línea por el importe base. El
+IVA de esa línea sale de los dos importes del documento: si el total es un 21%
+más que la base, la línea lleva el 21%. Y si el porcentaje que sale de ahí no es
+el de ningún impuesto de compras de su empresa, la línea se queda sin impuesto,
+igual que las demás.
 
 ## Qué conviene revisar antes de confirmarla
 

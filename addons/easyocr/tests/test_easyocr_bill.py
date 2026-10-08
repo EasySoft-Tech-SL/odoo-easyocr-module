@@ -83,3 +83,93 @@ class TestEasyocrBill(TransactionCase):
 
         with self.assertRaises(UserError):
             document._resolve_partner()
+
+    # ------------------------------------------------------------------
+    # The tax of a document that was only read as a total
+    #
+    # A reading that comes back with the two amounts and no lines still has to
+    # become a bill whose total matches the paper. The rate is worked back from
+    # the amounts, and used only when the company has that exact tax.
+    # ------------------------------------------------------------------
+    # A rate no standard chart carries, so a tax found can only be this one.
+    RATE_ONLY_THIS_TEST_HAS = 7.7
+
+    def _tax(self, rate, usage='purchase'):
+        return self.env['account.tax'].create({
+            'name': 'IVA %s%% %s' % (rate, usage),
+            'amount': rate,
+            'amount_type': 'percent',
+            'type_tax_use': usage,
+            'company_id': self.env.company.id,
+        })
+
+    def _billed_lines(self, **values):
+        # Set here and not assumed, like the bill-posted switch above: what is
+        # being tested is the line, and a bill that gets posted on the way adds
+        # a second reason for the test to fail.
+        self.env.company.easyocr_bill_post = False
+        values.setdefault('partner_id', self.partner.id)
+        document = self._document(**values)
+        document.action_create_bill()
+        return document.move_id.invoice_line_ids
+
+    def test_the_two_amounts_bring_the_tax_to_the_bill(self):
+        tax = self._tax(self.RATE_ONLY_THIS_TEST_HAS)
+
+        lines = self._billed_lines(amount_untaxed=100.0, amount_total=107.70)
+
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines.tax_ids, tax)
+        self.assertAlmostEqual(lines.price_unit, 100.0, places=2)
+
+    def test_the_bill_adds_up_to_the_paper_it_came_from(self):
+        self._tax(self.RATE_ONLY_THIS_TEST_HAS)
+
+        lines = self._billed_lines(amount_untaxed=100.0, amount_total=107.70)
+
+        self.assertAlmostEqual(lines.move_id.amount_total, 107.70, places=2)
+
+    def test_the_cent_the_paper_rounds_off_is_not_a_reason_to_give_up(self):
+        """33,33 with 7,7% prints 35,90, which works back to 7,71%."""
+        tax = self._tax(self.RATE_ONLY_THIS_TEST_HAS)
+
+        lines = self._billed_lines(amount_untaxed=33.33, amount_total=35.90)
+
+        self.assertEqual(lines.tax_ids, tax)
+
+    def test_a_rate_nobody_has_leaves_the_line_untaxed(self):
+        """A rate with no tax behind it is a rate nobody agreed on."""
+        lines = self._billed_lines(amount_untaxed=100.0, amount_total=133.33)
+
+        self.assertFalse(lines.tax_ids)
+
+    def test_a_sales_tax_is_not_taken_for_a_purchase_tax(self):
+        self._tax(self.RATE_ONLY_THIS_TEST_HAS, usage='sale')
+
+        lines = self._billed_lines(amount_untaxed=100.0, amount_total=107.70)
+
+        self.assertFalse(lines.tax_ids)
+
+    def test_a_total_below_the_amount_before_tax_is_not_a_tax(self):
+        """A discount, or the shape a credit note has. Neither is 21% of anything."""
+        self._tax(self.RATE_ONLY_THIS_TEST_HAS)
+
+        lines = self._billed_lines(amount_untaxed=100.0, amount_total=90.0)
+
+        self.assertFalse(lines.tax_ids)
+
+    def test_a_document_with_no_amounts_is_still_billed(self):
+        lines = self._billed_lines()
+
+        self.assertEqual(len(lines), 1)
+        self.assertFalse(lines.tax_ids)
+        self.assertAlmostEqual(lines.price_unit, 0.0, places=2)
+
+    def test_a_total_with_no_amount_before_it_is_not_a_rate(self):
+        """The amount before tax is what the rate is a percentage of."""
+        self._tax(self.RATE_ONLY_THIS_TEST_HAS)
+
+        lines = self._billed_lines(amount_total=107.70)
+
+        self.assertFalse(lines.tax_ids)
+        self.assertAlmostEqual(lines.price_unit, 107.70, places=2)
