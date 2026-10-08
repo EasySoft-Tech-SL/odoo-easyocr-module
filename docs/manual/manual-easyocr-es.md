@@ -128,7 +128,7 @@ manda ningún documento. Por eso se puede pulsar tantas veces como haga falta.
 | **Confirmar la factura automáticamente** | Confirma la factura en cuanto se crea, en lugar de dejarla en borrador. Apagado viene: confirmar contabiliza la factura y le pone número. Si al confirmar falla algo, la factura se queda en borrador con el motivo escrito en ella. |
 | **Crear los productos que no existan** | Cuando una línea trae una referencia de proveedor que no casa con ningún producto, lo crea. Apagado viene, para que el catálogo no crezca solo. |
 | **Aceptar nuestra propia empresa como proveedor** | Permite contabilizar un documento cuyo NIF sea el suyo. Apagado viene, porque casi siempre es un documento que se ha leído al revés. |
-| **Rechazar un documento ya leído** | Antes de enviar un archivo al servicio, busca otro documento con el mismo contenido que ya se haya leído y no lo manda. Encendido viene: leerlo otra vez costaría lo mismo y no cambiaría nada. |
+| **Preguntar antes de leer un documento ya leído** | Antes de enviar un archivo al servicio, busca otro documento con el mismo contenido que ya se haya leído y le pregunta si quiere leerlo otra vez. Encendido viene: leerlo otra vez cuesta una lectura, y dejarlo no cuesta nada. |
 | **Ventana de duplicados** | Hasta dónde mira esa comprobación, en días. 0 significa sin límite. Sirve para un proveedor cuyo documento mensual es exactamente el mismo archivo cada mes. |
 
 ## Tickets fotografiados
@@ -296,9 +296,15 @@ que no haya que salir del visor:
 | **Leer con IA** | Manda el documento al servicio y rellena la ficha con lo que lea. Es lo mismo que el botón de la ficha del documento. |
 | **Crear factura** | Prepara la factura de proveedor con lo que hay en la ficha y la abre. |
 
-Mientras el servicio está leyendo, la columna lo dice y los botones quedan
-bloqueados: una página escaneada tarda unos segundos, y es mejor saber que está
-trabajando que pulsar dos veces.
+Mientras el servicio está leyendo, la columna lo dice con una barra y los
+botones quedan bloqueados: una página escaneada tarda unos segundos, y es mejor
+saber que está trabajando que pulsar dos veces.
+
+El visor ocupa la pantalla entera, así que lleva su propia salida: **Volver a la
+ficha**, arriba del todo de la columna, devuelve a la ficha del documento que
+estaba mirando. Si ha dibujado recuadros y los quiere para la próxima vez,
+guárdelos como plantilla antes de salir: lo que no se guarda se va con la
+pantalla.
 
 Si la cuenta no puede leer —cuota agotada, suscripción vencida—, el módulo lo
 avisa aquí arriba en cuanto se abre el visor, antes de que nadie lo intente.
@@ -347,9 +353,9 @@ El botón **Leer con IA** es lo que lee los escaneos y las fotos. Manda el
 archivo al servicio y rellena la ficha con lo que devuelve: nombre y NIF del
 proveedor, número de documento, fecha, importe base y total.
 
-Si sale bien, verá un aviso de que el documento se ha leído y los campos
-rellenos. Si sale mal, el documento **no se pierde**: se queda con el motivo
-escrito, y puede corregirlo a mano o volver a intentarlo.
+Si sale bien, la lectura termina en una pantalla con lo que se ha leído y la
+ficha se queda rellena. Si sale mal, el documento **no se pierde**: se queda con
+el motivo escrito, y puede corregirlo a mano o volver a intentarlo.
 
 ## Cuando falla
 
@@ -379,6 +385,35 @@ Le dice de qué documento salió esa lectura y cuándo. Si **ese** archivo es de
 verdad el mismo que quiere leer otra vez —una cuota fija que llega igual todos
 los meses, por ejemplo—, pulse **Volver a leerlo** y se manda. Si no, **Dejarlo**
 y no se gasta nada. Vale lo mismo desde el visor: la pregunta es la misma.
+
+## Mientras se lee
+
+Leer un escaneo tarda unos segundos, y durante ese rato el botón queda
+desactivado. Para que no parezca que no pasa nada, la barra va diciendo en qué
+punto está: el archivo saliendo, el texto volviendo, los campos sacándose.
+
+![La barra de progreso con la etapa en la que va la lectura](img/28-barra-lectura.png)
+
+La barra no llega al final hasta que la lectura ha terminado de verdad. Si se
+quedara llena con la respuesta todavía en camino, le estaría engañando.
+
+## Lo que ha leído
+
+Cuando termina, la lectura abre esta pantalla. Arriba, lo que el servicio sabía
+del documento y lo que ha costado: la confianza, los segundos, los tokens y las
+páginas.
+
+![El resumen de la lectura, con los datos del proveedor y del documento](img/27-resumen-lectura.png)
+
+A la izquierda, lo que va a la ficha: el proveedor, las fechas, los importes y
+las líneas. A la derecha, los datos del proveedor que la ficha no guarda en
+ningún campo —la dirección, la ciudad, el teléfono, el correo, la forma de pago—
+y que hasta ahora se leían y se tiraban. **Abrir la ficha** lleva al documento
+para crear la factura.
+
+De esos datos nadie toca su agenda: la dirección y el teléfono se enseñan aquí,
+pero no se escriben solos en la ficha del proveedor. Eso es una decisión suya,
+no de una lectura.
 
 # 8. Crear la factura de proveedor
 

@@ -46,6 +46,20 @@
                     <div class="o_easyocr_sidebar_head">
                         <h4 t-esc="state.documentName"/>
                         <p class="text-muted" t-if="state.pages.length" t-esc="pagesLabel()"/>
+                        <!-- El visor ocupa la pantalla entera y Odoo no pinta
+                             migas de pan encima, asi que sin esto la unica
+                             salida es el menu, que pierde el documento.
+                             Hang off state.empty and nothing else: documentId
+                             is a getter on the component and never lands on
+                             state, so a t-if reading it is false for ever and
+                             the button was in the file and on no screen. -->
+                        <button
+                            t-if="!state.empty"
+                            class="btn btn-link btn-sm px-0"
+                            t-on-click="backToDocument"
+                        >
+                            <i class="fa fa-arrow-left me-1"/>Back to the document
+                        </button>
                     </div>
 
                     <!-- Nothing to do to a document that is not there yet, so
@@ -67,9 +81,21 @@
                             <i class="fa fa-exclamation-triangle me-1"/>
                             <t t-esc="state.aiBlockMessage"/>
                         </div>
-                        <div t-if="state.busy" class="o_easyocr_busy text-muted">
-                            <i class="fa fa-spinner fa-spin me-1"/>
-                            <t t-esc="state.busyLabel"/>
+                        <div t-if="state.busy" class="o_easyocr_busy">
+                            <!-- La barra solo sale cuando hay algo que medir:
+                                 leer un documento la enciende, guardar una
+                                 plantilla no, y una barra quieta en un trabajo
+                                 que no la tiene es una promesa de nada. -->
+                            <div t-if="state.busyPercent" class="o_easyocr_progress">
+                                <div
+                                    class="o_easyocr_progress_fill"
+                                    t-attf-style="width: {{ state.busyPercent }}%"
+                                />
+                            </div>
+                            <p class="text-muted mb-0">
+                                <i class="fa fa-spinner fa-spin me-1"/>
+                                <t t-esc="state.busyLabel"/>
+                            </p>
                         </div>
                         <div class="o_easyocr_actions">
                             <button

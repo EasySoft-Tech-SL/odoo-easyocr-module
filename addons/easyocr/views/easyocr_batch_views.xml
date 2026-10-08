@@ -2,7 +2,7 @@
 <!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
      License LGPL-3 (see LICENSE file).
 
-     Loaded after easyocr_document_views.xml: the menu hangs off
+     Loaded after easyocr_menu_views.xml: the menu hangs off
      menu_easyocr_root, which is defined there.
 
      Sending a stack is a screen of its own: picking files and watching them

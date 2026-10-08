@@ -92,7 +92,8 @@ The module talks to the same service the Dolibarr module uses
 
 - [x] Model for documents handed over by other modules, with their origin.
 - [x] Nothing is sent to the AI service on arrival; the user decides when.
-- [x] The same file is refused twice, by fingerprint.
+- [x] The same file is recognised twice, by fingerprint, and the reader decides:
+      the module asks before spending a second reading.
 - [x] Discarded documents can be brought back.
 - [x] Public helper (`recibir`) so another module can drop a file in.
 
@@ -219,6 +220,37 @@ Closed the same day, after using the module against the real service:
   out -- and the same method is asked again after a reading, because a reading is
   what usually gives a nameless file a tax number. The only template in the
   development database had no vendor at all, which is how the gap was found.
+
+Closed again on 8-oct-2026, after the module went in front of a real reader.
+Three things of the Dolibarr process were missing, and the port had one of them
+backwards:
+
+- **A file that was already read is asked about, not turned away.** Dolibarr
+  opens a dialog with what it knows -- the file, the day, the bill it became --
+  and reads it again if the answer is yes. Here the guard refused it outright,
+  which is not the same decision: this month's fixed fee really is the same file
+  as last month's, and only the person in front of it knows. The question is
+  asked from the form and from the viewer alike, and leaving it alone costs
+  nothing and changes nothing.
+- **A reading ends on the screen that says what was read.** Dolibarr opens a
+  summary with the confidence, the time and the data of the vendor, and the port
+  ended on a notice that disappeared on its own. Everything on that screen comes
+  back out of the answer that was already being kept, so nothing had to be
+  stored twice: the vendor's address, town, phone, email and payment method were
+  being read and dropped, because the document has no field for them.
+- **The reader can see the reading work, and can leave.** The service takes
+  seconds and says nothing while it works, so the module walks the stages of a
+  reading on a bar of its own -- the same stages the Dolibarr screen names -- and
+  stops short of the end until the answer is really in. The viewer covers the
+  whole screen and Odoo paints no breadcrumb over it, so it carries its own way
+  back to the document.
+- **And one that the suite could not see.** The way back was written, translated
+  and tested, and it hung off a name the component never puts on its state: the
+  condition was false for ever and the button was on no screen. Nothing raises
+  for that. It was found by looking, and kept found by a test that reads every
+  binding of every template against the components, which is where the next one
+  of these will be caught. The same sweep is what showed a clean install of the
+  released ZIP dying on the menu order, which no upgrade could ever have shown.
 
 Every row below was read in the Dolibarr source, in the file named, so what is
 ported is what that setting actually does and not what its name suggests.

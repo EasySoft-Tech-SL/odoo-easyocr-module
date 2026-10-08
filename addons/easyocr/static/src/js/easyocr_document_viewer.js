@@ -1,4 +1,5 @@
 import { Component, onMounted, onPatched, onWillStart, useRef, useState } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -16,6 +17,30 @@ import {
     rectangleBetween,
     resizedTo,
 } from "./easyocr_box_geometry";
+
+// The stages of a reading, with how far the bar is painted for each one. They
+// are the ones the module this is a port of shows, and they are an estimate and
+// not a measurement: the server makes one call and says nothing until it
+// answers. The bar never reaches the end, which is what it has to do to stay
+// honest while it waits. The words are the English source on purpose: they go
+// through _t when they are painted, not here.
+// Cada etiqueta es una llamada con su literal dentro, y no una cadena
+// suelta: el extractor de terminos de Odoo solo ve las _t con un literal
+// delante, y una _t sobre una variable no llega nunca al .po. La llamada
+// se hace al pintarla, que es cuando se sabe el idioma.
+const READING_STAGES = [
+    [5, () => _t("Sending the file...")],
+    [10, () => _t("Checking the document...")],
+    [20, () => _t("Reading the text (OCR)...")],
+    [35, () => _t("Working through the pages...")],
+    [50, () => _t("OCR finished...")],
+    [65, () => _t("Structuring the data with AI...")],
+    [78, () => _t("Analysing the fields...")],
+    [88, () => _t("Finishing the analysis...")],
+    [93, () => _t("Almost there...")],
+    [96, () => _t("Checking the result...")],
+];
+const READING_STAGE_DELAY = 2500;
 
 /**
  * The nine fields a box can be assigned to. The key is what gets stored and what
@@ -78,6 +103,7 @@ export class EasyocrDocumentViewer extends Component {
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.dialog = useService("dialog");
         this.actionService = useService("action");
         this.containerRef = useRef("pdfContainer");
         this.fileInputRef = useRef("fileInput");
@@ -105,6 +131,12 @@ export class EasyocrDocumentViewer extends Component {
             appliedVendor: "",
             busy: false,
             busyLabel: "",
+            // How far the progress bar is painted. The reading is one call the
+            // server makes, so there is nothing to measure while it happens:
+            // this walks the stages the module this is a port of walks, at the
+            // speed a reading of that kind of document usually takes, and stops
+            // short of the end so the bar never claims to be finished.
+            busyPercent: 0,
             // Why the account cannot read right now, in the reader's language,
             // or empty when it can.
             aiBlockMessage: "",
@@ -758,14 +790,97 @@ export class EasyocrDocumentViewer extends Component {
     // ------------------------------------------------------------------
     /** Send the file to the service and fill the document with what it reads. */
     async readWithAI() {
-        await this.runDocumentAction(
-            "action_extract",
-            _t("Reading the document. A scanned page takes a while."),
+        if (this.state.busy || !this.documentId) {
+            return;
+        }
+        // The question is asked here and not by the server, which is where it
+        // used to be asked, because a reading takes seconds and this screen is
+        // the only place that can show it working while it happens.
+        const duplicate = await this.orm.call(
+            "easyocr.document", "action_check_duplicate", [[this.documentId]],
         );
+        let force = false;
+        if (duplicate && duplicate.message) {
+            force = await this.askAboutDuplicate(duplicate);
+            if (!force) {
+                return;
+            }
+        }
+        await this.readDocument(force);
         // The reading is what usually says who sent the document, and the boxes
         // are kept under that name. This is the first moment they can be found,
         // so it is asked again here and not only when the document opens.
         await this.loadVendorTemplate();
+    }
+
+    /** The same question, with the same two answers, the server asks. */
+    askAboutDuplicate(duplicate) {
+        return new Promise((resolve) => {
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Read it again?"),
+                body: duplicate.message,
+                confirmLabel: _t("Read it again"),
+                cancelLabel: _t("Leave it"),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
+    }
+
+    /** The reading itself, with the bar the reader watches while it happens. */
+    async readDocument(force) {
+        this.state.busy = true;
+        this.startReadingStages();
+        try {
+            const result = await this.orm.call(
+                "easyocr.document", "action_extract", [[this.documentId], force],
+            );
+            if (result) {
+                await this.actionService.doAction(result);
+            }
+        } finally {
+            this.stopReadingStages();
+            this.state.busy = false;
+            this.state.busyLabel = "";
+            this.state.busyPercent = 0;
+        }
+    }
+
+    startReadingStages() {
+        this.state.busyPercent = READING_STAGES[0][0];
+        this.state.busyLabel = READING_STAGES[0][1]();
+        this.readingTimers = READING_STAGES.slice(1).map(([percent, label], index) => setTimeout(() => {
+            this.state.busyPercent = percent;
+            this.state.busyLabel = label();
+        }, READING_STAGE_DELAY * (index + 1)));
+    }
+
+    stopReadingStages() {
+        for (const timer of this.readingTimers || []) {
+            clearTimeout(timer);
+        }
+        this.readingTimers = [];
+    }
+
+    /**
+     * Back to the document.
+     *
+     * The viewer fills the screen and Odoo paints no breadcrumb over it, so
+     * without this the only way out is the menu, which loses the document you
+     * were working on.
+     */
+    backToDocument() {
+        if (!this.documentId) {
+            return;
+        }
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: "easyocr.document",
+            res_id: this.documentId,
+            views: [[false, "form"]],
+            view_mode: "form",
+            target: "current",
+        });
     }
 
     /** Turn what was read into a draft supplier bill, and open it. */

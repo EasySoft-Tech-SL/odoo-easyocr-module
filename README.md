@@ -55,11 +55,13 @@ and it lands in Odoo as a bill or as an expense claim.
 ## ✨ What it does
 
 <table>
-<tr><td>📄 <b>Workbench</b></td><td>One screen for the whole job: open or drop a file, read it, review it, turn it into an entry. The document never leaves the screen.</td></tr>
+<tr><td>📄 <b>Workbench</b></td><td>One screen for the whole job: open or drop a file, read it, review it, turn it into an entry. The document never leaves the screen, and the screen carries its own way back to it.</td></tr>
 <tr><td>✏️ <b>Rectangle templates</b></td><td>Draw a rectangle over each field once and save it under that vendor. Their next invoice opens with the rectangles already painted and their text read from the new file.</td></tr>
 <tr><td>🖱️ <b>Rectangles you can move</b></td><td>Drag one to move it, or pull a corner to resize it, and the text under it is read again on letting go. A rectangle cannot leave the page.</td></tr>
 <tr><td>🆓 <b>Read without the service</b></td><td>The text layer of a digital PDF is read in the browser and costs nothing. An amount printed <code>320,77 EUR</code> and a date printed <code>30/09/2026</code> are read as such, and a rectangle that read nothing leaves its field alone instead of emptying it.</td></tr>
 <tr><td>🤖 <b>Read with the service</b></td><td>Scans and photographs are sent to the EasyOCR extraction service and come back as lines, taxes and dates. A <b>Test the connection</b> button checks your key without spending a reading.</td></tr>
+<tr><td>👀 <b>What the reading found</b></td><td>A reading ends on a screen, not on a toast: how sure the service was, how long it took, what it cost in tokens and pages, and the vendor details the document has no field for. One button from there to the entry.</td></tr>
+<tr><td>🔁 <b>Read again, on purpose</b></td><td>A file that was already read is recognised by its content, and the module asks before spending a second reading, saying which document it came from and when. Saying yes reads it; leaving the question alone costs nothing.</td></tr>
 <tr><td>🗂️ <b>Batches</b></td><td>Hand over a folder's worth of documents in one call. Choose the files on their own screen, press Send once, and follow the batch while it is read, file by file.</td></tr>
 <tr><td>🧾 <b>Supplier bills</b></td><td>A draft bill from what was read, one line per line, with the product, discount and rate of each. A document that came back with nothing but its two amounts still gets its tax: the rate is worked back from them.</td></tr>
 <tr><td>↩️ <b>Credit notes</b></td><td>A rectificativa becomes a vendor credit note instead of a bill, with its entries the other way round. The reading notices the negative total by itself.</td></tr>
@@ -69,7 +71,7 @@ and it lands in Odoo as a bill or as an expense claim.
 <tr><td>📥 <b>Inbox</b></td><td>Another module can hand documents over before anyone has looked at them, with its own list and its own pending count.</td></tr>
 <tr><td>⚙️ <b>Settings</b></td><td>Sixteen switches over the service, over what a document becomes, and over what a webhook may do on its own. Off by default where the safe answer is off.</td></tr>
 <tr><td>🌐 <b>Languages</b></td><td>Spanish, Catalan, Galician, German, French, Italian and Portuguese, with a test that checks every label, help text and runtime message actually reaches the reader.</td></tr>
-<tr><td>✅ <b>Tests</b></td><td>241 of them, each one proven to fail when the thing it guards is broken. A test for a switch checks what the switch does, so a switch that stores the right value and changes nothing still fails.</td></tr>
+<tr><td>✅ <b>Tests</b></td><td>250 of them, each one proven to fail when the thing it guards is broken. A test for a switch checks what the switch does, so a switch that stores the right value and changes nothing still fails; a test for a template checks every binding against the component, because a name that is not there raises no error and paints nothing.</td></tr>
 </table>
 
 ## 📦 What you need

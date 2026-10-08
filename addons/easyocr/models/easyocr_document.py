@@ -7,6 +7,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import format_datetime
 
 from .easyocr_values import to_amount, to_date, to_float
 
@@ -211,6 +212,32 @@ class EasyocrDocument(models.Model):
             # left out, which is what a window is for.
             domain.append(('extraction_date', '>=', fields.Datetime.now() - timedelta(days=window)))
         return self.search(domain, limit=1)
+
+    def _duplicate_message(self, duplicate):
+        """What the reader is told before paying for the same reading twice.
+
+        One sentence per piece, because the date and the bill are only there
+        when there is one, and a translator gets whole sentences to work with
+        either way. It lives here and not in the dialog because there are two
+        dialogs: the one the server opens for the button on the document, and
+        the one the viewer paints itself so it can show the reading while it
+        happens.
+        """
+        self.ensure_one()
+        if not duplicate:
+            return ''
+        pieces = [_(
+            "This file has already been read: %(document)s.",
+            document=duplicate.display_name,
+        )]
+        if duplicate.extraction_date:
+            pieces.append(_(
+                "It was read on %s.",
+                format_datetime(self.env, duplicate.extraction_date),
+            ))
+        if duplicate.move_id:
+            pieces.append(_("It became %s.", duplicate.move_id.display_name))
+        return ' '.join(pieces)
 
     # ------------------------------------------------------------------
     # Business methods

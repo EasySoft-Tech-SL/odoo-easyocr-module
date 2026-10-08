@@ -179,13 +179,6 @@
     </record>
 
     <menuitem
-        id="menu_easyocr_root"
-        name="EasyOCR"
-        web_icon="easyocr,static/description/icon.png"
-        groups="group_easyocr_user"
-        sequence="85"
-    />
-    <menuitem
         id="menu_easyocr_document"
         name="Documents"
         parent="menu_easyocr_root"

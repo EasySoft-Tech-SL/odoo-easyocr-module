@@ -57,7 +57,7 @@
                         <setting id="easyocr_allow_self_vendor" string="Accept our own company as vendor" help="Book a document whose tax number is ours. Off by default: it is almost always a document that was read the wrong way round.">
                             <field name="easyocr_allow_self_vendor"/>
                         </setting>
-                        <setting id="easyocr_duplicate_check" string="Refuse a document already read" help="Before sending a file to the service, look for a document with the same content that has already been read. Reading it again would cost the same and change nothing.">
+                        <setting id="easyocr_duplicate_check" string="Ask before reading a document already read" help="Before sending a file to the service, look for a document with the same content that has already been read, and ask. Reading it again costs a reading; leaving the question alone costs nothing.">
                             <field name="easyocr_duplicate_check"/>
                         </setting>
                         <setting id="easyocr_duplicate_window_days" string="Duplicate window (days)" help="How far back that check looks. 0 means no limit. Useful for a vendor whose monthly document is exactly the same file every month.">

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License LGPL-3 (see LICENSE file).
+
+     The root menu, alone in a file of its own and loaded first.
+
+     Every other menu of the module hangs off it, and Odoo resolves an xmlid
+     while it parses the file that uses it: a child loaded before its parent
+     does not find it and the installation stops with a ParseError. It used to
+     live at the bottom of the document views, which the home screen is loaded
+     before, so a clean install died there. An upgrade never showed it because
+     the parent was already in the database from the first install.
+
+     Being first is the whole point of this file: do not move it down. -->
+<odoo>
+
+    <menuitem
+        id="menu_easyocr_root"
+        name="EasyOCR"
+        web_icon="easyocr,static/description/icon.png"
+        groups="group_easyocr_user"
+        sequence="85"
+    />
+
+</odoo>
