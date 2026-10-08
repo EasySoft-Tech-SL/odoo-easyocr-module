@@ -22,12 +22,6 @@ msgid "%(message)s Try again in %(seconds)s seconds."
 msgstr "%(message)s Versuchen Sie es in %(seconds)s Sekunden erneut."
 
 #. module: easyocr
-#. odoo-javascript
-#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
-msgid "&times;"
-msgstr "&times;"
-
-#. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template_box__page
 msgid "1-based page number."
 msgstr "Seitennummer, beginnend bei 1."
@@ -191,7 +185,9 @@ msgid "Config Settings"
 msgstr "Konfigurationseinstellungen"
 
 #. module: easyocr
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Create Bill"
 msgstr "Rechnung erstellen"
 
@@ -953,8 +949,10 @@ msgid ""
 msgstr "Lieferantenrechnungen und Belege lesen und in Buchungen umwandeln."
 
 #. module: easyocr
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Read with AI"
 msgstr "Mit KI lesen"
 
@@ -2345,3 +2343,141 @@ msgid "That kind of file cannot be read. Send a PDF or a photo."
 msgstr ""
 "Diese Art von Datei kann nicht gelesen werden. Senden Sie ein PDF oder ein "
 "Foto."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The extraction service needs an API key, and none is set in the EasyOCR "
+"settings."
+msgstr ""
+"Der Extraktionsdienst benötigt einen API-Schlüssel, und in den EasyOCR-"
+"Einstellungen ist keiner hinterlegt."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The extraction service rejected the API key. Check it in the EasyOCR "
+"settings: it may belong to another account, or have been switched off."
+msgstr ""
+"Der Extraktionsdienst hat den API-Schlüssel abgelehnt. Prüfen Sie ihn in den"
+" EasyOCR-Einstellungen: Er kann zu einem anderen Konto gehören oder "
+"deaktiviert sein."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "That API key is switched off in the EasyOCR account."
+msgstr "Dieser API-Schlüssel ist im EasyOCR-Konto deaktiviert."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "That API key has expired."
+msgstr "Dieser API-Schlüssel ist abgelaufen."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR account is switched off. Contact support."
+msgstr "Das EasyOCR-Konto ist deaktiviert. Wenden Sie sich an den Support."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This server's address is not allowed to use that API key."
+msgstr "Die Adresse dieses Servers darf diesen API-Schlüssel nicht verwenden."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This server's domain is not allowed to use that API key."
+msgstr "Die Domain dieses Servers darf diesen API-Schlüssel nicht verwenden."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The EasyOCR account has no readings left. Top it up to keep reading "
+"documents."
+msgstr ""
+"Das EasyOCR-Konto hat keine Lesungen mehr übrig. Laden Sie es auf, um weiter"
+" Dokumente zu lesen."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR account has no readings left."
+msgstr "Das EasyOCR-Konto hat keine Lesungen mehr übrig."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The monthly limit of the EasyOCR plan has been reached."
+msgstr "Das Monatslimit des EasyOCR-Tarifs ist erreicht."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This API key has reached its monthly limit."
+msgstr "Dieser API-Schlüssel hat sein Monatslimit erreicht."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR plan does not include that feature."
+msgstr "Der EasyOCR-Tarif enthält diese Funktion nicht."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "No extraction service is set in the EasyOCR settings."
+msgstr "In den EasyOCR-Einstellungen ist kein Extraktionsdienst hinterlegt."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "The EasyOCR account cannot read documents right now."
+msgstr "Das EasyOCR-Konto kann derzeit keine Dokumente lesen."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "The service answered. Account: %(account)s, plan: %(plan)s."
+msgstr "Der Dienst hat geantwortet. Konto: %(account)s, Tarif: %(plan)s."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "%(answer)s %(pages)s pages left to read this month."
+msgstr "%(answer)s In diesem Monat sind noch %(pages)s Seiten zu lesen."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "no name"
+msgstr "ohne Namen"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "no plan"
+msgstr "ohne Tarif"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Reading the document. A scanned page takes a while."
+msgstr "Das Dokument wird gelesen. Eine gescannte Seite dauert etwas."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Preparing the bill."
+msgstr "Die Rechnung wird vorbereitet."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Test the connection"
+msgstr "Verbindung testen"

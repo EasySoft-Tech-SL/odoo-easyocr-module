@@ -44,6 +44,15 @@
         flex: 1 1 auto;
     }
 
+    // Reading a scan takes seconds, and the toolbar is the only thing on screen
+    // that can say so.
+    .o_easyocr_busy {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
     .o_easyocr_template_name {
         width: 12rem;
     }

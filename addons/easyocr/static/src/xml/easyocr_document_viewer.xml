@@ -16,7 +16,26 @@
                     </button>
                 </t>
                 <span class="o_easyocr_toolbar_sep"/>
-                <button class="btn btn-secondary btn-sm" t-on-click="clearBoxes">
+                <span t-if="state.busy" class="o_easyocr_busy text-muted">
+                    <i class="fa fa-spinner fa-spin me-1"/>
+                    <t t-esc="state.busyLabel"/>
+                </span>
+                <button
+                    t-if="state.canReadWithAI"
+                    class="btn btn-secondary btn-sm"
+                    t-on-click="readWithAI"
+                    t-att-disabled="state.busy"
+                >
+                    Read with AI
+                </button>
+                <button
+                    class="btn btn-primary btn-sm"
+                    t-on-click="createBill"
+                    t-att-disabled="state.busy"
+                >
+                    Create Bill
+                </button>
+                <button class="btn btn-link btn-sm" t-on-click="clearBoxes">
                     Clear
                 </button>
                 <input
@@ -26,7 +45,7 @@
                     t-model="state.templateName"
                 />
                 <button
-                    class="btn btn-primary btn-sm"
+                    class="btn btn-secondary btn-sm"
                     t-on-click="saveTemplate"
                     t-att-disabled="state.saving"
                 >
@@ -59,7 +78,7 @@
                                 class="o_easyocr_remove"
                                 t-on-click="() => this.removeBox(box.uid)"
                                 t-att-title="'Remove ' + this.labelFor(box.field_key)"
-                            >&amp;times;</button>
+                            >&#215;</button>
                         </div>
                     </div>
                     <p t-else="" class="text-muted o_easyocr_hint">

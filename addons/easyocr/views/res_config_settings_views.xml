@@ -19,6 +19,16 @@
                         </setting>
                         <setting id="easyocr_ai_apikey" string="API key" help="Key the service expects in the X-API-Key header.">
                             <field name="easyocr_ai_apikey" widget="password"/>
+                            <!-- Next to the key because that is what it checks,
+                                 and free to press: the service is asked who the
+                                 key belongs to, which costs nothing, rather
+                                 than sending a document, which does. -->
+                            <button
+                                name="action_easyocr_test_connection"
+                                type="object"
+                                string="Test the connection"
+                                class="btn-link"
+                            />
                         </setting>
                         <setting id="easyocr_ai_timeout" string="Timeout" help="How long to wait for the service before giving up, in seconds. A scanned page can take a while to read, so keep this generous.">
                             <field name="easyocr_ai_timeout" class="o_light_label"/>

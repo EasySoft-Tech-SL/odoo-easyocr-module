@@ -100,8 +100,24 @@ La configuración vive en **Ajustes > EasyOCR** y viene en dos bloques.
 | **Leer con IA** | Enciende o apaga el envío de documentos al servicio. Mientras está apagado, el módulo no manda nada a ningún sitio. |
 | **URL del servicio** | La dirección del servicio de EasyOCR. Se escribe sin nada más: el módulo añade por su cuenta la parte final de la dirección. |
 | **Clave API** | La clave que identifica su cuenta ante el servicio. Se la da EasyOCR al contratar el servicio. |
+| **Probar la conexión** | Comprueba la clave contra el servicio y dice si vale. Está justo debajo de la clave y **no gasta ninguna lectura**. |
 | **Tiempo de espera** | Cuántos segundos espera Odoo la respuesta antes de darse por vencido. Una página escaneada puede tardar, así que conviene dejarlo generoso. |
 | **Decirle al servicio quiénes somos** | Añade el nombre y el NIF de su empresa a la petición, para que el servicio distinga las dos partes del documento y no le devuelva su propia empresa como proveedor. |
+
+### Probar la conexión
+
+![El botón Probar la conexión junto a la clave API](img/18-probar-conexion.png)
+
+Antes de leer el primer documento, pulse **Probar la conexión**. Pregunta al
+servicio a nombre de quién va esa clave, y contesta una de estas cosas:
+
+| **La cuenta y el plan** | La clave vale. Además dice cuántas páginas le quedan este mes. |
+| **El servicio ha rechazado la clave API** | La clave no es válida, o es de otra cuenta. Cópiela otra vez desde el panel de EasyOCR. |
+| **El servicio no se ha podido alcanzar** | La dirección del servicio no es correcta o no hay conexión. |
+| **El servicio necesita una clave API** | No hay ninguna escrita en la casilla. |
+
+Esta comprobación **no consume ninguna lectura**: solo pregunta quién es, no
+manda ningún documento. Por eso se puede pulsar tantas veces como haga falta.
 
 ## Documentos y facturas
 
@@ -247,6 +263,16 @@ marcados:
 
 Si un recuadro no le convence, la **×** de su derecha lo quita. El botón
 **Limpiar** borra todos de golpe.
+
+A la derecha de la barra están los dos botones que cierran el trabajo, para que
+no haya que salir del visor:
+
+| **Leer con IA** | Manda el documento al servicio y rellena la ficha con lo que lea. Es lo mismo que el botón de la ficha del documento. |
+| **Crear factura** | Prepara la factura de proveedor con lo que hay en la ficha y la abre. |
+
+Mientras el servicio está leyendo, la barra lo dice y los botones quedan
+bloqueados: una página escaneada tarda unos segundos, y es mejor saber que está
+trabajando que pulsar dos veces.
 
 Con esto ya tiene lo importante: los datos del proveedor leídos del documento,
 sin teclear.
@@ -425,7 +451,16 @@ documento.
 ## El botón «Leer con IA» no me aparece
 
 Ese botón es de **responsable**. Pídale a quien administra su Odoo que le asigne
-el permiso, o que lance él la lectura.
+el permiso, o que lance él la lectura. En el visor aparece junto a **Crear
+factura**, a la derecha de la barra.
+
+## He puesto la clave API y sigue sin leer
+
+Vaya a **Ajustes > EasyOCR** y pulse **Probar la conexión**, justo debajo de la
+clave. Le dirá si el servicio acepta esa clave, con qué cuenta y cuántas páginas
+le quedan este mes, y **no gasta ninguna lectura**. Si contesta que la ha
+rechazado, la clave no es válida o es de otra cuenta: cópiela otra vez desde el
+panel de EasyOCR sin espacios delante ni detrás.
 
 ## ¿Qué pasa si la lectura se equivoca?
 

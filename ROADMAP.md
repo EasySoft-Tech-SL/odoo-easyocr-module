@@ -124,6 +124,31 @@ fourteen are in, and the three that are not are the miscellaneous-payment ones,
 which are not portable because the object they feed does not exist in Odoo. Of
 the screens, the home screen is done and **batch processing is not built yet**.
 
+Closed the same day, after using the module against the real service:
+
+- **The viewer carries the two buttons that finish the job.** Reading with the
+  service and creating the bill lived only on the record's form, so opening a
+  document in the viewer meant leaving it to act on what you were looking at.
+  Both are now in the toolbar, with the same permission the form's button has,
+  and the toolbar says what it is waiting for while a scan is read.
+- **The settings screen checks the key.** A key that the service does not
+  recognise is indistinguishable from a key that was never sent -- both arrive
+  as HTTP 401 -- and a reading that comes back refused has already been paid
+  for. **Probar la conexión** asks the service who the key belongs to
+  (`GET /api/v1/me`, behind the key check but not behind the plan limiter) and
+  answers with the account, the plan and what is left. It costs nothing.
+- **The message for a refused key was wrong.** `_http_error_message` mapped by
+  HTTP status alone, so a key that was sent and rejected was reported as a key
+  that was never set. The service names the reason in the body
+  (`INVALID_API_KEY`, `QUOTA_EXCEEDED`, …); that is what is read now.
+- **Every word a template paints needs a reference of its own.** The web client
+  is handed the terms flagged as code, so a sentence written straight into an
+  OWL template is looked up in a map that holds only those. "Read with AI" and
+  "Create Bill" already existed in the `.po` as the form's button labels, which
+  is a different kind of reference, and on a Spanish screen they came out in
+  English. `tests/test_easyocr_translations.py` now walks the templates and
+  demands a code reference for every literal in them.
+
 Every row below was read in the Dolibarr source, in the file named, so what is
 ported is what that setting actually does and not what its name suggests.
 

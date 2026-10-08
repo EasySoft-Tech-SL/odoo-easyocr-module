@@ -22,12 +22,6 @@ msgid "%(message)s Try again in %(seconds)s seconds."
 msgstr "%(message)s Riprova tra %(seconds)s secondi."
 
 #. module: easyocr
-#. odoo-javascript
-#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
-msgid "&times;"
-msgstr "&times;"
-
-#. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template_box__page
 msgid "1-based page number."
 msgstr "Numero di pagina che parte da 1."
@@ -189,7 +183,9 @@ msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
 
 #. module: easyocr
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Create Bill"
 msgstr "Crea fattura"
 
@@ -948,8 +944,10 @@ msgstr ""
 "Leggi fatture fornitore e scontrini e trasformali in scritture contabili."
 
 #. module: easyocr
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Read with AI"
 msgstr "Leggi con l'IA"
 
@@ -2334,3 +2332,144 @@ msgstr "Scegliere prima un file."
 #: code:addons/easyocr/models/easyocr_upload.py:0
 msgid "That kind of file cannot be read. Send a PDF or a photo."
 msgstr "Quel tipo di file non può essere letto. Invii un PDF o una foto."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The extraction service needs an API key, and none is set in the EasyOCR "
+"settings."
+msgstr ""
+"Il servizio di estrazione richiede una chiave API, e nessuna è impostata "
+"nelle impostazioni di EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The extraction service rejected the API key. Check it in the EasyOCR "
+"settings: it may belong to another account, or have been switched off."
+msgstr ""
+"Il servizio di estrazione ha rifiutato la chiave API. Controllatela nelle "
+"impostazioni di EasyOCR: può appartenere a un altro account o essere "
+"disattivata."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "That API key is switched off in the EasyOCR account."
+msgstr "Questa chiave API è disattivata nell'account EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "That API key has expired."
+msgstr "Questa chiave API è scaduta."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR account is switched off. Contact support."
+msgstr "L'account EasyOCR è disattivato. Contattate il supporto."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This server's address is not allowed to use that API key."
+msgstr ""
+"L'indirizzo di questo server non è autorizzato a usare questa chiave API."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This server's domain is not allowed to use that API key."
+msgstr ""
+"Il dominio di questo server non è autorizzato a usare questa chiave API."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The EasyOCR account has no readings left. Top it up to keep reading "
+"documents."
+msgstr ""
+"L'account EasyOCR non ha più letture disponibili. Ricaricatelo per "
+"continuare a leggere documenti."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR account has no readings left."
+msgstr "L'account EasyOCR non ha più letture disponibili."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The monthly limit of the EasyOCR plan has been reached."
+msgstr "È stato raggiunto il limite mensile del piano EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This API key has reached its monthly limit."
+msgstr "Questa chiave API ha raggiunto il suo limite mensile."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR plan does not include that feature."
+msgstr "Il piano EasyOCR non include questa funzione."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "No extraction service is set in the EasyOCR settings."
+msgstr ""
+"Nessun servizio di estrazione è impostato nelle impostazioni di EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "The EasyOCR account cannot read documents right now."
+msgstr "L'account EasyOCR non può leggere documenti in questo momento."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "The service answered. Account: %(account)s, plan: %(plan)s."
+msgstr "Il servizio ha risposto. Account: %(account)s, piano: %(plan)s."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "%(answer)s %(pages)s pages left to read this month."
+msgstr "%(answer)s Restano %(pages)s pagine da leggere questo mese."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "no name"
+msgstr "senza nome"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "no plan"
+msgstr "senza piano"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Reading the document. A scanned page takes a while."
+msgstr "Lettura del documento. Una pagina scansionata richiede un po'."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Preparing the bill."
+msgstr "Preparazione della fattura."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Test the connection"
+msgstr "Verifica la connessione"

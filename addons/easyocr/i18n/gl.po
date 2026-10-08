@@ -22,12 +22,6 @@ msgid "%(message)s Try again in %(seconds)s seconds."
 msgstr "%(message)s Vólveo tentar dentro de %(seconds)s segundos."
 
 #. module: easyocr
-#. odoo-javascript
-#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
-msgid "&times;"
-msgstr "&times;"
-
-#. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template_box__page
 msgid "1-based page number."
 msgstr "Número de páxina comezando por 1."
@@ -189,7 +183,9 @@ msgid "Config Settings"
 msgstr "Configuración"
 
 #. module: easyocr
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Create Bill"
 msgstr "Crear factura"
 
@@ -948,8 +944,10 @@ msgstr ""
 "Lea facturas de provedor e tíckets, e convértaos en apuntes contables."
 
 #. module: easyocr
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Read with AI"
 msgstr "Ler con IA"
 
@@ -2314,3 +2312,141 @@ msgstr "Escolla un ficheiro primeiro."
 #: code:addons/easyocr/models/easyocr_upload.py:0
 msgid "That kind of file cannot be read. Send a PDF or a photo."
 msgstr "Ese tipo de ficheiro non se pode ler. Envíe un PDF ou unha foto."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The extraction service needs an API key, and none is set in the EasyOCR "
+"settings."
+msgstr ""
+"O servizo de extracción necesita unha clave API, e non hai ningunha posta "
+"nos axustes de EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The extraction service rejected the API key. Check it in the EasyOCR "
+"settings: it may belong to another account, or have been switched off."
+msgstr ""
+"O servizo de extracción rexeitou a clave API. Revísea nos axustes de "
+"EasyOCR: pode ser doutra conta ou estar desactivada."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "That API key is switched off in the EasyOCR account."
+msgstr "Esa clave API está desactivada na conta de EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "That API key has expired."
+msgstr "Esa clave API caducou."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR account is switched off. Contact support."
+msgstr "A conta de EasyOCR está desactivada. Contacte co soporte."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This server's address is not allowed to use that API key."
+msgstr "O enderezo deste servidor non ten permiso para usar esa clave API."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This server's domain is not allowed to use that API key."
+msgstr "O dominio deste servidor non ten permiso para usar esa clave API."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid ""
+"The EasyOCR account has no readings left. Top it up to keep reading "
+"documents."
+msgstr ""
+"A conta de EasyOCR non ten lecturas dispoñibles. Recárguea para seguir lendo"
+" documentos."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR account has no readings left."
+msgstr "A conta de EasyOCR non ten lecturas dispoñibles."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The monthly limit of the EasyOCR plan has been reached."
+msgstr "Acadouse o límite mensual do plan de EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "This API key has reached its monthly limit."
+msgstr "Esta clave API acadou o seu límite mensual."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "The EasyOCR plan does not include that feature."
+msgstr "O plan de EasyOCR non inclúe esa función."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+msgid "No extraction service is set in the EasyOCR settings."
+msgstr ""
+"Non hai ningún servizo de extracción configurado nos axustes de EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "The EasyOCR account cannot read documents right now."
+msgstr "A conta de EasyOCR non pode ler documentos agora mesmo."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "The service answered. Account: %(account)s, plan: %(plan)s."
+msgstr "O servizo respondeu. Conta: %(account)s, plan: %(plan)s."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "%(answer)s %(pages)s pages left to read this month."
+msgstr "%(answer)s Quédanlle %(pages)s páxinas para ler este mes."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "no name"
+msgstr "sen nome"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/res_config_settings.py:0
+msgid "no plan"
+msgstr "sen plan"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Reading the document. A scanned page takes a while."
+msgstr "Lendo o documento. Unha páxina escaneada tarda un pouco."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Preparing the bill."
+msgstr "Preparando a factura."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Test the connection"
+msgstr "Probar a conexión"
