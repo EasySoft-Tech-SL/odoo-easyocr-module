@@ -204,6 +204,11 @@ msgstr ""
 "Darf außerdem Dokumente löschen und die Extraktionseinstellungen ändern."
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Kostenverteilung"
+
+#. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
 msgid "Anything the service should know about these files"
 msgstr "Alles, was der Dienst über diese Dateien wissen sollte"

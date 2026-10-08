@@ -234,6 +234,50 @@ class TestEasyocrBill(TransactionCase):
 
         self.assertEqual(document.move_id.invoice_line_ids.tax_ids, tax)
 
+    # ------------------------------------------------------------------
+    # What the document belongs to
+    # ------------------------------------------------------------------
+    def _analytic_account(self, name='Obra del cliente'):
+        """The analytic account a project brings with it.
+
+        Nothing here depends on the Projects app: a project has one of these of
+        its own, and that is what both Odoo and the reader end up picking.
+        """
+        plan = self.env['account.analytic.plan'].search([], limit=1)
+        if not plan:
+            plan = self.env['account.analytic.plan'].create({'name': 'Proyectos'})
+        return self.env['account.analytic.account'].create({
+            'name': name,
+            'plan_id': plan.id,
+        })
+
+    def test_the_bill_takes_the_project_of_the_document(self):
+        account = self._analytic_account()
+        self.env.company.easyocr_bill_post = False
+        document = self._document(
+            partner_id=self.partner.id,
+            amount_untaxed=100.0,
+            amount_total=121.0,
+            analytic_distribution={str(account.id): 100},
+        )
+
+        document.action_create_bill()
+
+        self.assertEqual(
+            document.move_id.invoice_line_ids.analytic_distribution,
+            {str(account.id): 100},
+        )
+
+    def test_a_bill_with_no_project_gets_none(self):
+        self.env.company.easyocr_bill_post = False
+        document = self._document(
+            partner_id=self.partner.id, amount_untaxed=100.0, amount_total=121.0,
+        )
+
+        document.action_create_bill()
+
+        self.assertFalse(document.move_id.invoice_line_ids.analytic_distribution)
+
     def test_a_negative_price_does_not_turn_a_credit_note_into_a_bill(self):
         """Odoo turns a refund's lines round: carrying the sign as well undoes it."""
         document = self._document(

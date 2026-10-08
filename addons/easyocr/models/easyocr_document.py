@@ -57,7 +57,12 @@ class EasyocrDocument(models.Model):
 
     _name = 'easyocr.document'
     _description = 'OCR Document'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    # `analytic.mixin` is what Odoo itself uses to say which project or account
+    # a line of an expense or a bill belongs to. Bringing it in here is what
+    # lets a photographed receipt be charged to a project without this module
+    # dragging the Projects app in: a project has an analytic account of its own,
+    # and that account is what both Odoo and the reader pick.
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'analytic.mixin']
     _order = 'create_date desc, id desc'
 
     name = fields.Char(
@@ -317,6 +322,7 @@ class EasyocrDocument(models.Model):
                 'quantity': 1.0,
                 'price_unit': self._as_bill_amount(self.amount_untaxed or self.amount_total or 0.0),
                 'tax_ids': [(6, 0, self._tax_from_totals().ids)],
+                'analytic_distribution': self.analytic_distribution or False,
             }]
 
         values = []
@@ -329,6 +335,7 @@ class EasyocrDocument(models.Model):
                 'discount': line.discount_percent,
                 'product_id': product.id if product else False,
                 'tax_ids': [(6, 0, line._tax_ids().ids)],
+                'analytic_distribution': self.analytic_distribution or False,
             })
         return values
 
@@ -462,6 +469,7 @@ class EasyocrDocument(models.Model):
             'product_id': self._expense_product().id,
             'vendor_id': self.partner_id.id,
             'description': self.note or False,
+            'analytic_distribution': self.analytic_distribution or False,
         })
 
         # The photo goes with the expense: the person approving it has to be

@@ -202,6 +202,11 @@ msgstr ""
 "Può anche eliminare documenti e modificare le impostazioni di estrazione."
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Distribuzione analitica"
+
+#. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
 msgid "Anything the service should know about these files"
 msgstr "Qualcosa che il servizio dovrebbe sapere su questi file"

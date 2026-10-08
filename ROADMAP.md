@@ -111,7 +111,15 @@ The module talks to the same service the Dolibarr module uses
 
 - [x] Installable PWA so an employee can photograph a receipt.
 - [x] The photo is resized in the browser and lands in the inbox.
-- [ ] Attach it to a project.
+- [x] Attach it to a project. In Odoo a project has an analytic account of its
+      own, and that account is what an expense and a bill line are charged to, so
+      the document carries an analytic distribution and it is copied to whatever
+      the receipt becomes. The Projects app is not a dependency of this module:
+      a company that keeps no projects pays nothing for this, and one that does
+      sees its projects by name. The field sits behind Odoo's analytic-accounting
+      group, like the same field on a bill: without it the widget asks for plans
+      the user may not read and the form answers with an access error, which is
+      how it was found.
 
 ## Phase 7 — Settings, permissions, translations · done
 
