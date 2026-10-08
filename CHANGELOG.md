@@ -42,8 +42,12 @@ work was done.
   and nothing kept, is stored now and goes on the bill.
 - **Reading with the service.** Client for the EasyOCR extraction service, with a
   `Test the connection` button in the settings that checks the key without
-  spending a reading, plain-language messages for every way the service can turn
-  a document away, and a guard that refuses a file already read.
+  spending a reading, and plain-language messages for every way the service can
+  turn a document away.
+- **Reading the same file twice.** A file that has already been read is not read
+  again by itself, and it is not refused either: the module asks, says which
+  document came out of that file and when, and reads it again if you say so.
+  Some files are the same on purpose, and a fixed monthly charge is one of them.
 - **Batches.** A folder's worth of documents handed over in one call. The files
   are chosen and named on a screen of their own and stay in the page until Send
   is pressed, which is where the readings are paid for, all of them at once. The

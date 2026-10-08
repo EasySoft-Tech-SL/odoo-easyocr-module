@@ -127,8 +127,12 @@ HOME_STRINGS = (
 # notification. They need the Python marker for the same reason the capture page
 # does: they never pass through a view, so nothing else would carry them across.
 MESSAGE_STRINGS = (
-    "This file has already been read: %(document)s. Reading it again would cost "
-    "the same and change nothing.",
+    # What the dialog that asks before reading the same file twice is made of.
+    # One sentence per piece, because the date and the bill are only there when
+    # there is one, and a translator gets whole sentences either way.
+    "This file has already been read: %(document)s.",
+    "It was read on %s.",
+    "It became %s.",
     "The bill was left in draft: it could not be confirmed on its own "
     "(%(error)s). Review it and confirm it by hand.",
     # What a webhook writes into its own log when it goes further than filing.
@@ -220,6 +224,12 @@ ARCH_STRINGS = (
     ("Batches", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_list'),
     ("Being read", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search'),
     ("Partly read", 'model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search'),
+    # The dialog that asks before reading the same file twice. Both answers are
+    # here: a reader who cannot read the second one has a dialog with one door.
+    ("Read it again", 'model_terms:ir.ui.view,arch_db:'
+                      'easyocr.view_easyocr_reprocess_wizard_form'),
+    ("Leave it", 'model_terms:ir.ui.view,arch_db:'
+                 'easyocr.view_easyocr_reprocess_wizard_form'),
 )
 
 # The models whose terms are ours to translate. The two settings models are here
@@ -229,6 +239,7 @@ MODELS = (
     'easyocr.document',
     'easyocr.document.line',
     'easyocr.inbox.item',
+    'easyocr.reprocess.wizard',
     'easyocr.template',
     'easyocr.template.box',
     'easyocr.webhook.log',

@@ -197,6 +197,11 @@ msgid "All of them were read. Review them before they become bills."
 msgstr "S'han llegit tots. Reviseu-los abans que es converteixin en factures."
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__duplicate_id
+msgid "Already read as"
+msgstr "Ja llegit com"
+
+#. module: easyocr
 #: model:res.groups,comment:easyocr.group_easyocr_manager
 msgid "Also delete documents and change the extraction settings."
 msgstr "També pot suprimir documents i canviar la configuració d'extracció."
@@ -503,10 +508,10 @@ msgstr "Creat"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__create_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_uid
-#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__create_uid
 msgid "Created by"
 msgstr "Creat per"
 
@@ -515,10 +520,10 @@ msgstr "Creat per"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__create_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_date
-#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__create_date
 msgid "Created on"
 msgstr "Creat el"
 
@@ -608,9 +613,10 @@ msgstr "Nom mostrat"
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__document_id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__document_id
 msgid "Document"
-msgstr "Línies"
+msgstr "Document"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__document_date
@@ -1088,9 +1094,21 @@ msgstr "És un seguidor"
 
 #. module: easyocr
 #. odoo-python
+#: code:addons/easyocr/models/easyocr_reprocess_wizard.py:0
+msgid "It became %s."
+msgstr "S'ha convertit en %s."
+
+#. module: easyocr
+#. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "It could not be filed as an expense."
 msgstr "No s'ha pogut arxivar com a despesa."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reprocess_wizard.py:0
+msgid "It was read on %s."
+msgstr "Es va llegir el %s."
 
 #. module: easyocr
 #. odoo-javascript
@@ -1127,10 +1145,10 @@ msgstr "Llegit per última vegada"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__write_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_uid
-#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__write_uid
 msgid "Last Updated by"
 msgstr "Última actualització per"
 
@@ -1139,10 +1157,10 @@ msgstr "Última actualització per"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__write_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_date
-#: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__write_date
 msgid "Last Updated on"
 msgstr "Última actualització el"
 
@@ -1155,6 +1173,11 @@ msgstr "Última lectura"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
 msgid "Leave empty to be told here"
 msgstr "Deixeu-ho buit perquè s'avisi aquí"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reprocess_wizard_form
+msgid "Leave it"
+msgstr "Deixar-ho"
 
 #. module: easyocr
 #. odoo-javascript
@@ -1708,6 +1731,11 @@ msgid "Read"
 msgstr "Llegits"
 
 #. module: easyocr
+#: model:ir.model,name:easyocr.model_easyocr_reprocess_wizard
+msgid "Read a document again"
+msgstr "Tornar a llegir un document"
+
+#. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__partner_name
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__partner_vat
 msgid "Read from the document."
@@ -1718,6 +1746,14 @@ msgstr "Llegit del document."
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "Read from the receipt"
 msgstr "Llegit del rebut"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+#: model:ir.actions.act_window,name:easyocr.action_easyocr_reprocess_wizard
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reprocess_wizard_form
+msgid "Read it again"
+msgstr "Tornar a llegir-lo"
 
 #. module: easyocr
 #: model:ir.module.category,description:easyocr.module_category_easyocr
@@ -2746,18 +2782,9 @@ msgstr "Aquest document no té cap fitxer adjunt."
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_batch.py:0
+#: code:addons/easyocr/models/easyocr_reprocess_wizard.py:0
 msgid "This file has already been read: %(document)s."
 msgstr "Aquest fitxer ja s'ha llegit: %(document)s."
-
-#. module: easyocr
-#. odoo-python
-#: code:addons/easyocr/models/easyocr_extractor.py:0
-msgid ""
-"This file has already been read: %(document)s. Reading it again would cost "
-"the same and change nothing."
-msgstr ""
-"Aquest fitxer ja s'ha llegit: %(document)s. Tornar-lo a llegir costaria el "
-"mateix i no canviaria res."
 
 #. module: easyocr
 #. odoo-python
@@ -3015,6 +3042,11 @@ msgstr ""
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__line_ids
 msgid "What the service read line by line. The bill is built from these."
 msgstr "El que el servei va llegir línia a línia. La factura s'arma amb això."
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__message
+msgid "What was found"
+msgstr "El que s'ha trobat"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_template_box__text

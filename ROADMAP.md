@@ -296,9 +296,12 @@ The four of the AI service are already here. The fourteen that follow are not.
       is off unless asked for.
 - [x] **Duplicate check** (`EASYOCR_DUPLICATE_CHECK`, `lib` ~1043), on by
       default, and **the window in days** (`EASYOCR_DUPLICATE_WINDOW_DAYS`,
-      `lib` ~1062), 0 meaning no limit: a file already read is not read again,
-      so no credits are spent twice. The window is what lets a supplier's
-      month after month identical invoice through.
+      `lib` ~1062), 0 meaning no limit: a file already read is not read again
+      without asking, so no credits are spent twice. The window is what lets a
+      supplier's month after month identical invoice through without a
+      question. Asking rather than refusing is what the Dolibarr module does,
+      and it is what this does now: the first version turned the reader away
+      with a notice and no way to insist.
 - [x] **Mark the bill as paid** (`EASYOCR_WEBHOOK_MARK_PAID`,
       `EASYOCR_WEBHOOK_BANK_ID`, `EASYOCR_WEBHOOK_PAYMENT_TYPE`,
       `webhook_batch.php` ~363): the webhook registers the payment on a bank

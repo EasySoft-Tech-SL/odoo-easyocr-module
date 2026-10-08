@@ -22,6 +22,7 @@
         'security/ir.model.access.csv',
         'views/easyocr_home_views.xml',
         'views/easyocr_document_views.xml',
+        'views/easyocr_reprocess_wizard_views.xml',
         'views/easyocr_batch_views.xml',
         'views/easyocr_inbox_views.xml',
         'views/easyocr_template_views.xml',

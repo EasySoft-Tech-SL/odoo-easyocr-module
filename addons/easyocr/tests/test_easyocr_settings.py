@@ -152,8 +152,13 @@ class TestEasyocrSettings(TransactionCase):
 
     # ------------------------------------------------------------------
     # Duplicates
+    #
+    # What the guard does when it finds one is ask, not refuse: the reader may
+    # know that this month's fixed fee really is the same file as last month's.
+    # The three things to hold down are that it asks, that asking costs nothing,
+    # and that the answer is honoured.
     # ------------------------------------------------------------------
-    def test_the_same_file_is_not_read_twice(self):
+    def test_the_same_file_is_not_read_twice_without_asking(self):
         """Reading it again would cost the same and tell us nothing new."""
         first = self._document(name='PRIMERA')
         with mock.patch(POST, return_value=self._response()):
@@ -164,10 +169,81 @@ class TestEasyocrSettings(TransactionCase):
             result = second.action_extract()
 
         post.assert_not_called()
-        self.assertIn('PRIMERA', result['params']['message'])
+        self.assertEqual(result['res_model'], 'easyocr.reprocess.wizard')
+        wizard = self.env['easyocr.reprocess.wizard'].browse(result['res_id'])
+        self.assertEqual(wizard.document_id, second)
+        self.assertEqual(wizard.duplicate_id, first)
+        self.assertIn('PRIMERA', wizard.message)
         # Turned away, not broken: the document is untouched and can be read by
         # hand or sent again on purpose.
         self.assertEqual(second.state, 'draft')
+
+    def test_the_reader_can_ask_for_it_anyway(self):
+        """The other half: the question has an answer that is yes."""
+        first = self._document(name='PRIMERA')
+        with mock.patch(POST, return_value=self._response()):
+            first.action_extract()
+        second = self._document(name='SEGUNDA')
+
+        with mock.patch(POST, return_value=self._response()) as post:
+            second.action_extract(force=True)
+
+        post.assert_called_once()
+        self.assertEqual(second.state, 'processed')
+
+    def test_the_dialog_reads_it_again_and_says_so(self):
+        """The button of the dialog, which is what a reader actually presses."""
+        first = self._document(name='PRIMERA')
+        with mock.patch(POST, return_value=self._response()):
+            first.action_extract()
+        second = self._document(name='SEGUNDA')
+        wizard = self.env['easyocr.reprocess.wizard'].create({
+            'document_id': second.id,
+            'duplicate_id': first.id,
+        })
+
+        with mock.patch(POST, return_value=self._response()) as post:
+            result = wizard.action_read_again()
+
+        post.assert_called_once()
+        self.assertEqual(second.state, 'processed')
+        self.assertEqual(result['tag'], 'display_notification')
+
+    def test_leaving_the_dialog_alone_reads_nothing(self):
+        first = self._document(name='PRIMERA')
+        with mock.patch(POST, return_value=self._response()):
+            first.action_extract()
+        second = self._document(name='SEGUNDA')
+        wizard = self.env['easyocr.reprocess.wizard'].create({
+            'document_id': second.id,
+            'duplicate_id': first.id,
+        })
+
+        with mock.patch(POST) as post:
+            result = wizard.action_cancel()
+
+        post.assert_not_called()
+        self.assertEqual(result['type'], 'ir.actions.act_window_close')
+        self.assertEqual(second.state, 'draft')
+
+    def test_the_question_names_the_date_and_the_bill_of_the_earlier_reading(self):
+        """What a reader needs to tell the two apart, when there is one."""
+        first = self._document(name='PRIMERA', partner_id=self.partner.id)
+        with mock.patch(POST, return_value=self._response()):
+            first.action_extract()
+        first.move_id = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner.id,
+        })
+        second = self._document(name='SEGUNDA')
+
+        with mock.patch(POST):
+            result = second.action_extract()
+
+        message = self.env['easyocr.reprocess.wizard'].browse(result['res_id']).message
+        self.assertIn('PRIMERA', message)
+        self.assertIn('read on', message.lower())
+        self.assertIn(first.move_id.display_name, message)
 
     def test_the_guard_can_be_turned_off(self):
         first = self._document(name='PRIMERA')

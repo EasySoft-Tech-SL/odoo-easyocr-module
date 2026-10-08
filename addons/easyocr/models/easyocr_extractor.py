@@ -490,11 +490,17 @@ class EasyocrDocument(models.Model):
         help='How sure the service was of what it read, from 0 to 1.',
     )
 
-    def action_extract(self):
+    def action_extract(self, force=False):
         """Read the attached file with the service and fill in what it returns.
 
         A failure is written to the document instead of raised: the file stays
         visible with the reason it could not be read, ready to be tried again.
+
+        ``force`` reads a file that has already been read. That decision is the
+        reader's and not the fingerprint's, so without it the answer is the
+        question rather than a refusal: a fixed monthly charge really is the
+        same file every month, and a reading only a person can tell apart is a
+        reading a person has to be allowed to ask for.
         """
         self.ensure_one()
         company = self.company_id or self.env.company
@@ -521,14 +527,10 @@ class EasyocrDocument(models.Model):
         # fingerprint is written down on the way through, from the bytes already
         # in hand, so a document filed before this guard existed is covered too.
         self.file_hash = hashlib.sha256(content).hexdigest()
-        if company.easyocr_duplicate_check:
+        if company.easyocr_duplicate_check and not force:
             duplicate = self._duplicate_of()
             if duplicate:
-                return self._extraction_notification('warning', _(
-                    "This file has already been read: %(document)s. "
-                    "Reading it again would cost the same and change nothing.",
-                    document=duplicate.display_name,
-                ))
+                return self._reprocess_question(duplicate)
 
         # Noted before the call and not after: the window counts what has cost
         # money, and a reading that came back empty cost exactly the same.
@@ -650,4 +652,31 @@ class EasyocrDocument(models.Model):
                 'message': message,
                 'sticky': False,
             },
+        }
+
+    def _reprocess_question(self, duplicate):
+        """Open the dialog that asks whether to read it again.
+
+        A dialog and not a notification, because a notification has no answer:
+        it was what this used to do, and a reader who knew the document was
+        worth reading again had nowhere to say so. Every caller gets the same
+        thing, so the button on the document and the button in the viewer ask
+        the same question, and neither of them has to know about the other.
+
+        ``views`` travels with it because the viewer hands this action to the
+        client, and the client reads the list before asking the server for it:
+        without the key the action never opens and the screen says nothing.
+        """
+        wizard = self.env['easyocr.reprocess.wizard'].create({
+            'document_id': self.id,
+            'duplicate_id': duplicate.id,
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Read it again"),
+            'res_model': 'easyocr.reprocess.wizard',
+            'res_id': wizard.id,
+            'views': [(False, 'form')],
+            'view_mode': 'form',
+            'target': 'new',
         }
