@@ -367,6 +367,19 @@ Un aviso que **no** es un error: cuando el servicio solo puede leer el documento
 en parte, lo dice y añade si merece la pena volver a intentarlo. En ese caso los
 datos que sí ha leído quedan puestos, y el resto se completa a mano.
 
+## Si el archivo ya se había leído
+
+Cada lectura se paga, y leer dos veces el mismo archivo se paga dos veces sin
+traer nada nuevo. El módulo lo nota —reconoce el archivo por su contenido, no
+por el nombre— y antes de volver a mandarlo le pregunta:
+
+![El aviso de que el archivo ya se había leído, con las dos respuestas](img/26-releer.png)
+
+Le dice de qué documento salió esa lectura y cuándo. Si **ese** archivo es de
+verdad el mismo que quiere leer otra vez —una cuota fija que llega igual todos
+los meses, por ejemplo—, pulse **Volver a leerlo** y se manda. Si no, **Dejarlo**
+y no se gasta nada. Vale lo mismo desde el visor: la pregunta es la misma.
+
 # 8. Crear la factura de proveedor
 
 Con la ficha rellena —por la lectura con IA o a mano— el paso final es **Crear
