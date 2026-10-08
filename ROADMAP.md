@@ -45,10 +45,17 @@ of the port, and everything else builds on the boxes it produces.
 - [x] Match the vendor against `res.partner` by tax number, then by name.
 - [x] Refuse to book your own company's tax number as a vendor.
 - [x] Refuse to bill the same document twice.
-- [ ] Put the taxes of the document on the lines, instead of leaving the
-      amount untaxed for whoever reviews it.
+- [x] Put the taxes of the document on the lines, instead of leaving the
+      amount untaxed for whoever reviews it. When the document was read line by
+      line, each line carries the purchase tax of its own rate. When it came
+      back with nothing but its two amounts, the rate is worked back from them
+      and used only if the company has that exact tax: a bill whose total does
+      not add up to the paper is worse than one left to be finished by hand.
+- [x] Post the bill instead of leaving it in draft, per setting. The switch
+      exists (`easyocr_bill_post`), and a posting that fails leaves the bill in
+      draft with the reason written on it: a bill that could not be confirmed is
+      worth a great deal more than no bill at all.
 - [ ] Vendor refunds (rectificativas) vs regular bills.
-- [ ] Post the bill instead of leaving it in draft, per setting.
 
 ### The extraction service, as measured
 
@@ -84,7 +91,10 @@ The module talks to the same service the Dolibarr module uses
 - [x] Log of received calls, with the outcome of each.
 - [x] Shared secret compared in constant time; the endpoint is closed when no
       secret is set, rather than open.
-- [ ] Ability to leave created bills marked as paid.
+- [x] Ability to leave created bills marked as paid. Off by default and only for
+      the webhook: a bill in draft has nothing to pay against, so it is the
+      company that decides, and a payment that cannot be registered says why
+      instead of losing the bill.
 
 ## Phase 6 — Mobile expense capture · done
 

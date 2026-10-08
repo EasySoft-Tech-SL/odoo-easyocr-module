@@ -36,6 +36,12 @@ SERVICE_TYPES = ('service', 'shipping', 'fee')
 # the others when a receipt needs one and nobody said which.
 EXPENSE_PRODUCT_CODE = 'EXP_GEN'
 
+# How far the rate worked back from a document's two amounts may be from a tax
+# the company has, in percentage points. An invoice of 33,33 with 7,7% of tax
+# prints 35,90, which works back to 7,71: the cent the paper rounds off is not
+# a different rate. Anything wider starts matching rates nobody uses.
+TOTALS_RATE_TOLERANCE = 0.05
+
 # What can be handed to the service. A PDF or a photo; anything else is turned
 # away where it is chosen, with a sentence saying so, instead of being filed and
 # then failing at the service.
@@ -293,6 +299,7 @@ class EasyocrDocument(models.Model):
                 'name': self.name,
                 'quantity': 1.0,
                 'price_unit': self.amount_untaxed or self.amount_total or 0.0,
+                'tax_ids': [(6, 0, self._tax_from_totals().ids)],
             }]
 
         values = []
@@ -311,6 +318,32 @@ class EasyocrDocument(models.Model):
     def _compute_line_count(self):
         for document in self:
             document.line_count = len(document.line_ids)
+
+    def _tax_from_totals(self):
+        """The purchase tax the document's own two amounts imply.
+
+        A document read as a total and nothing else has no line to carry a rate,
+        but it does carry the amount before tax and the amount after it, and the
+        difference between the two is the tax. The rate worked back from them is
+        used only when the company has a purchase tax with that rate: a bill
+        whose total does not add up to the paper it came from is worse than one
+        left for whoever reviews it to finish.
+        """
+        self.ensure_one()
+        untaxed = self.amount_untaxed or 0.0
+        total = self.amount_total or 0.0
+        if not untaxed or total <= untaxed:
+            # Nothing to work with, or a total below the amount before tax: that
+            # is a discount or a credit note, not a tax.
+            return self.env['account.tax']
+        rate = (total / untaxed - 1.0) * 100.0
+        return self.env['account.tax'].search([
+            ('company_id', '=', self.company_id.id),
+            ('type_tax_use', '=', 'purchase'),
+            ('amount_type', '=', 'percent'),
+            ('amount', '>=', rate - TOTALS_RATE_TOLERANCE),
+            ('amount', '<=', rate + TOTALS_RATE_TOLERANCE),
+        ], order='amount', limit=1)
 
     # ------------------------------------------------------------------
     # From the document to an employee expense

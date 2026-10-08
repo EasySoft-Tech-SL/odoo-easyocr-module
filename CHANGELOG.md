@@ -49,8 +49,10 @@ work was done.
   nobody is watching is collected by a scheduled job, and a webhook on the batch
   is filed as soon as the service says so.
 - **Bills.** A draft supplier bill from what was read, one line per line read,
-  with the product, discount and rate of each; optional confirmation; and the
-  vendor matched by tax number.
+  with the product, discount and rate of each. A document that came back with
+  nothing but its two amounts still gets its tax: the rate is worked back from
+  them, and used when the company has that exact tax. Optional confirmation, and
+  the vendor matched by tax number.
 - **Photographed receipts.** A capture page for a phone, which files the photo and
   hands it to the module; the receipt can end up as a supplier bill or as an
   employee expense.
