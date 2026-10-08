@@ -89,9 +89,10 @@ viewer with its rectangle templates, extraction from the text layer of a PDF, ex
 through the EasyOCR service, creating a supplier bill from a document, the inbox other modules
 hand files to, the inbound webhook with its log, and the mobile capture page.
 
-`ROADMAP.md` lists what is deliberately left out of this version. The one worth knowing before
-you install: **a saved template is stored but not applied yet** to the next document of the
-same vendor, so boxes are still drawn by hand on each document.
+`ROADMAP.md` lists what is deliberately left out of this version.
+
+Templates are saved under the vendor they belong to, and come back painted on that vendor's
+next document, with their text read again from the file in front of you.
 
 ## Contributing
 

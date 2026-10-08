@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0-20260926\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 09:21+0000\n"
-"PO-Revision-Date: 2026-10-08 09:21+0000\n"
+"POT-Creation-Date: 2026-10-08 09:39+0000\n"
+"PO-Revision-Date: 2026-10-08 09:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -637,6 +637,8 @@ msgstr "Documents i factures"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_template.py:0
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Draw at least one box before saving a template."
 msgstr "Dibuixeu almenys un requadre abans de desar una plantilla."
@@ -882,6 +884,8 @@ msgstr "Icona Font Awesome p.e. fa-tasks"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_template.py:0
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Give the template a name."
 msgstr "Poseu un nom a la plantilla."
@@ -2098,6 +2102,12 @@ msgstr "Nom de la plantilla"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Template saved for %s."
+msgstr "Plantilla desada per a %s."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Template saved."
 msgstr "Plantilla desada."
 
@@ -2817,6 +2827,12 @@ msgstr "Utilitza aquesta foto"
 #: model:res.groups,name:easyocr.group_easyocr_user
 msgid "User"
 msgstr "Usuari"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Using the boxes of %s."
+msgstr "Fent servir els requadres de %s."
 
 #. module: easyocr
 #. odoo-javascript

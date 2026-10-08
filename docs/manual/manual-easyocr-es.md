@@ -301,16 +301,33 @@ Cuando los recuadros son los que quiere, póngale un nombre en la casilla
 
 ![El aviso de que la plantilla se ha guardado](img/08-plantilla-guardada.png)
 
-La plantilla queda guardada en **EasyOCR > Plantillas**, con las casillas y las
-coordenadas exactas de cada una:
+La plantilla queda guardada **a nombre de ese proveedor**, en **EasyOCR >
+Plantillas**, con las casillas y las coordenadas exactas de cada una:
 
-![La ficha de una plantilla y sus casillas](img/09-plantilla-ficha.png)
+![La ficha de una plantilla, con su proveedor y sus casillas](img/09-plantilla-ficha.png)
 
-**Conviene saberlo antes de contar con ello:** en esta versión la plantilla se
-guarda, pero el módulo **todavía no la aplica solo** al siguiente documento del
-mismo proveedor. Es decir, hoy la plantilla sirve como registro de dónde estaba
-cada dato, pero los recuadros hay que volver a dibujarlos en cada documento.
-Aplicarla automáticamente está en la hoja de ruta.
+El proveedor lo resuelve el módulo solo, por el NIF del documento y, si no lo
+hay, por su nombre. Si el documento todavía no está identificado —nadie ha
+leído aún de quién es—, la plantilla se guarda igual, pero sin proveedor.
+
+## La próxima vez, los recuadros ya están puestos
+
+Abra otro documento del mismo proveedor y los recuadros aparecerán ya
+dibujados, con el aviso de a quién pertenecen:
+
+![El visor con los recuadros de la plantilla ya pintados](img/24-plantilla-aplicada.png)
+
+Lo que se guarda es **dónde** están los recuadros. El texto se lee otra vez del
+documento que tiene delante, así que **Lo que ha leído** muestra siempre el de la
+factura que está abierta. Si algún recuadro no encaja, la **×** lo quita y lo
+dibuja de nuevo.
+
+Dos detalles que conviene conocer:
+
+- Si el documento no tiene proveedor identificado todavía, no hay plantilla que
+  buscar. Léalo antes con **Leer con IA**: es la lectura la que pone el NIF y el
+  nombre, y en cuanto lo hace, los recuadros aparecen solos.
+- Si un proveedor tiene varias plantillas, se aplica **la última que se guardó**.
 
 # 7. Leer un documento con IA
 
@@ -525,11 +542,17 @@ texto, en cambio, se lee sin configurar nada.
 Sí, para PDF que ya llevan texto. El módulo se instala, se usa y se lee igual;
 lo único que no hará es leer fotos ni escaneos.
 
-## Los recuadros de la plantilla no aparecen solos en el siguiente documento
+## He guardado la plantilla y no se aplica en el siguiente documento
 
-Correcto, y es una limitación conocida de esta versión: la plantilla se guarda
-pero todavía no se aplica sola. Hay que volver a dibujar los recuadros en cada
-documento.
+Mire primero si el documento sabe de qué proveedor es. La plantilla se busca por
+proveedor, y un documento recién metido todavía no tiene ninguno: se lo pone la
+lectura. Léalo con **Leer con IA** y los recuadros aparecerán en cuanto el
+servicio diga el NIF o el nombre.
+
+Si el documento sí es de ese proveedor y aun así no aparecen, compruebe en
+**EasyOCR > Plantillas** que la plantilla tiene casillas y que el proveedor de su
+ficha es el mismo. Y si ese proveedor tiene varias plantillas, la que se aplica
+es la última que se guardó.
 
 ## El botón «Leer con IA» no me aparece
 

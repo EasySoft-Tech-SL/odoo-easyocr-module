@@ -115,6 +115,11 @@
                         <p class="o_easyocr_section_note">
                             Name the boxes and keep them, so the drawing is not repeated every time.
                         </p>
+                        <!-- Boxes that appeared on their own, with nothing
+                             saying where from, read as a mistake. -->
+                        <p t-if="state.appliedTemplate and state.boxes.length" class="o_easyocr_applied">
+                            <i class="fa fa-check-circle me-1"/><t t-esc="appliedLabel()"/>
+                        </p>
                         <input
                             type="text"
                             class="o_easyocr_template_name form-control form-control-sm"
