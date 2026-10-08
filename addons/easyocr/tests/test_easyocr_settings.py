@@ -81,6 +81,7 @@ class TestEasyocrSettings(TransactionCase):
         response.json.return_value = body if body is not None else {
             'status': 'success',
             'confidence': 0.9,
+            'processing_time_ms': 1234,
             'structured_data': {'document_number': 'A/1', 'totals': {'total': 121.0}},
         }
         return response
@@ -207,7 +208,8 @@ class TestEasyocrSettings(TransactionCase):
 
         post.assert_called_once()
         self.assertEqual(second.state, 'processed')
-        self.assertEqual(result['tag'], 'display_notification')
+        # And it says what was read, on the screen the module keeps for that.
+        self.assertEqual(result['res_model'], 'easyocr.reading.result')
 
     def test_leaving_the_dialog_alone_reads_nothing(self):
         first = self._document(name='PRIMERA')
@@ -244,6 +246,57 @@ class TestEasyocrSettings(TransactionCase):
         self.assertIn('PRIMERA', message)
         self.assertIn('read on', message.lower())
         self.assertIn(first.move_id.display_name, message)
+
+    def test_the_reader_is_told_what_was_read(self):
+        """A reading costs money and takes time: it ends on a screen, not in a toast.
+
+        The answer here carries what the service really sends back, which is
+        more than the document has fields for.
+        """
+        document = self._document(partner_id=self.partner.id)
+        answer = {
+            'status': 'success',
+            'confidence': 0.94,
+            'processing_time_ms': 1234,
+            'structured_data': {
+                'document_number': 'A/1',
+                'totals': {'total': 121.0},
+                'supplier': {'address': 'Calle Mayor 1', 'city': 'Valencia'},
+                'payment': {'method': 'Transferencia'},
+            },
+        }
+
+        with mock.patch(POST, return_value=self._response(answer)):
+            result = document.action_extract()
+
+        self.assertEqual(result['res_model'], 'easyocr.reading.result')
+        wizard = self.env['easyocr.reading.result'].browse(result['res_id'])
+        self.assertEqual(wizard.document_id, document)
+        # The badges: the confidence and the time are the ones the service
+        # answered, and what it did not answer is not invented.
+        self.assertIn('94', wizard.meta)
+        self.assertIn('1.2', wizard.meta)
+        # And the vendor details the document has no field for, which used to be
+        # read and thrown away.
+        self.assertIn('Calle Mayor 1', wizard.extras)
+        self.assertIn('Transferencia', wizard.extras)
+
+    def test_the_viewer_can_ask_before_reading(self):
+        """The viewer asks on its own, so it can show the reading while it runs."""
+        first = self._document(name='PRIMERA')
+        with mock.patch(POST, return_value=self._response()):
+            first.action_extract()
+        second = self._document(name='SEGUNDA')
+
+        answer = second.action_check_duplicate()
+
+        self.assertEqual(answer['document_id'], first.id)
+        self.assertIn('PRIMERA', answer['message'])
+
+    def test_there_is_nothing_to_ask_about_a_file_nobody_read(self):
+        document = self._document(name='NUEVA')
+
+        self.assertFalse(document.action_check_duplicate())
 
     def test_the_guard_can_be_turned_off(self):
         first = self._document(name='PRIMERA')

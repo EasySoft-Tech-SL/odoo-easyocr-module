@@ -14,3 +14,4 @@ access_easyocr_webhook_log_manager,easyocr.webhook.log.manager,model_easyocr_web
 access_easyocr_batch_user,easyocr.batch.user,model_easyocr_batch,group_easyocr_user,1,1,1,0
 access_easyocr_batch_manager,easyocr.batch.manager,model_easyocr_batch,group_easyocr_manager,1,1,1,1
 access_easyocr_reprocess_wizard_user,easyocr.reprocess.wizard.user,model_easyocr_reprocess_wizard,group_easyocr_user,1,1,1,1
+access_easyocr_reading_result_user,easyocr.reading.result.user,model_easyocr_reading_result,group_easyocr_user,1,1,1,1

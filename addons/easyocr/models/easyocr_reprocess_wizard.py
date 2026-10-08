@@ -2,7 +2,6 @@
 # License LGPL-3 (see LICENSE file).
 
 from odoo import _, api, fields, models
-from odoo.tools import format_datetime
 
 
 class EasyocrReprocessWizard(models.TransientModel):
@@ -40,32 +39,7 @@ class EasyocrReprocessWizard(models.TransientModel):
     @api.depends('duplicate_id')
     def _compute_message(self):
         for wizard in self:
-            wizard.message = wizard._compose_message()
-
-    def _compose_message(self):
-        """What the reader needs to decide, in sentences and not in a template.
-
-        Each piece is its own term, so a translator gets whole sentences to
-        work with, and the pieces that have nothing to say are left out
-        instead of leaving a gap in the middle of the text.
-        """
-        self.ensure_one()
-        duplicate = self.duplicate_id
-        if not duplicate:
-            return ''
-
-        pieces = [_(
-            "This file has already been read: %(document)s.",
-            document=duplicate.display_name,
-        )]
-        if duplicate.extraction_date:
-            pieces.append(_(
-                "It was read on %s.",
-                format_datetime(self.env, duplicate.extraction_date),
-            ))
-        if duplicate.move_id:
-            pieces.append(_("It became %s.", duplicate.move_id.display_name))
-        return ' '.join(pieces)
+            wizard.message = wizard.document_id._duplicate_message(wizard.duplicate_id)
 
     def action_read_again(self):
         """Read it, this time without asking."""

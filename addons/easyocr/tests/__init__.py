@@ -12,6 +12,7 @@ from . import test_easyocr_lines
 from . import test_easyocr_settings
 from . import test_easyocr_template
 from . import test_easyocr_template_apply
+from . import test_easyocr_templates
 from . import test_easyocr_upload
 from . import test_easyocr_translations
 from . import test_easyocr_webhook

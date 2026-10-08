@@ -91,6 +91,7 @@ msgstr "Uno scontrino fotografato finisce come"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__is_refund
+#: model:ir.model.fields,help:easyocr.field_easyocr_reading_result__is_refund
 msgid ""
 "A rectificativa: the vendor is giving money back instead of asking for it, "
 "and the bill is made the other way round. A reading that brings a negative "
@@ -190,10 +191,22 @@ msgstr ""
 "servizio distingue le due parti del documento."
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Address"
+msgstr "Indirizzo"
+
+#. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_batch.js:0
 msgid "All of them were read. Review them before they become bills."
 msgstr "Sono stati letti tutti. Controllali prima che diventino fatture."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Almost there..."
+msgstr "Quasi pronto..."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__duplicate_id
@@ -205,6 +218,12 @@ msgstr "Già letto come"
 msgid "Also delete documents and change the extraction settings."
 msgstr ""
 "Può anche eliminare documenti e modificare le impostazioni di estrazione."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Analysing the fields..."
+msgstr "Analisi dei campi..."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__analytic_distribution
@@ -246,6 +265,13 @@ msgstr ""
 "si cerca il prodotto, e appartiene al fornitore, non a noi."
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_duplicate_check
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_duplicate_check
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Ask before reading a document already read"
+msgstr "Chiedere prima di leggere un documento già letto"
+
+#. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_batch__include_extracted_text
 msgid ""
 "Ask the service to send back the raw text of every page as well. It is not "
@@ -260,6 +286,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_attachment_count
 msgid "Attachment Count"
 msgstr "Numero allegati"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Back to the document"
+msgstr "Torna alla scheda"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_journal_id
@@ -325,12 +357,12 @@ msgstr "Batch"
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid ""
 "Before sending a file to the service, look for a document with the same "
-"content that has already been read. Reading it again would cost the same and"
-" change nothing."
+"content that has already been read, and ask. Reading it again costs a "
+"reading; leaving the question alone costs nothing."
 msgstr ""
-"Prima di inviare un file al servizio, cercare un documento con lo stesso "
-"contenuto già letto. Rileggerlo costerebbe lo stesso e non cambierebbe "
-"nulla."
+"Prima di inviare un file al servizio, cerca un documento con lo stesso "
+"contenuto già letto e chiede. Leggerlo di nuovo costa una lettura; lasciare "
+"la domanda senza risposta non costa nulla."
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__processing
@@ -407,6 +439,18 @@ msgstr "Acquisisci un'altra ricevuta"
 
 #. module: easyocr
 #. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Checking the document..."
+msgstr "Verifica del documento..."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Checking the result..."
+msgstr "Verifica del risultato..."
+
+#. module: easyocr
+#. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Choose a file"
 msgstr "Scegli un file"
@@ -435,6 +479,12 @@ msgid "Choose the invoices you want read, or drop them here."
 msgstr "Scegli le fatture da leggere, o trascinale qui."
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "City"
+msgstr "Città"
+
+#. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_batch.xml:0
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
@@ -460,6 +510,12 @@ msgid "Company"
 msgstr "Azienda"
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Confidence %s%%"
+msgstr "Affidabilità %s%%"
+
+#. module: easyocr
 #: model:ir.model,name:easyocr.model_res_config_settings
 msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
@@ -470,6 +526,12 @@ msgstr "Impostazioni di configurazione"
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid "Confirm the bill automatically"
 msgstr "Confermare la fattura automaticamente"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Country"
+msgstr "Paese"
 
 #. module: easyocr
 #. odoo-javascript
@@ -512,6 +574,7 @@ msgstr "Creazione"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__create_uid
 msgid "Created by"
 msgstr "Creato da"
 
@@ -524,17 +587,22 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__create_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__create_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__create_date
 msgid "Created on"
 msgstr "Data creazione"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__is_refund
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__is_refund
 msgid "Credit Note"
 msgstr "Nota di credito"
 
 #. module: easyocr
+#. odoo-python
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__currency_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__currency_id
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__currency_id
 msgid "Currency"
 msgstr "Valuta"
 
@@ -607,6 +675,8 @@ msgstr "Sconto (%)"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__display_name
 #: model:ir.model.fields,field_description:easyocr.field_res_company__display_name
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__display_name
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
@@ -615,17 +685,21 @@ msgstr "Nome visualizzato"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__document_id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__document_id
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reading_result_form
 msgid "Document"
 msgstr "Documento"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__document_date
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__document_date
 msgid "Document Date"
 msgstr "Data del documento"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__ref
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__ref
 msgid "Document Number"
 msgstr "Numero del documento"
 
@@ -689,6 +763,7 @@ msgstr "Carica il tuo primo documento"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__due_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__due_date
 msgid "Due Date"
 msgstr "Data di scadenza"
 
@@ -740,6 +815,12 @@ msgstr "EasyOCR — Acquisisci una ricevuta"
 #: model:ir.actions.server,name:easyocr.ir_cron_easyocr_batch_ir_actions_server
 msgid "EasyOCR: collect finished batches"
 msgstr "EasyOCR: raccogliere i batch completati"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Email"
+msgstr "Email"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__res_company__easyocr_expense_target__expense
@@ -902,6 +983,12 @@ msgid "Finished On"
 msgstr "Completato il"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Finishing the analysis..."
+msgstr "Conclusione dell'analisi..."
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_follower_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_follower_ids
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_follower_ids
@@ -1008,6 +1095,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__id
 #: model:ir.model.fields,field_description:easyocr.field_res_company__id
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__id
 msgid "ID"
 msgstr "ID"
 
@@ -1094,6 +1183,7 @@ msgstr "Sta seguendo"
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_reprocess_wizard.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "It became %s."
 msgstr "È diventato %s."
 
@@ -1106,6 +1196,7 @@ msgstr "Non è stato possibile archiviarlo come spesa."
 #. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_reprocess_wizard.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "It was read on %s."
 msgstr "È stato letto il %s."
 
@@ -1148,6 +1239,7 @@ msgstr "Ultima lettura il"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_uid
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_uid
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__write_uid
 msgid "Last Updated by"
 msgstr "Ultimo aggiornamento di"
 
@@ -1160,6 +1252,7 @@ msgstr "Ultimo aggiornamento di"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__write_date
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__write_date
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__write_date
 msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
 
@@ -1174,7 +1267,9 @@ msgid "Leave empty to be told here"
 msgstr "Lasciare vuoto per essere avvisati qui"
 
 #. module: easyocr
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reprocess_wizard_form
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Leave it"
 msgstr "Lasciare"
 
@@ -1234,6 +1329,7 @@ msgstr "Tipo di riga"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__line_ids
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__document_id
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__line_count
 msgid "Lines"
 msgstr "Righe"
 
@@ -1517,6 +1613,12 @@ msgid "OCR Webhook Call"
 msgstr "Chiamata webhook OCR"
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "OCR finished..."
+msgstr "OCR completato..."
+
+#. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "Only PDF files are accepted by the inbox."
@@ -1538,6 +1640,11 @@ msgstr "Apri il visualizzatore"
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Open a PDF, or drop one here"
 msgstr "Apri un PDF o trascinalo qui"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reading_result_form
+msgid "Open the document"
+msgstr "Apri la scheda"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__origin
@@ -1572,6 +1679,12 @@ msgid "Page"
 msgstr "Pagina"
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Pages: %s"
+msgstr "Pagine: %s"
+
+#. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__partial
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search
 msgid "Partly read"
@@ -1584,11 +1697,19 @@ msgid "Payload"
 msgstr "Carico utile"
 
 #. module: easyocr
+#. odoo-python
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_payment_method_line_id
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_payment_method_line_id
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
 msgid "Payment method"
 msgstr "Modalità di pagamento"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Payment reference"
+msgstr "Riferimento del pagamento"
 
 #. module: easyocr
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document__state__draft
@@ -1597,6 +1718,12 @@ msgstr "Modalità di pagamento"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 msgid "Pending"
 msgstr "In attesa"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Phone"
+msgstr "Telefono"
 
 #. module: easyocr
 #. odoo-python
@@ -1660,6 +1787,12 @@ msgstr ""
 "Confermare la fattura fornitore appena creata, invece di lasciarla in bozza "
 "per la revisione. Disattivato per impostazione predefinita: la conferma "
 "registra la fattura e le assegna un numero."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Postal code"
+msgstr "Codice postale"
 
 #. module: easyocr
 #. odoo-javascript
@@ -1736,6 +1869,8 @@ msgstr "Leggere di nuovo un documento"
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__partner_name
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__partner_vat
+#: model:ir.model.fields,help:easyocr.field_easyocr_reading_result__partner_name
+#: model:ir.model.fields,help:easyocr.field_easyocr_reading_result__partner_vat
 msgid "Read from the document."
 msgstr "Letto dal documento."
 
@@ -1747,11 +1882,25 @@ msgstr "Letto dallo scontrino"
 
 #. module: easyocr
 #. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Read in %s s"
+msgstr "Letto in %s s"
+
+#. module: easyocr
+#. odoo-python
+#. odoo-javascript
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_reprocess_wizard
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reprocess_wizard_form
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Read it again"
 msgstr "Leggilo di nuovo"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Read it again?"
+msgstr "Leggerlo di nuovo?"
 
 #. module: easyocr
 #: model:ir.module.category,description:easyocr.module_category_easyocr
@@ -1780,6 +1929,12 @@ msgstr "Leggi con l'IA"
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Reading the document. A scanned page takes a while."
 msgstr "Lettura del documento. Una pagina scansionata richiede un po'."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Reading the text (OCR)..."
+msgstr "Lettura del testo (OCR)..."
 
 #. module: easyocr
 #. odoo-javascript
@@ -1815,13 +1970,6 @@ msgstr "Ricevuto il"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__name
 msgid "Reference"
 msgstr "Riferimento"
-
-#. module: easyocr
-#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_duplicate_check
-#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_duplicate_check
-#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
-msgid "Refuse a document already read"
-msgstr "Rifiutare un documento già letto"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_webhook_mark_paid
@@ -2011,6 +2159,12 @@ msgid "Sending it again will not change the result."
 msgstr "Un nuovo invio non cambierà il risultato."
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Sending the file..."
+msgstr "Invio del file..."
+
+#. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "Sending the photo…"
@@ -2108,6 +2262,12 @@ msgstr ""
 "Pianificato: attività future."
 
 #. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Structuring the data with AI..."
+msgstr "Strutturazione dei dati con IA..."
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__product_code
 msgid "Supplier Reference"
 msgstr "Riferimento fornitore"
@@ -2137,6 +2297,7 @@ msgstr "Imposta"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__partner_vat
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__partner_vat
 msgid "Tax Number"
 msgstr "Partita IVA"
 
@@ -2440,6 +2601,7 @@ msgstr "La fotocamera non è ancora pronta. Aspetta un secondo."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__due_date
+#: model:ir.model.fields,help:easyocr.field_easyocr_reading_result__due_date
 msgid "The day the vendor wants to be paid, as printed on the document."
 msgstr ""
 "Il giorno in cui il fornitore vuole essere pagato, come stampato sul "
@@ -2681,10 +2843,21 @@ msgstr ""
 "entrata. Scattala da un po' più lontano."
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__meta
+msgid "The reading"
+msgstr "La lettura"
+
+#. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_batch.py:0
 msgid "The same file is twice in this batch."
 msgstr "Lo stesso file è presente due volte in questo batch."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "The service answered with the fields of the document and nothing else."
+msgstr "Il servizio ha risposto solo con i campi del documento."
 
 #. module: easyocr
 #. odoo-python
@@ -2789,6 +2962,7 @@ msgstr "Questo documento non ha file allegati."
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_batch.py:0
 #: code:addons/easyocr/models/easyocr_reprocess_wizard.py:0
+#: code:addons/easyocr/models/easyocr_document.py:0
 msgid "This file has already been read: %(document)s."
 msgstr "Questo file è già stato letto: %(document)s."
 
@@ -2843,6 +3017,12 @@ msgid "Timeout (seconds)"
 msgstr "Timeout (secondi)"
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Tokens: %s"
+msgstr "Token: %s"
+
+#. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_batch__custom_instructions
 msgid ""
 "Told to the service once, for every file of this batch. It is not kept on "
@@ -2858,8 +3038,15 @@ msgstr ""
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__amount_total
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_total
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__amount_total
 msgid "Total"
 msgstr "Totale"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Type"
+msgstr "Tipo"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__activity_exception_decoration
@@ -2873,6 +3060,7 @@ msgstr "Prezzo unitario"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__amount_untaxed
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Importo imponibile"
 
@@ -2936,11 +3124,13 @@ msgstr "Uso dei riquadri di %s."
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_name
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_search
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reading_result_form
 msgid "Vendor"
 msgstr "Fornitore"
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__partner_name
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__partner_name
 msgid "Vendor Name"
 msgstr "Nome fornitore"
 
@@ -3003,6 +3193,11 @@ msgid "Website communication history"
 msgstr "Cronologia comunicazioni sito web"
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__extras
+msgid "What else came back"
+msgstr "Il resto di quanto arrivato"
+
+#. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "What it read"
@@ -3020,6 +3215,15 @@ msgid ""
 "What the line comes to, discount taken off. It follows the quantity, the "
 "price and the discount, the way the bill will."
 msgstr "Quanto totalizza la riga sul documento, sconto già tolto."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_extractor.py:0
+#: model:ir.actions.act_window,name:easyocr.action_easyocr_reading_result
+#: model:ir.model,name:easyocr.model_easyocr_reading_result
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reading_result_form
+msgid "What the reading found"
+msgstr "Cosa ha trovato la lettura"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_batch__service_uuid
@@ -3153,6 +3357,12 @@ msgstr "Larghezza"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_search
 msgid "Without vendor"
 msgstr "Senza fornitore"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Working through the pages..."
+msgstr "Scansione delle pagine..."
 
 #. module: easyocr
 #. odoo-javascript

@@ -29,6 +29,24 @@ NEVER_TRANSLATED = ('EasyOCR',)
 # from a model, so they are listed here: a new one added to the viewer without
 # a translation is what this list is meant to catch.
 VIEWER_STRINGS = (
+    # The stages of the reading bar. They are estimates of a reading in
+    # progress, painted while the server says nothing, and they are read out
+    # loud on the screen: a stage left in English is as visible as any label.
+    "Sending the file...",
+    "Checking the document...",
+    "Reading the text (OCR)...",
+    "Working through the pages...",
+    "OCR finished...",
+    "Structuring the data with AI...",
+    "Analysing the fields...",
+    "Finishing the analysis...",
+    "Almost there...",
+    "Checking the result...",
+    # The question the viewer asks itself, because it is the one that shows the
+    # reading while it happens.
+    "Read it again?",
+    "Read it again",
+    "Leave it",
     "Draw at least one box before saving a template.",
     "Give the template a name.",
     "Template saved.",
@@ -133,6 +151,22 @@ MESSAGE_STRINGS = (
     "This file has already been read: %(document)s.",
     "It was read on %s.",
     "It became %s.",
+    # The reading summary, which Python puts together and a dialog shows: the
+    # badges above, and the vendor details the document has no field for.
+    "Confidence %s%%",
+    "Read in %s s",
+    "Tokens: %s",
+    "Pages: %s",
+    "Type",
+    "Address",
+    "City",
+    "Postal code",
+    "Country",
+    "Phone",
+    "Email",
+    "Payment method",
+    "Payment reference",
+    "The service answered with the fields of the document and nothing else.",
     "The bill was left in draft: it could not be confirmed on its own "
     "(%(error)s). Review it and confirm it by hand.",
     # What a webhook writes into its own log when it goes further than filing.
@@ -230,6 +264,12 @@ ARCH_STRINGS = (
                       'easyocr.view_easyocr_reprocess_wizard_form'),
     ("Leave it", 'model_terms:ir.ui.view,arch_db:'
                  'easyocr.view_easyocr_reprocess_wizard_form'),
+    # The reading summary: the button that leads back to the document and the
+    # two headings of its groups.
+    ("Open the document", 'model_terms:ir.ui.view,arch_db:'
+                          'easyocr.view_easyocr_reading_result_form'),
+    ("Vendor", 'model_terms:ir.ui.view,arch_db:'
+               'easyocr.view_easyocr_reading_result_form'),
 )
 
 # The models whose terms are ours to translate. The two settings models are here
@@ -239,6 +279,7 @@ MODELS = (
     'easyocr.document',
     'easyocr.document.line',
     'easyocr.inbox.item',
+    'easyocr.reading.result',
     'easyocr.reprocess.wizard',
     'easyocr.template',
     'easyocr.template.box',

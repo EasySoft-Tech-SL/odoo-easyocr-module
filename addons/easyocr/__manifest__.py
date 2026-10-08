@@ -20,6 +20,9 @@
     'data': [
         'security/easyocr_security.xml',
         'security/ir.model.access.csv',
+        # El menu raiz, antes que nada: todo lo demas cuelga de el y Odoo
+        # resuelve un xmlid mientras lee el fichero que lo usa.
+        'views/easyocr_menu_views.xml',
         'views/easyocr_home_views.xml',
         'views/easyocr_document_views.xml',
         'views/easyocr_reprocess_wizard_views.xml',

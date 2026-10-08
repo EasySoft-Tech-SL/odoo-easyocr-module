@@ -35,12 +35,32 @@
     }
 
     // Reading a scan takes seconds, and the button that started it is disabled
-    // meanwhile: this is the only thing that says why.
+    // meanwhile: this is the only thing that says why. It stacks now, because
+    // the bar goes above the sentence.
     .o_easyocr_busy {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        gap: 0.3rem;
         margin-bottom: 0.5rem;
         font-size: 0.78rem;
+    }
+
+    // The bar of a reading. It is walked by the stages the module this is a port
+    // of shows, so it moves while the server says nothing, and it stops short of
+    // the end: a bar that fills before the answer arrives is a lie the reader
+    // catches.
+    .o_easyocr_progress {
+        height: 0.35rem;
+        overflow: hidden;
+        background-color: var(--o-easyocr-track, #e9ecef);
+        border-radius: 0.2rem;
+
+        .o_easyocr_progress_fill {
+            height: 100%;
+            background-color: var(--o-easyocr-accent, #71639e);
+            border-radius: 0.2rem;
+            transition: width 0.4s ease;
+        }
     }
 
     .o_easyocr_viewer_body {

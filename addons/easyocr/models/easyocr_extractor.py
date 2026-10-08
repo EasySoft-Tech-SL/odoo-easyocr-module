@@ -559,9 +559,12 @@ class EasyocrDocument(models.Model):
         self._apply_extraction(result['data'])
         self.state = 'processed'
         self.error_message = False
-        return self._extraction_notification(
-            'success', _("The document was read.")
-        )
+        # What it read, on a screen of its own: a reading costs money and takes
+        # seconds, and until this existed the only proof it had happened was a
+        # notice in the corner that faded. The module this is a port of shows
+        # the same summary, and the vendor's address and phone, which have
+        # nowhere else to be seen.
+        return self._reading_result_action()
 
     # ------------------------------------------------------------------
     # Filling the document
@@ -642,6 +645,46 @@ class EasyocrDocument(models.Model):
         self.state = 'error'
         self.error_message = message
         return self._extraction_notification('warning', message)
+
+    def action_check_duplicate(self):
+        """Whether this file was already read, asked before reading anything.
+
+        The viewer asks with its own dialog and then does the reading itself, so
+        that it can show the reading while it happens instead of a still screen.
+        To do that it has to know beforehand, and this is how: the same
+        fingerprint and the same window the guard uses, and not a call to the
+        service.
+
+        Returns nothing at all when there is nothing to ask about, which is the
+        answer the viewer wants in one line of code.
+        """
+        self.ensure_one()
+        company = self.company_id or self.env.company
+        if not company.easyocr_duplicate_check:
+            return {}
+        self._refresh_file_hash()
+        duplicate = self._duplicate_of()
+        if not duplicate:
+            return {}
+        return {
+            'document_id': duplicate.id,
+            'document': duplicate.display_name,
+            'message': self._duplicate_message(duplicate),
+        }
+
+    def _reading_result_action(self):
+        """The summary of the reading, as a dialog."""
+        self.ensure_one()
+        wizard = self.env['easyocr.reading.result'].create({'document_id': self.id})
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("What the reading found"),
+            'res_model': 'easyocr.reading.result',
+            'res_id': wizard.id,
+            'views': [(False, 'form')],
+            'view_mode': 'form',
+            'target': 'new',
+        }
 
     def _extraction_notification(self, kind, message):
         return {

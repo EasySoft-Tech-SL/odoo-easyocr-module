@@ -70,11 +70,11 @@ class ResCompany(models.Model):
              'almost always a document that was read the wrong way round.',
     )
     easyocr_duplicate_check = fields.Boolean(
-        string='Refuse a document already read',
+        string='Ask before reading a document already read',
         default=True,
         help='Before sending a file to the service, look for a document with the '
-             'same content that has already been read. Reading it again would cost '
-             'the same and change nothing.',
+             'same content that has already been read, and ask. Reading it again '
+             'costs a reading; leaving the question alone costs nothing.',
     )
     easyocr_duplicate_window_days = fields.Integer(
         string='Duplicate window (days)',
