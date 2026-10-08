@@ -140,8 +140,8 @@ One branch per Odoo series, as is the norm in the Odoo ecosystem:
 
 | Branch | Odoo series | Module version |
 | --- | --- | --- |
-| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.1` |
-| `18.0` | Odoo Community 18.0 | `18.0.1.0.1` |
+| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.2` |
+| `18.0` | Odoo Community 18.0 | `18.0.1.0.2` |
 
 The branch name and the first two digits of the module version always match, and the CI
 checks it. One module covers one series: the code is the same on both, except where the
