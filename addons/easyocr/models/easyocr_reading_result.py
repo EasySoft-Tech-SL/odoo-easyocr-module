@@ -5,6 +5,8 @@ import json
 
 from odoo import _, api, fields, models
 
+from .easyocr_values import to_float
+
 
 class EasyocrReadingResult(models.TransientModel):
     """Everything the service answered, in one screen.
@@ -151,8 +153,11 @@ class EasyocrReadingResult(models.TransientModel):
     def action_result_data(self):
         """Everything the result dialog draws, in one answer.
 
-        The cards come back as ready label/value rows, with the labels already
-        in the reader's language, so the screen paints them and nothing else.
+        Each card comes back as ``[key, label, value]`` rows, with the labels
+        already in the reader's language: the key tells the screen which value
+        it may hand back corrected, and the amounts travel as numbers so the
+        screen writes them the way the reader's language does. The lines come
+        back with the rates the service put on each one already picked out.
         The raw payload travels whole for the JSON button.
         """
         self.ensure_one()
@@ -163,57 +168,143 @@ class EasyocrReadingResult(models.TransientModel):
         customer = structured.get('customer') or {}
         totals = structured.get('totals') or {}
         payment = structured.get('payment') or {}
+        company = self.document_id.company_id
 
-        def rows(pairs):
-            return [[label, value] for label, value in pairs if value not in (None, '')]
+        def rows(triples):
+            return [
+                [key, label, value] for key, label, value in triples
+                if value not in (None, '')
+            ]
+
+        def doc(*keys):
+            # The service puts these at the top of the answer; older answers
+            # nest them under ``document``. Either is read.
+            for key in keys:
+                for source in (structured, document):
+                    value = source.get(key)
+                    if value not in (None, ''):
+                        return value
+            return None
+
+        def amount(*keys):
+            for key in keys:
+                value = totals.get(key)
+                if value not in (None, ''):
+                    return to_float(value, None)
+            return None
 
         return {
             'meta_pills': self._meta_pills(answer),
             'sections': {
                 'document': rows([
-                    (_("Type"), document.get('document_type')),
-                    (_("Invoice number"), document.get('document_number')),
-                    (_("Date"), document.get('issue_date')),
-                    (_("Due date"), document.get('due_date')),
-                    (_("Currency"), document.get('currency')),
+                    ('document_type', _("Type"), self._document_type_label(doc('document_type'))),
+                    ('document_number', _("Invoice number"), doc('document_number', 'invoice_number')),
+                    ('issue_date', _("Date"), doc('issue_date', 'date')),
+                    ('due_date', _("Due date"), doc('due_date')),
+                    ('currency', _("Currency"), doc('currency')),
                 ]),
                 'supplier': rows([
-                    (_("Name"), supplier.get('name')),
-                    (_("Tax number"), supplier.get('tax_id')),
-                    (_("Address"), supplier.get('address')),
-                    (_("City"), supplier.get('city')),
-                    (_("Postal code"), supplier.get('postal_code')),
-                    (_("Country"), supplier.get('country')),
-                    (_("Phone"), supplier.get('phone')),
-                    (_("Email"), supplier.get('email')),
+                    ('name', _("Name"), supplier.get('name')),
+                    ('tax_id', _("Tax ID"), supplier.get('tax_id')),
+                    ('address', _("Address"), supplier.get('address')),
+                    ('city', _("City"), supplier.get('city')),
+                    ('postal_code', _("Postal code"), supplier.get('postal_code')),
+                    ('country', _("Country"), supplier.get('country')),
+                    ('phone', _("Phone"), supplier.get('phone')),
+                    ('email', _("Email"), supplier.get('email')),
                 ]),
                 'customer': rows([
-                    (_("Name"), customer.get('name')),
-                    (_("Tax number"), customer.get('tax_id')),
-                    (_("Address"), customer.get('address')),
-                    (_("City"), customer.get('city')),
-                    (_("Postal code"), customer.get('postal_code')),
-                    (_("Country"), customer.get('country')),
+                    ('name', _("Name"), customer.get('name')),
+                    ('tax_id', _("Tax ID"), customer.get('tax_id')),
+                    ('address', _("Address"), customer.get('address')),
+                    ('city', _("City"), customer.get('city')),
+                    ('postal_code', _("Postal code"), customer.get('postal_code')),
+                    ('country', _("Country"), customer.get('country')),
                 ]),
                 'totals': rows([
-                    (_("Subtotal"), totals.get('net_subtotal')),
-                    (_("Tax"), totals.get('tax_total')),
-                    (_("Discount"), totals.get('discount_total')),
-                    (_("RE / Surcharge"), totals.get('surcharge_total')),
-                    (_("IRPF / Withholding"), totals.get('withholding_total')),
-                    (_("Total"), totals.get('total')),
+                    ('subtotal', _("Subtotal"), amount('net_subtotal', 'subtotal')),
+                    ('tax', _("Tax"), amount('tax_total', 'tax')),
+                    ('discount', _("Discount"), amount('discount_total', 'discount')),
+                    ('surcharge', _("RE / Surcharge"), amount('surcharge_total')),
+                    ('withholding', _("IRPF / Withholding"), amount('withholding_total')),
+                    ('total', _("Total"), amount('total')),
                 ]),
                 'payment': rows([
-                    (_("Method"), payment.get('method')),
-                    (_("Status"), payment.get('status')),
-                    (_("Bank account"), payment.get('bank_account')),
-                    (_("Reference"), payment.get('reference')),
+                    ('method', _("Method"), payment.get('method')),
+                    ('status', _("Status"), self._payment_status_label(payment.get('status'))),
+                    ('bank_account', _("Bank account"), payment.get('bank_account')),
+                    ('reference', _("Reference"), payment.get('reference')),
                 ]),
             },
-            'items': structured.get('items') or [],
+            'items': [self._dialog_item(item, totals) for item in structured.get('items') or []],
             'notes': structured.get('notes') or '',
+            'supplier_match': self.document_id.action_check_supplier(
+                supplier.get('tax_id') or '', supplier.get('name') or '',
+            ),
+            'invoice_draft': bool(company.easyocr_invoice_draft),
+            'is_refund': bool(self.document_id.is_refund),
             'raw': answer,
         }
+
+    def _document_type_label(self, value):
+        """The kind of document, in words, for the types the service names."""
+        labels = {
+            'invoice': _("Invoice"),
+            'credit_note': _("Credit note"),
+            'receipt': _("Receipt"),
+            'proforma': _("Pro forma"),
+            'quote': _("Quote"),
+        }
+        return labels.get(str(value or '').lower(), value)
+
+    def _payment_status_label(self, value):
+        """Whether the paper says it was paid, in words."""
+        labels = {
+            'paid': _("Paid"),
+            'unpaid': _("Unpaid"),
+            'pending': _("Unpaid"),
+            'partial': _("Partially paid"),
+            'partially_paid': _("Partially paid"),
+        }
+        return labels.get(str(value or '').lower(), value)
+
+    def _dialog_item(self, item, totals):
+        """One line as the dialog edits it: the three rates picked out apart."""
+        rates = {'tax_rate': 0.0, 're_rate': 0.0, 'irpf_rate': 0.0}
+        for tax in item.get('taxes') if isinstance(item.get('taxes'), list) else []:
+            if not isinstance(tax, dict):
+                continue
+            kind = str(tax.get('tax_type') or '').lower().strip()
+            rate = to_float(tax.get('tax_rate'))
+            if kind in ('tva', 'iva', 'vat') and rate:
+                rates['tax_rate'] = rate
+            elif kind == 're' and rate:
+                rates['re_rate'] = rate
+            elif kind in ('irpf', 'retencion', 'withholding') and rate:
+                rates['irpf_rate'] = abs(rate)
+        for key in rates:
+            if not rates[key]:
+                rates[key] = abs(to_float(item.get(key)))
+        if not rates['tax_rate']:
+            # The document's own VAT rate, for a line that came without one.
+            for tax in totals.get('taxes') if isinstance(totals.get('taxes'), list) else []:
+                if isinstance(tax, dict) and str(tax.get('tax_type') or '').lower() in ('tva', 'iva', 'vat'):
+                    rates['tax_rate'] = to_float(tax.get('tax_rate'))
+                    break
+        quantity = to_float(item.get('quantity') or item.get('qty'), 1.0) or 1.0
+        unit_price = to_float(item.get('unit_price') or item.get('price'))
+        net = to_float(item.get('net_amount') or item.get('total') or item.get('line_total'), None)
+        if not unit_price and net:
+            unit_price = net / quantity
+        return dict(
+            rates,
+            code=item.get('code') or item.get('product_code') or '',
+            description=item.get('description') or item.get('label') or item.get('name') or '',
+            item_type=(item.get('item_type') or 'product').strip().lower(),
+            quantity=quantity,
+            unit_price=unit_price,
+            discount_percent=to_float(item.get('discount_percent')),
+        )
 
     def _meta_pills(self, answer):
         """The header pills, one per fact the service measured, in order."""

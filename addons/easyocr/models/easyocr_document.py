@@ -2,6 +2,7 @@
 # License LGPL-3 (see LICENSE file).
 
 import hashlib
+import json
 import logging
 from datetime import timedelta
 
@@ -287,8 +288,52 @@ class EasyocrDocument(models.Model):
 
         return self.env['res.partner']
 
+    @api.model
+    def action_check_supplier(self, vat='', name=''):
+        """Who the supplier on screen is, before anything is created.
+
+        ``found`` names the contact the bill will go to, ``new`` says one will
+        be created from what was read, and ``own`` that the tax number is the
+        company's own. Nothing is written: the dialog asks this as the reader
+        types.
+        """
+        Partner = self.env['res.partner']
+        vat_typed = (vat or '').strip()
+        vat_clean = self._normalize_vat(vat_typed)
+        company = self.env.company
+        if vat_clean:
+            own_vat = self._normalize_vat(company.partner_id.vat)
+            if own_vat and own_vat == vat_clean and not company.easyocr_allow_self_vendor:
+                return {'status': 'own', 'name': company.name, 'id': False}
+            partner = Partner.search(['|', ('vat', '=', vat_typed), ('vat', '=', vat_clean)], limit=1)
+            if partner:
+                return {'status': 'found', 'name': partner.display_name, 'id': partner.id}
+        clean_name = (name or '').strip()
+        if clean_name:
+            partner = Partner.search([('name', '=ilike', clean_name)], limit=1)
+            if partner:
+                return {'status': 'found', 'name': partner.display_name, 'id': partner.id}
+            return {'status': 'new', 'name': clean_name, 'id': False}
+        return {'status': 'none', 'name': '', 'id': False}
+
+    @api.model
+    def action_resolve_codes(self, partner_id=False, codes=None):
+        """Which product each code on the lines points to, for the dialog.
+
+        Advisory only, the same lookup the bill makes: the reader sees which
+        lines will be tied to a product and which will go as free text.
+        """
+        partner = self.env['res.partner'].browse(partner_id or [])
+        found = {}
+        for code in codes or []:
+            product = self._product_for_code(partner, (code or '').strip())
+            if product:
+                found[code] = product.display_name
+        return found
+
     def action_create_bill(self, draft=False, journal_id=False, items=None,
-                           register_payment=False, bank_id=False):
+                           register_payment=False, bank_id=False, overrides=None,
+                           payment_method_id=False, is_refund=None):
         """Create a supplier bill from what was read from this document.
 
         One bill line for every line the service read, each with its own product,
@@ -301,12 +346,24 @@ class EasyocrDocument(models.Model):
         dialog hands back the lines as the reader left them, the bill is made
         from those and not from the reading. A posted bill can also be paid right
         away, from the bank account the reader picked.
+
+        What the reader corrected in the dialog (the invoice number, the dates,
+        the supplier's details) comes back as ``overrides`` and is written onto
+        the document first, so the bill and the document say the same thing.
+        A supplier nobody has on file is created from what was read, the way
+        the module this is a port of does it.
         """
         self.ensure_one()
         if self.move_id:
             raise UserError(_("This document already has a bill."))
 
-        partner = self._resolve_partner()
+        self._apply_overrides(overrides or {})
+        if is_refund is not None:
+            self.is_refund = bool(is_refund)
+
+        partner = self._resolve_partner() or self._create_partner_from_reading(
+            (overrides or {}).get('supplier') or {},
+        )
         if not partner:
             raise UserError(_(
                 "No vendor could be matched. Set the vendor on the document, "
@@ -341,35 +398,142 @@ class EasyocrDocument(models.Model):
         if not draft:
             self._confirm_bill(move)
         if register_payment and not draft:
-            self._register_payment(move, bank_id)
+            self._register_payment(move, bank_id, payment_method_id)
 
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'res_id': move.id,
+            'views': [(False, 'form')],
             'view_mode': 'form',
             'target': 'current',
         }
 
-    def _register_payment(self, move, bank_id):
+    def _register_payment(self, move, bank_id, payment_method_id=False):
         """Pay a posted bill straight away, from the bank the reader picked.
 
         The payment goes through Odoo's own register, so the reconciliation and
         the numbering are Odoo's and not something the module invents. A bank
         without a journal, or a bill that could not be posted, is paid by nobody:
-        the bill is still there, in draft, for a person to finish.
+        the bill is still there, in draft, for a person to finish. With no bank
+        picked, the company's first bank journal pays it.
         """
-        bank = self.env['res.partner.bank'].browse(bank_id)
-        journal = bank.journal_id
-        if not journal or move.state != 'posted':
+        if move.state != 'posted':
             return
-        register = self.env['account.payment.register'].with_context(
-            active_model='account.move', active_ids=[move.id],
-        ).create({
+        if bank_id:
+            journal = self.env['res.partner.bank'].browse(bank_id).journal_id
+        else:
+            journal = self.env['account.journal'].search([
+                ('company_id', '=', move.company_id.id),
+                ('type', '=', 'bank'),
+            ], limit=1)
+        if not journal:
+            return
+        values = {
             'journal_id': journal.id,
             'amount': move.amount_total,
-        })
+        }
+        method_line = self._payment_method_line(journal, payment_method_id)
+        if method_line:
+            values['payment_method_line_id'] = method_line.id
+        register = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=[move.id],
+        ).create(values)
         register.action_create_payments()
+
+    def _payment_method_line(self, journal, payment_method_id):
+        """The journal's outgoing line for the method the reader picked."""
+        if not payment_method_id:
+            return self.env['account.payment.method.line']
+        return journal.outbound_payment_method_line_ids.filtered(
+            lambda line: payment_method_id in (line.id, line.payment_method_id.id),
+        )[:1]
+
+    def _apply_overrides(self, overrides):
+        """Write onto the document what the reader corrected in the dialog."""
+        self.ensure_one()
+        document = overrides.get('document') or {}
+        supplier = overrides.get('supplier') or {}
+        values = {}
+        if (document.get('document_number') or '').strip():
+            values['ref'] = document['document_number'].strip()
+        for key, field_name in (('issue_date', 'document_date'), ('due_date', 'due_date')):
+            if key in document:
+                values[field_name] = to_date(document.get(key)) or False
+        if (supplier.get('name') or '').strip():
+            values['partner_name'] = supplier['name'].strip()
+        if 'tax_id' in supplier:
+            values['partner_vat'] = (supplier.get('tax_id') or '').strip()
+        changed = (
+            values.get('partner_name', self.partner_name) != self.partner_name
+            or values.get('partner_vat', self.partner_vat) != self.partner_vat
+        )
+        if changed:
+            # A supplier the reader changed by hand is looked up again.
+            values['partner_id'] = False
+        if values:
+            self.write(values)
+
+    def _reading_supplier(self):
+        """The supplier block of the last reading, as the service sent it."""
+        self.ensure_one()
+        try:
+            answer = json.loads(self.last_extraction or '{}')
+        except (ValueError, TypeError):
+            return {}
+        return ((answer.get('structured_data') or {}).get('supplier')) or {}
+
+    def _create_partner_from_reading(self, edited=None):
+        """A supplier nobody has on file, created from what was read.
+
+        The same as the module this is a port of: the name and the tax number,
+        and the address, town, postal code, country, phone and email when the
+        reading has them. Without a name there is nobody to create.
+        """
+        self.ensure_one()
+        data = dict(self._reading_supplier())
+        data.update({key: value for key, value in (edited or {}).items() if value not in (None, '')})
+        name = (self.partner_name or data.get('name') or '').strip()
+        if not name:
+            return self.env['res.partner']
+        vat = (self.partner_vat or data.get('tax_id') or '').strip()
+        values = {
+            'name': name,
+            'is_company': True,
+            'supplier_rank': 1,
+            'street': data.get('address') or False,
+            'city': data.get('city') or False,
+            'zip': data.get('postal_code') or False,
+            'phone': data.get('phone') or False,
+            'email': data.get('email') or False,
+        }
+        country = self._country_from_reading(data.get('country'), vat)
+        if country:
+            values['country_id'] = country.id
+        partner = self.env['res.partner'].create(values)
+        if vat:
+            # Written apart, without the format check: a tax number the
+            # reading got slightly wrong must not stop the bill being made.
+            partner.with_context(no_vat_validation=True).vat = vat
+        self.partner_id = partner
+        return partner
+
+    def _country_from_reading(self, country, vat):
+        """The country the reading named, or the one its tax number starts with."""
+        Country = self.env['res.country']
+        text = (country or '').strip()
+        if len(text) == 2:
+            found = Country.search([('code', '=ilike', text)], limit=1)
+            if found:
+                return found
+        if text:
+            found = Country.search([('name', '=ilike', text)], limit=1)
+            if found:
+                return found
+        clean = self._normalize_vat(vat)
+        if len(clean) > 2 and clean[:2].isalpha():
+            return Country.search([('code', '=', clean[:2])], limit=1)
+        return Country
 
     def _bill_line_values(self, partner):
         """What goes on the bill, line by line.
@@ -411,14 +575,51 @@ class EasyocrDocument(models.Model):
         quantity corrected, a line added or taken out is the reader's word.
         """
         values = []
+        partner = self.partner_id
         for item in items or []:
+            taxes = self._purchase_tax(to_float(item.get('tax_rate')))
+            taxes |= self._purchase_tax(to_float(item.get('re_rate')))
+            irpf = to_float(item.get('irpf_rate'))
+            if irpf:
+                taxes |= self._purchase_tax(-abs(irpf))
+            product = self._product_for_code(
+                partner, (item.get('code') or '').strip(), item.get('item_type') or '',
+            )
             values.append({
                 'name': (item.get('description') or '').strip() or _('Line'),
                 'quantity': to_float(item.get('quantity'), 1.0) or 1.0,
-                'price_unit': to_float(item.get('unit_price')),
+                'price_unit': self._as_bill_amount(to_float(item.get('unit_price'))),
                 'discount': to_float(item.get('discount_percent')),
+                'product_id': product.id if product else False,
+                'tax_ids': [(6, 0, taxes.ids)],
+                'analytic_distribution': self.analytic_distribution or False,
             })
         return values
+
+    def _purchase_tax(self, rate):
+        """The company's purchase tax with exactly this rate, or none."""
+        if not rate:
+            return self.env['account.tax']
+        return self.env['account.tax'].search([
+            ('company_id', '=', self.company_id.id),
+            ('type_tax_use', '=', 'purchase'),
+            ('amount_type', '=', 'percent'),
+            ('amount', '=', rate),
+        ], limit=1)
+
+    def _product_for_code(self, partner, code, item_type=''):
+        """The product a code on the paper points to, without creating one."""
+        Product = self.env['product.product']
+        if not code or item_type in ('discount', 'surcharge', 'other'):
+            return Product
+        if partner:
+            info = self.env['product.supplierinfo'].search([
+                ('partner_id', '=', partner.id),
+                ('product_code', '=', code),
+            ], limit=1)
+            if info:
+                return info.product_id or info.product_tmpl_id.product_variant_id
+        return Product.search(['|', ('default_code', '=', code), ('barcode', '=', code)], limit=1)
 
     def _as_bill_amount(self, amount):
         """An amount written the way the bill it goes on expects it.

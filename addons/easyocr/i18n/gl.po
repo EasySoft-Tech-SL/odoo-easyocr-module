@@ -295,10 +295,12 @@ msgstr "Volver á ficha"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_journal_id
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_journal_id
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
 msgid "Bank account"
 msgstr "Conta bancaria"
 
@@ -410,6 +412,7 @@ msgstr "Caixas"
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -613,6 +616,8 @@ msgstr "Moeda"
 #: code:addons/easyocr/controllers/expense.py:0
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Date"
 msgstr "Data"
 
@@ -621,6 +626,8 @@ msgstr "Data"
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__name
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__description
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Description"
 msgstr "Descrición"
 
@@ -656,7 +663,11 @@ msgid "Discarded"
 msgstr "Descartado"
 
 #. module: easyocr
+#. odoo-python
+#. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__discount
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Discount"
 msgstr "Desconto"
 
@@ -773,8 +784,11 @@ msgstr "Data de vencemento"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__due_date
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Due date"
 msgstr "Data de vencemento"
 
@@ -914,7 +928,9 @@ msgid "Failed"
 msgstr "Con erro"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__fee
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Fee"
 msgstr "Comisión"
 
@@ -1170,8 +1186,11 @@ msgstr "Instruccións"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_number
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Invoice number"
 msgstr "Número de factura"
 
@@ -1421,10 +1440,13 @@ msgstr "Os meus elementos"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
 #: code:addons/easyocr/static/src/xml/easyocr_batch.xml:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__name
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__name:0
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Name"
 msgstr "Nome"
 
@@ -1666,7 +1688,9 @@ msgid "Origin"
 msgstr "Orixe"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__other
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Other"
 msgstr "Outro"
 
@@ -1834,8 +1858,11 @@ msgid "Processed"
 msgstr "Procesado"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__product_id
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__product
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Product"
 msgstr "Produto"
 
@@ -1980,10 +2007,12 @@ msgid "Received On"
 msgstr "Recibido o"
 
 #. module: easyocr
+#. odoo-python
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__name
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__name
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__name
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
 msgid "Reference"
 msgstr "Referencia"
 
@@ -2202,7 +2231,9 @@ msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__service
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Service"
 msgstr "Servizo"
 
@@ -2225,7 +2256,9 @@ msgid "Settings"
 msgstr "Axustes"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__shipping
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Shipping"
 msgstr "Transporte"
 
@@ -2254,6 +2287,7 @@ msgstr "Algúns destes ficheiros xa se leron"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__state
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__state
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__state
@@ -2263,6 +2297,7 @@ msgstr "Algúns destes ficheiros xa se leron"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
 msgid "Status"
 msgstr "Estado"
 
@@ -2297,7 +2332,9 @@ msgid "Supplier bill"
 msgstr "Factura de provedor"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document_line__item_type__surcharge
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Surcharge"
 msgstr "Recarga"
 
@@ -2308,8 +2345,11 @@ msgstr "Fai outra"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__tax_amount
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Tax"
 msgstr "Imposto"
 
@@ -3043,12 +3083,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__amount_total
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_total
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__amount_total
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Total"
 msgstr "Total"
 
 #. module: easyocr
 #. odoo-python
+#. odoo-javascript
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Type"
 msgstr "Tipo"
 
@@ -3591,30 +3636,35 @@ msgstr "Cliente"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Code"
 msgstr "Código"
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Qty"
 msgstr "Cantidade"
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Price"
 msgstr "Prezo"
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Disc%"
 msgstr "Dto%"
 
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Tax%"
 msgstr "IVE%"
 
@@ -3656,8 +3706,10 @@ msgstr "Data da factura"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_number:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__move_id:0
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
 msgid "Invoice"
 msgstr "Factura"
 
@@ -3681,7 +3733,10 @@ msgstr "IVE"
 
 #. module: easyocr
 #. odoo-javascript
+#. odoo-python
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_vat:0
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "Tax ID"
 msgstr "CIF/NIF"
 
@@ -4131,3 +4186,189 @@ msgstr "Completado"
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__partial:0
 msgid "Partial"
 msgstr "Parcial"
+
+#. module: easyocr
+#. odoo-python
+#. odoo-javascript
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+msgid "Subtotal"
+msgstr "Base impoñible"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "RE / Surcharge"
+msgstr "RE / Recarga"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "IRPF / Withholding"
+msgstr "IRPF / Retención"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Method"
+msgstr "Método"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+msgid "Supplier on file: %s"
+msgstr "Provedor detectado: %s"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+msgid "New supplier: it will be created from this data"
+msgstr "Provedor novo: crearase con estes datos"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+msgid "This tax ID is your own company's"
+msgstr "Este NIF é o da túa propia empresa"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "RE%"
+msgstr "RE%"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "IRPF%"
+msgstr "IRPF%"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+msgid "%(column)s, line %(line)s"
+msgstr "%(column)s, liña %(line)s"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+msgid "Only a validated invoice can be paid"
+msgstr "Só se pode pagar unha factura validada"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+msgid "The invoice could not be created: %s"
+msgstr "Non se puido crear a factura: %s"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Close"
+msgstr "Pechar"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Loading…"
+msgstr "Cargando…"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Lines do not match document totals"
+msgstr "As liñas non cadran cos totais do documento"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Actions"
+msgstr "Accións"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "No line items"
+msgstr "Sen liñas de factura"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "No product linked: the line goes as free text"
+msgstr "Sen produto vinculado: a liña irá como texto libre"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Delete"
+msgstr "Eliminar"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Document type"
+msgstr "Tipo de documento"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Supplier invoice"
+msgstr "Factura de provedor"
+
+#. module: easyocr
+#. odoo-javascript
+#. odoo-python
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Credit note"
+msgstr "Factura rectificativa"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Payment method: -- Automatic --"
+msgstr "Forma de pagamento: -- Automático --"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Bank account: -- Automatic --"
+msgstr "Conta bancaria: -- Automático --"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Receipt"
+msgstr "Tícket"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Pro forma"
+msgstr "Proforma"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Quote"
+msgstr "Orzamento"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Paid"
+msgstr "Pagado"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Unpaid"
+msgstr "Pendente de pagamento"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+msgid "Partially paid"
+msgstr "Pagado parcialmente"

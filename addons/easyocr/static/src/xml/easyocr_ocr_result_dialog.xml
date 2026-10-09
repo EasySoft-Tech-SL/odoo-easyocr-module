@@ -1,215 +1,315 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+    <!-- One card of label/value fields: a two-column grid, the label above
+         the box in small capitals, the way the module this is a port of draws
+         it. A field the bill does not use is shown read-only. -->
+    <t t-name="easyocr.OCRResultDialog.fields">
+        <div class="o_easyocr_result_grid">
+            <t t-foreach="sectionFields(section)" t-as="field" t-key="field.key">
+                <div t-att-class="'o_easyocr_result_field' + (isWide(field.key) ? ' is-wide' : '')">
+                    <label class="o_easyocr_result_field_label" t-att-for="fieldId(section, field.key)"><t t-esc="field.label"/></label>
+                    <input
+                        type="text"
+                        t-att-id="fieldId(section, field.key)"
+                        t-att-class="'o_easyocr_result_field_input' + (isMoney(section) ? ' is-money' : '')"
+                        t-att-value="field.value"
+                        t-att-readonly="!isEditable(section, field.key)"
+                        t-att-aria-describedby="section === 'supplier' and field.key === 'tax_id' and supplierHint() ? uid + '_supplier_hint' : false"
+                        t-on-change="(ev) => this.onFieldChange(section, field, ev)"
+                    />
+                    <div
+                        t-if="section === 'supplier' and field.key === 'tax_id' and supplierHint()"
+                        t-att-id="uid + '_supplier_hint'"
+                        t-att-class="'o_easyocr_result_supplier_hint ' + supplierHint().cls"
+                        role="status"
+                    >
+                        <i t-att-class="'fa ' + supplierHint().icon + ' me-1'" aria-hidden="true"/>
+                        <t t-esc="supplierHint().text"/>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <!-- The head of a card: a real button, so it can be reached and opened
+         from the keyboard and a screen reader says whether it is open. -->
+    <t t-name="easyocr.OCRResultDialog.cardHead">
+        <button
+            type="button"
+            class="o_easyocr_result_card_head"
+            t-att-aria-expanded="isCollapsed(card) ? 'false' : 'true'"
+            t-att-aria-controls="uid + '_card_' + card"
+            t-on-click="() => this.toggleCard(card)"
+        >
+            <span t-att-class="'o_easyocr_result_card_icon is-' + card" aria-hidden="true"><i t-att-class="'fa ' + icon"/></span>
+            <span class="o_easyocr_result_card_title"><t t-esc="title"/></span>
+            <span t-if="count !== undefined" class="o_easyocr_result_count"><t t-esc="count"/></span>
+            <i t-att-class="'fa fa-chevron-down o_easyocr_result_chevron' + (isCollapsed(card) ? ' is-collapsed' : '')" aria-hidden="true"/>
+        </button>
+    </t>
+
     <!-- The reading result: a sectioned modal over the screen, the way the
          module this is a port of shows it. One collapsible card per part of the
-         answer, the raw payload behind the JSON button, and the two buttons that
-         either leave it or turn it into the bill. -->
+         answer, the raw payload behind the JSON button, and the footer that
+         either leaves it or turns it into the bill. -->
     <t t-name="easyocr.OCRResultDialog">
-        <div class="o_easyocr_result_overlay" t-on-click="close">
-            <div class="o_easyocr_result_modal" t-on-click.stop="() => {}">
+        <div class="o_easyocr_result_overlay" t-on-click.self="close">
+            <div
+                class="o_easyocr_result_modal"
+                role="dialog"
+                aria-modal="true"
+                t-att-aria-labelledby="uid + '_title'"
+                tabindex="-1"
+                t-ref="modal"
+            >
 
                 <div class="o_easyocr_result_header">
                     <div class="o_easyocr_result_title">
-                        <i class="fa fa-magic me-2"/>
-                        <h4>AI Result</h4>
-                        <div class="o_easyocr_result_pills">
-                            <t t-foreach="pills()" t-as="pill" t-key="pill_index">
-                                <span class="o_easyocr_result_pill"><t t-esc="pill"/></span>
-                            </t>
+                        <span class="o_easyocr_result_title_icon" aria-hidden="true"><i class="fa fa-magic"/></span>
+                        <div>
+                            <h4 t-att-id="uid + '_title'">AI Result</h4>
+                            <ul class="o_easyocr_result_pills" t-if="pills().length">
+                                <t t-foreach="pills()" t-as="pill" t-key="pill_index">
+                                    <li class="o_easyocr_result_pill"><t t-esc="pill"/></li>
+                                </t>
+                            </ul>
                         </div>
                     </div>
                     <div class="o_easyocr_result_head_actions">
                         <button
-                            class="btn btn-link btn-sm"
+                            type="button"
+                            t-att-class="'o_easyocr_result_json' + (state.showPayload ? ' active' : '')"
+                            t-att-aria-pressed="state.showPayload ? 'true' : 'false'"
+                            t-att-aria-controls="uid + '_payload'"
                             t-on-click="togglePayload"
-                            t-att-class="state.showPayload ? 'btn btn-link btn-sm active' : 'btn btn-link btn-sm'"
                         >
-                            <i class="fa fa-code me-1"/>JSON
+                            <i class="fa fa-code me-1" aria-hidden="true"/>JSON
                         </button>
-                        <button class="btn btn-link btn-sm" t-on-click="close"><i class="fa fa-times"/></button>
+                        <button type="button" class="o_easyocr_result_close" t-on-click="close" title="Close" aria-label="Close">
+                            <i class="fa fa-times" aria-hidden="true"/>
+                        </button>
                     </div>
                 </div>
 
-                <div t-if="state.showPayload" class="o_easyocr_result_payload">
-                    <pre><t t-esc="payloadText()"/></pre>
+                <div t-if="state.showPayload" class="o_easyocr_result_payload" t-att-id="uid + '_payload'">
+                    <pre tabindex="0"><t t-esc="payloadText()"/></pre>
                 </div>
 
                 <div class="o_easyocr_result_body">
-                    <div t-if="hasSection('document')" class="o_easyocr_result_card">
-                        <div class="o_easyocr_result_card_head" t-on-click="() => this.toggleCard('document')">
-                            <i class="fa fa-file-o me-1"/>
-                            <span>Document</span>
-                            <i class="fa fa-chevron-down ms-auto"/>
-                        </div>
-                        <div t-if="!isCollapsed('document')" class="o_easyocr_result_card_body">
-                            <div t-foreach="sectionRows('document')" t-as="row" t-key="row_index" class="o_easyocr_result_row">
-                                <span class="o_easyocr_result_label"><t t-esc="row[0]"/></span>
-                                <span class="o_easyocr_result_value"><t t-esc="row[1]"/></span>
-                            </div>
-                        </div>
+                    <div t-if="state.loading" class="o_easyocr_result_loading" role="status">
+                        <i class="fa fa-circle-o-notch fa-spin me-2" aria-hidden="true"/>Loading…
                     </div>
 
-                    <div t-if="hasSection('supplier')" class="o_easyocr_result_card">
-                        <div class="o_easyocr_result_card_head" t-on-click="() => this.toggleCard('supplier')">
-                            <i class="fa fa-home me-1"/>
-                            <span>Supplier</span>
-                            <i class="fa fa-chevron-down ms-auto"/>
-                        </div>
-                        <div t-if="!isCollapsed('supplier')" class="o_easyocr_result_card_body">
-                            <div t-foreach="sectionRows('supplier')" t-as="row" t-key="row_index" class="o_easyocr_result_row">
-                                <span class="o_easyocr_result_label"><t t-esc="row[0]"/></span>
-                                <span class="o_easyocr_result_value"><t t-esc="row[1]"/></span>
-                            </div>
-                        </div>
+                    <div t-if="mismatch()" class="o_easyocr_result_warning" role="alert">
+                        <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"/>
+                        <strong>Lines do not match document totals</strong>
+                        <span class="ms-1"><t t-esc="mismatch()"/></span>
                     </div>
 
-                    <div t-if="hasSection('customer')" class="o_easyocr_result_card">
-                        <div class="o_easyocr_result_card_head" t-on-click="() => this.toggleCard('customer')">
-                            <i class="fa fa-user-o me-1"/>
-                            <span>Customer</span>
-                            <i class="fa fa-chevron-down ms-auto"/>
+                    <section t-if="hasSection('document')" class="o_easyocr_result_card">
+                        <t t-call="easyocr.OCRResultDialog.cardHead">
+                            <t t-set="card" t-value="'document'"/>
+                            <t t-set="icon" t-value="'fa-file-text-o'"/>
+                            <t t-set="title">Document</t>
+                        </t>
+                        <div t-if="!isCollapsed('document')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_document'">
+                            <t t-call="easyocr.OCRResultDialog.fields"><t t-set="section" t-value="'document'"/></t>
                         </div>
-                        <div t-if="!isCollapsed('customer')" class="o_easyocr_result_card_body">
-                            <div t-foreach="sectionRows('customer')" t-as="row" t-key="row_index" class="o_easyocr_result_row">
-                                <span class="o_easyocr_result_label"><t t-esc="row[0]"/></span>
-                                <span class="o_easyocr_result_value"><t t-esc="row[1]"/></span>
-                            </div>
-                        </div>
-                    </div>
+                    </section>
 
-                    <div t-if="hasSection('lines')" class="o_easyocr_result_card">
-                        <div class="o_easyocr_result_card_head" t-on-click="() => this.toggleCard('lines')">
-                            <i class="fa fa-list-ul me-1"/>
-                            <span>Invoice lines</span>
-                            <span class="o_easyocr_result_count"><t t-esc="items().length"/></span>
-                            <i class="fa fa-chevron-down ms-auto"/>
+                    <section t-if="hasSection('supplier')" class="o_easyocr_result_card">
+                        <t t-call="easyocr.OCRResultDialog.cardHead">
+                            <t t-set="card" t-value="'supplier'"/>
+                            <t t-set="icon" t-value="'fa-building-o'"/>
+                            <t t-set="title">Supplier</t>
+                        </t>
+                        <div t-if="!isCollapsed('supplier')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_supplier'">
+                            <t t-call="easyocr.OCRResultDialog.fields"><t t-set="section" t-value="'supplier'"/></t>
                         </div>
-                        <div t-if="!isCollapsed('lines')" class="o_easyocr_result_card_body o_easyocr_result_lines">
-                            <table class="o_easyocr_result_table">
-                                <thead>
-                                    <tr>
-                                        <th>Code</th>
-                                        <th>Description</th>
-                                        <th class="text-end">Qty</th>
-                                        <th class="text-end">Price</th>
-                                        <th class="text-end">Disc%</th>
-                                        <th class="text-end">Tax%</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="state.items" t-as="item" t-key="item_index">
+                    </section>
+
+                    <section t-if="hasSection('customer')" class="o_easyocr_result_card">
+                        <t t-call="easyocr.OCRResultDialog.cardHead">
+                            <t t-set="card" t-value="'customer'"/>
+                            <t t-set="icon" t-value="'fa-user-o'"/>
+                            <t t-set="title">Customer</t>
+                        </t>
+                        <div t-if="!isCollapsed('customer')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_customer'">
+                            <t t-call="easyocr.OCRResultDialog.fields"><t t-set="section" t-value="'customer'"/></t>
+                        </div>
+                    </section>
+
+                    <section t-if="hasSection('lines')" class="o_easyocr_result_card">
+                        <t t-call="easyocr.OCRResultDialog.cardHead">
+                            <t t-set="card" t-value="'lines'"/>
+                            <t t-set="icon" t-value="'fa-list-ul'"/>
+                            <t t-set="title">Invoice lines</t>
+                            <t t-set="count" t-value="items().length"/>
+                        </t>
+                        <div t-if="!isCollapsed('lines')" class="o_easyocr_result_card_body o_easyocr_result_lines" t-att-id="uid + '_card_lines'">
+                            <div class="o_easyocr_result_lines_toolbar">
+                                <button class="o_easyocr_result_add_line" type="button" t-on-click="addLine">
+                                    <i class="fa fa-plus me-1" aria-hidden="true"/>Add line
+                                </button>
+                            </div>
+                            <div class="o_easyocr_result_table_wrap">
+                                <table class="o_easyocr_result_table">
+                                    <thead>
                                         <tr>
-                                            <td><t t-esc="item.code"/></td>
-                                            <td><input class="o_easyocr_result_input" t-model="item.description"/></td>
-                                            <td class="text-end"><input class="o_easyocr_result_input o_easyocr_result_input_number" type="number" step="any" t-model="item.quantity"/></td>
-                                            <td class="text-end"><input class="o_easyocr_result_input o_easyocr_result_input_number" type="number" step="any" t-model="item.unit_price"/></td>
-                                            <td class="text-end"><input class="o_easyocr_result_input o_easyocr_result_input_number" type="number" step="any" t-model="item.discount_percent"/></td>
-                                            <td class="text-end"><t t-esc="item.tax_rate"/></td>
-                                            <td class="text-end">
-                                                <button class="btn btn-link btn-sm o_easyocr_result_remove" type="button" t-on-click="() => this.removeLine(item_index)">
-                                                    <i class="fa fa-times"/>
-                                                </button>
-                                            </td>
+                                            <th scope="col" class="col-code">Code</th>
+                                            <th scope="col" class="col-product">Product</th>
+                                            <th scope="col" class="col-desc">Description</th>
+                                            <th scope="col" class="col-type">Type</th>
+                                            <th scope="col" class="col-num">Qty</th>
+                                            <th scope="col" class="col-num">Price</th>
+                                            <th scope="col" class="col-rate">Disc%</th>
+                                            <th scope="col" class="col-rate">Tax%</th>
+                                            <th scope="col" class="col-rate">RE%</th>
+                                            <th scope="col" class="col-rate">IRPF%</th>
+                                            <th scope="col" class="col-num">Total</th>
+                                            <th scope="col" class="col-actions"><span class="visually-hidden">Actions</span></th>
                                         </tr>
-                                    </t>
-                                </tbody>
-                            </table>
-                            <button class="btn btn-link btn-sm o_easyocr_result_add_line" type="button" t-on-click="addLine">
-                                <i class="fa fa-plus me-1"/>Add line
-                            </button>
-                        </div>
-                    </div>
-
-                    <div t-if="hasSection('totals')" class="o_easyocr_result_card">
-                        <div class="o_easyocr_result_card_head" t-on-click="() => this.toggleCard('totals')">
-                            <i class="fa fa-eur me-1"/>
-                            <span>Totals</span>
-                            <i class="fa fa-chevron-down ms-auto"/>
-                        </div>
-                        <div t-if="!isCollapsed('totals')" class="o_easyocr_result_card_body">
-                            <div t-foreach="sectionRows('totals')" t-as="row" t-key="row_index" class="o_easyocr_result_row">
-                                <span class="o_easyocr_result_label"><t t-esc="row[0]"/></span>
-                                <span class="o_easyocr_result_value"><t t-esc="row[1]"/></span>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-if="!items().length">
+                                            <td colspan="12" class="o_easyocr_result_empty">No line items</td>
+                                        </tr>
+                                        <t t-foreach="state.items" t-as="item" t-key="item_index">
+                                            <tr>
+                                                <td><input class="o_easyocr_result_cell" t-model="item.code" t-on-change="resolveProducts" t-att-aria-label="cellLabel('code', item_index)"/></td>
+                                                <td class="col-product">
+                                                    <span t-if="productOf(item)" class="o_easyocr_result_product is-linked" t-att-title="productOf(item)"><i class="fa fa-link me-1" aria-hidden="true"/><t t-esc="productOf(item)"/></span>
+                                                    <span t-else="" class="o_easyocr_result_product" title="No product linked: the line goes as free text">—</span>
+                                                </td>
+                                                <td><input class="o_easyocr_result_cell" t-model="item.description" t-att-aria-label="cellLabel('description', item_index)"/></td>
+                                                <td>
+                                                    <select class="o_easyocr_result_cell" t-model="item.item_type" t-att-aria-label="cellLabel('item_type', item_index)">
+                                                        <t t-foreach="itemTypes" t-as="type" t-key="type[0]">
+                                                            <option t-att-value="type[0]"><t t-esc="type[1]"/></option>
+                                                        </t>
+                                                    </select>
+                                                </td>
+                                                <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.quantity" t-att-aria-label="cellLabel('quantity', item_index)"/></td>
+                                                <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.unit_price" t-att-aria-label="cellLabel('unit_price', item_index)"/></td>
+                                                <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.discount_percent" t-att-aria-label="cellLabel('discount_percent', item_index)"/></td>
+                                                <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.tax_rate" t-att-aria-label="cellLabel('tax_rate', item_index)"/></td>
+                                                <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.re_rate" t-att-aria-label="cellLabel('re_rate', item_index)"/></td>
+                                                <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.irpf_rate" t-att-aria-label="cellLabel('irpf_rate', item_index)"/></td>
+                                                <td class="o_easyocr_result_line_total"><t t-esc="lineTotal(item)"/></td>
+                                                <td class="col-actions">
+                                                    <button class="o_easyocr_result_remove" type="button" t-on-click="() => this.removeLine(item_index)" title="Delete" aria-label="Delete">
+                                                        <i class="fa fa-times" aria-hidden="true"/>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <div t-if="hasSection('payment')" class="o_easyocr_result_card">
-                        <div class="o_easyocr_result_card_head" t-on-click="() => this.toggleCard('payment')">
-                            <i class="fa fa-credit-card me-1"/>
-                            <span>Payment</span>
-                            <i class="fa fa-chevron-down ms-auto"/>
+                    <section t-if="hasSection('totals')" class="o_easyocr_result_card">
+                        <t t-call="easyocr.OCRResultDialog.cardHead">
+                            <t t-set="card" t-value="'totals'"/>
+                            <t t-set="icon" t-value="'fa-eur'"/>
+                            <t t-set="title">Totals</t>
+                        </t>
+                        <div t-if="!isCollapsed('totals')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_totals'">
+                            <t t-call="easyocr.OCRResultDialog.fields"><t t-set="section" t-value="'totals'"/></t>
                         </div>
-                        <div t-if="!isCollapsed('payment')" class="o_easyocr_result_card_body">
-                            <div t-foreach="sectionRows('payment')" t-as="row" t-key="row_index" class="o_easyocr_result_row">
-                                <span class="o_easyocr_result_label"><t t-esc="row[0]"/></span>
-                                <span class="o_easyocr_result_value"><t t-esc="row[1]"/></span>
-                            </div>
-                        </div>
-                    </div>
+                    </section>
 
-                    <div t-if="hasSection('notes')" class="o_easyocr_result_card">
-                        <div class="o_easyocr_result_card_head" t-on-click="() => this.toggleCard('notes')">
-                            <i class="fa fa-pencil me-1"/>
-                            <span>Notes</span>
-                            <i class="fa fa-chevron-down ms-auto"/>
+                    <section t-if="hasSection('payment')" class="o_easyocr_result_card">
+                        <t t-call="easyocr.OCRResultDialog.cardHead">
+                            <t t-set="card" t-value="'payment'"/>
+                            <t t-set="icon" t-value="'fa-credit-card'"/>
+                            <t t-set="title">Payment</t>
+                        </t>
+                        <div t-if="!isCollapsed('payment')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_payment'">
+                            <t t-call="easyocr.OCRResultDialog.fields"><t t-set="section" t-value="'payment'"/></t>
                         </div>
-                        <div t-if="!isCollapsed('notes')" class="o_easyocr_result_card_body">
-                            <t t-esc="notes()"/>
+                    </section>
+
+                    <section t-if="hasSection('notes')" class="o_easyocr_result_card">
+                        <t t-call="easyocr.OCRResultDialog.cardHead">
+                            <t t-set="card" t-value="'notes'"/>
+                            <t t-set="icon" t-value="'fa-pencil'"/>
+                            <t t-set="title">Notes</t>
+                        </t>
+                        <div t-if="!isCollapsed('notes')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_notes'">
+                            <p class="o_easyocr_result_notes"><t t-esc="notes()"/></p>
                         </div>
-                    </div>
+                    </section>
                 </div>
 
                 <div class="o_easyocr_result_footer">
-                    <div class="o_easyocr_result_status me-auto">
-                        <span class="o_easyocr_result_status_label">Status</span>
-                        <label class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="ocr_status" t-att-checked="!state.draft" t-on-click="() => this.state.draft = false"/>
-                            <span>Validated</span>
-                        </label>
-                        <label class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="ocr_status" t-att-checked="state.draft" t-on-click="() => this.state.draft = true"/>
-                            <span>Draft</span>
-                        </label>
-                        <span class="o_easyocr_result_status_label ms-3">Journal</span>
-                        <select class="form-select form-select-sm" t-model="state.journalId">
-                            <option value="">-- Automatic --</option>
-                            <t t-foreach="state.journals" t-as="journal" t-key="journal.id">
-                                <option t-att-value="journal.id"><t t-esc="journal.name"/></option>
-                            </t>
-                        </select>
+                    <div t-if="state.error" class="o_easyocr_result_error" role="alert">
+                        <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/><t t-esc="state.error"/>
                     </div>
-                    <button class="btn btn-secondary" t-on-click="close">Cancel</button>
-                    <button
-                        class="btn btn-success"
-                        t-on-click="createInvoice"
-                        t-att-disabled="state.busy"
-                    >
-                        <i class="fa fa-check me-1"/>Create invoice
-                    </button>
-                    <div class="o_easyocr_result_payment">
-                        <label class="form-check form-check-inline">
-                            <input type="checkbox" class="form-check-input" t-model="state.createPayment"/>
-                            <span>Create payment linked to the invoice</span>
-                        </label>
-                        <t t-if="state.createPayment">
-                            <span class="o_easyocr_result_status_label ms-3">Payment method</span>
-                            <select class="form-select form-select-sm" t-model="state.paymentModeId">
-                                <option value="">-- Automatic --</option>
-                                <t t-foreach="state.paymentModes" t-as="mode" t-key="mode.id">
-                                    <option t-att-value="mode.id"><t t-esc="mode.name"/></option>
-                                </t>
-                            </select>
-                            <span class="o_easyocr_result_status_label ms-3">Bank account</span>
-                            <select class="form-select form-select-sm" t-model="state.bankId">
-                                <option value="">-- Automatic --</option>
-                                <t t-foreach="state.banks" t-as="bank" t-key="bank.id">
-                                    <option t-att-value="bank.id"><t t-esc="bank.name"/></option>
-                                </t>
-                            </select>
-                        </t>
+                    <div class="o_easyocr_result_footer_options">
+                        <div class="o_easyocr_result_footer_row">
+                            <div class="o_easyocr_result_option" role="radiogroup" t-att-aria-labelledby="uid + '_status_label'">
+                                <span class="o_easyocr_result_option_label" t-att-id="uid + '_status_label'">Status</span>
+                                <label class="o_easyocr_result_radio">
+                                    <input type="radio" t-att-name="uid + '_status'" t-att-checked="!state.draft" t-on-change="() => this.setDraft(false)"/>
+                                    <span>Validated</span>
+                                </label>
+                                <label class="o_easyocr_result_radio">
+                                    <input type="radio" t-att-name="uid + '_status'" t-att-checked="state.draft" t-on-change="() => this.setDraft(true)"/>
+                                    <span>Draft</span>
+                                </label>
+                            </div>
+                            <div class="o_easyocr_result_option">
+                                <label class="o_easyocr_result_option_label" t-att-for="uid + '_journal'">Journal</label>
+                                <select class="o_easyocr_result_select" t-att-id="uid + '_journal'" t-model="state.journalId">
+                                    <option value="">-- Automatic --</option>
+                                    <t t-foreach="state.journals" t-as="journal" t-key="journal.id">
+                                        <option t-att-value="journal.id"><t t-esc="journal.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="o_easyocr_result_option">
+                                <label class="o_easyocr_result_option_label" t-att-for="uid + '_doctype'">Document type</label>
+                                <select class="o_easyocr_result_select" t-att-id="uid + '_doctype'" t-on-change="(ev) => this.state.isRefund = ev.target.value === 'refund'">
+                                    <option value="invoice" t-att-selected="!state.isRefund">Supplier invoice</option>
+                                    <option value="refund" t-att-selected="state.isRefund">Credit note</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="o_easyocr_result_footer_row">
+                            <label class="o_easyocr_result_check" t-att-title="paymentHint()">
+                                <input type="checkbox" t-model="state.createPayment" t-att-disabled="state.draft"/>
+                                <span>Create payment linked to the invoice</span>
+                            </label>
+                            <t t-if="state.createPayment">
+                                <select class="o_easyocr_result_select" t-model="state.paymentModeId" aria-label="Payment method">
+                                    <option value="">Payment method: -- Automatic --</option>
+                                    <t t-foreach="state.paymentModes" t-as="mode" t-key="mode.id">
+                                        <option t-att-value="mode.id"><t t-esc="mode.name"/></option>
+                                    </t>
+                                </select>
+                                <select class="o_easyocr_result_select" t-model="state.bankId" aria-label="Bank account">
+                                    <option value="">Bank account: -- Automatic --</option>
+                                    <t t-foreach="state.banks" t-as="bank" t-key="bank.id">
+                                        <option t-att-value="bank.id"><t t-esc="bank.name"/></option>
+                                    </t>
+                                </select>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="o_easyocr_result_footer_btns">
+                        <button type="button" class="btn btn-outline-secondary" t-on-click="close">Cancel</button>
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            t-on-click="createInvoice"
+                            t-att-disabled="state.busy or state.loading"
+                            aria-keyshortcuts="Control+Enter"
+                        >
+                            <i t-att-class="'fa me-1 ' + (state.busy ? 'fa-circle-o-notch fa-spin' : 'fa-check')" aria-hidden="true"/>Create invoice
+                        </button>
                     </div>
                 </div>
 

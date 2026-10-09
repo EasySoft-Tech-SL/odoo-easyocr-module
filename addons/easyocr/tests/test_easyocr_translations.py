@@ -77,6 +77,15 @@ VIEWER_STRINGS = (
     "That template has no boxes.",
     # The reading-result dialog: what it says when the bill cannot be made.
     "The bill could not be created.",
+    "The invoice could not be created: %s",
+    "Supplier on file: %s",
+    "New supplier: it will be created from this data",
+    "This tax ID is your own company's",
+    "%(column)s, line %(line)s",
+    "Only a validated invoice can be paid",
+    "Shipping",
+    "Surcharge",
+    "Fee",
     # The help popup: the two blocks of shortcuts and interaction tips.
     "Keyboard shortcuts",
     "Select label",
