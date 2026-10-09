@@ -30,7 +30,7 @@ desde el primer día, gratis y sin configurar nada.
 
 Lo que **no** puede hacer por sí solo es leer un escaneo o una foto: eso lo
 resuelve el servicio de extracción de EasyOCR, y **hasta que no lo configure,
-los escaneos y las fotos no se leerán**. Si pulsa «Leer con IA» sin haberlo
+los escaneos y las fotos no se leerán**. Si pulsa «Extraer con IA» sin haberlo
 configurado, el módulo se lo dirá con este aviso, sin más consecuencias:
 
 !["Aviso de que la extracción con IA está desactivada"](img/10-ia-apagada.png)
@@ -62,23 +62,26 @@ el menú principal. Al abrirla entra en su pantalla de inicio:
 
 ![La pantalla de inicio de EasyOCR](img/02-inicio.png)
 
-Arriba del todo están los números: cuántos **documentos** hay, cuántos han
-acabado en **factura** y cuántas **plantillas** tiene guardadas. Cada uno es
-también un atajo: púlselo y va a su lista.
+Arriba del todo están los números: cuántas **facturas** se han generado y
+cuántas **plantillas** hay guardadas. Cada uno es también un atajo: púlselo y va
+a su lista.
 
 Debajo, cada tarjeta lleva a un sitio:
 
-- **Subir un documento** — abre la pantalla de trabajo, que espera el PDF o la foto.
-  Es el camino corto para meter una factura a mano.
-- **Documentos** — las facturas y tickets leídos, o esperando a leerse.
-- **Bandeja de entrada** — lo que le han entregado otros módulos y todavía
-  nadie ha mirado.
-- **Capturar un recibo** — la página del móvil, para fotografiar un ticket.
-- **Plantillas** — los recuadros guardados de cada proveedor.
-- **Facturas de proveedor** — las facturas de compra, donde han ido a parar los
-  documentos que ha facturado.
-- **Registro de webhooks** — las llamadas que ha hecho el servicio.
-- **Ajustes** — solo aparece si usted puede configurar el módulo.
+- **Cargar Pdf** — importa un PDF y extrae los datos de la factura de proveedor
+  de forma visual. Es el camino corto para meter una factura a mano.
+- **Envío por lotes** — procesa varios PDFs a la vez con extracción automática
+  mediante IA.
+- **Escanear gasto** — escanea un ticket de gasto desde el móvil y lo registra
+  automáticamente.
+- **Plantillas** — gestiona las plantillas de selección de zonas asociadas a
+  proveedores.
+- **Facturas** — consulta el historial de facturas generadas desde PDFs
+  importados.
+- **Logs de Webhook** — audita las notificaciones del webhook recibidas y
+  revisa los fallos de procesamiento.
+- **Configuración** — configura la clave API, el servicio en la nube y las
+  opciones del módulo.
 
 El **Abrir** de cada tarjeta, con su flecha, indica que la tarjeta entera se
 pulsa; no hay que apuntarle a nada en concreto.
@@ -93,12 +96,12 @@ La configuración vive en **Ajustes > EasyOCR** y viene en dos bloques.
 
 ![La sección EasyOCR en Ajustes](img/03-ajustes.png)
 
-## Leer con IA
+## Configuración IA OCR
 
 |[tabla: Opciones del servicio de lectura]|
 |---|---|
-| **Leer con IA** | Enciende o apaga el envío de documentos al servicio. Mientras está apagado, el módulo no manda nada a ningún sitio. |
-| **URL del servicio** | La dirección del servicio de EasyOCR. Se escribe sin nada más: el módulo añade por su cuenta la parte final de la dirección. |
+| **Habilitar IA OCR** | Enciende o apaga el envío de documentos al servicio. Mientras está apagado, el módulo no manda nada a ningún sitio. |
+| **URL del servicio OCR** | La dirección del servicio de EasyOCR. Se escribe sin nada más: el módulo añade por su cuenta la parte final de la dirección. |
 | **Clave API** | La clave que identifica su cuenta ante el servicio. Se la da EasyOCR al contratar el servicio. |
 | **Probar la conexión** | Comprueba la clave contra el servicio y dice si vale. Está justo debajo de la clave y **no gasta ninguna lectura**. |
 | **Tiempo de espera** | Cuántos segundos espera Odoo la respuesta antes de darse por vencido. Una página escaneada puede tardar, así que conviene dejarlo generoso. |
@@ -158,7 +161,7 @@ factura nada.
 Cuando termine, pulse **Guardar**. El botón **Descartar** deja todo como estaba.
 
 **Nada de esto hace falta si solo va a leer PDF que ya traen texto.** Deje
-«Leer con IA» apagado y el módulo funcionará igual.
+«Extraer con IA» apagado y el módulo funcionará igual.
 
 ## Un ajuste que no está en esta pantalla
 
@@ -176,7 +179,7 @@ abierto. Si no va a usar esta vía, no tiene que hacer nada.
 
 ## Meter un documento: un paso
 
-Desde la pantalla de inicio, **Subir un documento** es el camino corto: lleva a
+Desde la pantalla de inicio, **Cargar Pdf** es el camino corto: lleva a
 la pantalla de trabajo con el documento todavía sin elegir.
 
 ![La pantalla esperando un archivo](img/19-abrir-documento.png)
@@ -217,7 +220,7 @@ arriba:
 |[tabla: Los botones de la ficha de un documento]|
 |---|---|
 | **Abrir el visor** | Abre la pantalla grande donde se ve el documento y se dibujan las casillas. |
-| **Leer con IA** | Manda el archivo al servicio. Solo aparece si hay archivo adjunto y si tiene usted el permiso de responsable. |
+| **Extraer con IA** | Manda el archivo al servicio. Solo aparece si hay archivo adjunto y si tiene usted el permiso de responsable. |
 | **Crear factura** | Prepara la factura de proveedor con lo que hay en la ficha. |
 | **Marcar como procesado** | Da el documento por revisado sin crear nada. |
 
@@ -254,10 +257,10 @@ y, en una columna a la derecha, todo lo que se puede hacer con él.
 
 La columna, de arriba abajo, tiene estos apartados:
 
-| **Cuenta** | El botón **Leer con IA** y, debajo, lo que tiene contratado: el plan y lo que le queda de la cuota del mes —cuántas páginas ha usado, cuántas le quedan, cuándo se renuevan y el saldo del monedero—. |
-| **Campos** | Los nueve datos que se pueden leer, uno por botón. El color de cada botón es el color con el que se pintará su recuadro, así que siempre se sabe qué recuadro es qué. |
+| **Cuenta** | El botón **Extraer con IA** y, debajo, lo que tiene contratado: el plan y lo que le queda de la cuota del mes —cuántas páginas ha usado, cuántas le quedan, cuándo se renuevan y el saldo del monedero—. |
+| **Etiquetas** | Los nueve datos que se pueden leer, uno por botón. El color de cada botón es el color con el que se pintará su recuadro, así que siempre se sabe qué recuadro es qué. |
 | **Plantilla** | Ponerle nombre a los recuadros y guardarlos. |
-| **Lo que ha leído** | Los valores que van saliendo de cada recuadro. Aparece en cuanto hay uno. |
+| **Datos extraídos** | Los valores que van saliendo de cada recuadro. Aparece en cuanto hay uno. |
 
 Abajo del todo quedan los dos botones que cierran el trabajo —**Guardar
 plantilla** y **Generar factura**—, y una línea con los atajos de teclado: las
@@ -284,16 +287,16 @@ Si un recuadro no le convence, la **×** de su derecha lo quita. El botón
 Un recuadro ya dibujado se puede colocar mejor sin borrarlo: arrástrelo desde
 dentro para moverlo, o tire de una de sus esquinas —los cuadraditos de color—
 para cambiarle el tamaño. Al soltar, el módulo vuelve a leer el texto que ha
-quedado dentro, así que **Lo que ha leído** siempre es lo que hay debajo del
+quedado dentro, así que **Datos extraídos** siempre es lo que hay debajo del
 recuadro.
 
 Cuando esté conforme, pulse **Llevarlo a la ficha**: los valores que ha leído
 pasan a los campos del documento, y ya puede crear la factura sin teclear nada.
 Esta lectura **no cuesta nada**, porque el texto estaba en el propio archivo; la
-de **Leer con IA** es la que se paga. Si un recuadro cogió lo que no era, ese
+de **Extraer con IA** es la que se paga. Si un recuadro cogió lo que no era, ese
 campo se queda como estaba y los demás se rellenan igual.
 
-El botón **Leer con IA** —dentro del apartado **Cuenta**— manda el documento al
+El botón **Extraer con IA** —dentro del apartado **Cuenta**— manda el documento al
 servicio y rellena la ficha con lo que lea; es el mismo de la ficha del
 documento. **Generar factura**, en el pie de la columna, prepara la factura de
 proveedor con lo que hay en la ficha y la abre.
@@ -339,20 +342,20 @@ dibujados, con el aviso de a quién pertenecen:
 ![El visor con los recuadros de la plantilla ya pintados](img/24-plantilla-aplicada.png)
 
 Lo que se guarda es **dónde** están los recuadros. El texto se lee otra vez del
-documento que tiene delante, así que **Lo que ha leído** muestra siempre el de la
+documento que tiene delante, así que **Datos extraídos** muestra siempre el de la
 factura que está abierta. Si algún recuadro no encaja, la **×** lo quita y lo
 dibuja de nuevo.
 
 Dos detalles que conviene conocer:
 
 - Si el documento no tiene proveedor identificado todavía, no hay plantilla que
-  buscar. Léalo antes con **Leer con IA**: es la lectura la que pone el NIF y el
+  buscar. Léalo antes con **Extraer con IA**: es la lectura la que pone el NIF y el
   nombre, y en cuanto lo hace, los recuadros aparecen solos.
 - Si un proveedor tiene varias plantillas, se aplica **la última que se guardó**.
 
 # 7. Leer un documento con IA
 
-El botón **Leer con IA** es lo que lee los escaneos y las fotos. Manda el
+El botón **Extraer con IA** es lo que lee los escaneos y las fotos. Manda el
 archivo al servicio y rellena la ficha con lo que devuelve: nombre y NIF del
 proveedor, número de documento, fecha, importe base y total.
 
@@ -400,7 +403,7 @@ punto está: el archivo saliendo, el texto volviendo, los campos sacándose.
 La barra no llega al final hasta que la lectura ha terminado de verdad. Si se
 quedara llena con la respuesta todavía en camino, le estaría engañando.
 
-## Lo que ha leído
+## Datos extraídos
 
 Cuando termina, la lectura abre esta pantalla. Arriba, lo que el servicio sabía
 del documento y lo que ha costado: la confianza, los segundos, los tokens y las
@@ -560,7 +563,7 @@ factura se quedó en borrador, aquí lo dirá en lugar de quedarse callado.
 # 12. Enviar varios documentos de una vez
 
 Cuando llega la carpeta entera del trimestre, mandar los archivos de uno en uno
-es la parte pesada. **EasyOCR > Enviar documentos** manda un montón de golpe y
+es la parte pesada. **EasyOCR > Envío por lotes** manda un montón de golpe y
 los deja leídos y repartidos, uno por documento.
 
 ![La pantalla de lotes con dos archivos elegidos](img/20-enviar-por-lotes.png)
@@ -626,7 +629,7 @@ meses se puede volver a leer cuando pasa el tiempo que haya configurado.
 ## He instalado el módulo y no lee mis escaneos
 
 Es lo esperado. Un escaneo es una imagen, y para leerlo hace falta el servicio de
-EasyOCR configurado y la opción **Leer con IA** encendida. Un PDF que ya trae
+EasyOCR configurado y la opción **Extraer con IA** encendida. Un PDF que ya trae
 texto, en cambio, se lee sin configurar nada.
 
 ## ¿Puedo usar el módulo sin contratar el servicio?
@@ -638,7 +641,7 @@ lo único que no hará es leer fotos ni escaneos.
 
 Mire primero si el documento sabe de qué proveedor es. La plantilla se busca por
 proveedor, y un documento recién metido todavía no tiene ninguno: se lo pone la
-lectura. Léalo con **Leer con IA** y los recuadros aparecerán en cuanto el
+lectura. Léalo con **Extraer con IA** y los recuadros aparecerán en cuanto el
 servicio diga el NIF o el nombre.
 
 Si el documento sí es de ese proveedor y aun así no aparecen, compruebe en
@@ -646,7 +649,7 @@ Si el documento sí es de ese proveedor y aun así no aparecen, compruebe en
 ficha es el mismo. Y si ese proveedor tiene varias plantillas, la que se aplica
 es la última que se guardó.
 
-## El botón «Leer con IA» no me aparece
+## El botón «Extraer con IA» no me aparece
 
 Ese botón es de **responsable**. Pídale a quien administra su Odoo que le asigne
 el permiso, o que lance él la lectura. En el visor aparece junto a **Crear
@@ -675,7 +678,7 @@ borrador y vuelva a la ficha del documento: el módulo volverá a ofrecerle
 ## ¿Se suben mis documentos a algún sitio?
 
 Solo si usted lo pide. El módulo no manda nada al servicio hasta que se pulsa
-**Leer con IA** —o hasta que llega una foto desde la captura del móvil con la
+**Extraer con IA** —o hasta que llega una foto desde la captura del móvil con la
 lectura encendida—. Recibir un archivo en la bandeja de entrada no envía nada, y
 elegir archivos para un lote tampoco: de un lote solo sale lo que se manda al
 pulsar **Enviarlos**.
