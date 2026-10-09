@@ -136,6 +136,24 @@ work was done.
   its editable lines and the payment, and the viewer its completeness checklist,
   the quota, the AI instructions, the supplier dropdown and undo.
 
+- **Making the bill from the reading result said only that it failed.** A
+  supplier nobody had on file stopped the bill, and the dialog swallowed the
+  reason. The supplier is now created from what was read (name, tax number,
+  address, town, postal code, country, phone and email), as the module this is
+  a port of does, and when the server does refuse, the dialog says why.
+- **The reading result, redone.** Every card is a grid of labelled fields; the
+  ones that reach the bill (invoice number, dates, the supplier's details) can be
+  corrected there and are written onto the document first. The supplier's tax
+  number says whether the contact exists or will be created. The lines carry
+  code, product, type, quantity, price, discount, VAT, RE, IRPF and their total,
+  in the reader's own number format, and a warning shows when they do not add
+  up to the document's totals. The footer groups status, journal and document
+  type (bill or credit note), and the payment uses the method and bank picked,
+  or the company's bank journal. The VAT, RE and IRPF typed on a line become
+  the company's taxes with those rates, which the edited lines used to lose.
+  The dialog can be used from the keyboard: Esc closes it, Ctrl+Enter makes the
+  bill, Tab stays inside it, and every control has a name a screen reader says.
+
 ### Pending
 
 - **Spanish localisation cases.** IRPF, recargo de equivalencia and IGIC.

@@ -292,6 +292,7 @@ class EasyocrInboxItem(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'easyocr.document',
             'res_id': self.document_id.id,
+            'views': [(False, 'form')],
             'view_mode': 'form',
             'target': 'current',
         }
