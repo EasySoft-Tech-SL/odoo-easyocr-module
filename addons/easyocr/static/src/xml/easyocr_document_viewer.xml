@@ -107,47 +107,63 @@
                                 <t t-esc="state.account.message"/>
                             </div>
 
-                            <!-- The plan and what is left, out of the same answer. -->
+                            <!-- The plan and what is left, out of the same answer,
+                                 folded to one line until the reader opens it. -->
                             <div t-if="state.account.plan.name" class="o_easyocr_quota">
-                                <div class="o_easyocr_quota_head">
-                                    <span class="o_easyocr_quota_plan">
-                                        <i class="fa fa-star me-1"/>
-                                        <t t-esc="state.account.plan.name"/>
-                                        <t t-if="state.account.plan.is_free">
-                                            <span class="o_easyocr_badge o_easyocr_badge_free">FREE</span>
-                                        </t>
+                                <button class="o_easyocr_quota_toggle" type="button" t-on-click="toggleQuota">
+                                    <span class="o_easyocr_quota_toggle_left">
+                                        <span class="o_easyocr_quota_plan_name"><t t-esc="state.account.plan.name"/></span>
+                                        <span class="o_easyocr_quota_compact">
+                                            <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/> Pages
+                                        </span>
                                     </span>
-                                </div>
-                                <div t-if="state.account.quota.pages_used !== undefined" class="o_easyocr_quota_bar">
-                                    <div
-                                        class="o_easyocr_quota_fill"
-                                        t-attf-style="width: {{ quotaPercent() }}%"
-                                    />
-                                </div>
-                                <div class="o_easyocr_quota_stats">
-                                    <div class="o_easyocr_quota_stat">
-                                        <span class="o_easyocr_quota_label">Pages</span>
-                                        <span class="o_easyocr_quota_value">
-                                            <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/>
+                                    <span class="o_easyocr_quota_toggle_right">
+                                        <span class="o_easyocr_quota_remaining"><t t-esc="state.account.quota.pages_remaining"/> Left</span>
+                                        <i class="fa fa-chevron-down"/>
+                                    </span>
+                                </button>
+
+                                <div t-if="state.quotaExpanded" class="o_easyocr_quota_details">
+                                    <div class="o_easyocr_quota_head">
+                                        <span class="o_easyocr_quota_plan">
+                                            <i class="fa fa-star me-1"/>
+                                            <t t-esc="state.account.plan.name"/>
+                                            <t t-if="state.account.plan.is_free">
+                                                <span class="o_easyocr_badge o_easyocr_badge_free">FREE</span>
+                                            </t>
                                         </span>
                                     </div>
-                                    <div class="o_easyocr_quota_stat" t-if="state.account.quota.pages_remaining !== undefined">
-                                        <span class="o_easyocr_quota_label">Left</span>
-                                        <span class="o_easyocr_quota_value">
-                                            <t t-esc="state.account.quota.pages_remaining"/>
-                                        </span>
+                                    <div t-if="state.account.quota.pages_used !== undefined" class="o_easyocr_quota_bar">
+                                        <div
+                                            class="o_easyocr_quota_fill"
+                                            t-attf-style="width: {{ quotaPercent() }}%"
+                                        />
                                     </div>
-                                    <div class="o_easyocr_quota_stat" t-if="state.account.quota.reset_date">
-                                        <span class="o_easyocr_quota_label">Resets</span>
-                                        <span class="o_easyocr_quota_value" t-esc="resetDateLabel()"/>
-                                    </div>
-                                    <div class="o_easyocr_quota_stat" t-if="state.account.wallet.exists and state.account.wallet.balance_pages">
-                                        <span class="o_easyocr_quota_label">
-                                            <i class="fa fa-credit-card me-1"/>Wallet
-                                        </span>
-                                        <span class="o_easyocr_quota_value">
-                                            <t t-esc="state.account.wallet.balance_pages"/>
-                                        </span>
+                                    <div class="o_easyocr_quota_stats">
+                                        <div class="o_easyocr_quota_stat">
+                                            <span class="o_easyocr_quota_label">Pages</span>
+                                            <span class="o_easyocr_quota_value">
+                                                <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/>
+                                            </span>
+                                        </div>
+                                        <div class="o_easyocr_quota_stat" t-if="state.account.quota.pages_remaining !== undefined">
+                                            <span class="o_easyocr_quota_label">Left</span>
+                                            <span class="o_easyocr_quota_value">
+                                                <t t-esc="state.account.quota.pages_remaining"/>
+                                            </span>
+                                        </div>
+                                        <div class="o_easyocr_quota_stat" t-if="state.account.quota.reset_date">
+                                            <span class="o_easyocr_quota_label">Resets</span>
+                                            <span class="o_easyocr_quota_value" t-esc="resetDateLabel()"/>
+                                        </div>
+                                        <div class="o_easyocr_quota_stat" t-if="state.account.wallet.exists and state.account.wallet.balance_pages">
+                                            <span class="o_easyocr_quota_label">
+                                                <i class="fa fa-credit-card me-1"/>Wallet
+                                            </span>
+                                            <span class="o_easyocr_quota_value">
+                                                <t t-esc="state.account.wallet.balance_pages"/>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -264,6 +280,34 @@
                                     type="button"
                                     t-on-click="() => this.fillDocument()"
                                 ><t>Put it on the document</t></button>
+                            </div>
+
+                            <!-- The completeness checklist: the five fields a
+                                 bill cannot do without, and the four optional
+                                 ones after. A field is done when a box has read
+                                 text for it. -->
+                            <div class="o_easyocr_readiness mt-2">
+                                <t t-set="readiness" t-value="readinessItems()"/>
+                                <div
+                                    t-foreach="readiness.required"
+                                    t-as="item"
+                                    t-key="item.key"
+                                    class="o_easyocr_readiness_row"
+                                >
+                                    <span t-att-class="item.done ? 'o_easyocr_chk o_easyocr_chk_done' : 'o_easyocr_chk'"><t t-esc="item.done ? '●' : '○'"/></span>
+                                    <t t-esc="item.label"/>
+                                </div>
+                                <div
+                                    t-foreach="readiness.optional"
+                                    t-as="item"
+                                    t-key="item.key"
+                                    class="o_easyocr_readiness_row o_easyocr_readiness_optional"
+                                >
+                                    <span t-att-class="item.done ? 'o_easyocr_chk o_easyocr_chk_done' : 'o_easyocr_chk'"><t t-esc="item.done ? '●' : '○'"/></span>
+                                    <t t-esc="item.label"/>
+                                    <small class="o_easyocr_optional_badge">optional</small>
+                                </div>
+                                <div class="o_easyocr_readiness_summary"><t t-esc="readiness.done + '/' + readiness.total"/></div>
                             </div>
                         </div>
 

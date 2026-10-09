@@ -157,6 +157,10 @@ export class EasyocrDocumentViewer extends Component {
             // at one. Answered asynchronously further down -- hasGroup hands
             // back a promise, and a promise is true whatever it resolves to.
             canReadWithAI: false,
+            // The quota widget starts folded to one line, the way the module
+            // this is a port of keeps it: the reader opens the details, they do
+            // not push the fields down by default.
+            quotaExpanded: false,
         });
 
         this.pdfDocument = null;
@@ -567,6 +571,10 @@ export class EasyocrDocumentViewer extends Component {
         return Math.min(100, Math.max(0, value));
     }
 
+    toggleQuota() {
+        this.state.quotaExpanded = !this.state.quotaExpanded;
+    }
+
     /** The day the quota resets, as the reader writes it. */
     resetDateLabel() {
         const raw = this.state.account?.quota?.reset_date;
@@ -578,6 +586,31 @@ export class EasyocrDocumentViewer extends Component {
             return raw;
         }
         return date.toLocaleDateString();
+    }
+
+    /**
+     * The completeness checklist, one row per field, with the five that a bill
+     * cannot do without first and the four that are optional after them. A field
+     * is done when a box on the page has read text for it; the summary counts
+     * only the required five.
+     */
+    readinessItems() {
+        const required = [
+            "partner_name", "document_number", "document_date",
+            "amount_untaxed", "amount_total",
+        ];
+        const optional = ["tax_amount", "description", "partner_vat", "due_date"];
+        const filled = (key) => this.state.boxes.some((box) => box.field_key === key && box.text);
+        return {
+            required: required.map((key) => ({
+                key, label: FIELD_BY_KEY[key]?.label || key, done: filled(key),
+            })),
+            optional: optional.map((key) => ({
+                key, label: FIELD_BY_KEY[key]?.label || key, done: filled(key),
+            })),
+            done: required.filter((key) => filled(key)).length,
+            total: required.length,
+        };
     }
 
     /** The keyboard help, one sentence so it translates as one. */

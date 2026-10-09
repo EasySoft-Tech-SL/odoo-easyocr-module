@@ -199,6 +199,50 @@
         gap: 0.25rem;
     }
 
+    // The completeness checklist: the five fields a bill needs, the four
+    // optional ones after, and the "3/5" that counts only the required five.
+    .o_easyocr_readiness {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #eef1f4;
+
+        .o_easyocr_readiness_row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            color: #495057;
+        }
+
+        .o_easyocr_readiness_optional {
+            color: #90a4ae;
+        }
+
+        .o_easyocr_chk {
+            width: 1rem;
+            text-align: center;
+            color: #adb5bd;
+
+            &.o_easyocr_chk_done {
+                color: #27ae60;
+            }
+        }
+
+        .o_easyocr_optional_badge {
+            margin-left: auto;
+            font-size: 0.68rem;
+            color: #90a4ae;
+        }
+
+        .o_easyocr_readiness_summary {
+            margin-top: 0.3rem;
+            font-weight: 600;
+            color: #002c3c;
+        }
+    }
+
     // The AI banner at the top: the icon, the name with its PRO badge, the
     // button, and underneath the plan and the quota. It is the first thing on
     // the column, which is where the plan belongs.
@@ -284,6 +328,56 @@
         border: 1px solid #eef1f4;
         border-radius: 0.375rem;
         background: #fff;
+
+        .o_easyocr_quota_toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: inherit;
+            cursor: pointer;
+            text-align: start;
+
+            .o_easyocr_quota_toggle_left {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                min-width: 0;
+            }
+
+            .o_easyocr_quota_plan_name {
+                font-weight: 600;
+                font-size: 0.78rem;
+                color: #002c3c;
+            }
+
+            .o_easyocr_quota_compact {
+                color: #6c757d;
+                font-size: 0.72rem;
+            }
+
+            .o_easyocr_quota_toggle_right {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+                flex: 0 0 auto;
+                color: #6c757d;
+            }
+
+            .o_easyocr_quota_remaining {
+                font-weight: 600;
+                color: #002c3c;
+                font-size: 0.72rem;
+            }
+        }
+
+        .o_easyocr_quota_details {
+            margin-top: 0.5rem;
+        }
 
         .o_easyocr_quota_head {
             margin-bottom: 0.4rem;
