@@ -206,24 +206,38 @@
                             </div>
                         </div>
 
-                        <!-- The template: name the boxes and keep them, so the
-                             drawing is not repeated every time. Saving lives in
-                             the footer, next to the bill, which is where the
-                             module this is a port of puts it. -->
+                        <!-- The template: pick one already saved and its boxes
+                             come back, instead of drawing them again. Saving a
+                             new one lives in the footer, next to the bill. -->
                         <div t-if="!state.empty" class="o_easyocr_section">
                             <h5>Template</h5>
                             <p t-if="state.appliedTemplate and state.boxes.length" class="o_easyocr_applied">
                                 <i class="fa fa-check-circle me-1"/><t t-esc="appliedLabel()"/>
                             </p>
-                            <input
-                                type="text"
-                                class="o_easyocr_template_name form-control form-control-sm"
-                                placeholder="Template name"
-                                t-model="state.templateName"
-                            />
-                            <button class="btn btn-link btn-sm px-0 mt-1" t-on-click="clearBoxes">
-                                Clear the boxes
-                            </button>
+                            <div class="o_easyocr_template_row">
+                                <select
+                                    class="o_easyocr_template_select form-select form-select-sm"
+                                    t-model="state.templateId"
+                                >
+                                    <option value="">No template</option>
+                                    <t t-foreach="state.templates" t-as="template" t-key="template.id">
+                                        <option t-att-value="template.id"><t t-esc="template.label"/></option>
+                                    </t>
+                                </select>
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    t-on-click="applyTemplate"
+                                    t-att-disabled="!state.templateId"
+                                >
+                                    Apply
+                                </button>
+                                <button
+                                    t-if="state.appliedTemplate"
+                                    class="btn btn-link btn-sm"
+                                    t-on-click="clearBoxes"
+                                    t-att-title="'Clear template'"
+                                >&#215;</button>
+                            </div>
                         </div>
 
                         <!-- What the boxes read, and the one action that turns a

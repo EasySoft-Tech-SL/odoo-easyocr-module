@@ -142,13 +142,69 @@ class EasyocrDocument(models.Model):
             } for box in template.box_ids],
         }
 
-    def action_save_template(self, name, boxes):
+    @api.model
+    def action_list_templates(self):
+        """The saved templates, for the dropdown that applies them.
+
+        The screen offers the ones that have boxes, most recent first, each with
+        the vendor it belongs to, so the reader can tell two templates apart when
+        a vendor has more than one.
+        """
+        templates = self.env['easyocr.template'].search([
+            ('company_id', '=', self.env.company.id),
+            ('box_ids', '!=', False),
+        ], order='write_date desc, id desc')
+        return [{
+            'id': template.id,
+            'name': template.name,
+            'vendor': template.partner_id.display_name or '',
+            'label': template.display_name,
+        } for template in templates]
+
+    def action_load_template(self, template_id):
+        """The boxes of one saved template, to paint them on the open document.
+
+        The same shape as ``action_template_for_reading``, but for a template the
+        reader picked from the dropdown rather than the one their vendor owns, so
+        the custom instructions come back too.
+        """
+        self.ensure_one()
+        template = self.env['easyocr.template'].browse(template_id)
+        if not template.exists():
+            return {'template': False, 'name': '', 'label': '', 'vendor': '',
+                    'custom_instructions': '', 'boxes': []}
+        return {
+            'template': template.id,
+            'name': template.name,
+            'label': template.display_name,
+            'vendor': template.partner_id.display_name or '',
+            'custom_instructions': template.custom_instructions or '',
+            'boxes': [{
+                'page': box.page,
+                'field_key': box.field_key,
+                'x': box.x,
+                'y': box.y,
+                'width': box.width,
+                'height': box.height,
+            } for box in template.box_ids],
+        }
+
+    @api.model
+    def action_list_suppliers(self):
+        """The vendors the save dialog offers, most of them the ones already used."""
+        suppliers = self.env['res.partner'].search([
+            ('supplier_rank', '>', 0),
+        ], order='name')
+        return [{'id': supplier.id, 'name': supplier.display_name} for supplier in suppliers]
+
+    def action_save_template(self, name, boxes, partner_id=False, custom_instructions=False):
         """Keep these boxes for this document's vendor.
 
         The vendor is worked out here and not on the screen: the screen has no
         way to know it, and a template saved without one is a template nothing
         can ever find again. That is what the first one of these was, and it is
-        why this moved to the server.
+        why this moved to the server. The dialog can also hand a vendor picked by
+        hand, or none for a generic template, and the extra instructions.
         """
         self.ensure_one()
         name = (name or '').strip()
@@ -157,11 +213,12 @@ class EasyocrDocument(models.Model):
         if not boxes:
             raise UserError(_("Draw at least one box before saving a template."))
 
-        partner = self._vendor_for_boxes()
+        partner = self.env['res.partner'].browse(partner_id) if partner_id else self._vendor_for_boxes()
         template = self.env['easyocr.template'].create({
             'name': name,
             'partner_id': partner.id,
             'company_id': self.company_id.id,
+            'custom_instructions': (custom_instructions or '').strip(),
             'box_ids': [(0, 0, self._box_values(box)) for box in boxes],
         })
         return {

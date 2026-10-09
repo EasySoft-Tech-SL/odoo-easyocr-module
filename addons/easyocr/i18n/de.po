@@ -876,8 +876,10 @@ msgstr ""
 "senden."
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__custom_instructions
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
+#: code:addons/easyocr/static/src/xml/easyocr_template_dialog.xml:0
 msgid "Extra instructions"
 msgstr "Zusätzliche Anweisungen"
 
@@ -3545,3 +3547,39 @@ msgstr ""
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Wallet"
 msgstr "Guthaben"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "No template"
+msgstr "Keine Vorlage"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Apply"
+msgstr "Anwenden"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Clear template"
+msgstr "Vorlage entfernen"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_template_dialog.xml:0
+msgid "No vendor (generic)"
+msgstr "Kein Lieferant (generisch)"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Pick a template to apply it."
+msgstr "Wählen Sie eine Vorlage, um sie anzuwenden."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "That template has no boxes."
+msgstr "Diese Vorlage hat keine Felder."
