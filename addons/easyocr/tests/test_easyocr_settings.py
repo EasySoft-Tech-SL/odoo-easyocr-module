@@ -212,8 +212,8 @@ class TestEasyocrSettings(TransactionCase):
 
         post.assert_called_once()
         self.assertEqual(second.state, 'processed')
-        # And it says what was read, on the screen the module keeps for that.
-        self.assertEqual(result['res_model'], 'easyocr.reading.result')
+        # And it says what was read, on the dialog the module keeps for that.
+        self.assertEqual(result['tag'], 'easyocr.ocr_result_dialog')
 
     def test_leaving_the_dialog_alone_reads_nothing(self):
         first = self._document(name='PRIMERA')
@@ -273,17 +273,17 @@ class TestEasyocrSettings(TransactionCase):
         with mock.patch(POST, return_value=self._response(answer)):
             result = document.action_extract()
 
-        self.assertEqual(result['res_model'], 'easyocr.reading.result')
-        wizard = self.env['easyocr.reading.result'].browse(result['res_id'])
-        self.assertEqual(wizard.document_id, document)
-        # The badges: the confidence and the time are the ones the service
-        # answered, and what it did not answer is not invented.
-        self.assertIn('94', wizard.meta)
-        self.assertIn('1.2', wizard.meta)
+        self.assertEqual(result['tag'], 'easyocr.ocr_result_dialog')
+        self.assertEqual(result['params']['document_id'], document.id)
+        # The data the dialog draws: the confidence and the time are the ones
+        # the service answered, and what it did not answer is not invented.
+        data = document.action_result_data()
+        self.assertIn('94', data['meta_pills'][0])
+        self.assertIn('1.2', data['meta_pills'][1])
         # And the vendor details the document has no field for, which used to be
         # read and thrown away.
-        self.assertIn('Calle Mayor 1', wizard.extras)
-        self.assertIn('Transferencia', wizard.extras)
+        self.assertIn('Calle Mayor 1', [v for row in data['sections']['supplier'] for v in row])
+        self.assertIn('Transferencia', [v for row in data['sections']['payment'] for v in row])
 
     def test_the_viewer_can_ask_before_reading(self):
         """The viewer asks on its own, so it can show the reading while it runs."""

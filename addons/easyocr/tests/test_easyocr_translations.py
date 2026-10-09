@@ -75,6 +75,8 @@ VIEWER_STRINGS = (
     # the chosen template turns out to have nothing to draw.
     "Pick a template to apply it.",
     "That template has no boxes.",
+    # The reading-result dialog: what it says when the bill cannot be made.
+    "The bill could not be created.",
 )
 
 # What the batch screen writes by itself. Same rule, and the same reason they

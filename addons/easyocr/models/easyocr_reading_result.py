@@ -147,3 +147,89 @@ class EasyocrReadingResult(models.TransientModel):
             'view_mode': 'form',
             'target': 'current',
         }
+
+    def action_result_data(self):
+        """Everything the result dialog draws, in one answer.
+
+        The cards come back as ready label/value rows, with the labels already
+        in the reader's language, so the screen paints them and nothing else.
+        The raw payload travels whole for the JSON button.
+        """
+        self.ensure_one()
+        answer = self._answer()
+        structured = self._structured(answer)
+        document = structured.get('document') or {}
+        supplier = structured.get('supplier') or {}
+        customer = structured.get('customer') or {}
+        totals = structured.get('totals') or {}
+        payment = structured.get('payment') or {}
+
+        def rows(pairs):
+            return [[label, value] for label, value in pairs if value not in (None, '')]
+
+        return {
+            'meta_pills': self._meta_pills(answer),
+            'sections': {
+                'document': rows([
+                    (_("Type"), document.get('document_type')),
+                    (_("Invoice number"), document.get('document_number')),
+                    (_("Date"), document.get('issue_date')),
+                    (_("Due date"), document.get('due_date')),
+                    (_("Currency"), document.get('currency')),
+                ]),
+                'supplier': rows([
+                    (_("Name"), supplier.get('name')),
+                    (_("Tax number"), supplier.get('tax_id')),
+                    (_("Address"), supplier.get('address')),
+                    (_("City"), supplier.get('city')),
+                    (_("Postal code"), supplier.get('postal_code')),
+                    (_("Country"), supplier.get('country')),
+                    (_("Phone"), supplier.get('phone')),
+                    (_("Email"), supplier.get('email')),
+                ]),
+                'customer': rows([
+                    (_("Name"), customer.get('name')),
+                    (_("Tax number"), customer.get('tax_id')),
+                    (_("Address"), customer.get('address')),
+                    (_("City"), customer.get('city')),
+                    (_("Postal code"), customer.get('postal_code')),
+                    (_("Country"), customer.get('country')),
+                ]),
+                'totals': rows([
+                    (_("Subtotal"), totals.get('net_subtotal')),
+                    (_("Tax"), totals.get('tax_total')),
+                    (_("Discount"), totals.get('discount_total')),
+                    (_("RE / Surcharge"), totals.get('surcharge_total')),
+                    (_("IRPF / Withholding"), totals.get('withholding_total')),
+                    (_("Total"), totals.get('total')),
+                ]),
+                'payment': rows([
+                    (_("Method"), payment.get('method')),
+                    (_("Status"), payment.get('status')),
+                    (_("Bank account"), payment.get('bank_account')),
+                    (_("Reference"), payment.get('reference')),
+                ]),
+            },
+            'items': structured.get('items') or [],
+            'notes': structured.get('notes') or '',
+            'raw': answer,
+        }
+
+    def _meta_pills(self, answer):
+        """The header pills, one per fact the service measured, in order."""
+        self.ensure_one()
+        structured = self._structured(answer)
+        pills = []
+        confidence = answer.get('confidence')
+        if confidence is not None:
+            pills.append(_("Confidence %s%%", round(float(confidence) * 100)))
+        milliseconds = answer.get('processing_time_ms')
+        if milliseconds:
+            pills.append(_("Read in %s s", round(float(milliseconds) / 1000, 1)))
+        tokens = (answer.get('tokens') or {}).get('total')
+        if tokens:
+            pills.append(_("Tokens: %s", tokens))
+        pages = (structured.get('metadata') or {}).get('page_count')
+        if pages:
+            pills.append(_("Pages: %s", pages))
+        return pills
