@@ -51,15 +51,15 @@ const READING_STAGE_DELAY = 2500;
  * through _t so the toolbar reads in the user's language instead of English.
  */
 export const BOX_FIELDS = [
-    { key: "document_date", label: _t("Date"), color: "#6c3483" },
-    { key: "document_number", label: _t("Invoice number"), color: "#2980b9" },
-    { key: "amount_untaxed", label: _t("Untaxed total"), color: "#c0392b" },
-    { key: "amount_total", label: _t("Total"), color: "#d4458b" },
-    { key: "tax_amount", label: _t("Tax"), color: "#ff6b35" },
+    { key: "document_date", label: _t("Invoice date"), color: "#6c3483" },
+    { key: "document_number", label: _t("Invoice"), color: "#2980b9" },
+    { key: "amount_untaxed", label: _t("Total excl. tax"), color: "#c0392b" },
+    { key: "amount_total", label: _t("Total price"), color: "#d4458b" },
+    { key: "tax_amount", label: _t("Tax amount"), color: "#ff6b35" },
     { key: "description", label: _t("Description"), color: "#27ae60" },
-    { key: "partner_vat", label: _t("Tax number"), color: "#16a085" },
+    { key: "partner_vat", label: _t("Tax ID"), color: "#16a085" },
     { key: "due_date", label: _t("Due date"), color: "#f39c12" },
-    { key: "partner_name", label: _t("Vendor"), color: "#5d6d7e" },
+    { key: "partner_name", label: _t("Supplier"), color: "#5d6d7e" },
 ];
 
 const FIELD_BY_KEY = Object.fromEntries(BOX_FIELDS.map((field) => [field.key, field]));
@@ -132,6 +132,9 @@ export class EasyocrDocumentViewer extends Component {
             // under a name the reader picked instead of only the one worked out
             // from the document.
             suppliers: [],
+            // The vendor of the open document, kept so the dropdown can say who
+            // it is and let the reader change it by hand.
+            supplierId: null,
             saving: false,
             // The template whose boxes are on the page, and the vendor it was
             // saved for. Kept so the screen can say where the boxes came from:
@@ -161,6 +164,9 @@ export class EasyocrDocumentViewer extends Component {
             // this is a port of keeps it: the reader opens the details, they do
             // not push the fields down by default.
             quotaExpanded: false,
+            // The AI instructions fold away too: they are only for readers who
+            // want to steer the service, not for everyone on every document.
+            customExpanded: false,
         });
 
         this.pdfDocument = null;
@@ -346,9 +352,10 @@ export class EasyocrDocumentViewer extends Component {
         const [document] = await this.orm.read(
             "easyocr.document",
             [this.documentId],
-            ["name", "attachment_id"],
+            ["name", "attachment_id", "partner_id"],
         );
         this.state.documentName = document.name;
+        this.state.supplierId = document.partner_id ? document.partner_id[0] : null;
 
         if (!document.attachment_id) {
             this.state.loading = false;
@@ -573,6 +580,10 @@ export class EasyocrDocumentViewer extends Component {
 
     toggleQuota() {
         this.state.quotaExpanded = !this.state.quotaExpanded;
+    }
+
+    toggleCustom() {
+        this.state.customExpanded = !this.state.customExpanded;
     }
 
     /** The day the quota resets, as the reader writes it. */
@@ -1149,6 +1160,24 @@ export class EasyocrDocumentViewer extends Component {
             for (const pageInfo of this.state.pages) {
                 this.redrawPage(pageInfo.number);
             }
+        } catch (error) {
+            this.notification.add(this.failureMessage(error), { type: "danger" });
+        }
+    }
+
+    /**
+     * Set the vendor by hand, from the dropdown in the extracted data, and bring
+     * back the boxes saved for them.
+     */
+    async setSupplier() {
+        if (!this.documentId || !this.state.supplierId) {
+            return;
+        }
+        try {
+            await this.orm.call(
+                "easyocr.document", "action_set_supplier", [[this.documentId], this.state.supplierId],
+            );
+            await this.loadVendorTemplate();
         } catch (error) {
             this.notification.add(this.failureMessage(error), { type: "danger" });
         }

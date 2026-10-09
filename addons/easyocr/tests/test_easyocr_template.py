@@ -80,4 +80,4 @@ class TestEasyocrTemplate(TransactionCase):
             'height': 1,
         })
 
-        self.assertEqual(box.display_name, 'Vendor')
+        self.assertEqual(box.display_name, 'Supplier')

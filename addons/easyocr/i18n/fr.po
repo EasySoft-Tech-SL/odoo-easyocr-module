@@ -3597,6 +3597,7 @@ msgstr "JSON"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_name:0
 msgid "Supplier"
 msgstr "Fournisseur"
 
@@ -3665,3 +3666,99 @@ msgstr "La facture n'a pas pu être créée."
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "optional"
 msgstr "optionnel"
+
+#. module: easyocr
+#. odoo-javascript
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date:0
+msgid "Invoice date"
+msgstr "Date de facture"
+
+#. module: easyocr
+#. odoo-javascript
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_number:0
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: easyocr
+#. odoo-javascript
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_untaxed:0
+msgid "Total excl. tax"
+msgstr "Total HT"
+
+#. module: easyocr
+#. odoo-javascript
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_total:0
+msgid "Total price"
+msgstr "Prix total"
+
+#. module: easyocr
+#. odoo-javascript
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__tax_amount:0
+msgid "Tax amount"
+msgstr "TVA"
+
+#. module: easyocr
+#. odoo-javascript
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_vat:0
+msgid "Tax ID"
+msgstr "N° fiscal"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Send the PDF to AI service for automatic data extraction"
+msgstr "Envoyer le PDF au service IA pour extraction automatique"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Extract with AI"
+msgstr "Extraire avec IA"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Labels"
+msgstr "Étiquettes"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Select a label → Draw a rectangle on the PDF"
+msgstr "Sélectionnez une étiquette → Dessinez un rectangle sur le PDF"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Extracted data"
+msgstr "Données extraites"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Apply to invoice"
+msgstr "Appliquer à la facture"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Generate Invoice"
+msgstr "Générer Facture"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Completeness"
+msgstr "Complétude"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "AI Instructions"
+msgstr "Instructions IA"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Select supplier"
+msgstr "Sélectionner le fournisseur"

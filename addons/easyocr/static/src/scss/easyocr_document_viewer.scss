@@ -147,6 +147,30 @@
         }
     }
 
+    // A collapsible section title: the chevron says it opens, and it closes the
+    // same way, the way the AI instructions and the PDF metadata do.
+    .o_easyocr_collapsible {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        cursor: pointer;
+
+        .fa-chevron-down {
+            color: #90a4ae;
+        }
+    }
+
+    // The supplier dropdown inside the extracted data, the one that names whose
+    // document it is when the reading has not.
+    .o_easyocr_supplier {
+        .o_easyocr_supplier_label {
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.72rem;
+            color: #6c757d;
+        }
+    }
+
     .o_easyocr_section_note {
         margin: 0 0 0.6rem;
         font-size: 0.78rem;
