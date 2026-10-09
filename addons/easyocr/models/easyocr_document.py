@@ -229,7 +229,9 @@ class EasyocrDocument(models.Model):
             return ''
         pieces = [_(
             "This file has already been read: %(document)s.",
-            document=duplicate.display_name,
+            # A name that ends in a full stop ("S.L.") would read "S.L.." once
+            # the sentence closes.
+            document=duplicate.display_name.rstrip('.'),
         )]
         if duplicate.extraction_date:
             pieces.append(_(

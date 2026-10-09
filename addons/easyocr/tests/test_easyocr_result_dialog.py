@@ -142,3 +142,15 @@ class TestEasyocrResultDialog(TransactionCase):
         self.assertEqual(list(found), ['TORN-1'])
         self.assertIn(product.name, found['TORN-1'])
         self.assertEqual(self.env['product.product'].search_count([]), before)
+
+    def test_a_name_ending_in_a_full_stop_does_not_get_two(self):
+        """'Ferretería ..., S.L.' closes the sentence once, not 'S.L..'."""
+        first = self.Document.create({
+            'name': 'Proveedor Ficticio, S.L.', 'file_hash': 'abc123', 'state': 'processed',
+        })
+        second = self.Document.create({'name': 'OTRA', 'file_hash': 'abc123'})
+
+        message = second._duplicate_message(first)
+
+        self.assertIn('S.L.', message)
+        self.assertNotIn('S.L..', message)
