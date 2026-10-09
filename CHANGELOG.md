@@ -188,6 +188,18 @@ work was done.
 - **The module's own description said it could not read anything.** The
   README shipped inside the module still listed extraction and bill creation as
   pending. It now says what the module does and how to set it up.
+- **A template picked from the dropdown came back with no boxes.** The dropdown
+  hands its value over as text, and the server looked the template up by that
+  text and found nothing. Ids are now read as numbers on both sides, and the
+  supplier dropdown had the same fault.
+- **Name tags covered the neighbouring box.** On fields printed a line apart,
+  the tag above a box sat on the box above. Each tag now goes where it covers no
+  other box and no other tag: above, below, or beside.
+- **A box read the line under it.** A field drawn round one line also took the
+  line it only grazed ("01/07/2026 02/07/2026"). A line now counts only when most
+  of it is inside the box.
+- **Drawing next to a box took hold of its corner.** With a field picked, only
+  the painted corner square still grabs; anywhere else, the press draws.
 
 ### Pending
 

@@ -7,6 +7,14 @@ from odoo.exceptions import UserError
 # The nine fields a template can mark on a page. The key is what gets stored and
 # what the extraction code matches on; the colour is only how it is painted, and
 # it is kept here so the viewer and the API agree on one list.
+
+def _as_id(value):
+    """A record id as an int, whatever the screen sent: 12, "12" or nothing."""
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
 BOX_FIELDS = [
     ('document_date', 'Invoice date', '#6c3483'),
     ('document_number', 'Invoice', '#2980b9'),
@@ -169,7 +177,9 @@ class EasyocrDocument(models.Model):
         the custom instructions come back too.
         """
         self.ensure_one()
-        template = self.env['easyocr.template'].browse(template_id)
+        # A <select> hands its value over as text; browse('12') finds nothing,
+        # and the template came back "with no boxes" while it had seven.
+        template = self.env['easyocr.template'].browse(_as_id(template_id))
         if not template.exists():
             return {'template': False, 'name': '', 'label': '', 'vendor': '',
                     'custom_instructions': '', 'boxes': []}
@@ -204,7 +214,7 @@ class EasyocrDocument(models.Model):
         here also brings their template back on the next open.
         """
         self.ensure_one()
-        partner = self.env['res.partner'].browse(partner_id)
+        partner = self.env['res.partner'].browse(_as_id(partner_id))
         if partner.exists():
             self.partner_id = partner.id
         return {'partner_id': self.partner_id.id, 'name': self.partner_id.display_name or ''}
@@ -225,7 +235,7 @@ class EasyocrDocument(models.Model):
         if not boxes:
             raise UserError(_("Draw at least one box before saving a template."))
 
-        partner = self.env['res.partner'].browse(partner_id) if partner_id else self._vendor_for_boxes()
+        partner = self.env['res.partner'].browse(_as_id(partner_id)) if _as_id(partner_id) else self._vendor_for_boxes()
         template = self.env['easyocr.template'].create({
             'name': name,
             'partner_id': partner.id,

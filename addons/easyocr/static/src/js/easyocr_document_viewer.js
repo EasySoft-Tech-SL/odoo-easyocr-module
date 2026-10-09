@@ -13,9 +13,11 @@ import {
     anchorOf,
     boxAt,
     handleAt,
+    labelPlacement,
     movedTo,
     rectangleBetween,
     resizedTo,
+    textInBox,
 } from "./easyocr_box_geometry";
 import { TemplateDialog } from "./easyocr_template_dialog";
 
@@ -498,8 +500,19 @@ export class EasyocrDocumentViewer extends Component {
         image.onload = () => {
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(image, 0, 0);
-            for (const box of this.boxesOfPage(pageNumber)) {
-                this.paintBox(context, box);
+            const boxes = this.boxesOfPage(pageNumber);
+            // Each tag goes where it covers no other box and no tag already
+            // painted, so fields a line apart stay readable.
+            const placed = [];
+            for (const box of boxes) {
+                const others = boxes.filter((other) => other !== box).map((other) => ({
+                    x: other.x * VIEW_SCALE, y: other.y * VIEW_SCALE,
+                    width: other.width * VIEW_SCALE, height: other.height * VIEW_SCALE,
+                }));
+                const tag = this.paintBox(context, box, false, others.concat(placed), canvas);
+                if (tag) {
+                    placed.push(tag);
+                }
             }
             if (this.pendingBox && this.pendingBox.page === pageNumber) {
                 this.paintBox(context, this.pendingBox, true);
@@ -508,7 +521,7 @@ export class EasyocrDocumentViewer extends Component {
         image.src = base;
     }
 
-    paintBox(context, box, isDraft = false) {
+    paintBox(context, box, isDraft = false, obstacles = [], canvas = null) {
         const field = FIELD_BY_KEY[box.field_key] || { color: "#000", label: box.field_key };
         const x = box.x * VIEW_SCALE;
         const y = box.y * VIEW_SCALE;
@@ -524,14 +537,20 @@ export class EasyocrDocumentViewer extends Component {
         context.lineWidth = 2;
         context.strokeRect(x, y, width, height);
 
+        let tag = null;
         if (!isDraft) {
             const label = field.label;
             context.font = "12px sans-serif";
-            const labelWidth = context.measureText(label).width + 8;
+            tag = labelPlacement(
+                { x, y, width, height },
+                { width: context.measureText(label).width + 8, height: 18 },
+                obstacles,
+                canvas ? { width: canvas.width, height: canvas.height } : null,
+            );
             context.fillStyle = field.color;
-            context.fillRect(x, Math.max(0, y - 18), labelWidth, 18);
+            context.fillRect(tag.x, tag.y, tag.width, tag.height);
             context.fillStyle = "#fff";
-            context.fillText(label, x + 4, Math.max(12, y - 5));
+            context.fillText(label, tag.x + 4, tag.y + 13);
 
             // A square on each corner, which is both what they are for and what
             // says the box can still be changed after it has been drawn.
@@ -542,6 +561,7 @@ export class EasyocrDocumentViewer extends Component {
             }
         }
         context.restore();
+        return tag;
     }
 
     boxesOfPage(pageNumber) {
@@ -761,7 +781,10 @@ export class EasyocrDocumentViewer extends Component {
      */
     beginGesture(event, pageNumber) {
         const point = this.eventToPoints(event, pageNumber);
-        const tolerance = HANDLE_SIZE / VIEW_SCALE;
+        // With a field picked, a press means "draw here": only the painted
+        // square itself still grabs a corner. Otherwise starting a box next to
+        // another one took hold of the neighbour's corner and squashed it.
+        const tolerance = (this.state.activeField ? HANDLE_DOT / 2 : HANDLE_SIZE) / VIEW_SCALE;
         const boxes = this.boxesOfPage(pageNumber);
 
         const held = handleAt(boxes, point, tolerance);
@@ -974,36 +997,7 @@ export class EasyocrDocumentViewer extends Component {
 
     /** The text whose characters fall inside the box, read in reading order. */
     async readText(box) {
-        const items = await this.textItems(box.page);
-        const left = Math.min(box.x, box.x + box.width);
-        const right = Math.max(box.x, box.x + box.width);
-        const top = Math.min(box.y, box.y + box.height);
-        const bottom = Math.max(box.y, box.y + box.height);
-
-        const hits = [];
-        for (const item of items) {
-            const overlapX = Math.min(right, item.right) - Math.max(left, item.left);
-            const overlapY = Math.min(bottom, item.bottom) - Math.max(top, item.top);
-            if (overlapX <= 0 || overlapY <= 0) {
-                continue;
-            }
-            // Cut at character level so a box can take part of a line.
-            let piece = "";
-            for (let index = 0; index < item.text.length; index++) {
-                const charLeft = item.left + index * item.charWidth;
-                const charRight = charLeft + item.charWidth;
-                if (charRight > left && charLeft < right) {
-                    piece += item.text[index];
-                }
-            }
-            piece = piece.trim();
-            if (piece) {
-                hits.push({ text: piece, top: item.top, left: item.left });
-            }
-        }
-
-        hits.sort((a, b) => (Math.abs(a.top - b.top) > 5 ? a.top - b.top : a.left - b.left));
-        return hits.map((hit) => hit.text).join(" ");
+        return textInBox(await this.textItems(box.page), box);
     }
 
     async refreshAllTexts() {
@@ -1234,7 +1228,7 @@ export class EasyocrDocumentViewer extends Component {
         }
         try {
             const answer = await this.orm.call(
-                "easyocr.document", "action_load_template", [[this.documentId], this.state.templateId],
+                "easyocr.document", "action_load_template", [[this.documentId], Number(this.state.templateId)],
             );
             if (!answer.boxes.length) {
                 this.notification.add(_t("That template has no boxes."), { type: "warning" });
@@ -1266,7 +1260,7 @@ export class EasyocrDocumentViewer extends Component {
         }
         try {
             await this.orm.call(
-                "easyocr.document", "action_set_supplier", [[this.documentId], this.state.supplierId],
+                "easyocr.document", "action_set_supplier", [[this.documentId], Number(this.state.supplierId)],
             );
             await this.loadVendorTemplate();
         } catch (error) {
