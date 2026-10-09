@@ -8,18 +8,19 @@
         <field name="model">easyocr.webhook.log</field>
         <field name="arch" type="xml">
             <list
-                string="Webhook Log"
+                string="Webhook logs"
                 decoration-warning="status == 'ignored'"
                 decoration-danger="status == 'error'"
             >
-                <field name="create_date" string="Received On"/>
+                <field name="id" string="ID"/>
+                <field name="create_date" string="Received"/>
                 <field name="event"/>
-                <field name="status" widget="badge"/>
-                <field name="document_id_external"/>
+                <field name="document_id_external" string="Document ID"/>
                 <field name="filename"/>
-                <field name="document_id"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="status" widget="badge"/>
                 <field name="message"/>
+                <field name="move_id"/>
+                <field name="partner_id"/>
             </list>
         </field>
     </record>

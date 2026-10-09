@@ -16,7 +16,7 @@
         <field name="model">easyocr.batch</field>
         <field name="arch" type="xml">
             <list
-                string="Batches"
+                string="Batch history"
                 decoration-info="state == 'processing'"
                 decoration-success="state == 'completed'"
                 decoration-warning="state == 'partial'"
@@ -24,9 +24,9 @@
                 decoration-muted="state == 'cancelled'"
             >
                 <field name="name"/>
-                <field name="document_count" string="Files"/>
-                <field name="completed_count" string="Read"/>
-                <field name="failed_count" string="Failed" optional="show"/>
+                <field name="document_count"/>
+                <field name="completed_count"/>
+                <field name="failed_count" optional="show"/>
                 <field name="progress" widget="progressbar"/>
                 <field name="sent_at"/>
                 <field name="finished_at" optional="hide"/>
@@ -45,14 +45,14 @@
                     <button
                         name="action_send_button"
                         type="object"
-                        string="Send"
+                        string="Process batch"
                         class="btn-primary"
                         invisible="service_uuid"
                     />
                     <button
                         name="action_refresh_button"
                         type="object"
-                        string="Look again"
+                        string="Refresh"
                         invisible="not service_uuid or state in ('completed', 'partial', 'failed', 'cancelled')"
                     />
                     <button
@@ -60,7 +60,7 @@
                         type="object"
                         string="Cancel"
                         invisible="not service_uuid or state in ('completed', 'partial', 'failed', 'cancelled')"
-                        confirm="Cancelling stops the files that are still waiting. The ones already read are kept."
+                        confirm="Cancel this batch? This action cannot be undone."
                     />
                     <field name="state" widget="statusbar" statusbar_visible="pending,processing,completed,partial,failed"/>
                 </header>
@@ -73,11 +73,11 @@
                             icon="fa-file-text-o"
                             invisible="not document_count"
                         >
-                            <field name="document_count" widget="statinfo" string="Files"/>
+                            <field name="document_count" widget="statinfo"/>
                         </button>
                     </div>
                     <div class="oe_title">
-                        <h1><field name="name" placeholder="Batch name"/></h1>
+                        <h1><field name="name" placeholder="E.g.: Invoices January 2026"/></h1>
                     </div>
                     <group>
                         <group>
@@ -104,12 +104,12 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="How it is read" name="options">
+                        <page string="Configuration" name="options">
                             <group>
                                 <field name="include_extracted_text" readonly="service_uuid"/>
                                 <field name="auto_correct" readonly="service_uuid"/>
                             </group>
-                            <field name="custom_instructions" readonly="service_uuid" placeholder="Anything the service should know about these files"/>
+                            <field name="custom_instructions" readonly="service_uuid" placeholder="E.g.: This supplier always includes shipping in the last line. VAT is always 21%. Discounts are on separate lines..."/>
                             <field name="notify_url" readonly="service_uuid" placeholder="Leave empty to be told here"/>
                         </page>
                         <page string="Detail" name="detail" invisible="not error_message">
@@ -125,12 +125,12 @@
         <field name="name">easyocr.batch.search</field>
         <field name="model">easyocr.batch</field>
         <field name="arch" type="xml">
-            <search string="Batches">
+            <search string="Batch history">
                 <field name="name"/>
                 <filter name="running" string="Being read" domain="[('state', 'in', ('pending', 'processing'))]"/>
                 <filter name="finished" string="Finished" domain="[('state', 'in', ('completed', 'partial', 'failed', 'cancelled'))]"/>
                 <separator/>
-                <filter name="partial" string="Partly read" domain="[('state', '=', 'partial')]"/>
+                <filter name="partial" string="Partial" domain="[('state', '=', 'partial')]"/>
                 <filter name="failed" string="Failed" domain="[('state', '=', 'failed')]"/>
                 <!-- Odoo 19 dropped expand/string on the search group element. -->
                 <group>
@@ -141,17 +141,17 @@
     </record>
 
     <record id="action_easyocr_batch" model="ir.actions.act_window">
-        <field name="name">Batches</field>
+        <field name="name">Batch history</field>
         <field name="res_model">easyocr.batch</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_easyocr_batch_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Send a stack of documents in one go
+                Upload multiple documents and process them in bulk
             </p>
             <p>
-                Pick a folder's worth of invoices, hand them over together and review what
-                was read from each one before they become accounting entries.
+                Upload your documents (up to 200 per batch). Configure processing options.
+                Receive the extracted data automatically.
             </p>
         </field>
     </record>
@@ -160,21 +160,21 @@
          reached from the Batches list the way a form is; it is its own menu
          entry, and it is where the Batches menu lands first. -->
     <record id="action_easyocr_new_batch" model="ir.actions.client">
-        <field name="name">Send documents</field>
+        <field name="name">Batch processing</field>
         <field name="tag">easyocr.batch</field>
         <field name="target">current</field>
     </record>
 
     <menuitem
         id="menu_easyocr_new_batch"
-        name="Send documents"
+        name="Batch processing"
         parent="menu_easyocr_root"
         action="action_easyocr_new_batch"
         sequence="20"
     />
     <menuitem
         id="menu_easyocr_batch"
-        name="Batches"
+        name="Batch history"
         parent="menu_easyocr_root"
         action="action_easyocr_batch"
         sequence="21"

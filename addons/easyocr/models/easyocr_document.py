@@ -287,7 +287,7 @@ class EasyocrDocument(models.Model):
 
         return self.env['res.partner']
 
-    def action_create_bill(self, draft=False, journal_id=False):
+    def action_create_bill(self, draft=False, journal_id=False, items=None):
         """Create a supplier bill from what was read from this document.
 
         One bill line for every line the service read, each with its own product,
@@ -296,7 +296,9 @@ class EasyocrDocument(models.Model):
         amount goes on a single line instead, untaxed, as it always did.
 
         The dialog can ask for a draft, which leaves the bill unposted for review
-        instead of validating it right away, and can pick the journal.
+        instead of validating it right away, and can pick the journal. When the
+        dialog hands back the lines as the reader left them, the bill is made
+        from those and not from the reading.
         """
         self.ensure_one()
         if self.move_id:
@@ -309,6 +311,11 @@ class EasyocrDocument(models.Model):
                 "or make sure the tax number is on a contact."
             ))
 
+        line_values = (
+            self._bill_line_values_from_items(items)
+            if items
+            else self._bill_line_values(partner)
+        )
         values = {
             'move_type': 'in_refund' if self.is_refund else 'in_invoice',
             'partner_id': partner.id,
@@ -316,7 +323,7 @@ class EasyocrDocument(models.Model):
             'invoice_date': self.document_date or fields.Date.context_today(self),
             'currency_id': self.currency_id.id,
             'invoice_line_ids': [
-                (0, 0, line) for line in self._bill_line_values(partner)
+                (0, 0, line) for line in line_values
             ],
         }
         if journal_id:
@@ -372,6 +379,23 @@ class EasyocrDocument(models.Model):
             })
         return values
 
+    def _bill_line_values_from_items(self, items):
+        """What goes on the bill when the reader corrected the lines on screen.
+
+        The dialog hands the lines back exactly as the reader left them, so the
+        bill follows the reader and not the reading: a description fixed, a
+        quantity corrected, a line added or taken out is the reader's word.
+        """
+        values = []
+        for item in items or []:
+            values.append({
+                'name': (item.get('description') or '').strip() or _('Line'),
+                'quantity': to_float(item.get('quantity'), 1.0) or 1.0,
+                'price_unit': to_float(item.get('unit_price')),
+                'discount': to_float(item.get('discount_percent')),
+            })
+        return values
+
     def _as_bill_amount(self, amount):
         """An amount written the way the bill it goes on expects it.
 
@@ -383,6 +407,31 @@ class EasyocrDocument(models.Model):
         if self.is_refund:
             return abs(amount or 0.0)
         return amount
+
+    @api.model
+    def action_list_payment_modes(self):
+        """The payment methods Odoo knows, for the footer of the result dialog.
+
+        Kept as a list of id/name pairs so the screen paints them like the
+        journals and nothing else. ``account.payment.method`` is the model Odoo
+        introduced to hold the method on its own; older series keep it on the
+        journal's payment line, so that is the fallback.
+        """
+        Model = self.env.get('account.payment.method')
+        if Model is None:
+            Model = self.env.get('account.payment.method.line')
+        if Model is None:
+            return []
+        methods = Model.search([], order='name')
+        return [{'id': method.id, 'name': method.name} for method in methods]
+
+    @api.model
+    def action_list_banks(self):
+        """The company's bank accounts, for the footer of the result dialog."""
+        banks = self.env['res.partner.bank'].search([
+            ('company_id', '=', self.env.company.id),
+        ], order='display_name')
+        return [{'id': bank.id, 'name': bank.display_name} for bank in banks]
 
     def _compute_line_count(self):
         for document in self:

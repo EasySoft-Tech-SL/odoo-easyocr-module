@@ -95,21 +95,30 @@
                                         <th class="text-end">Price</th>
                                         <th class="text-end">Disc%</th>
                                         <th class="text-end">Tax%</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="items()" t-as="item" t-key="item_index">
+                                    <t t-foreach="state.items" t-as="item" t-key="item_index">
                                         <tr>
                                             <td><t t-esc="item.code"/></td>
-                                            <td><t t-esc="item.description"/></td>
-                                            <td class="text-end"><t t-esc="item.quantity"/></td>
-                                            <td class="text-end"><t t-esc="item.unit_price"/></td>
-                                            <td class="text-end"><t t-esc="item.discount_percent"/></td>
+                                            <td><input class="o_easyocr_result_input" t-model="item.description"/></td>
+                                            <td class="text-end"><input class="o_easyocr_result_input o_easyocr_result_input_number" type="number" step="any" t-model="item.quantity"/></td>
+                                            <td class="text-end"><input class="o_easyocr_result_input o_easyocr_result_input_number" type="number" step="any" t-model="item.unit_price"/></td>
+                                            <td class="text-end"><input class="o_easyocr_result_input o_easyocr_result_input_number" type="number" step="any" t-model="item.discount_percent"/></td>
                                             <td class="text-end"><t t-esc="item.tax_rate"/></td>
+                                            <td class="text-end">
+                                                <button class="btn btn-link btn-sm o_easyocr_result_remove" type="button" t-on-click="() => this.removeLine(item_index)">
+                                                    <i class="fa fa-times"/>
+                                                </button>
+                                            </td>
                                         </tr>
                                     </t>
                                 </tbody>
                             </table>
+                            <button class="btn btn-link btn-sm o_easyocr_result_add_line" type="button" t-on-click="addLine">
+                                <i class="fa fa-plus me-1"/>Add line
+                            </button>
                         </div>
                     </div>
 
@@ -180,6 +189,28 @@
                     >
                         <i class="fa fa-check me-1"/>Create invoice
                     </button>
+                    <div class="o_easyocr_result_payment">
+                        <label class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" t-model="state.createPayment"/>
+                            <span>Create payment linked to the invoice</span>
+                        </label>
+                        <t t-if="state.createPayment">
+                            <span class="o_easyocr_result_status_label ms-3">Payment method</span>
+                            <select class="form-select form-select-sm" t-model="state.paymentModeId">
+                                <option value="">-- Automatic --</option>
+                                <t t-foreach="state.paymentModes" t-as="mode" t-key="mode.id">
+                                    <option t-att-value="mode.id"><t t-esc="mode.name"/></option>
+                                </t>
+                            </select>
+                            <span class="o_easyocr_result_status_label ms-3">Bank account</span>
+                            <select class="form-select form-select-sm" t-model="state.bankId">
+                                <option value="">-- Automatic --</option>
+                                <t t-foreach="state.banks" t-as="bank" t-key="bank.id">
+                                    <option t-att-value="bank.id"><t t-esc="bank.name"/></option>
+                                </t>
+                            </select>
+                        </t>
+                    </div>
                 </div>
 
             </div>

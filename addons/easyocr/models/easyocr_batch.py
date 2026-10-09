@@ -15,10 +15,10 @@ _logger = logging.getLogger(__name__)
 # is the whole reason the guard exists. What makes it worth repeating is time,
 # and that is the company's duplicate window, not a number of its own.
 BATCH_STATES = [
-    ('pending', 'Waiting'),
-    ('processing', 'Being read'),
-    ('completed', 'Read'),
-    ('partial', 'Partly read'),
+    ('pending', 'Pending'),
+    ('processing', 'Processing'),
+    ('completed', 'Completed'),
+    ('partial', 'Partial'),
     ('failed', 'Failed'),
     ('cancelled', 'Cancelled'),
 ]
@@ -48,7 +48,7 @@ class EasyocrBatch(models.Model):
     _order = 'create_date desc, id desc'
 
     name = fields.Char(
-        string='Reference',
+        string='Name',
         required=True,
         default=lambda self: _('New'),
     )
@@ -76,33 +76,33 @@ class EasyocrBatch(models.Model):
         inverse_name='batch_id',
         string='Documents',
     )
-    document_count = fields.Integer(string='Files', compute='_compute_counts')
-    completed_count = fields.Integer(string='Read', compute='_compute_counts')
-    failed_count = fields.Integer(string='Failed', compute='_compute_counts')
+    document_count = fields.Integer(string='Documents', compute='_compute_counts')
+    completed_count = fields.Integer(string='Completed documents', compute='_compute_counts')
+    failed_count = fields.Integer(string='Failed documents', compute='_compute_counts')
     progress = fields.Float(string='Progress', compute='_compute_counts')
     sent_at = fields.Datetime(string='Sent On', readonly=True, copy=False)
-    finished_at = fields.Datetime(string='Finished On', readonly=True, copy=False)
+    finished_at = fields.Datetime(string='Completed at', readonly=True, copy=False)
     error_message = fields.Text(string='Detail', readonly=True, copy=False)
 
     include_extracted_text = fields.Boolean(
-        string='Keep the text it read',
+        string='Include extracted text',
         default=False,
         help='Ask the service to send back the raw text of every page as well. '
              'It is not needed to make a bill, and it is not kept here.',
     )
     auto_correct = fields.Boolean(
-        string='Let it correct what it reads',
+        string='Auto-correction',
         default=False,
         help='Let the service fix what it can make out and mark what it changed, '
              'instead of returning the document exactly as it stands.',
     )
     custom_instructions = fields.Text(
-        string='Instructions',
+        string='AI Instructions',
         help='Told to the service once, for every file of this batch. It is not '
              'kept on the documents.',
     )
     notify_url = fields.Char(
-        string='Tell this address instead',
+        string='Webhook URL',
         help='Where the service is to say that a file has been read. Left empty, '
              'this installation answers for itself and each reading is filed on '
              'the document it belongs to. Set it only when the webhook is '

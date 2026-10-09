@@ -295,9 +295,11 @@ msgid "Back to the document"
 msgstr "Tornar a la fitxa"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_journal_id
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_journal_id
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Bank account"
 msgstr "Compte bancari"
 
@@ -737,6 +739,7 @@ msgstr "Document del lot %(batch)s actualitzat."
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_document
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__document_ids
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_document
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__document_count:0
 msgid "Documents"
 msgstr "Documents"
 
@@ -936,6 +939,8 @@ msgstr "Camps"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_upload_wizard__file
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__filename:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list:0
 msgid "File"
 msgstr "Fitxer"
 
@@ -1102,6 +1107,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__id
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list:0
 msgid "ID"
 msgstr "ID"
 
@@ -1422,6 +1428,7 @@ msgstr "Els meus elements"
 #: code:addons/easyocr/static/src/xml/easyocr_batch.xml:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__name
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__name:0
 msgid "Name"
 msgstr "Nom"
 
@@ -1709,10 +1716,12 @@ msgstr "Càrrega"
 
 #. module: easyocr
 #. odoo-python
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_webhook_payment_method_line_id
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_payment_method_line_id
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Payment method"
 msgstr "Forma de pagament"
 
@@ -1727,6 +1736,7 @@ msgstr "Referència del pagament"
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_inbox_item__state__pending
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__pending:0
 msgid "Pending"
 msgstr "Pendent"
 
@@ -1966,6 +1976,7 @@ msgstr ""
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_list
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list:0
 msgid "Received"
 msgstr "Rebuda"
 
@@ -3580,6 +3591,7 @@ msgstr "JSON"
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_name:0
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__partner_id:0
 msgid "Supplier"
 msgstr "Proveïdor"
 
@@ -3658,6 +3670,7 @@ msgstr "Data de la factura"
 #. module: easyocr
 #. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_number:0
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__move_id:0
 msgid "Invoice"
 msgstr "Factura"
 
@@ -3737,6 +3750,7 @@ msgstr "Completesa"
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__custom_instructions:0
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__custom_instructions:0
 msgid "AI Instructions"
 msgstr "Instruccions IA"
 
@@ -4042,3 +4056,93 @@ msgid ""
 msgstr ""
 "Si s'activa, les factures que crea el mòdul es deixen en esborrany en lloc "
 "de publicar-se automàticament, perquè una persona les confirmi."
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list:0
+msgid "Document ID"
+msgstr "ID document"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Add line"
+msgstr "Afegir línia"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Create payment linked to the invoice"
+msgstr "Crear pagament per a la factura"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_invoice_list:0
+msgid "Ref."
+msgstr "Ref."
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_invoice_list:0
+msgid "Supplier Ref."
+msgstr "Ref. proveïdor"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_invoice_list:0
+msgid "Third party"
+msgstr "Tercer"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__completed_count:0
+msgid "Completed documents"
+msgstr "Documents completats"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__failed_count:0
+msgid "Failed documents"
+msgstr "Documents fallits"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__finished_at:0
+msgid "Completed at"
+msgstr "Completat el"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__include_extracted_text:0
+msgid "Include extracted text"
+msgstr "Incloure text extret"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__auto_correct:0
+msgid "Auto-correction"
+msgstr "Auto-correcció"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__notify_url:0
+msgid "Webhook URL"
+msgstr "URL del webhook"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__processing:0
+msgid "Processing"
+msgstr "Processant"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__completed:0
+msgid "Completed"
+msgstr "Completat"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__partial:0
+msgid "Partial"
+msgstr "Parcial"
