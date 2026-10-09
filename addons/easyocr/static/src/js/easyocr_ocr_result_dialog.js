@@ -441,8 +441,24 @@ export class OCRResultDialog extends Component {
         }
     }
 
+    /**
+     * Back to where the reader came from. The dialog is a client action in
+     * the main area, where ``act_window_close`` does nothing at all, so the
+     * way out is the previous breadcrumb, or the document when there is none.
+     */
     close() {
-        this.actionService.doAction({ type: "ir.actions.act_window_close" });
+        const breadcrumbs = this.env.config?.breadcrumbs || [];
+        if (breadcrumbs.length > 1) {
+            breadcrumbs[breadcrumbs.length - 2].onSelected();
+            return;
+        }
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: "easyocr.document",
+            res_id: this.documentId,
+            views: [[false, "form"]],
+            target: "current",
+        }, { clearBreadcrumbs: true });
     }
 
     overrides() {
