@@ -287,13 +287,16 @@ class EasyocrDocument(models.Model):
 
         return self.env['res.partner']
 
-    def action_create_bill(self):
-        """Create a draft supplier bill from what was read from this document.
+    def action_create_bill(self, draft=False):
+        """Create a supplier bill from what was read from this document.
 
         One bill line for every line the service read, each with its own product,
         discount and rate. When the document has no lines -- a reading that came
         back with nothing but a total, or a document filed by hand -- the whole
         amount goes on a single line instead, untaxed, as it always did.
+
+        The dialog can ask for a draft, which leaves the bill unposted for review
+        instead of validating it right away.
         """
         self.ensure_one()
         if self.move_id:
@@ -324,7 +327,8 @@ class EasyocrDocument(models.Model):
 
         self.move_id = move
         self.state = 'processed'
-        self._confirm_bill(move)
+        if not draft:
+            self._confirm_bill(move)
 
         return {
             'type': 'ir.actions.act_window',

@@ -2254,6 +2254,7 @@ msgid "Some of these files have already been read"
 msgstr "Certains de ces fichiers ont déjà été lus"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__state
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__state
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__state
@@ -2262,6 +2263,7 @@ msgstr "Certains de ces fichiers ont déjà été lus"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Status"
 msgstr "Statut"
 
@@ -3754,6 +3756,7 @@ msgstr "Complétude"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_template__custom_instructions:0
 msgid "AI Instructions"
 msgstr "Instructions IA"
 
@@ -3762,3 +3765,212 @@ msgstr "Instructions IA"
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Select supplier"
 msgstr "Sélectionner le fournisseur"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "AI Result"
+msgstr "Résultat IA"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Invoice lines"
+msgstr "Lignes de facture"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Create invoice"
+msgstr "Créer facture"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Validated"
+msgstr "Validée"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "Help and shortcuts"
+msgstr "Aide et raccourcis"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Keyboard shortcuts"
+msgstr "Raccourcis clavier"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Select label"
+msgstr "Sélectionner étiquette"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Undo last action"
+msgstr "Annuler dernière action"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Save/Edit template"
+msgstr "Sauvegarder/Modifier modèle"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Close modal / Deselect"
+msgstr "Fermer modal / Désélectionner"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Interaction"
+msgstr "Interaction"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Drag a PDF to the viewer to load it"
+msgstr "Glissez un PDF dans la visionneuse pour le charger"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Draw rectangles after selecting a label"
+msgstr "Dessinez des rectangles après avoir sélectionné une étiquette"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Drag selections to move them"
+msgstr "Glissez les sélections pour les déplacer"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Use corners to resize"
+msgstr "Utilisez les coins pour redimensionner"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "+/− to zoom the PDF"
+msgstr "+/− pour zoomer le PDF"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid ""
+"Tool for extracting text content from PDF files for automatic creation of "
+"supplier invoices in Dolibarr."
+msgstr ""
+"Outil d'extraction de contenu textuel de fichiers PDF pour la création "
+"automatique de factures fournisseur dans Dolibarr."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Quick access"
+msgstr "Accès rapide"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Invoices"
+msgstr "Factures"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Upload PDF"
+msgstr "Charger PDF"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Import a PDF and visually extract supplier invoice data."
+msgstr ""
+"Importez un PDF et extrayez visuellement les données des factures "
+"fournisseur."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Batch processing"
+msgstr "Traitement par lots"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Process multiple PDFs at once with AI-powered automatic extraction."
+msgstr "Traitez plusieurs PDFs à la fois avec extraction automatique par IA."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Scan expense"
+msgstr "Scanner une dépense"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Scan an expense receipt from your phone and register it automatically."
+msgstr ""
+"Scannez un ticket de dépense depuis votre mobile et enregistrez-le "
+"automatiquement."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Manage zone selection templates linked to suppliers."
+msgstr "Gérez les modèles de sélection de zones associés aux fournisseurs."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "View the history of invoices generated from imported PDFs."
+msgstr ""
+"Consultez l'historique des factures générées depuis les PDFs importés."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Webhook logs"
+msgstr "Logs Webhook"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Audit incoming webhook notifications and review processing failures."
+msgstr ""
+"Auditez les notifications webhook reçues et examinez les échecs de "
+"traitement."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Setup"
+msgstr "Configuration"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_home.js:0
+msgid "Configure the API key, cloud service and module options."
+msgstr "Configurez la clé API, le service cloud et les options du module."
+
+#. module: easyocr
+#. odoo-javascript
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_template__box_count:0
+msgid "Num. Fields"
+msgstr "Nbre champs"

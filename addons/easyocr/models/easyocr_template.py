@@ -47,7 +47,7 @@ class EasyocrTemplate(models.Model):
         default=lambda self: self.env.company,
     )
     custom_instructions = fields.Text(
-        string='Extra instructions',
+        string='AI Instructions',
         help='Sent to the extraction service on top of the standard instructions.',
     )
     box_ids = fields.One2many(
@@ -56,7 +56,7 @@ class EasyocrTemplate(models.Model):
         string='Fields',
         copy=True,
     )
-    box_count = fields.Integer(string='Boxes', compute='_compute_box_count')
+    box_count = fields.Integer(string='Num. Fields', compute='_compute_box_count')
     active = fields.Boolean(default=True)
 
     @api.depends('box_ids')

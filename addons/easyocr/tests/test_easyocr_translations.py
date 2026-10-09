@@ -77,6 +77,19 @@ VIEWER_STRINGS = (
     "That template has no boxes.",
     # The reading-result dialog: what it says when the bill cannot be made.
     "The bill could not be created.",
+    # The help popup: the two blocks of shortcuts and interaction tips.
+    "Keyboard shortcuts",
+    "Select label",
+    "Undo last action",
+    "Save/Edit template",
+    "Generate invoice",
+    "Close modal / Deselect",
+    "Interaction",
+    "Drag a PDF to the viewer to load it",
+    "Draw rectangles after selecting a label",
+    "Drag selections to move them",
+    "Use corners to resize",
+    "+/− to zoom the PDF",
 )
 
 # What the batch screen writes by itself. Same rule, and the same reason they
@@ -128,26 +141,23 @@ CAPTURE_STRINGS = (
 # still arrived in English until their entries were flagged as JavaScript,
 # which is how "Capture a receipt" ended up on a Spanish screen.
 HOME_STRINGS = (
-    "Capture a receipt",
-    "Webhook Log",
-    "Documents",
-    "Templates",
-    "Inbox",
-    "Bills",
-    "Vendor bills",
-    "What the documents became",
-    "Sections",
     "Open",
-    "Upload a document",
-    "Pick a PDF or a photo and open it in the viewer",
-    "Read supplier invoices and expense receipts, and turn them into accounting entries.",
-    "Invoices and receipts read, or waiting to be",
-    "Waiting to be looked at, handed over by other modules",
-    "The boxes saved for each vendor",
-    "Photograph one from a phone",
-    "The calls the extraction service has made",
-    "The extraction service and what a document becomes",
-    "Settings",
+    "Quick access",
+    "Invoices",
+    "Templates",
+    "Setup",
+    "Tool for extracting text content from PDF files for automatic creation of supplier invoices in Dolibarr.",
+    "Upload PDF",
+    "Import a PDF and visually extract supplier invoice data.",
+    "Batch processing",
+    "Process multiple PDFs at once with AI-powered automatic extraction.",
+    "Scan expense",
+    "Scan an expense receipt from your phone and register it automatically.",
+    "Manage zone selection templates linked to suppliers.",
+    "View the history of invoices generated from imported PDFs.",
+    "Webhook logs",
+    "Audit incoming webhook notifications and review processing failures.",
+    "Configure the API key, cloud service and module options.",
 )
 
 # Sentences the module builds in Python and hands to the screen as a
