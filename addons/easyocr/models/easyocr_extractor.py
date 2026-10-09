@@ -678,17 +678,25 @@ class EasyocrDocument(models.Model):
         }
 
     def _reading_result_action(self):
-        """The summary of the reading, as a dialog."""
+        """The summary of the reading, as the sectioned dialog."""
         self.ensure_one()
-        wizard = self.env['easyocr.reading.result'].create({'document_id': self.id})
+        return self.action_open_result_dialog()
+
+    def action_result_data(self):
+        """Everything the result dialog draws, read from this document."""
+        self.ensure_one()
+        wizard = self.env['easyocr.reading.result'].new({'document_id': self.id})
+        return wizard.action_result_data()
+
+    def action_open_result_dialog(self):
+        """The reading result, as the sectioned dialog the module this is a port
+        of shows: the cards, the raw payload, and the footer that makes the bill."""
+        self.ensure_one()
         return {
-            'type': 'ir.actions.act_window',
+            'type': 'ir.actions.client',
+            'tag': 'easyocr.ocr_result_dialog',
             'name': _("What the reading found"),
-            'res_model': 'easyocr.reading.result',
-            'res_id': wizard.id,
-            'views': [(False, 'form')],
-            'view_mode': 'form',
-            'target': 'new',
+            'params': {'document_id': self.id},
         }
 
     def _extraction_notification(self, kind, message):

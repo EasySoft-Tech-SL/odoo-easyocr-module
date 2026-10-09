@@ -681,12 +681,14 @@ msgid "Display Name"
 msgstr "Nom mostrat"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__document_id
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reading_result_form
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Document"
 msgstr "Document"
 
@@ -1328,11 +1330,13 @@ msgid "Line Type"
 msgstr "Tipus de línia"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__line_count
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__line_ids
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__document_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__line_count
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Lines"
 msgstr "Línies"
 
@@ -1533,10 +1537,12 @@ msgid "None of these files could be read."
 msgstr "No s'ha pogut llegir cap d'aquests fitxers."
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__note
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__note
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_form
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 msgid "Notes"
 msgstr "Notes"
 
@@ -3212,6 +3218,7 @@ msgstr "El que suma la línia al document, ja descomptat el descompte."
 
 #. module: easyocr
 #. odoo-python
+#. odoo-javascript
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_reading_result
 #: model:ir.model,name:easyocr.model_easyocr_reading_result
@@ -3559,3 +3566,75 @@ msgstr "Trieu una plantilla per aplicar-la."
 #: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "That template has no boxes."
 msgstr "Aquesta plantilla no té requadres."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "JSON"
+msgstr "JSON"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Supplier"
+msgstr "Proveïdor"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Customer"
+msgstr "Client"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Code"
+msgstr "Codi"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Qty"
+msgstr "Quantitat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Price"
+msgstr "Preu"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Disc%"
+msgstr "Dte%"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Tax%"
+msgstr "IVA%"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Totals"
+msgstr "Totals"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Payment"
+msgstr "Pagament"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Create the bill"
+msgstr "Crear la factura"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+msgid "The bill could not be created."
+msgstr "No s'ha pogut crear la factura."
