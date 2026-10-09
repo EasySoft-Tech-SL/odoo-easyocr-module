@@ -22,7 +22,7 @@ class EasyocrWebhookLog(models.Model):
         readonly=True,
         help='Identifier the OCR service gives to the document.',
     )
-    filename = fields.Char(string='File Name', readonly=True)
+    filename = fields.Char(string='File', readonly=True)
     status = fields.Selection(
         selection=[
             ('ok', 'Created'),
@@ -43,6 +43,18 @@ class EasyocrWebhookLog(models.Model):
         string='Document',
         readonly=True,
         ondelete='set null',
+    )
+    # What the call ended up producing, read from the document it filed, so
+    # the log answers "did anything come of it" without opening the document.
+    move_id = fields.Many2one(
+        related='document_id.move_id',
+        string='Invoice',
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        related='document_id.partner_id',
+        string='Supplier',
+        readonly=True,
     )
     company_id = fields.Many2one(
         comodel_name='res.company',

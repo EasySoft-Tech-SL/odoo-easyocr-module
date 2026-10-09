@@ -43,6 +43,7 @@
         'views/easyocr_inbox_views.xml',
         'views/easyocr_template_views.xml',
         'views/easyocr_webhook_log_views.xml',
+        'views/easyocr_invoice_views.xml',
         'views/easyocr_upload_views.xml',
         'views/expense_capture_views.xml',
         'views/res_config_settings_views.xml',

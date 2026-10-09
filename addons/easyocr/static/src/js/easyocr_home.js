@@ -67,7 +67,7 @@ export class EasyocrHome extends Component {
                 icon: "fa-money",
                 label: _t("Invoices"),
                 count: counts ? counts.invoices : null,
-                action: "account.action_move_in_invoice_type",
+                action: "easyocr.action_easyocr_invoice",
                 accent: INVOICES.accent,
                 bg: INVOICES.bg,
             },
@@ -124,7 +124,7 @@ export class EasyocrHome extends Component {
                 icon: "fa-money",
                 title: _t("Invoices"),
                 note: _t("View the history of invoices generated from imported PDFs."),
-                action: "account.action_move_in_invoice_type",
+                action: "easyocr.action_easyocr_invoice",
                 ...INVOICES,
             },
             {

@@ -33,6 +33,15 @@ export class OCRResultDialog extends Component {
             // The journal the bill is posted to, when the reader picks one.
             journals: [],
             journalId: null,
+            // The lines the reader can correct before the bill is made.
+            items: [],
+            // Whether the footer also asks for the payment. UI only for now:
+            // recording the payment itself is a later pass.
+            createPayment: false,
+            paymentModes: [],
+            banks: [],
+            paymentModeId: null,
+            bankId: null,
         });
         onWillStart(() => this.load());
     }
@@ -46,6 +55,9 @@ export class OCRResultDialog extends Component {
             this.state.data = await this.orm.call(
                 "easyocr.document", "action_result_data", [[this.documentId]],
             );
+            // A copy the reader edits; the raw reading stays under `data` for
+            // the JSON button and the read-only cards.
+            this.state.items = JSON.parse(JSON.stringify(this.state.data?.items || []));
         } catch {
             this.state.data = null;
         } finally {
@@ -57,6 +69,20 @@ export class OCRResultDialog extends Component {
             );
         } catch {
             this.state.journals = [];
+        }
+        try {
+            this.state.paymentModes = await this.orm.call(
+                "easyocr.document", "action_list_payment_modes", [],
+            );
+        } catch {
+            this.state.paymentModes = [];
+        }
+        try {
+            this.state.banks = await this.orm.call(
+                "easyocr.document", "action_list_banks", [],
+            );
+        } catch {
+            this.state.banks = [];
         }
     }
 
@@ -96,7 +122,22 @@ export class OCRResultDialog extends Component {
     }
 
     items() {
-        return this.state.data?.items || [];
+        return this.state.items || [];
+    }
+
+    removeLine(index) {
+        this.state.items.splice(index, 1);
+    }
+
+    addLine() {
+        this.state.items.push({
+            code: '',
+            description: '',
+            quantity: 1,
+            unit_price: 0,
+            discount_percent: 0,
+            tax_rate: 0,
+        });
     }
 
     notes() {
@@ -112,7 +153,7 @@ export class OCRResultDialog extends Component {
         try {
             const result = await this.orm.call(
                 "easyocr.document", "action_create_bill",
-                [[this.documentId], this.state.draft, this.state.journalId],
+                [[this.documentId], this.state.draft, this.state.journalId, this.state.items],
             );
             if (result) {
                 await this.actionService.doAction(result);
