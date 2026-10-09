@@ -37,8 +37,8 @@ export class EasyocrHome extends Component {
 
         this.logoSrc = "/easyocr/static/description/icon.png";
         this.title = _t("EasyOCR");
-        this.subtitle = _t("Read supplier invoices and expense receipts, and turn them into accounting entries.");
-        this.sectionTitle = _t("Sections");
+        this.subtitle = _t("Tool for extracting text content from PDF files for automatic creation of supplier invoices in Dolibarr.");
+        this.sectionTitle = _t("Quick access");
         this.openLabel = _t("Open");
 
         this.state = useState({ counts: false, canConfigure: false });
@@ -63,18 +63,9 @@ export class EasyocrHome extends Component {
         const counts = this.state.counts;
         return [
             {
-                key: "documents",
-                icon: "fa-file-text-o",
-                label: _t("Documents"),
-                count: counts ? counts.documents : null,
-                action: "easyocr.action_easyocr_document",
-                accent: PDF.accent,
-                bg: PDF.bg,
-            },
-            {
                 key: "invoices",
                 icon: "fa-money",
-                label: _t("Bills"),
+                label: _t("Invoices"),
                 count: counts ? counts.invoices : null,
                 action: "account.action_move_in_invoice_type",
                 accent: INVOICES.accent,
@@ -99,32 +90,24 @@ export class EasyocrHome extends Component {
                 // file and landing in the viewer is what most visits are for.
                 key: "upload",
                 icon: "fa-file-pdf-o",
-                title: _t("Upload a document"),
-                note: _t("Pick a PDF or a photo and open it in the viewer"),
+                title: _t("Upload PDF"),
+                note: _t("Import a PDF and visually extract supplier invoice data."),
                 action: "easyocr.action_easyocr_new_document",
                 ...PDF,
             },
             {
-                key: "documents",
-                icon: "fa-file-text-o",
-                title: _t("Documents"),
-                note: _t("Invoices and receipts read, or waiting to be"),
-                action: "easyocr.action_easyocr_document",
+                key: "batch",
+                icon: "fa-files-o",
+                title: _t("Batch processing"),
+                note: _t("Process multiple PDFs at once with AI-powered automatic extraction."),
+                action: "easyocr.action_easyocr_batch",
                 ...DOCUMENTS,
-            },
-            {
-                key: "inbox",
-                icon: "fa-inbox",
-                title: _t("Inbox"),
-                note: _t("Waiting to be looked at, handed over by other modules"),
-                action: "easyocr.action_easyocr_inbox",
-                ...INBOX,
             },
             {
                 key: "capture",
                 icon: "fa-camera",
-                title: _t("Capture a receipt"),
-                note: _t("Photograph one from a phone"),
+                title: _t("Scan expense"),
+                note: _t("Scan an expense receipt from your phone and register it automatically."),
                 url: "/easyocr/capture",
                 ...SCAN,
             },
@@ -132,24 +115,23 @@ export class EasyocrHome extends Component {
                 key: "templates",
                 icon: "fa-th-large",
                 title: _t("Templates"),
-                note: _t("The boxes saved for each vendor"),
+                note: _t("Manage zone selection templates linked to suppliers."),
                 action: "easyocr.action_easyocr_template",
                 ...TEMPLATES,
             },
             {
                 key: "invoices",
                 icon: "fa-money",
-                title: _t("Vendor bills"),
-                note: _t("What the documents became"),
+                title: _t("Invoices"),
+                note: _t("View the history of invoices generated from imported PDFs."),
                 action: "account.action_move_in_invoice_type",
                 ...INVOICES,
             },
             {
                 key: "webhooks",
                 icon: "fa-exchange",
-                // Spelled as the menu is, so the two share one translation.
-                title: _t("Webhook Log"),
-                note: _t("The calls the extraction service has made"),
+                title: _t("Webhook logs"),
+                note: _t("Audit incoming webhook notifications and review processing failures."),
                 action: "easyocr.action_easyocr_webhook_log",
                 ...WEBHOOKS,
             },
@@ -159,8 +141,8 @@ export class EasyocrHome extends Component {
             cards.push({
                 key: "settings",
                 icon: "fa-cog",
-                title: _t("Settings"),
-                note: _t("The extraction service and what a document becomes"),
+                title: _t("Setup"),
+                note: _t("Configure the API key, cloud service and module options."),
                 url: "/odoo/settings#easyocr",
                 ...SETUP,
             });

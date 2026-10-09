@@ -7,10 +7,12 @@
         <field name="name">easyocr.template.list</field>
         <field name="model">easyocr.template</field>
         <field name="arch" type="xml">
-            <list string="Extraction Templates">
+            <list string="Templates">
                 <field name="name"/>
                 <field name="partner_id"/>
+                <field name="custom_instructions"/>
                 <field name="box_count"/>
+                <field name="create_date"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
         </field>

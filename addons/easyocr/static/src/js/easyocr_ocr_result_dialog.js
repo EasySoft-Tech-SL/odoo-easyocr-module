@@ -28,6 +28,8 @@ export class OCRResultDialog extends Component {
             data: null,
             busy: false,
             collapsed: {},
+            // Whether the bill is posted straight away or left in draft.
+            draft: false,
         });
         onWillStart(() => this.load());
     }
@@ -99,7 +101,7 @@ export class OCRResultDialog extends Component {
         this.state.busy = true;
         try {
             const result = await this.orm.call(
-                "easyocr.document", "action_create_bill", [[this.documentId]],
+                "easyocr.document", "action_create_bill", [[this.documentId], this.state.draft],
             );
             if (result) {
                 await this.actionService.doAction(result);

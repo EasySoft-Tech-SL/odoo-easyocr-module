@@ -362,7 +362,9 @@
                          chips, which is how a whole page is drawn without the
                          mouse. One sentence, so it translates as one. -->
                     <div class="o_easyocr_help" t-if="!state.empty">
-                        <i class="fa fa-keyboard-o me-1"/><t t-esc="helpLabel()"/>
+                        <i class="fa fa-keyboard-o me-1"/>
+                        Help and shortcuts
+                        <i class="fa fa-question-circle ms-1" t-att-title="helpText()"/>
                     </div>
                 </div>
             </div>

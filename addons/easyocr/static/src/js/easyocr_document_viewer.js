@@ -629,6 +629,25 @@ export class EasyocrDocumentViewer extends Component {
         return _t("Keys: 1-8 select a field, Ctrl+S saves the template, Ctrl+Enter makes the bill, Esc releases the field.");
     }
 
+    /** The full help, in the two blocks the module this is a port of shows. */
+    helpText() {
+        return [
+            _t("Keyboard shortcuts"),
+            "1-4 — " + _t("Select label"),
+            "Ctrl+Z — " + _t("Undo last action"),
+            "Ctrl+S — " + _t("Save/Edit template"),
+            "Ctrl+Enter — " + _t("Generate invoice"),
+            "Esc — " + _t("Close modal / Deselect"),
+            "",
+            _t("Interaction"),
+            "• " + _t("Drag a PDF to the viewer to load it"),
+            "• " + _t("Draw rectangles after selecting a label"),
+            "• " + _t("Drag selections to move them"),
+            "• " + _t("Use corners to resize"),
+            "• " + _t("+/− to zoom the PDF"),
+        ].join("\n");
+    }
+
     // ------------------------------------------------------------------
     // Drawing, dragging and pulling
     // ------------------------------------------------------------------

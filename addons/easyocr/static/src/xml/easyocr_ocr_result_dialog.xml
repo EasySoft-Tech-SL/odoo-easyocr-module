@@ -12,7 +12,7 @@
                 <div class="o_easyocr_result_header">
                     <div class="o_easyocr_result_title">
                         <i class="fa fa-magic me-2"/>
-                        <h4>What the reading found</h4>
+                        <h4>AI Result</h4>
                         <div class="o_easyocr_result_pills">
                             <t t-foreach="pills()" t-as="pill" t-key="pill_index">
                                 <span class="o_easyocr_result_pill"><t t-esc="pill"/></span>
@@ -81,7 +81,7 @@
                     <div t-if="hasSection('lines')" class="o_easyocr_result_card">
                         <div class="o_easyocr_result_card_head" t-on-click="() => this.toggleCard('lines')">
                             <i class="fa fa-list-ul me-1"/>
-                            <span>Lines</span>
+                            <span>Invoice lines</span>
                             <span class="o_easyocr_result_count"><t t-esc="items().length"/></span>
                             <i class="fa fa-chevron-down ms-auto"/>
                         </div>
@@ -154,13 +154,24 @@
                 </div>
 
                 <div class="o_easyocr_result_footer">
+                    <div class="o_easyocr_result_status me-auto">
+                        <span class="o_easyocr_result_status_label">Status</span>
+                        <label class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" name="ocr_status" t-att-checked="!state.draft" t-on-click="() => this.state.draft = false"/>
+                            <span>Validated</span>
+                        </label>
+                        <label class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" name="ocr_status" t-att-checked="state.draft" t-on-click="() => this.state.draft = true"/>
+                            <span>Draft</span>
+                        </label>
+                    </div>
                     <button class="btn btn-secondary" t-on-click="close">Cancel</button>
                     <button
                         class="btn btn-success"
                         t-on-click="createInvoice"
                         t-att-disabled="state.busy"
                     >
-                        <i class="fa fa-check me-1"/>Create the bill
+                        <i class="fa fa-check me-1"/>Create invoice
                     </button>
                 </div>
 
