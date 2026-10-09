@@ -128,6 +128,13 @@ work was done.
   of the quota at the top of the column, and the keyboard spelled out at the
   bottom (1-8 pick a field, Ctrl+S saves the template, Ctrl+Enter makes the
   bill, Esc releases the field).
+- **Lined up with the module it ports.** The home, the viewer, the reading
+  result, the templates, the invoices, the webhook log, the batch screen and the
+  settings now read like the Dolibarr module's, screen by screen: the same
+  labels, the same sections, the same keyboard and the same order, in the seven
+  languages. The reading result gained its collapsible cards and its raw payload,
+  its editable lines and the payment, and the viewer its completeness checklist,
+  the quota, the AI instructions, the supplier dropdown and undo.
 
 ### Pending
 
