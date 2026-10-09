@@ -153,7 +153,8 @@ export class OCRResultDialog extends Component {
         try {
             const result = await this.orm.call(
                 "easyocr.document", "action_create_bill",
-                [[this.documentId], this.state.draft, this.state.journalId, this.state.items],
+                [[this.documentId], this.state.draft, this.state.journalId,
+                 this.state.items, this.state.createPayment, this.state.bankId],
             );
             if (result) {
                 await this.actionService.doAction(result);

@@ -300,3 +300,19 @@ class TestEasyocrBill(TransactionCase):
         self.assertEqual(len(line), 1)
         self.assertAlmostEqual(line.price_unit, 100.0, places=2)
         self.assertLess(line.balance, 0)
+
+    def test_asking_to_pay_without_a_bank_journal_does_not_crash(self):
+        """A bank with no journal is paid by nobody, and nothing breaks."""
+        bank = self.env['res.partner.bank'].create({
+            'acc_number': 'ES9121000418450200051332',
+        })
+        document = self._document(
+            partner_id=self.partner.id,
+            amount_untaxed=100.0,
+            amount_total=121.0,
+        )
+
+        document.action_create_bill(register_payment=True, bank_id=bank.id)
+
+        self.assertTrue(document.move_id)
+        self.assertEqual(document.move_id.payment_state, 'not_paid')

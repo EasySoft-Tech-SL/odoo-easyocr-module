@@ -287,7 +287,8 @@ class EasyocrDocument(models.Model):
 
         return self.env['res.partner']
 
-    def action_create_bill(self, draft=False, journal_id=False, items=None):
+    def action_create_bill(self, draft=False, journal_id=False, items=None,
+                           register_payment=False, bank_id=False):
         """Create a supplier bill from what was read from this document.
 
         One bill line for every line the service read, each with its own product,
@@ -298,7 +299,8 @@ class EasyocrDocument(models.Model):
         The dialog can ask for a draft, which leaves the bill unposted for review
         instead of validating it right away, and can pick the journal. When the
         dialog hands back the lines as the reader left them, the bill is made
-        from those and not from the reading.
+        from those and not from the reading. A posted bill can also be paid right
+        away, from the bank account the reader picked.
         """
         self.ensure_one()
         if self.move_id:
@@ -338,6 +340,8 @@ class EasyocrDocument(models.Model):
         self.state = 'processed'
         if not draft:
             self._confirm_bill(move)
+        if register_payment and not draft:
+            self._register_payment(move, bank_id)
 
         return {
             'type': 'ir.actions.act_window',
@@ -346,6 +350,26 @@ class EasyocrDocument(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+
+    def _register_payment(self, move, bank_id):
+        """Pay a posted bill straight away, from the bank the reader picked.
+
+        The payment goes through Odoo's own register, so the reconciliation and
+        the numbering are Odoo's and not something the module invents. A bank
+        without a journal, or a bill that could not be posted, is paid by nobody:
+        the bill is still there, in draft, for a person to finish.
+        """
+        bank = self.env['res.partner.bank'].browse(bank_id)
+        journal = bank.journal_id
+        if not journal or move.state != 'posted':
+            return
+        register = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=[move.id],
+        ).create({
+            'journal_id': journal.id,
+            'amount': move.amount_total,
+        })
+        register.action_create_payments()
 
     def _bill_line_values(self, partner):
         """What goes on the bill, line by line.
@@ -431,7 +455,11 @@ class EasyocrDocument(models.Model):
         banks = self.env['res.partner.bank'].search([
             ('company_id', '=', self.env.company.id),
         ], order='display_name')
-        return [{'id': bank.id, 'name': bank.display_name} for bank in banks]
+        return [{
+            'id': bank.id,
+            'name': bank.display_name,
+            'journal_id': bank.journal_id.id,
+        } for bank in banks]
 
     def _compute_line_count(self):
         for document in self:
