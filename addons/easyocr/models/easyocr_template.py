@@ -8,15 +8,15 @@ from odoo.exceptions import UserError
 # what the extraction code matches on; the colour is only how it is painted, and
 # it is kept here so the viewer and the API agree on one list.
 BOX_FIELDS = [
-    ('document_date', 'Date', '#6c3483'),
-    ('document_number', 'Invoice number', '#2980b9'),
-    ('amount_untaxed', 'Untaxed total', '#c0392b'),
-    ('amount_total', 'Total', '#d4458b'),
-    ('tax_amount', 'Tax', '#ff6b35'),
+    ('document_date', 'Invoice date', '#6c3483'),
+    ('document_number', 'Invoice', '#2980b9'),
+    ('amount_untaxed', 'Total excl. tax', '#c0392b'),
+    ('amount_total', 'Total price', '#d4458b'),
+    ('tax_amount', 'Tax amount', '#ff6b35'),
     ('description', 'Description', '#27ae60'),
-    ('partner_vat', 'Tax number', '#16a085'),
+    ('partner_vat', 'Tax ID', '#16a085'),
     ('due_date', 'Due date', '#f39c12'),
-    ('partner_name', 'Vendor', '#5d6d7e'),
+    ('partner_name', 'Supplier', '#5d6d7e'),
 ]
 
 
@@ -196,6 +196,18 @@ class EasyocrDocument(models.Model):
             ('supplier_rank', '>', 0),
         ], order='name')
         return [{'id': supplier.id, 'name': supplier.display_name} for supplier in suppliers]
+
+    def action_set_supplier(self, partner_id):
+        """Set the vendor by hand, from the dropdown in the extracted data.
+
+        The boxes are kept under whoever sent the document, so naming the vendor
+        here also brings their template back on the next open.
+        """
+        self.ensure_one()
+        partner = self.env['res.partner'].browse(partner_id)
+        if partner.exists():
+            self.partner_id = partner.id
+        return {'partner_id': self.partner_id.id, 'name': self.partner_id.display_name or ''}
 
     def action_save_template(self, name, boxes, partner_id=False, custom_instructions=False):
         """Keep these boxes for this document's vendor.

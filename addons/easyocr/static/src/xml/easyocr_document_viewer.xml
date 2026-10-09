@@ -73,7 +73,7 @@
                                         <span class="o_easyocr_badge">PRO</span>
                                     </span>
                                     <p class="o_easyocr_ai_hero_hint">
-                                        Read the scan with the service and fill the document in.
+                                        Send the PDF to AI service for automatic data extraction
                                     </p>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                                 t-att-disabled="state.busy"
                             >
                                 <i class="fa fa-magic me-1"/>
-                                Read with AI
+                                Extract with AI
                             </button>
 
                             <div t-if="state.account.blocked" class="o_easyocr_blocked">
@@ -202,9 +202,9 @@
                              that arms it: 1-8 select the first eight, the way the
                              module this is a port of does it. -->
                         <div t-if="!state.empty" class="o_easyocr_section">
-                            <h5>Fields <span class="o_easyocr_shortcut_hint">1-8</span></h5>
+                            <h5>Labels <span class="o_easyocr_shortcut_hint">1-8</span></h5>
                             <p class="o_easyocr_section_note">
-                                Pick one, then drag a box over the page. The text under the box is read straight away. To move a box, drag it; to resize it, pull a corner.
+                                Select a label → Draw a rectangle on the PDF
                             </p>
                             <div class="o_easyocr_field_list">
                                 <t t-foreach="fields" t-as="field" t-key="field.key">
@@ -226,7 +226,7 @@
                              come back, instead of drawing them again. Saving a
                              new one lives in the footer, next to the bill. -->
                         <div t-if="!state.empty" class="o_easyocr_section">
-                            <h5>Template</h5>
+                            <h5>Templates</h5>
                             <p t-if="state.appliedTemplate and state.boxes.length" class="o_easyocr_applied">
                                 <i class="fa fa-check-circle me-1"/><t t-esc="appliedLabel()"/>
                             </p>
@@ -256,13 +256,38 @@
                             </div>
                         </div>
 
+                        <!-- Extra instructions that steer the service, folded
+                             away until the reader wants them. -->
+                        <div t-if="!state.empty and state.account and state.account.ai_enabled" class="o_easyocr_section">
+                            <h5 class="o_easyocr_collapsible" t-on-click="toggleCustom">
+                                AI Instructions
+                                <i class="fa fa-chevron-down ms-auto"/>
+                            </h5>
+                            <textarea
+                                t-if="state.customExpanded"
+                                class="form-control form-control-sm"
+                                rows="3"
+                                t-model="state.customInstructions"
+                                placeholder="Extra instructions"
+                            />
+                        </div>
+
                         <!-- What the boxes read, and the one action that turns a
                              drawn page into a filed document. -->
                         <div class="o_easyocr_section" t-if="state.boxes.length">
                             <h5>
-                                What it read
+                                Extracted data
                                 <span class="o_easyocr_badge"><t t-esc="state.boxes.length"/></span>
                             </h5>
+                            <div class="o_easyocr_supplier mb-2">
+                                <label class="o_easyocr_supplier_label">Supplier</label>
+                                <select class="form-select form-select-sm" t-model="state.supplierId" t-on-change="setSupplier">
+                                    <option value="">Select supplier</option>
+                                    <t t-foreach="state.suppliers" t-as="supplier" t-key="supplier.id">
+                                        <option t-att-value="supplier.id"><t t-esc="supplier.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
                             <div class="o_easyocr_fields">
                                 <div t-foreach="state.boxes" t-as="box" t-key="box.uid" class="o_easyocr_field_row">
                                     <span class="o_easyocr_field_label" t-esc="this.labelFor(box.field_key)"/>
@@ -279,7 +304,7 @@
                                     class="btn btn-secondary btn-sm w-100"
                                     type="button"
                                     t-on-click="() => this.fillDocument()"
-                                ><t>Put it on the document</t></button>
+                                ><t>Apply to invoice</t></button>
                             </div>
 
                             <!-- The completeness checklist: the five fields a
@@ -307,7 +332,7 @@
                                     <t t-esc="item.label"/>
                                     <small class="o_easyocr_optional_badge">optional</small>
                                 </div>
-                                <div class="o_easyocr_readiness_summary"><t t-esc="readiness.done + '/' + readiness.total"/></div>
+                                <div class="o_easyocr_readiness_summary"><t>Completeness</t>: <t t-esc="readiness.done + '/' + readiness.total"/></div>
                             </div>
                         </div>
 
@@ -329,7 +354,7 @@
                             t-on-click="createBill"
                             t-att-disabled="state.busy"
                         >
-                            Generate invoice
+                            Generate Invoice
                         </button>
                     </div>
 
