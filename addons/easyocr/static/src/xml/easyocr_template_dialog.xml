@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- The "save template" dialog: the name, the vendor it belongs to and the
+         extra instructions, the three things a template carries beyond its
+         boxes. It mirrors the module this is a port of, which asks for them in
+         a small modal rather than typing the name into the column. -->
+    <t t-name="easyocr.TemplateDialog">
+        <div class="o_easyocr_template_dialog">
+            <div class="mb-2">
+                <label class="form-label" for="template_dialog_name">Template name</label>
+                <input
+                    id="template_dialog_name"
+                    type="text"
+                    class="form-control"
+                    t-model="state.name"
+                    autofocus="true"
+                />
+            </div>
+
+            <div class="mb-2" t-if="props.suppliers.length">
+                <label class="form-label" for="template_dialog_supplier">Vendor</label>
+                <select id="template_dialog_supplier" class="form-select" t-model="state.supplierId">
+                    <option value="">No vendor (generic)</option>
+                    <t t-foreach="props.suppliers" t-as="supplier" t-key="supplier.id">
+                        <option t-att-value="supplier.id"><t t-esc="supplier.name"/></option>
+                    </t>
+                </select>
+            </div>
+
+            <div class="mb-2" t-if="props.aiEnabled">
+                <label class="form-label" for="template_dialog_instructions">Extra instructions</label>
+                <textarea
+                    id="template_dialog_instructions"
+                    class="form-control"
+                    rows="3"
+                    t-model="state.instructions"
+                />
+            </div>
+        </div>
+    </t>
+
+</templates>

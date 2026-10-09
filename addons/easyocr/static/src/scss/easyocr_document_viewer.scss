@@ -180,6 +180,19 @@
         font-size: 0.78rem;
     }
 
+    // The dropdown that applies a saved template, with its Apply button and the
+    // small cross that clears it. One row so the select keeps the width.
+    .o_easyocr_template_row {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+
+        .o_easyocr_template_select {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+    }
+
     .o_easyocr_field_list {
         display: flex;
         flex-direction: column;

@@ -17,6 +17,7 @@ import {
     rectangleBetween,
     resizedTo,
 } from "./easyocr_box_geometry";
+import { TemplateDialog } from "./easyocr_template_dialog";
 
 // The stages of a reading, with how far the bar is painted for each one. They
 // are the ones the module this is a port of shows, and they are an estimate and
@@ -121,7 +122,16 @@ export class EasyocrDocumentViewer extends Component {
             pages: [],
             boxes: [],
             activeField: null,
-            templateName: "",
+            // The saved templates, for the dropdown that applies one instead of
+            // drawing the boxes again. Each one carries the vendor it belongs to
+            // so two templates of the same vendor can be told apart.
+            templates: [],
+            templateId: null,
+            customInstructions: "",
+            // The vendors the save dialog offers, so a template can be kept
+            // under a name the reader picked instead of only the one worked out
+            // from the document.
+            suppliers: [],
             saving: false,
             // The template whose boxes are on the page, and the vendor it was
             // saved for. Kept so the screen can say where the boxes came from:
@@ -165,6 +175,7 @@ export class EasyocrDocumentViewer extends Component {
         onWillStart(() => this.loadPermission());
         onWillStart(() => this.loadDocument());
         onWillStart(() => this.loadAccountState());
+        onWillStart(() => this.loadTemplates());
         onMounted(() => this.paintPages());
         onMounted(() => this.bindKeyboard());
         onWillUnmount(() => this.unbindKeyboard());
@@ -1055,8 +1066,65 @@ export class EasyocrDocumentViewer extends Component {
     // ------------------------------------------------------------------
     // Template handling
     // ------------------------------------------------------------------
+    /** The saved templates the dropdown offers, most recent first, and the
+     *  vendors the save dialog offers. */
+    async loadTemplates() {
+        try {
+            this.state.templates = await this.orm.call(
+                "easyocr.document", "action_list_templates", [],
+            );
+        } catch {
+            // No list is not worth a message: the reader draws the boxes.
+            this.state.templates = [];
+        }
+        try {
+            this.state.suppliers = await this.orm.call(
+                "easyocr.document", "action_list_suppliers", [],
+            );
+        } catch {
+            this.state.suppliers = [];
+        }
+    }
+
+    /**
+     * Paint the boxes of the template chosen in the dropdown.
+     *
+     * The boxes replace whatever is on the page, the way the module this is a
+     * port of does it: a template is a shortcut for drawing, not an extra layer
+     * on top of the boxes already there.
+     */
+    async applyTemplate() {
+        if (!this.state.templateId || !this.documentId) {
+            this.notification.add(_t("Pick a template to apply it."), { type: "warning" });
+            return;
+        }
+        try {
+            const answer = await this.orm.call(
+                "easyocr.document", "action_load_template", [[this.documentId], this.state.templateId],
+            );
+            if (!answer.boxes.length) {
+                this.notification.add(_t("That template has no boxes."), { type: "warning" });
+                return;
+            }
+            this.state.boxes = answer.boxes.map((box) => ({
+                ...box, uid: this.nextUid++, text: "",
+            }));
+            this.state.appliedTemplate = answer.label || answer.name;
+            this.state.appliedVendor = answer.vendor;
+            this.state.customInstructions = answer.custom_instructions || "";
+            await this.refreshAllTexts();
+            for (const pageInfo of this.state.pages) {
+                this.redrawPage(pageInfo.number);
+            }
+        } catch (error) {
+            this.notification.add(this.failureMessage(error), { type: "danger" });
+        }
+    }
+
     clearBoxes() {
         this.state.boxes = [];
+        this.state.templateId = null;
+        this.state.customInstructions = "";
         // Nothing is left of the template either: an empty page still claiming
         // to be using somebody's boxes would be the screen lying.
         this.state.appliedTemplate = "";
@@ -1089,7 +1157,20 @@ export class EasyocrDocumentViewer extends Component {
             });
             return;
         }
-        if (!this.state.templateName.trim()) {
+        const payload = await this.dialog.add(TemplateDialog, {
+            name: this.state.appliedTemplate,
+            suppliers: this.state.suppliers,
+            aiEnabled: this.state.account?.ai_enabled,
+        }, {
+            title: _t("Save template"),
+            confirmLabel: _t("Save"),
+            cancelLabel: _t("Cancel"),
+        });
+        if (!payload) {
+            return;
+        }
+        const name = (payload.name || "").trim();
+        if (!name) {
             this.notification.add(_t("Give the template a name."), { type: "warning" });
             return;
         }
@@ -1099,7 +1180,7 @@ export class EasyocrDocumentViewer extends Component {
             await this.refreshAllTexts();
             const answer = await this.orm.call("easyocr.document", "action_save_template", [
                 [this.documentId],
-                this.state.templateName,
+                name,
                 this.state.boxes.map((box) => ({
                     page: box.page,
                     field_key: box.field_key,
@@ -1109,6 +1190,8 @@ export class EasyocrDocumentViewer extends Component {
                     height: box.height,
                     text: box.text || "",
                 })),
+                payload.supplierId || false,
+                payload.instructions || "",
             ]);
             this.state.appliedTemplate = answer.label || answer.name;
             this.state.appliedVendor = answer.vendor;
@@ -1118,7 +1201,8 @@ export class EasyocrDocumentViewer extends Component {
                     : _t("Template saved."),
                 { type: "success" },
             );
-            this.state.templateName = "";
+            // The dropdown offers what was just saved.
+            await this.loadTemplates();
         } catch (error) {
             this.notification.add(this.failureMessage(error), { type: "danger" });
         } finally {

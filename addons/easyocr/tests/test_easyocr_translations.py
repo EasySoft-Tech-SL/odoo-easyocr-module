@@ -71,6 +71,10 @@ VIEWER_STRINGS = (
     "%s field(s) written on the document.",
     # The keyboard help, one sentence.
     "Keys: 1-8 select a field, Ctrl+S saves the template, Ctrl+Enter makes the bill, Esc releases the field.",
+    # The template dropdown: what it says when nothing can be applied, and when
+    # the chosen template turns out to have nothing to draw.
+    "Pick a template to apply it.",
+    "That template has no boxes.",
 )
 
 # What the batch screen writes by itself. Same rule, and the same reason they
