@@ -3659,3 +3659,9 @@ msgstr "Créer la facture"
 #: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
 msgid "The bill could not be created."
 msgstr "La facture n'a pas pu être créée."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid "optional"
+msgstr "optionnel"
