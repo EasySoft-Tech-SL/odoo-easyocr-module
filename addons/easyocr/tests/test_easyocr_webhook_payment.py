@@ -44,7 +44,7 @@ class TestEasyocrWebhookPayment(TransactionCase):
             'easyocr_webhook_mark_paid': False,
             'easyocr_webhook_journal_id': self.journal.id,
             'easyocr_webhook_payment_method_line_id': False,
-            'easyocr_bill_post': False,
+            'easyocr_invoice_draft': True,
         })
 
     def _document(self, **values):
@@ -107,7 +107,7 @@ class TestEasyocrWebhookPayment(TransactionCase):
         self.company.write({
             'easyocr_webhook_create_bill': True,
             'easyocr_webhook_mark_paid': True,
-            'easyocr_bill_post': True,
+            'easyocr_invoice_draft': False,
         })
         document = self._document()
 
@@ -136,7 +136,7 @@ class TestEasyocrWebhookPayment(TransactionCase):
         self.company.write({
             'easyocr_webhook_create_bill': True,
             'easyocr_webhook_mark_paid': True,
-            'easyocr_bill_post': True,
+            'easyocr_invoice_draft': False,
             'easyocr_webhook_journal_id': False,
         })
         document = self._document()
@@ -150,7 +150,7 @@ class TestEasyocrWebhookPayment(TransactionCase):
         self.company.write({
             'easyocr_webhook_create_bill': True,
             'easyocr_webhook_mark_paid': True,
-            'easyocr_bill_post': True,
+            'easyocr_invoice_draft': False,
         })
         document = self._document()
 

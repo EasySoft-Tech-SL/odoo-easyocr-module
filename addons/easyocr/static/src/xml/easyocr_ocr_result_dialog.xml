@@ -164,6 +164,13 @@
                             <input type="radio" class="form-check-input" name="ocr_status" t-att-checked="state.draft" t-on-click="() => this.state.draft = true"/>
                             <span>Draft</span>
                         </label>
+                        <span class="o_easyocr_result_status_label ms-3">Journal</span>
+                        <select class="form-select form-select-sm" t-model="state.journalId">
+                            <option value="">-- Automatic --</option>
+                            <t t-foreach="state.journals" t-as="journal" t-key="journal.id">
+                                <option t-att-value="journal.id"><t t-esc="journal.name"/></option>
+                            </t>
+                        </select>
                     </div>
                     <button class="btn btn-secondary" t-on-click="close">Cancel</button>
                     <button

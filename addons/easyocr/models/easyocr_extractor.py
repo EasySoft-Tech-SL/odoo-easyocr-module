@@ -699,6 +699,15 @@ class EasyocrDocument(models.Model):
             'params': {'document_id': self.id},
         }
 
+    @api.model
+    def action_list_journals(self):
+        """The purchase journals the dialog offers, for the bill it will make."""
+        journals = self.env['account.journal'].search([
+            ('type', '=', 'purchase'),
+            ('company_id', '=', self.env.company.id),
+        ], order='name')
+        return [{'id': journal.id, 'name': journal.name} for journal in journals]
+
     def _extraction_notification(self, kind, message):
         return {
             'type': 'ir.actions.client',

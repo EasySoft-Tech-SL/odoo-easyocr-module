@@ -42,7 +42,7 @@ class TestEasyocrBill(TransactionCase):
         # Set here and not assumed: this switch lives on the company, so a test
         # that trusts the shipped default is really testing the database it runs
         # against, and goes red the moment somebody turns it on.
-        self.env.company.easyocr_bill_post = False
+        self.env.company.easyocr_invoice_draft = True
         document = self._document(
             partner_id=self.partner.id,
             ref='A/123',
@@ -107,7 +107,7 @@ class TestEasyocrBill(TransactionCase):
         # Set here and not assumed, like the bill-posted switch above: what is
         # being tested is the line, and a bill that gets posted on the way adds
         # a second reason for the test to fail.
-        self.env.company.easyocr_bill_post = False
+        self.env.company.easyocr_invoice_draft = True
         values.setdefault('partner_id', self.partner.id)
         document = self._document(**values)
         document.action_create_bill()
@@ -253,7 +253,7 @@ class TestEasyocrBill(TransactionCase):
 
     def test_the_bill_takes_the_project_of_the_document(self):
         account = self._analytic_account()
-        self.env.company.easyocr_bill_post = False
+        self.env.company.easyocr_invoice_draft = True
         document = self._document(
             partner_id=self.partner.id,
             amount_untaxed=100.0,
@@ -269,7 +269,7 @@ class TestEasyocrBill(TransactionCase):
         )
 
     def test_a_bill_with_no_project_gets_none(self):
-        self.env.company.easyocr_bill_post = False
+        self.env.company.easyocr_invoice_draft = True
         document = self._document(
             partner_id=self.partner.id, amount_untaxed=100.0, amount_total=121.0,
         )

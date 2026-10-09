@@ -287,7 +287,7 @@ class EasyocrDocument(models.Model):
 
         return self.env['res.partner']
 
-    def action_create_bill(self, draft=False):
+    def action_create_bill(self, draft=False, journal_id=False):
         """Create a supplier bill from what was read from this document.
 
         One bill line for every line the service read, each with its own product,
@@ -296,7 +296,7 @@ class EasyocrDocument(models.Model):
         amount goes on a single line instead, untaxed, as it always did.
 
         The dialog can ask for a draft, which leaves the bill unposted for review
-        instead of validating it right away.
+        instead of validating it right away, and can pick the journal.
         """
         self.ensure_one()
         if self.move_id:
@@ -319,6 +319,8 @@ class EasyocrDocument(models.Model):
                 (0, 0, line) for line in self._bill_line_values(partner)
             ],
         }
+        if journal_id:
+            values['journal_id'] = journal_id
         if self.due_date:
             # Only when the paper says one: left out, Odoo works it out from the
             # payment terms of the vendor, which is better than a blank.
@@ -619,7 +621,7 @@ class EasyocrDocument(models.Model):
         be confirmed is worth a great deal more than no bill at all.
         """
         self.ensure_one()
-        if not self.company_id.easyocr_bill_post:
+        if self.company_id.easyocr_invoice_draft:
             return
         try:
             move.action_post()

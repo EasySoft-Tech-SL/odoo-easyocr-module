@@ -112,6 +112,10 @@
                             <div t-if="state.account.plan.name" class="o_easyocr_quota">
                                 <button class="o_easyocr_quota_toggle" type="button" t-on-click="toggleQuota">
                                     <span class="o_easyocr_quota_toggle_left">
+                                        <span
+                                            t-att-class="state.account.blocked ? 'o_easyocr_quota_status o_easyocr_quota_status_blocked' : 'o_easyocr_quota_status'"
+                                            t-esc="state.account.blocked ? '⚠️' : '✓'"
+                                        />
                                         <span class="o_easyocr_quota_plan_name"><t t-esc="state.account.plan.name"/></span>
                                         <span class="o_easyocr_quota_compact">
                                             <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/> Pages

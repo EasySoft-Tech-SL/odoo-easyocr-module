@@ -10,14 +10,14 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app name="easyocr" string="EasyOCR" data-string="EasyOCR" groups="easyocr.group_easyocr_manager">
-                    <block title="AI extraction" id="easyocr_ai_block">
-                        <setting id="easyocr_ai_enabled" string="Read with AI" help="Send documents to the EasyOCR service for scans and photos that carry no text layer of their own.">
+                    <block title="AI OCR configuration" id="easyocr_ai_block">
+                        <setting id="easyocr_ai_enabled" string="Enable AI OCR" help="Send documents to the EasyOCR service for scans and photos that carry no text layer of their own.">
                             <field name="easyocr_ai_enabled"/>
                         </setting>
-                        <setting id="easyocr_ai_url" string="Service URL" help="Base address of the EasyOCR service. The /api/v1/ocr/file endpoint is added automatically.">
+                        <setting id="easyocr_ai_url" string="OCR service URL" help="Base address of the EasyOCR service. The /api/v1/ocr/file endpoint is added automatically.">
                             <field name="easyocr_ai_url" placeholder="https://app.easyocr.es"/>
                         </setting>
-                        <setting id="easyocr_ai_apikey" string="API key" help="Key the service expects in the X-API-Key header.">
+                        <setting id="easyocr_ai_apikey" string="API Key" help="Key the service expects in the X-API-Key header.">
                             <field name="easyocr_ai_apikey" widget="password"/>
                             <!-- Next to the key because that is what it checks,
                                  and free to press: the service is asked who the
@@ -47,11 +47,11 @@
                             <field name="easyocr_ai_receiver_context"/>
                         </setting>
                     </block>
-                    <block title="Documents and bills" id="easyocr_bill_block">
-                        <setting id="easyocr_bill_post" string="Confirm the bill automatically" help="Post the supplier bill as soon as it is created, instead of leaving it in draft for review. Off by default: posting books the bill and gives it a number.">
-                            <field name="easyocr_bill_post"/>
+                    <block title="General configuration" id="easyocr_bill_block">
+                        <setting id="easyocr_invoice_draft" string="Create invoices as draft" help="When on, the invoices the module creates are left in draft instead of being posted automatically, so a person confirms them.">
+                            <field name="easyocr_invoice_draft"/>
                         </setting>
-                        <setting id="easyocr_autocreate_product" string="Create products that do not exist" help="When a line carries a supplier reference no product matches, create the product instead of leaving the line without one.">
+                        <setting id="easyocr_autocreate_product" string="Create products automatically" help="When a line carries a supplier reference no product matches, create the product instead of leaving the line without one.">
                             <field name="easyocr_autocreate_product"/>
                         </setting>
                         <setting id="easyocr_allow_self_vendor" string="Accept our own company as vendor" help="Book a document whose tax number is ours. Off by default: it is almost always a document that was read the wrong way round.">
@@ -64,22 +64,22 @@
                             <field name="easyocr_duplicate_window_days" class="o_light_label"/>
                         </setting>
                     </block>
-                    <block title="Photographed receipts" id="easyocr_expense_block">
-                        <setting id="easyocr_expense_target" string="A photographed receipt becomes" help="Where a receipt photographed from a phone ends up. A supplier bill needs a vendor; a ticket from a petrol station is not one, so the employee expense is usually the better fit when the person taking the photo is the one who paid.">
+                    <block title="Employee expenses (mobile)" id="easyocr_expense_block">
+                        <setting id="easyocr_expense_target" string="Register the expense as" help="Where a receipt photographed from a phone ends up. A supplier bill needs a vendor; a ticket from a petrol station is not one, so the employee expense is usually the better fit when the person taking the photo is the one who paid.">
                             <field name="easyocr_expense_target"/>
                         </setting>
                         <setting id="easyocr_expense_allow_validate" string="Let the phone send the expense" help="Let whoever took the photo put the expense forward for approval at the same time, instead of leaving it in draft until they open Odoo.">
                             <field name="easyocr_expense_allow_validate"/>
                         </setting>
                     </block>
-                    <block title="Webhooks" id="easyocr_webhook_block">
+                    <block title="Automatic payment (Webhook)" id="easyocr_webhook_block">
                         <setting id="easyocr_webhook_create_bill" string="Create the bill from a webhook" help="When the service says it has finished reading a document, make the supplier bill from it without waiting for anyone. Off by default: a webhook is a message from outside, and a bill is an accounting entry.">
                             <field name="easyocr_webhook_create_bill"/>
                         </setting>
-                        <setting id="easyocr_webhook_mark_paid" string="Mark the bill as paid" help="Register the payment on the bills a webhook creates, as if the money had already gone out. It only applies to a bill that is confirmed, because a bill in draft has nothing to pay against.">
+                        <setting id="easyocr_webhook_mark_paid" string="Mark webhook invoices as paid" help="Register the payment on the bills a webhook creates, as if the money had already gone out. It only applies to a bill that is confirmed, because a bill in draft has nothing to pay against.">
                             <field name="easyocr_webhook_mark_paid"/>
                         </setting>
-                        <setting id="easyocr_webhook_journal_id" string="Bank account" help="Where the payment of a webhook bill is recorded.">
+                        <setting id="easyocr_webhook_journal_id" string="Payment bank account" help="Where the payment of a webhook bill is recorded.">
                             <field name="easyocr_webhook_journal_id"/>
                         </setting>
                         <setting id="easyocr_webhook_payment_method_line_id" string="Payment method" help="How the payment is recorded on that bank account. Left empty, Odoo takes the one the account has by default.">

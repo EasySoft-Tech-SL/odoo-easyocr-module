@@ -371,6 +371,19 @@
                 align-items: center;
                 gap: 0.5rem;
                 min-width: 0;
+
+                // The little state mark in front of the plan: a tick while the
+                // account can still read, a warning once it is blocked.
+                .o_easyocr_quota_status {
+                    flex: 0 0 auto;
+                    font-size: 0.8rem;
+                    line-height: 1;
+                    color: #27ae60;
+                }
+
+                .o_easyocr_quota_status_blocked {
+                    color: #f39c12;
+                }
             }
 
             .o_easyocr_quota_plan_name {

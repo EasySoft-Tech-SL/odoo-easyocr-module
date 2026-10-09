@@ -36,8 +36,8 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.easyocr_ai_receiver_context',
         readonly=False,
     )
-    easyocr_bill_post = fields.Boolean(
-        related='company_id.easyocr_bill_post',
+    easyocr_invoice_draft = fields.Boolean(
+        related='company_id.easyocr_invoice_draft',
         readonly=False,
     )
     easyocr_autocreate_product = fields.Boolean(

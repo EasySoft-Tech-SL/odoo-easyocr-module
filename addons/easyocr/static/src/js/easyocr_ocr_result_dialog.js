@@ -30,6 +30,9 @@ export class OCRResultDialog extends Component {
             collapsed: {},
             // Whether the bill is posted straight away or left in draft.
             draft: false,
+            // The journal the bill is posted to, when the reader picks one.
+            journals: [],
+            journalId: null,
         });
         onWillStart(() => this.load());
     }
@@ -47,6 +50,13 @@ export class OCRResultDialog extends Component {
             this.state.data = null;
         } finally {
             this.state.loading = false;
+        }
+        try {
+            this.state.journals = await this.orm.call(
+                "easyocr.document", "action_list_journals", [],
+            );
+        } catch {
+            this.state.journals = [];
         }
     }
 
@@ -101,7 +111,8 @@ export class OCRResultDialog extends Component {
         this.state.busy = true;
         try {
             const result = await this.orm.call(
-                "easyocr.document", "action_create_bill", [[this.documentId], this.state.draft],
+                "easyocr.document", "action_create_bill",
+                [[this.documentId], this.state.draft, this.state.journalId],
             );
             if (result) {
                 await this.actionService.doAction(result);

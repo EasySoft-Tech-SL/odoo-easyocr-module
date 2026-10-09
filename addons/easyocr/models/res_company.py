@@ -53,11 +53,10 @@ class ResCompany(models.Model):
     # --------------------------------------------------------------
     # What a document becomes
     # --------------------------------------------------------------
-    easyocr_bill_post = fields.Boolean(
-        string='Confirm the bill automatically',
-        help='Post the supplier bill as soon as it is created, instead of leaving '
-             'it in draft for review. Off by default: posting books the bill and '
-             'gives it a number.',
+    easyocr_invoice_draft = fields.Boolean(
+        string='Create invoices as draft',
+        help='When on, the invoices the module creates are left in draft instead '
+             'of being posted automatically, so a person confirms them.',
     )
     easyocr_autocreate_product = fields.Boolean(
         string='Create products that do not exist',

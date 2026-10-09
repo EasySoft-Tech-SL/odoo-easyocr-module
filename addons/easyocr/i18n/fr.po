@@ -132,6 +132,7 @@ msgstr ""
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_ai_apikey
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_ai_apikey
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
 msgid "API Key"
 msgstr "Clé API"
 
@@ -3974,3 +3975,94 @@ msgstr "Configurez la clé API, le service cloud et les options du module."
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__box_count:0
 msgid "Num. Fields"
 msgstr "Nbre champs"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "Journal"
+msgstr "Journal"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+msgid "-- Automatic --"
+msgstr "-- Automatique --"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_invoice_draft:0
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_invoice_draft:0
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "Create invoices as draft"
+msgstr "Créer les factures en brouillon"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "Enable AI OCR"
+msgstr "Activer IA OCR"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "OCR service URL"
+msgstr "URL du service OCR"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "Create products automatically"
+msgstr "Créer automatiquement les produits"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "Mark webhook invoices as paid"
+msgstr "Marquer comme payées les factures du webhook"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "Payment bank account"
+msgstr "Compte bancaire du paiement"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "Register the expense as"
+msgstr "Enregistrer la dépense en tant que"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "AI OCR configuration"
+msgstr "Configuration IA OCR"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "General configuration"
+msgstr "Configuration générale"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "Employee expenses (mobile)"
+msgstr "Dépenses des employés (mobile)"
+
+#. module: easyocr
+#. odoo-python
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
+msgid "Automatic payment (Webhook)"
+msgstr "Paiement automatique (Webhook)"
+
+#. module: easyocr
+#. odoo-python
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_invoice_draft:0
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_invoice_draft:0
+msgid ""
+"When on, the invoices the module creates are left in draft instead of being "
+"posted automatically, so a person confirms them."
+msgstr ""
+"Si activée, les factures créées par le module sont laissées en brouillon au "
+"lieu d'être publiées automatiquement, afin qu'une personne les confirme."
