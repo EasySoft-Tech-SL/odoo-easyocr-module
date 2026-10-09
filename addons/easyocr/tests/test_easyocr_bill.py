@@ -305,6 +305,7 @@ class TestEasyocrBill(TransactionCase):
         """A bank with no journal is paid by nobody, and nothing breaks."""
         bank = self.env['res.partner.bank'].create({
             'acc_number': 'ES9121000418450200051332',
+            'partner_id': self.env.company.partner_id.id,
         })
         document = self._document(
             partner_id=self.partner.id,
