@@ -60,10 +60,10 @@ and it lands in Odoo as a bill or as an expense claim.
 <tr><td>🖱️ <b>Rectangles you can move</b></td><td>Drag one to move it, or pull a corner to resize it, and the text under it is read again on letting go. A rectangle cannot leave the page.</td></tr>
 <tr><td>🆓 <b>Read without the service</b></td><td>The text layer of a digital PDF is read in the browser and costs nothing. An amount printed <code>320,77 EUR</code> and a date printed <code>30/09/2026</code> are read as such, and a rectangle that read nothing leaves its field alone instead of emptying it.</td></tr>
 <tr><td>🤖 <b>Read with the service</b></td><td>Scans and photographs are sent to the EasyOCR extraction service and come back as lines, taxes and dates. A <b>Test the connection</b> button checks your key without spending a reading.</td></tr>
-<tr><td>👀 <b>What the reading found</b></td><td>A reading ends on a screen, not on a toast: how sure the service was, how long it took, what it cost in tokens and pages, and the vendor details the document has no field for. One button from there to the entry.</td></tr>
+<tr><td>👀 <b>AI result</b></td><td>A reading ends on a dialog, not on a toast: how sure the service was and what it cost, one card per part of the document, the lines with their VAT, surcharge and withholding ready to correct, a warning when they do not add up to the totals, and the bill's status, journal, type and payment. One button makes the bill.</td></tr>
 <tr><td>🔁 <b>Read again, on purpose</b></td><td>A file that was already read is recognised by its content, and the module asks before spending a second reading, saying which document it came from and when. Saying yes reads it; leaving the question alone costs nothing.</td></tr>
 <tr><td>🗂️ <b>Batches</b></td><td>Hand over a folder's worth of documents in one call. Choose the files on their own screen, press Send once, and follow the batch while it is read, file by file.</td></tr>
-<tr><td>🧾 <b>Supplier bills</b></td><td>A draft bill from what was read, one line per line, with the product, discount and rate of each. A document that came back with nothing but its two amounts still gets its tax: the rate is worked back from them.</td></tr>
+<tr><td>🧾 <b>Supplier bills</b></td><td>A bill from what was read, validated or in draft as the company prefers, one line per line, with the product, discount and rates of each. A supplier that is not on file is created from the reading. A document that came back with nothing but its two amounts still gets its tax: the rate is worked back from them.</td></tr>
 <tr><td>↩️ <b>Credit notes</b></td><td>A rectificativa becomes a vendor credit note instead of a bill, with its entries the other way round. The reading notices the negative total by itself.</td></tr>
 <tr><td>📸 <b>Photographed receipts</b></td><td>An installable capture page for a phone. The receipt becomes a supplier bill or an employee expense, with the photo attached.</td></tr>
 <tr><td>🏗️ <b>Charged to a project</b></td><td>The document carries the analytic account, so a receipt or a bill line lands on the project it belongs to. No separate app is needed for it.</td></tr>
@@ -118,8 +118,8 @@ Everything lives in **Settings → EasyOCR**:
 3. **Review it.** What was read sits next to the field it came from, and reading a
    document wrong is normal, so it is corrected on the document and not on the bill
    afterwards.
-4. **Create the bill.** It lands in draft (or posted, if you asked for that), with the
-   vendor matched by tax number, the lines, the tax, and the analytic account of the
+4. **Create the bill.** It is validated (or left in draft, if you asked for that), with the
+   vendor matched by tax number (or created from the reading), the lines, the tax, and the analytic account of the
    project if the document carries one.
 
 ## 🌐 Languages
@@ -140,8 +140,8 @@ One branch per Odoo series, as is the norm in the Odoo ecosystem:
 
 | Branch | Odoo series | Module version |
 | --- | --- | --- |
-| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.5` |
-| `18.0` | Odoo Community 18.0 | `18.0.1.0.5` |
+| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.6` |
+| `18.0` | Odoo Community 18.0 | `18.0.1.0.6` |
 
 The branch name and the first two digits of the module version always match, and the CI
 checks it. One module covers one series: the code is the same on both, except where the
