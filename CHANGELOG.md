@@ -185,10 +185,15 @@ work was done.
   draft setting's explanation, the batch history and its buttons, and the AI
   instructions' example stayed in English on a Spanish screen. Every one of them
   is now checked by a test.
+- **The module's own description said it could not read anything.** The
+  README shipped inside the module still listed extraction and bill creation as
+  pending. It now says what the module does and how to set it up.
 
 ### Pending
 
-- **Spanish localisation cases.** IRPF, recargo de equivalencia and IGIC.
+- **IGIC.** The Canary Islands' tax is not handled yet. IRPF and the
+  equivalence surcharge read on a line become the company's taxes with those
+  rates, when it has them.
 - **The three `EASYOCR_EXPENSE_VARIOUS_*` settings** of the module this is a port
   of are not here: the object they file against does not exist in Odoo, so
   bringing them over would have been a switch that does nothing.
