@@ -76,6 +76,9 @@ const HANDLE_SIZE = 10;
 /** The little square painted on each corner, in canvas pixels. */
 const HANDLE_DOT = 6;
 
+/** How many undos the viewer keeps before the oldest one is dropped. */
+const BOX_HISTORY_LIMIT = 50;
+
 /** What the pointer says a corner is for. */
 const CORNER_CURSORS = {
     nw: "nwse-resize",
@@ -177,6 +180,7 @@ export class EasyocrDocumentViewer extends Component {
         // that is already there, or pulling one of its corners.
         this.gesture = null;
         this.nextUid = 1;
+        this.boxHistory = [];
         this.fields = BOX_FIELDS;
         // Set when a file is dropped on the screen, so the same component then
         // shows the document it just filed.
@@ -656,6 +660,41 @@ export class EasyocrDocumentViewer extends Component {
     }
 
     // ------------------------------------------------------------------
+    // Undo
+    // ------------------------------------------------------------------
+    /**
+     * Keep the boxes as they are, before a change that can be undone.
+     *
+     * The snapshot is a deep copy: the gesture code changes the boxes in
+     * place, so keeping references would remember nothing. The stack is
+     * capped so a long session cannot make it grow without end.
+     */
+    pushHistory() {
+        this.boxHistory.push(JSON.parse(JSON.stringify(this.state.boxes)));
+        if (this.boxHistory.length > BOX_HISTORY_LIMIT) {
+            this.boxHistory.shift();
+        }
+    }
+
+    /**
+     * Back one step: the boxes as they were before the last change.
+     *
+     * The snapshot was taken before the change, so popping it restores
+     * exactly what was on the page then. Every page is repainted so the
+     * canvas agrees with the list again.
+     */
+    undo() {
+        const snapshot = this.boxHistory.pop();
+        if (!snapshot) {
+            return;
+        }
+        this.state.boxes = snapshot;
+        for (const pageInfo of this.state.pages) {
+            this.redrawPage(pageInfo.number);
+        }
+    }
+
+    // ------------------------------------------------------------------
     // Keyboard
     // ------------------------------------------------------------------
     bindKeyboard() {
@@ -677,6 +716,11 @@ export class EasyocrDocumentViewer extends Component {
         // Typing in a box is not the shortcut for anything.
         const tag = event.target && event.target.tagName;
         if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
+            return;
+        }
+        if ((event.ctrlKey || event.metaKey) && event.key === "z") {
+            event.preventDefault();
+            this.undo();
             return;
         }
         if ((event.ctrlKey || event.metaKey) && event.key === "s") {
@@ -717,6 +761,10 @@ export class EasyocrDocumentViewer extends Component {
         const held = handleAt(boxes, point, tolerance);
         if (held) {
             const box = this.boxOf(held.uid);
+            // The corner is about to be pulled. The drag rewrites the box in
+            // place on every move, so the snapshot undo goes back to has to be
+            // taken now, before the box is touched.
+            this.pushHistory();
             this.gesture = {
                 kind: "resize",
                 page: pageNumber,
@@ -738,6 +786,9 @@ export class EasyocrDocumentViewer extends Component {
 
         const touched = boxAt(boxes, point);
         if (touched) {
+            // Same as pulling a corner: the drag moves the box in place, so
+            // remember it before it starts walking.
+            this.pushHistory();
             this.gesture = {
                 kind: "move",
                 page: pageNumber,
@@ -828,6 +879,7 @@ export class EasyocrDocumentViewer extends Component {
                 }
                 draft.uid = this.nextUid++;
                 draft.text = await this.readText(draft);
+                this.pushHistory();
                 this.state.boxes.push(draft);
                 this.redrawPage(pageNumber);
                 return;
@@ -1169,6 +1221,7 @@ export class EasyocrDocumentViewer extends Component {
                 this.notification.add(_t("That template has no boxes."), { type: "warning" });
                 return;
             }
+            this.pushHistory();
             this.state.boxes = answer.boxes.map((box) => ({
                 ...box, uid: this.nextUid++, text: "",
             }));
@@ -1203,6 +1256,7 @@ export class EasyocrDocumentViewer extends Component {
     }
 
     clearBoxes() {
+        this.pushHistory();
         this.state.boxes = [];
         this.state.templateId = null;
         this.state.customInstructions = "";
@@ -1217,6 +1271,7 @@ export class EasyocrDocumentViewer extends Component {
 
     removeBox(uid) {
         const box = this.state.boxes.find((item) => item.uid === uid);
+        this.pushHistory();
         this.state.boxes = this.state.boxes.filter((item) => item.uid !== uid);
         if (box) {
             this.redrawPage(box.page);

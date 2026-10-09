@@ -53,7 +53,7 @@ class TestEasyocrSettings(TransactionCase):
         # Every switch back to how the module ships, so one test cannot decide
         # what the next one measures.
         self.company.write({
-            'easyocr_bill_post': False,
+            'easyocr_invoice_draft': True,
             'easyocr_autocreate_product': False,
             'easyocr_allow_self_vendor': False,
             'easyocr_ai_receiver_context': False,
@@ -122,7 +122,7 @@ class TestEasyocrSettings(TransactionCase):
         self.assertEqual(document.move_id.state, 'draft')
 
     def test_the_bill_is_confirmed_when_the_company_asks_for_it(self):
-        self.company.easyocr_bill_post = True
+        self.company.easyocr_invoice_draft = False
         document = self._document(partner_id=self.partner.id, amount_untaxed=100.0)
 
         document.action_create_bill()
@@ -131,7 +131,7 @@ class TestEasyocrSettings(TransactionCase):
 
     def test_a_bill_that_cannot_be_confirmed_is_still_created(self):
         """A bill left in draft with a reason beats no bill at all."""
-        self.company.easyocr_bill_post = True
+        self.company.easyocr_invoice_draft = False
         document = self._document(partner_id=self.partner.id, amount_untaxed=100.0)
         move_action_post = 'odoo.addons.account.models.account_move.AccountMove.action_post'
 
