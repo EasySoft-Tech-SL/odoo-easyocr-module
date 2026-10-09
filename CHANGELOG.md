@@ -153,6 +153,29 @@ work was done.
   the company's taxes with those rates, which the edited lines used to lose.
   The dialog can be used from the keyboard: Esc closes it, Ctrl+Enter makes the
   bill, Tab stays inside it, and every control has a name a screen reader says.
+- **The reading-result dialog would not close.** It opens in the main area,
+  where Odoo's own "close" does nothing, so the cross, Cancel, Esc and a click
+  outside all left it on screen. It now goes back to the screen it came from.
+- **Saving a template never asked for its name.** The viewer read the function
+  that closes the dialog as if it were the answer, so every template was saved
+  without showing the dialog and under the name "removeCurrentOverlay". The
+  dialog now opens, and its name, supplier and instructions are what is saved.
+  The template dropdown also shows the template in use instead of "No template".
+- **Four of the viewer's labels stayed in English.** "Invoice date", "Total
+  excl. tax", "Total price" and "Tax amount" had their translation, but Odoo only
+  sends the browser the terms a script or template points to, and these only
+  pointed to a model. Every term a script asks for is now checked by a test.
+- **The viewer and the batch screen did not open in debug mode.** Odoo hands a
+  client action more properties than they listed, and in debug mode that stops
+  them dead.
+- **A box pulled past its opposite corner became a line.** Starting a new box
+  next to an old one could grab its corner and squash it to nothing. A pull that
+  leaves a box smaller than the minimum is now undone, and drawing a box lets go
+  of the field, as Dolibarr does.
+- **Small wording.** The document's button reads "Extract with AI" like the
+  viewer's; the note under the AI banner no longer points to a button that is
+  not there when the service is off; and a name ending in a full stop no longer
+  reads "S.L.." in the already-read warning.
 
 ### Pending
 

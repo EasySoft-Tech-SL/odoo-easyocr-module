@@ -415,6 +415,7 @@ msgstr "Casillas"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_upload_form
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -897,6 +898,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__custom_instructions
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_form
 #: code:addons/easyocr/static/src/xml/easyocr_template_dialog.xml:0
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Extra instructions"
 msgstr "Instrucciones adicionales"
 
@@ -2082,6 +2084,7 @@ msgstr "Error de envío del SMS"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Save template"
 msgstr "Guardar plantilla"
 
@@ -2399,6 +2402,7 @@ msgstr "Plantilla"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: code:addons/easyocr/static/src/xml/easyocr_template_dialog.xml:0
 msgid "Template name"
 msgstr "Nombre de la plantilla"
 
@@ -2419,6 +2423,7 @@ msgstr "Plantilla guardada."
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_template
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_template
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Templates"
 msgstr "Plantillas"
 
@@ -3187,6 +3192,7 @@ msgstr "Usando los recuadros de %s."
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_reading_result_form
+#: code:addons/easyocr/static/src/xml/easyocr_template_dialog.xml:0
 msgid "Vendor"
 msgstr "Proveedor"
 
@@ -3538,6 +3544,7 @@ msgstr "GRATIS"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Generate invoice"
 msgstr "Generar factura"
 
@@ -3574,16 +3581,6 @@ msgstr "Lea el escaneo con el servicio y rellene el documento."
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Resets"
 msgstr "Se renueva"
-
-#. module: easyocr
-#. odoo-javascript
-#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
-msgid ""
-"The button above is for the extraction service. Until it is\n"
-"                                set in Settings, only PDFs that already carry their text can be read."
-msgstr ""
-"El botón de arriba es del servicio de extracción. Hasta que se configure en "
-"Ajustes, solo se pueden leer los PDF que ya traen su texto."
 
 #. module: easyocr
 #. odoo-javascript
@@ -3638,6 +3635,8 @@ msgstr "JSON"
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_name:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__partner_id:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
 msgid "Supplier"
 msgstr "Proveedor"
 
@@ -3715,6 +3714,7 @@ msgstr "opcional"
 #. module: easyocr
 #. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Invoice date"
 msgstr "Con fecha de"
 
@@ -3724,24 +3724,28 @@ msgstr "Con fecha de"
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_number:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log__move_id:0
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Invoice"
 msgstr "Factura"
 
 #. module: easyocr
 #. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_untaxed:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Total excl. tax"
 msgstr "HT totales"
 
 #. module: easyocr
 #. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__amount_total:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Total price"
 msgstr "Precio total"
 
 #. module: easyocr
 #. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__tax_amount:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Tax amount"
 msgstr "IVA"
 
@@ -3751,6 +3755,7 @@ msgstr "IVA"
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__partner_vat:0
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
 #: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
 msgid "Tax ID"
 msgstr "CIF/NIF"
 
@@ -3763,6 +3768,7 @@ msgstr "Envía el PDF al servicio de IA para extraer datos automáticamente"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_form
 msgid "Extract with AI"
 msgstr "Extraer con IA"
 
@@ -4391,3 +4397,19 @@ msgstr "Proforma"
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
 msgid "Quote"
 msgstr "Presupuesto"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_document_viewer.js:0
+msgid "Save"
+msgstr "Guardar"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+msgid ""
+"Until the service is set in Settings, only PDFs that already carry their "
+"text can be read."
+msgstr ""
+"Hasta que se configure el servicio en Ajustes, solo se pueden leer los PDF "
+"que ya traen su texto."

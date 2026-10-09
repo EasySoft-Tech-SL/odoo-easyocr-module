@@ -26,6 +26,10 @@ export class EasyocrBatch extends Component {
     static props = {
         action: { type: Object, optional: true },
         actionId: { type: [Number, Boolean], optional: true },
+        // Odoo hands every client action more than these (updateActionState,
+        // className...), and in debug mode a component that does not accept
+        // them refuses to open.
+        "*": true,
     };
 
     setup() {

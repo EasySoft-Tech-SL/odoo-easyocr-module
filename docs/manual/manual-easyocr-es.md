@@ -1,8 +1,8 @@
 ---
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
-version: 19.0.1.0.0
-date: 2026-10-08
+version: 19.0.1.0.4 / 18.0.1.0.4
+date: 2026-10-09
 author: EasySoft Tech S.L.
 ---
 
@@ -128,7 +128,7 @@ manda ningún documento. Por eso se puede pulsar tantas veces como haga falta.
 
 |[tabla: Qué hace el módulo con lo que lee]|
 |---|---|
-| **Confirmar la factura automáticamente** | Confirma la factura en cuanto se crea, en lugar de dejarla en borrador. Apagado viene: confirmar contabiliza la factura y le pone número. Si al confirmar falla algo, la factura se queda en borrador con el motivo escrito en ella. |
+| **Crear facturas como borrador** | Deja la factura en borrador en lugar de validarla al crearla. Apagado viene, como en Dolibarr: la factura se valida, se contabiliza y recibe su número. Si al validar falla algo, la factura se queda en borrador con el motivo escrito en ella. En la pantalla de resultado se puede elegir otra cosa para una factura concreta. |
 | **Crear los productos que no existan** | Cuando una línea trae una referencia de proveedor que no casa con ningún producto, lo crea. Apagado viene, para que el catálogo no crezca solo. |
 | **Aceptar nuestra propia empresa como proveedor** | Permite contabilizar un documento cuyo NIF sea el suyo. Apagado viene, porque casi siempre es un documento que se ha leído al revés. |
 | **Preguntar antes de leer un documento ya leído** | Antes de enviar un archivo al servicio, busca otro documento con el mismo contenido que ya se haya leído y le pregunta si quiere leerlo otra vez. Encendido viene: leerlo otra vez cuesta una lectura, y dejarlo no cuesta nada. |
@@ -320,24 +320,35 @@ sin teclear.
 
 # 6. Guardar la plantilla del proveedor
 
-Cuando los recuadros son los que quiere, póngale un nombre en la casilla
-**Nombre de la plantilla** y pulse **Guardar plantilla**.
+Cuando los recuadros son los que quiere, pulse **Guardar plantilla**, abajo en
+la columna. Se abre una ventana que pide tres cosas:
 
-![El aviso de que la plantilla se ha guardado](img/08-plantilla-guardada.png)
+![La ventana para guardar la plantilla](img/08-plantilla-guardada.png)
+
+- **Nombre de la plantilla**: el que le sirva para reconocerla en la lista.
+- **Proveedor**: a quién pertenece. Si lo deja en «Sin proveedor (genérica)», la
+  plantilla vale para cualquiera, pero no se aplicará sola.
+- **Instrucciones adicionales**: solo aparece si tiene la lectura con IA
+  encendida. Es lo que quiera decirle al servicio sobre los documentos de ese
+  proveedor.
+
+Pulse **Guardar** (o Intro en el nombre) y un aviso le confirma para quién se ha
+guardado.
 
 La plantilla queda guardada **a nombre de ese proveedor**, en **EasyOCR >
 Plantillas**, con las casillas y las coordenadas exactas de cada una:
 
 ![La ficha de una plantilla, con su proveedor y sus casillas](img/09-plantilla-ficha.png)
 
-El proveedor lo resuelve el módulo solo, por el NIF del documento y, si no lo
-hay, por su nombre. Si el documento todavía no está identificado —nadie ha
-leído aún de quién es—, la plantilla se guarda igual, pero sin proveedor.
+Si no elige proveedor en la ventana, el módulo lo busca solo por el NIF del
+documento y, si no lo hay, por su nombre. Si el documento todavía no está
+identificado, la plantilla se guarda igual, pero sin proveedor.
 
 ## La próxima vez, los recuadros ya están puestos
 
 Abra otro documento del mismo proveedor y los recuadros aparecerán ya
-dibujados, con el aviso de a quién pertenecen:
+dibujados, con el aviso de a quién pertenecen y la plantilla elegida en el
+desplegable de **Plantillas**:
 
 ![El visor con los recuadros de la plantilla ya pintados](img/24-plantilla-aplicada.png)
 
@@ -373,7 +384,7 @@ Los avisos que se ve son estos:
 | **El servicio no se ha podido alcanzar** | La dirección no es correcta o no hay conexión. Revise la URL del servicio. |
 | **El servicio ha rechazado la clave API** | La clave no es válida o es de otra cuenta. |
 | **El servicio está caído u ocupado** | Es temporal. Vuelva a intentarlo dentro de un rato. |
-| **No se ha podido emparejar ningún proveedor** | La lectura fue bien, pero el NIF del documento no está en ningún contacto. Cree el proveedor o indíquelo a mano en la ficha. |
+| **No se ha podido identificar ningún proveedor** | La lectura no trajo el nombre del proveedor ni un NIF que esté en sus contactos. Escríbalo en la pantalla de resultado o en la ficha y vuelva a crear la factura. |
 
 Un aviso que **no** es un error: cuando el servicio solo puede leer el documento
 en parte, lo dice y añade si merece la pena volver a intentarlo. En ese caso los
@@ -403,35 +414,67 @@ punto está: el archivo saliendo, el texto volviendo, los campos sacándose.
 La barra no llega al final hasta que la lectura ha terminado de verdad. Si se
 quedara llena con la respuesta todavía en camino, le estaría engañando.
 
-## Datos extraídos
+## Resultado IA
 
-Cuando termina, la lectura abre esta pantalla. Arriba, lo que el servicio sabía
-del documento y lo que ha costado: la confianza, los segundos, los tokens y las
-páginas.
+Cuando termina, la lectura abre la ventana **Resultado IA**. Arriba, lo que el
+servicio sabía del documento y lo que ha costado: la confianza, los segundos,
+los tokens y las páginas. El botón **JSON** enseña la respuesta completa del
+servicio, por si hay que pedir soporte.
 
-![El resumen de la lectura, con los datos del proveedor y del documento](img/27-resumen-lectura.png)
+![La ventana Resultado IA, con el documento y el proveedor](img/27-resumen-lectura.png)
 
-A la izquierda, lo que va a la ficha: el proveedor, las fechas, los importes y
-las líneas. A la derecha, los datos del proveedor que la ficha no guarda en
-ningún campo —la dirección, la ciudad, el teléfono, el correo, la forma de pago—
-y que hasta ahora se leían y se tiraban. **Abrir la ficha** lleva al documento
-para crear la factura.
+Debajo, una tarjeta por cada parte de lo leído: **Documento**, **Proveedor**,
+**Cliente**, **Líneas de factura**, **Totales**, **Pago** y **Notas**. Cada
+tarjeta se pliega pulsando su cabecera. Los campos con fondo blanco se pueden
+corregir y pasan a la factura: el número, las fechas y los datos del proveedor.
+Los de fondo gris son informativos.
 
-De esos datos nadie toca su agenda: la dirección y el teléfono se enseñan aquí,
-pero no se escriben solos en la ficha del proveedor. Eso es una decisión suya,
-no de una lectura.
+Bajo el NIF del proveedor, la ventana le dice qué va a pasar con él:
+
+- **Proveedor detectado**: ya existe un contacto con ese NIF o ese nombre, y la
+  factura irá a su nombre.
+- **Proveedor nuevo: se creará con estos datos**: no hay ninguno, y al crear la
+  factura se dará de alta con el nombre, el NIF, la dirección, la ciudad, el
+  código postal, el país, el teléfono y el correo que ve en la tarjeta. Un
+  contacto que ya existe no se modifica.
+
+![Las líneas, los totales y el pie de la ventana](img/29-resultado-lineas.png)
+
+En **Líneas de factura** puede corregir cada línea antes de crear la factura:
+código, descripción, tipo, cantidad, precio, descuento, IVA, recargo de
+equivalencia e IRPF. La columna **Producto** dice si el código casa con un
+producto suyo; si no, la línea irá como texto libre. **Añadir línea** y la **×**
+de cada fila añaden y quitan líneas. Si las líneas no suman lo mismo que los
+totales del documento, sale un aviso amarillo encima de las tarjetas.
+
+El pie decide cómo se crea la factura:
+
+- **Estado**: **Validada** la contabiliza al crearla; **Borrador** la deja para
+  revisarla. Viene marcado lo que diga el ajuste **Crear facturas como
+  borrador**.
+- **Diario**: el diario de compras. Con «Automático» se usa el de siempre.
+- **Tipo de documento**: **Factura de proveedor** o **Factura rectificativa**.
+- **Crear pago asociado a la factura**: registra el pago en el acto, con la
+  forma de pago y la cuenta bancaria que elija (en «Automático», la primera
+  cuenta bancaria de la empresa). Solo se puede con la factura validada.
+
+**Crear factura** (o Ctrl+Intro) la crea y la abre. **Cancelar**, la **×** o la
+tecla Esc cierran la ventana sin crear nada. Si el servidor no puede crearla,
+el motivo aparece en rojo en el pie, en lugar de un error genérico.
 
 # 8. Crear la factura de proveedor
 
-Con la ficha rellena —por la lectura con IA o a mano— el paso final es **Crear
-factura**.
+La factura se crea desde la ventana **Resultado IA**, como se ha visto, o desde
+la ficha del documento, con la ficha rellena por la lectura o a mano, con el
+botón **Crear factura**.
 
 ![La ficha del documento con los datos leídos](img/11-ficha-rellena.png)
 
-El módulo busca el proveedor por su NIF y, si no lo encuentra, por el nombre.
-Después prepara un borrador de factura de proveedor con esos datos:
+El módulo busca el proveedor por su NIF y, si no lo encuentra, por el nombre;
+si no existe, lo crea con los datos leídos. Después crea la factura de proveedor
+con esos datos y la abre:
 
-![El borrador de factura creado desde el documento](img/12-factura-borrador.png)
+![La factura de proveedor creada desde el documento](img/12-factura-creada.png)
 
 ## Cómo se arma la factura
 
@@ -467,15 +510,16 @@ deuda con ese proveedor baje en vez de subir.
 
 ## Qué conviene revisar antes de confirmarla
 
-- **El proveedor.** Si no existía, se ha creado al vuelo. Compruebe que no se ha
-  duplicado con una ficha que ya tuviera.
+- **El proveedor.** Si no existía, se ha creado con los datos leídos. Compruebe
+  que no se ha duplicado con una ficha que ya tuviera con otro NIF.
 - **Las líneas y sus impuestos.** Sobre todo si el documento lleva varios tipos
   de IVA o descuentos por línea.
 - **La fecha y la referencia.** Son las del documento original.
 
-La factura queda **en borrador**: no se ha contabilizado nada. Puede editarla
-con calma y confirmarla cuando esté conforme. Si tiene encendido **Confirmar la
-factura automáticamente** en los ajustes, se confirma sola en cuanto se crea.
+La factura se crea **validada**, como en Dolibarr, salvo que tenga encendido
+**Crear facturas como borrador** en los ajustes o elija **Borrador** en la
+ventana de resultado. En borrador no se ha contabilizado nada: puede editarla
+con calma y validarla cuando esté conforme.
 
 El mismo documento no se puede facturar dos veces: si ya tiene factura, el botón
 desaparece de la ficha.
@@ -665,15 +709,17 @@ panel de EasyOCR sin espacios delante ni detrás.
 
 ## ¿Qué pasa si la lectura se equivoca?
 
-Nada irreversible. El módulo solo **propone**: rellena los campos de la ficha y
-crea un borrador de factura. Nada se contabiliza hasta que usted confirma la
-factura, así que siempre hay un momento para revisar y corregir.
+Antes de crear nada, la ventana **Resultado IA** le enseña todo lo leído y le
+deja corregirlo. Si prefiere revisar también la factura, elija **Borrador** en el
+pie de esa ventana, o encienda **Crear facturas como borrador** en los ajustes:
+así no se contabiliza nada hasta que usted la valide.
 
 ## He creado una factura por error
 
-La factura está en borrador. Bórrela como cualquier otra factura de proveedor en
-borrador y vuelva a la ficha del documento: el módulo volverá a ofrecerle
-**Crear factura**.
+Si está en borrador, bórrela como cualquier otra factura de proveedor. Si ya
+está validada, restablézcala a borrador antes, o haga una rectificativa si ya se
+ha declarado. Después vuelva a la ficha del documento: el módulo volverá a
+ofrecerle **Crear factura**.
 
 ## ¿Se suben mis documentos a algún sitio?
 

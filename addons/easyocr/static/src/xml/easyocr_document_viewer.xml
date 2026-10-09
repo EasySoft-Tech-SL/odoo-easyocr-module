@@ -190,8 +190,7 @@
                                 </div>
                             </div>
                             <p class="o_easyocr_section_note">
-                                The button above is for the extraction service. Until it is
-                                set in Settings, only PDFs that already carry their text can be read.
+                                Until the service is set in Settings, only PDFs that already carry their text can be read.
                             </p>
                         </div>
 

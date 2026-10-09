@@ -39,7 +39,7 @@
                     <button
                         name="action_extract"
                         type="object"
-                        string="Read with AI"
+                        string="Extract with AI"
                         class="btn-secondary"
                         invisible="not attachment_id"
                         groups="easyocr.group_easyocr_manager"

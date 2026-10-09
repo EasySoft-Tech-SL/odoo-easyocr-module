@@ -102,6 +102,10 @@ export class EasyocrDocumentViewer extends Component {
     static props = {
         action: Object,
         actionId: { type: [Number, Boolean], optional: true },
+        // Odoo hands every client action more than these (updateActionState,
+        // className...), and in debug mode a component that does not accept
+        // them refuses to open.
+        "*": true,
     };
 
     setup() {
@@ -420,6 +424,8 @@ export class EasyocrDocumentViewer extends Component {
             }));
             this.state.appliedTemplate = answer.label || answer.name;
             this.state.appliedVendor = answer.vendor;
+            // The dropdown names the template in use, not "No template".
+            this.state.templateId = answer.template || null;
             await this.refreshAllTexts();
             for (const pageInfo of this.state.pages) {
                 this.redrawPage(pageInfo.number);
@@ -881,11 +887,24 @@ export class EasyocrDocumentViewer extends Component {
                 draft.text = await this.readText(draft);
                 this.pushHistory();
                 this.state.boxes.push(draft);
+                // One box per pick, as the module this is a port of does: the
+                // field is let go, so the next press on the page moves a box
+                // instead of drawing a second one for the same field.
+                this.state.activeField = null;
                 this.redrawPage(pageNumber);
                 return;
             }
 
             const box = this.boxOf(gesture.uid);
+            if (gesture.kind === "resize" && box
+                && (box.width < MIN_BOX_SIZE / VIEW_SCALE || box.height < MIN_BOX_SIZE / VIEW_SCALE)) {
+                // A corner pulled past the opposite one leaves a line that
+                // reads nothing and can no longer be grabbed: the pull is
+                // undone, the same rule a new box is held to.
+                this.undo();
+                this.redrawPage(pageNumber);
+                return;
+            }
             if (box) {
                 box.text = await this.readText(box);
             }
@@ -1293,14 +1312,17 @@ export class EasyocrDocumentViewer extends Component {
             });
             return;
         }
-        const payload = await this.dialog.add(TemplateDialog, {
-            name: this.state.appliedTemplate,
-            suppliers: this.state.suppliers,
-            aiEnabled: this.state.account?.ai_enabled,
-        }, {
-            title: _t("Save template"),
-            confirmLabel: _t("Save"),
-            cancelLabel: _t("Cancel"),
+        // dialog.add answers with the function that closes the dialog, not
+        // with what was typed: the answer comes back through onSave, and
+        // closing the dialog any other way answers nothing.
+        const payload = await new Promise((resolve) => {
+            this.dialog.add(TemplateDialog, {
+                title: _t("Save template"),
+                name: this.state.appliedTemplate || "",
+                suppliers: this.state.suppliers || [],
+                aiEnabled: Boolean(this.state.account?.ai_enabled),
+                onSave: resolve,
+            }, { onClose: () => resolve(null) });
         });
         if (!payload) {
             return;
@@ -1331,6 +1353,9 @@ export class EasyocrDocumentViewer extends Component {
             ]);
             this.state.appliedTemplate = answer.label || answer.name;
             this.state.appliedVendor = answer.vendor;
+            // The new template joins the dropdown, already picked.
+            await this.loadTemplates();
+            this.state.templateId = answer.template || null;
             this.notification.add(
                 answer.vendor
                     ? _t("Template saved for %s.", this.withoutFinalStop(answer.vendor))

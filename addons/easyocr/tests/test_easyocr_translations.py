@@ -16,7 +16,7 @@ from odoo.tools.translate import (
 
 # Attributes an OWL template paints as they are written. A literal in any of
 # them is a term the reader sees.
-TEMPLATE_ATTRIBUTES = ('string', 'title', 'placeholder', 'alt')
+TEMPLATE_ATTRIBUTES = ('string', 'title', 'placeholder', 'alt', 'aria-label')
 
 # Text that is punctuation, an entity or a lone symbol rather than a sentence.
 NOT_A_SENTENCE = re.compile(r'^[^\w]*$')
@@ -396,6 +396,17 @@ class TestEasyocrTranslations(TransactionCase):
             po, msgid, JAVASCRIPT_TRANSLATION_COMMENT,
             "Add the .js reference of whichever script asks for it.",
         )
+        # The marker is not enough on its own: the web client is handed the
+        # terms that carry a code reference and no others. The viewer's four
+        # money and date labels had the marker, only the selection's model
+        # reference, and stayed in English on a Spanish screen.
+        entry = self._entry(po, msgid)
+        self.assertTrue(
+            any(ref.startswith('code:addons/easyocr/static/') for ref, _line in entry.occurrences),
+            "%r is flagged for the browser in %s but has no code:addons/easyocr/static/ "
+            "reference, so the browser never receives it."
+            % (msgid, os.path.basename(po.fpath)),
+        )
 
     def _assert_reaches_python(self, po, msgid):
         self._assert_marked(
@@ -482,6 +493,27 @@ class TestEasyocrTranslations(TransactionCase):
                     % (msgid, os.path.basename(po.fpath)),
                 )
 
+    def test_every_string_a_script_asks_for_reaches_the_browser(self):
+        """Every _t("...") written in the module's scripts, found by reading them.
+
+        The lists above are kept by hand, and a string added to a script and
+        not to a list is exactly the one nobody checks.
+        """
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        folder = os.path.join(root, 'static', 'src', 'js')
+        literal = re.compile(r'_t\(\s*"((?:[^"\\]|\\.)*)"')
+        terms = set()
+        for name in sorted(os.listdir(folder)):
+            if name.endswith('.js'):
+                with open(os.path.join(folder, name), encoding='utf-8') as handle:
+                    terms.update(literal.findall(handle.read()))
+        self.assertGreater(len(terms), 20, "Barely any _t() call was found at all.")
+
+        for name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, name))
+            for msgid in sorted(terms):
+                self._assert_reaches_the_browser(po, msgid.replace('\\"', '"'))
+
     def _template_literals(self):
         """Every word the module's own templates paint, and where it is written.
 
@@ -508,6 +540,10 @@ class TestEasyocrTranslations(TransactionCase):
                 want(node.text, '%s <%s>' % (where, node.tag))
                 # Words that follow a tag, up to the next one.
                 want(node.tail, '%s <%s> (after it)' % (where, node.tag))
+                if node.tag[:1].isupper():
+                    # A component (<Dialog title="props.title">): its
+                    # attributes are expressions, not words on the screen.
+                    continue
                 for attribute in TEMPLATE_ATTRIBUTES:
                     value = node.get(attribute)
                     # t-att-* and t-esc carry a binding, not a word.
