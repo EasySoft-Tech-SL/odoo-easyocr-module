@@ -81,3 +81,29 @@ class TestEasyocrTemplate(TransactionCase):
         })
 
         self.assertEqual(box.display_name, 'Supplier')
+
+    def test_a_template_picked_from_the_dropdown_brings_its_boxes(self):
+        """A <select> sends the id as text: "12" must find template 12.
+
+        It used to find nothing, and the viewer said the template had no boxes
+        while it had seven.
+        """
+        template = self._make_template()
+        self.Box.create({
+            'template_id': template.id, 'page': 1, 'field_key': 'document_number',
+            'x': 10, 'y': 20, 'width': 30, 'height': 40,
+        })
+        document = self.env['easyocr.document'].create({'name': 'PLANTILLA-TEXTO'})
+
+        answer = document.action_load_template(str(template.id))
+
+        self.assertEqual(answer['template'], template.id)
+        self.assertEqual(len(answer['boxes']), 1)
+
+    def test_a_supplier_picked_from_the_dropdown_is_set(self):
+        partner = self.env['res.partner'].create({'name': 'Proveedor del desplegable'})
+        document = self.env['easyocr.document'].create({'name': 'PROVEEDOR-TEXTO'})
+
+        document.action_set_supplier(str(partner.id))
+
+        self.assertEqual(document.partner_id, partner)

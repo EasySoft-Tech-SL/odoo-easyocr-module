@@ -113,3 +113,85 @@ export function clamped(box, bounds) {
         height,
     };
 }
+
+/** Whether two rectangles share any area. */
+export function overlaps(a, b) {
+    return a.x < b.x + b.width && b.x < a.x + a.width
+        && a.y < b.y + b.height && b.y < a.y + a.height;
+}
+
+/**
+ * Where a box's name tag goes, so it covers no other box and no other tag.
+ *
+ * The tag sits above the box's top left corner, the way the module this is a
+ * port of paints it. On a page where fields are a line apart, that spot is the
+ * box above, and the tag hid it. So the spots are tried in turn -- above, below,
+ * the same on the right, then beside the box on either side -- and the first one
+ * clear of everything and inside the page wins. With none clear, the one that
+ * hides least; never the box's own text.
+ */
+export function labelPlacement(box, tag, obstacles, bounds) {
+    const candidates = [
+        {x: box.x, y: box.y - tag.height},
+        {x: box.x, y: box.y + box.height},
+        {x: box.x + box.width - tag.width, y: box.y - tag.height},
+        {x: box.x + box.width - tag.width, y: box.y + box.height},
+        {x: box.x + box.width, y: box.y},
+        {x: box.x - tag.width, y: box.y},
+    ].map((spot) => ({...spot, width: tag.width, height: tag.height}));
+    const fits = (rect) => !bounds || (
+        rect.x >= 0 && rect.y >= 0
+        && rect.x + rect.width <= bounds.width && rect.y + rect.height <= bounds.height
+    );
+    const covered = (rect) => obstacles.reduce((sum, other) => {
+        const w = Math.min(rect.x + rect.width, other.x + other.width) - Math.max(rect.x, other.x);
+        const h = Math.min(rect.y + rect.height, other.y + other.height) - Math.max(rect.y, other.y);
+        return sum + (w > 0 && h > 0 ? w * h : 0);
+    }, 0);
+    const inside = candidates.filter(fits);
+    const clear = inside.find((rect) => covered(rect) === 0);
+    if (clear) {
+        return clear;
+    }
+    // Everything around is taken: the spot that hides the least of the others,
+    // and never the box's own text.
+    const pool = inside.length ? inside : candidates;
+    return pool.reduce((best, rect) => (covered(rect) < covered(best) ? rect : best));
+}
+
+/**
+ * The text a box holds, from the page's text items, in reading order.
+ *
+ * A line counts when most of its height is inside the box, not when it merely
+ * touches it: fields printed a line apart used to read the line under them as
+ * well ("01/07/2026 02/07/2026"). Within a line, a character counts when its
+ * middle is inside, so a box can take part of a line without a stray letter
+ * from the edge.
+ */
+export function textInBox(items, box) {
+    const left = Math.min(box.x, box.x + box.width);
+    const right = Math.max(box.x, box.x + box.width);
+    const top = Math.min(box.y, box.y + box.height);
+    const bottom = Math.max(box.y, box.y + box.height);
+    const hits = [];
+    for (const item of items) {
+        const height = Math.max(item.bottom - item.top, 0.01);
+        const overlapY = Math.min(bottom, item.bottom) - Math.max(top, item.top);
+        if (overlapY < height / 2 || item.right <= left || item.left >= right) {
+            continue;
+        }
+        let piece = "";
+        for (let index = 0; index < item.text.length; index++) {
+            const middle = item.left + (index + 0.5) * item.charWidth;
+            if (middle > left && middle < right) {
+                piece += item.text[index];
+            }
+        }
+        piece = piece.trim();
+        if (piece) {
+            hits.push({text: piece, top: item.top, left: item.left});
+        }
+    }
+    hits.sort((a, b) => (Math.abs(a.top - b.top) > 5 ? a.top - b.top : a.left - b.left));
+    return hits.map((hit) => hit.text).join(" ");
+}

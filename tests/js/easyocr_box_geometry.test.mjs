@@ -17,7 +17,8 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 
 import {
-    anchorOf, boxAt, clamped, cornerOf, handleAt, movedTo, rectangleBetween, resizedTo,
+    anchorOf, boxAt, clamped, cornerOf, handleAt, labelPlacement, movedTo, overlaps,
+    rectangleBetween, resizedTo, textInBox,
 } from '../../addons/easyocr/static/src/js/easyocr_box_geometry.js';
 
 // A page the size of a sheet of A4 in PDF points, which is what the viewer
@@ -157,4 +158,72 @@ test('the box on top is the one picked up', () => {
     const under = box({uid: 1});
     const over = box({uid: 2, x: 120, y: 200});
     assert.equal(boxAt([under, over], {x: 140, y: 210}).uid, 2);
+});
+
+
+// ---------------------------------------------------------------------------
+// Name tags and reading, on fields printed a line apart
+// ---------------------------------------------------------------------------
+
+const TAG = {width: 60, height: 18};
+
+test('a tag above a box does not cover the box on the line above', () => {
+    const upper = {x: 800, y: 100, width: 100, height: 20};
+    const lower = {x: 800, y: 125, width: 100, height: 20};
+
+    const tag = labelPlacement(lower, TAG, [upper], {width: 1300, height: 1800});
+
+    assert.equal(overlaps(tag, upper), false);
+});
+
+test('a tag does not cover another tag already painted', () => {
+    const one = {x: 100, y: 300, width: 100, height: 20};
+    const two = {x: 120, y: 300, width: 100, height: 20};
+    const first = labelPlacement(one, TAG, [two], {width: 1300, height: 1800});
+
+    const second = labelPlacement(two, TAG, [one, first], {width: 1300, height: 1800});
+
+    assert.equal(overlaps(second, first), false);
+});
+
+test('with room above, the tag stays above, the way the original paints it', () => {
+    const lone = {x: 100, y: 300, width: 100, height: 20};
+
+    assert.deepEqual(
+        labelPlacement(lone, TAG, [], {width: 1300, height: 1800}),
+        {x: 100, y: 282, width: 60, height: 18},
+    );
+});
+
+const line = (text, top, left = 500) => ({
+    text, left, right: left + text.length * 5, top, bottom: top + 9, charWidth: 5,
+});
+
+test('a box over one line does not read the line it only grazes', () => {
+    const items = [line('01/07/2026', 90), line('02/07/2026', 99)];
+
+    // Drawn round the first date, its bottom edge one point into the second.
+    const read = textInBox(items, {x: 498, y: 89, width: 54, height: 11});
+
+    assert.equal(read, '01/07/2026');
+});
+
+test('a box still takes part of a line, cut at the characters inside it', () => {
+    const items = [line('Factura EF26-0145', 50)];
+
+    // Round "EF26-0145", which starts at the ninth character.
+    const read = textInBox(items, {x: 540, y: 49, width: 46, height: 11});
+
+    assert.equal(read, 'EF26-0145');
+});
+
+test('with a box above and one below, the tag goes beside, not over its own text', () => {
+    const above = {x: 800, y: 80, width: 100, height: 20};
+    const middle = {x: 800, y: 100, width: 100, height: 20};
+    const below = {x: 800, y: 120, width: 100, height: 20};
+
+    const tag = labelPlacement(middle, TAG, [above, below], {width: 1300, height: 1800});
+
+    assert.equal(overlaps(tag, middle), false);
+    assert.equal(overlaps(tag, above) || overlaps(tag, below), false);
 });
