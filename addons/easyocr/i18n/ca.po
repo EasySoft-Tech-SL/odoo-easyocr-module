@@ -621,6 +621,7 @@ msgstr "Divisa"
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
 #: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_invoice_list
 msgid "Date"
 msgstr "Data"
 
@@ -2426,6 +2427,7 @@ msgstr "Plantilla desada."
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_template
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_template
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_list
 msgid "Templates"
 msgstr "Plantilles"
 
@@ -3942,6 +3944,7 @@ msgstr "Accés ràpid"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_invoice_list
 msgid "Invoices"
 msgstr "Factures"
 
@@ -3998,6 +4001,7 @@ msgstr "Consulteu l'historial de factures generades des dels PDFs importats."
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list
 msgid "Webhook logs"
 msgstr "Logs del Webhook"
 
@@ -4111,6 +4115,7 @@ msgstr "Pagament automàtic (Webhook)"
 #. odoo-python
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_invoice_draft:0
 #: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_invoice_draft:0
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid ""
 "When on, the invoices the module creates are left in draft instead of being "
 "posted automatically, so a person confirms them."
@@ -4205,6 +4210,7 @@ msgstr "Completat"
 #. module: easyocr
 #. odoo-python
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__partial:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search
 msgid "Partial"
 msgstr "Parcial"
 
@@ -4409,3 +4415,38 @@ msgid ""
 msgstr ""
 "Fins que no es configuri el servei a Configuració, només es poden llegir els"
 " PDF que ja porten el text."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_list
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search
+msgid "Batch history"
+msgstr "Historial de lots"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid "Process batch"
+msgstr "Processar lot"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid "Refresh"
+msgstr "Actualitzar"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid "Cancel this batch? This action cannot be undone."
+msgstr "Cancel·lar aquest lot? Aquesta acció no es pot desfer."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid "Configuration"
+msgstr "Configuració"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid ""
+"E.g.: This supplier always includes shipping in the last line. VAT is always"
+" 21%. Discounts are on separate lines..."
+msgstr ""
+"Ex: Aquest proveïdor sempre inclou ports a l'última línia. L'IVA és sempre "
+"el 21%..."

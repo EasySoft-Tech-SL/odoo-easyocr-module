@@ -551,6 +551,48 @@ class TestEasyocrTranslations(TransactionCase):
                         want(value, '%s <%s %s=>' % (where, node.tag, attribute))
         return found
 
+    def test_every_word_a_view_writes_points_to_that_view(self):
+        """Every string, help and placeholder written in the module's views.
+
+        A view's help is a term of its own, looked up under the view's reference
+        and not under the field's: the settings screen showed the field's help
+        in Spanish everywhere except on the settings screen itself, where the
+        <setting help="..."> said it again, in English.
+        """
+        attributes = ('string', 'help', 'placeholder', 'title', 'confirm')
+        expected = {}
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        folder = os.path.join(root, 'views')
+        for name in sorted(os.listdir(folder)):
+            if not name.endswith('.xml'):
+                continue
+            tree = ElementTree.parse(os.path.join(folder, name))
+            for record in tree.iter('record'):
+                if record.get('model') != 'ir.ui.view':
+                    continue
+                ref = 'model_terms:ir.ui.view,arch_db:easyocr.%s' % record.get('id')
+                for node in record.iter():
+                    for attribute in attributes:
+                        value = (node.get(attribute) or '').strip()
+                        if node.tag == 'field' and node.get('name') in ('arch', 'model', 'name', 'inherit_id', 'priority'):
+                            continue
+                        if value and not NOT_A_SENTENCE.match(value):
+                            expected.setdefault(value, set()).add(ref)
+        self.assertGreater(len(expected), 20, "Barely any view string was found.")
+
+        for po_name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, po_name))
+            for msgid, refs in sorted(expected.items()):
+                entry = self._entry(po, msgid)
+                self.assertTrue(entry.msgstr, "%s leaves %r in English" % (po_name, msgid))
+                have = {reference for reference, _line in entry.occurrences}
+                for ref in refs:
+                    self.assertIn(
+                        ref, have,
+                        "%r is written in %s and %s does not point there, so that "
+                        "screen shows it in English." % (msgid, ref, po_name),
+                    )
+
     def test_the_strings_that_live_only_in_a_view_are_translated(self):
         """Nothing else carries these: they are text in the view and nowhere else."""
         for name in self._po_files():

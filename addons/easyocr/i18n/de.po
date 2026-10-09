@@ -623,6 +623,7 @@ msgstr "Währung"
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_template_box__field_key__document_date
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
 #: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_invoice_list
 msgid "Date"
 msgstr "Datum"
 
@@ -2434,6 +2435,7 @@ msgstr "Vorlage gespeichert."
 #: model:ir.actions.act_window,name:easyocr.action_easyocr_template
 #: model:ir.ui.menu,name:easyocr.menu_easyocr_template
 #: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_template_list
 msgid "Templates"
 msgstr "Vorlagen"
 
@@ -3965,6 +3967,7 @@ msgstr "Schnellzugriff"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_invoice_list
 msgid "Invoices"
 msgstr "Rechnungen"
 
@@ -4023,6 +4026,7 @@ msgstr ""
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_list
 msgid "Webhook logs"
 msgstr "Webhook-Protokolle"
 
@@ -4136,6 +4140,7 @@ msgstr "Automatische Zahlung (Webhook)"
 #. odoo-python
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_invoice_draft:0
 #: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_invoice_draft:0
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
 msgid ""
 "When on, the invoices the module creates are left in draft instead of being "
 "posted automatically, so a person confirms them."
@@ -4231,6 +4236,7 @@ msgstr "Abgeschlossen"
 #. module: easyocr
 #. odoo-python
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__partial:0
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search
 msgid "Partial"
 msgstr "Teilweise"
 
@@ -4435,3 +4441,39 @@ msgid ""
 msgstr ""
 "Bis der Dienst in den Einstellungen eingerichtet ist, können nur PDFs "
 "gelesen werden, die ihren Text bereits enthalten."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_list
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search
+msgid "Batch history"
+msgstr "Stapelverlauf"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid "Process batch"
+msgstr "Stapel verarbeiten"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid "Cancel this batch? This action cannot be undone."
+msgstr ""
+"Diesen Stapel abbrechen? Diese Aktion kann nicht rückgängig gemacht werden."
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+msgid ""
+"E.g.: This supplier always includes shipping in the last line. VAT is always"
+" 21%. Discounts are on separate lines..."
+msgstr ""
+"Z.B.: Dieser Lieferant schließt immer Versandkosten in der letzten Zeile "
+"ein. Die MwSt. beträgt immer 21%..."

@@ -176,6 +176,15 @@ work was done.
   viewer's; the note under the AI banner no longer points to a button that is
   not there when the service is off; and a name ending in a full stop no longer
   reads "S.L.." in the already-read warning.
+- **Screenshots retaken on a made-up invoice.** The Apps Store gallery and the
+  user guide showed a real quote, with a real customer's name and tax number,
+  and an interface that is no longer the module's. Every screenshot is now taken
+  from the current screens on a fictitious supplier.
+- **Words written straight into the views reached the screen in English.** A
+  view's own help or label is a term of its own, looked up under that view: the
+  draft setting's explanation, the batch history and its buttons, and the AI
+  instructions' example stayed in English on a Spanish screen. Every one of them
+  is now checked by a test.
 
 ### Pending
 
