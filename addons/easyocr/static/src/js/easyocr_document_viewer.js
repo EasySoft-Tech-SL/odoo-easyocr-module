@@ -150,6 +150,9 @@ export class EasyocrDocumentViewer extends Component {
             // boxes that appear on their own and nothing explaining them read
             // as a mistake.
             appliedTemplate: "",
+            // The bare name, for the save dialog: the label adds the vendor,
+            // and saving it back as a name grew "(Vendor) (Vendor)".
+            appliedTemplateName: "",
             appliedVendor: "",
             busy: false,
             busyLabel: "",
@@ -425,6 +428,7 @@ export class EasyocrDocumentViewer extends Component {
                 ...box, uid: this.nextUid++, text: "",
             }));
             this.state.appliedTemplate = answer.label || answer.name;
+            this.state.appliedTemplateName = answer.name || "";
             this.state.appliedVendor = answer.vendor;
             // The dropdown names the template in use, not "No template".
             this.state.templateId = answer.template || null;
@@ -1239,6 +1243,7 @@ export class EasyocrDocumentViewer extends Component {
                 ...box, uid: this.nextUid++, text: "",
             }));
             this.state.appliedTemplate = answer.label || answer.name;
+            this.state.appliedTemplateName = answer.name || "";
             this.state.appliedVendor = answer.vendor;
             this.state.customInstructions = answer.custom_instructions || "";
             await this.refreshAllTexts();
@@ -1276,6 +1281,7 @@ export class EasyocrDocumentViewer extends Component {
         // Nothing is left of the template either: an empty page still claiming
         // to be using somebody's boxes would be the screen lying.
         this.state.appliedTemplate = "";
+        this.state.appliedTemplateName = "";
         this.state.appliedVendor = "";
         for (const pageInfo of this.state.pages) {
             this.redrawPage(pageInfo.number);
@@ -1312,7 +1318,7 @@ export class EasyocrDocumentViewer extends Component {
         const payload = await new Promise((resolve) => {
             this.dialog.add(TemplateDialog, {
                 title: _t("Save template"),
-                name: this.state.appliedTemplate || "",
+                name: this.state.appliedTemplateName || "",
                 suppliers: this.state.suppliers || [],
                 aiEnabled: Boolean(this.state.account?.ai_enabled),
                 onSave: resolve,
@@ -1346,6 +1352,7 @@ export class EasyocrDocumentViewer extends Component {
                 payload.instructions || "",
             ]);
             this.state.appliedTemplate = answer.label || answer.name;
+            this.state.appliedTemplateName = answer.name || "";
             this.state.appliedVendor = answer.vendor;
             // The new template joins the dropdown, already picked.
             await this.loadTemplates();

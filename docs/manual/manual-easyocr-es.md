@@ -1,8 +1,8 @@
 ---
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
-version: 19.0.1.0.7 / 18.0.1.0.7
-date: 2026-10-09
+version: 19.0.1.0.8 / 18.0.1.0.8
+date: 2026-10-10
 author: EasySoft Tech S.L.
 ---
 
@@ -92,9 +92,11 @@ desde **Ajustes > Usuarios**, como cualquier otro permiso de Odoo.
 
 # 3. Configuración
 
-La configuración vive en **Ajustes > EasyOCR** y viene en dos bloques.
+La configuración vive en **Ajustes > EasyOCR**, y también se llega desde el menú
+**Configuración** de la propia aplicación. Arriba tiene una fila de pestañas; la
+primera, **Configuración**, es la de los ajustes y viene en dos bloques.
 
-![La sección EasyOCR en Ajustes](img/03-ajustes.png)
+![La sección EasyOCR en Ajustes, con las pestañas arriba](img/03-ajustes.png)
 
 ## Configuración IA OCR
 
@@ -174,6 +176,25 @@ Mientras ese valor no exista, la dirección que recibe los avisos del servicio
 rechaza **todas** las llamadas. Es deliberado: un secreto con un valor por
 defecto no es un secreto, así que el módulo prefiere quedarse cerrado antes que
 abierto. Si no va a usar esta vía, no tiene que hacer nada.
+
+## Las otras pestañas
+
+Solo las ven los usuarios con el rol **Responsable** de EasyOCR.
+
+- **Plan de Servicio.** Lo que el servicio sabe de su cuenta: el plan contratado,
+  las páginas que lleva gastadas este mes y las que le quedan, las estadísticas,
+  los límites y el saldo del monedero. Si no hay clave API, le manda a la pestaña
+  Configuración. Si la clave está mal, lo dice así, distinto de cuando el
+  servicio no responde.
+- **Acuerdo de Licencia.** La licencia del módulo (GNU LGPL v3) con su texto
+  completo.
+- **Telemetría y Protección de Datos.** Qué sale de su Odoo cuando lee con IA y
+  qué no sale nunca. La línea del nombre y el NIF de su empresa marca si ahora
+  mismo se envían o no, según el ajuste «Decirle al servicio quiénes somos».
+- **Acerca de.** La descripción del módulo.
+- **Historial de cambios.** Lo que trae cada versión.
+
+![La pestaña Telemetría y Protección de Datos](img/30-telemetria.png)
 
 # 4. Dónde viven los documentos
 

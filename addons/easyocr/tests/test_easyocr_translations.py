@@ -303,6 +303,7 @@ ARCH_STRINGS = (
 # The models whose terms are ours to translate. The two settings models are here
 # too, and only through their own fields: they carry a few hundred of Odoo's.
 MODELS = (
+    'easyocr.admin',
     'easyocr.batch',
     'easyocr.document',
     'easyocr.document.line',
@@ -665,6 +666,26 @@ class TestEasyocrTranslations(TransactionCase):
                                     'easyocr.selection__%s__%s__%s' % (slug, field_name, key))
             want(model._description, 'model:ir.model,name:easyocr.model_%s' % slug)
         return expected
+
+    def test_every_menu_and_action_name_is_translated(self):
+        """The names in the menu bar and on the breadcrumbs, one by one."""
+        data = self.env['ir.model.data'].search([
+            ('module', '=', 'easyocr'),
+            ('model', 'in', ('ir.ui.menu', 'ir.actions.act_window', 'ir.actions.client')),
+        ])
+        self.assertTrue(data, "The module declares no menu and no action.")
+        for po_name in self._po_files():
+            po = polib.pofile(os.path.join(self.i18n_path, po_name))
+            for record in data:
+                name = self.env[record.model].browse(record.res_id).with_context(lang='en_US').name
+                ref = 'model:%s,name:easyocr.%s' % (record.model, record.name)
+                entry = self._entry(po, name)
+                self.assertTrue(entry.msgstr, "%s leaves %r in English" % (po_name, name))
+                self.assertIn(
+                    ref, {reference for reference, _line in entry.occurrences},
+                    "%r is translated in %s but not under %s, where Odoo looks for it"
+                    % (name, po_name, ref),
+                )
 
     def test_the_module_summary_is_translated(self):
         """The Apps screen shows it on the card, before the module is installed."""

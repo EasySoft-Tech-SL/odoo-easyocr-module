@@ -42,7 +42,16 @@ RETRYABLE_ERROR_CODES = ('OCR_EMPTY', 'PARTIAL_DEGRADATION')
 
 
 class EasyocrServiceError(Exception):
-    """A failure talking to the service, carrying a message fit for the user."""
+    """A failure talking to the service, carrying a message fit for the user.
+
+    ``status`` is the HTTP status when the service answered, and 0 when it
+    could not be reached: the plan page tells a rejected key from a service
+    that is down by it, without reading the sentence.
+    """
+
+    def __init__(self, message='', status=0):
+        super().__init__(message)
+        self.status = status
 
 
 class EasyocrExtractor(models.AbstractModel):
@@ -230,7 +239,7 @@ class EasyocrExtractor(models.AbstractModel):
             ) from error
 
         if not 200 <= response.status_code < 300:
-            raise EasyocrServiceError(self._http_error_message(response))
+            raise EasyocrServiceError(self._http_error_message(response), response.status_code)
 
         try:
             return (response.json() or {}).get('data') or {}
