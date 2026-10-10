@@ -55,144 +55,149 @@
                         </button>
                     </div>
 
-                    <div class="o_easyocr_sidebar_scroll">
-
-                        <!-- The AI banner. Always on top, two states: configured
-                             (the button, the block banner and the quota), and
-                             not configured (a short note pointing at the
-                             settings). It is the first thing the reader sees,
-                             which is where the plan and what is left belong. -->
-                        <div class="o_easyocr_section o_easyocr_ai_hero" t-if="state.account and state.account.ai_enabled">
-                            <div class="o_easyocr_ai_hero_head">
-                                <div class="o_easyocr_ai_hero_icon">
-                                    <i class="fa fa-magic"/>
-                                </div>
-                                <div>
-                                    <span class="o_easyocr_ai_hero_title">
-                                        easyOCR AI
-                                        <span class="o_easyocr_badge">PRO</span>
-                                    </span>
-                                    <p class="o_easyocr_ai_hero_hint">
-                                        Send the PDF to AI service for automatic data extraction
-                                    </p>
-                                </div>
+                    <!-- The AI block stays put above the column, as in the module
+                         this is a port of: only the middle scrolls, between it
+                         and the footer with the actions and the help. -->
+                    <div class="o_easyocr_sidebar_fixed" t-if="state.account">
+                    <!-- The AI banner. Always on top, two states: configured
+                         (the button, the block banner and the quota), and
+                         not configured (a short note pointing at the
+                         settings). It is the first thing the reader sees,
+                         which is where the plan and what is left belong. -->
+                    <div class="o_easyocr_section o_easyocr_ai_hero" t-if="state.account and state.account.ai_enabled">
+                        <div class="o_easyocr_ai_hero_head">
+                            <div class="o_easyocr_ai_hero_icon">
+                                <i class="fa fa-magic"/>
                             </div>
-
-                            <!-- Reading, with its bar. -->
-                            <div t-if="state.busy" class="o_easyocr_busy">
-                                <div t-if="state.busyPercent" class="o_easyocr_progress">
-                                    <div
-                                        class="o_easyocr_progress_fill"
-                                        t-attf-style="width: {{ state.busyPercent }}%"
-                                    />
-                                </div>
-                                <p class="text-muted mb-0">
-                                    <i class="fa fa-spinner fa-spin me-1"/>
-                                    <t t-esc="state.busyLabel"/>
+                            <div>
+                                <span class="o_easyocr_ai_hero_title">
+                                    easyOCR AI
+                                    <span class="o_easyocr_badge">PRO</span>
+                                </span>
+                                <p class="o_easyocr_ai_hero_hint">
+                                    Send the PDF to AI service for automatic data extraction
                                 </p>
                             </div>
-
-                            <button
-                                t-if="state.canReadWithAI"
-                                class="o_easyocr_btn_ai w-100"
-                                t-on-click="readWithAI"
-                                t-att-disabled="state.busy"
-                            >
-                                <i class="fa fa-magic me-1"/>
-                                Extract with AI
-                            </button>
-
-                            <div t-if="state.account.blocked" class="o_easyocr_blocked">
-                                <i class="fa fa-exclamation-triangle me-1"/>
-                                <t t-esc="state.account.message"/>
-                            </div>
-
-                            <!-- The plan and what is left, out of the same answer,
-                                 folded to one line until the reader opens it. -->
-                            <div t-if="state.account.plan.name" class="o_easyocr_quota">
-                                <button class="o_easyocr_quota_toggle" type="button" t-on-click="toggleQuota">
-                                    <span class="o_easyocr_quota_toggle_left">
-                                        <span
-                                            t-att-class="state.account.blocked ? 'o_easyocr_quota_status o_easyocr_quota_status_blocked' : 'o_easyocr_quota_status'"
-                                            t-esc="state.account.blocked ? '⚠️' : '✓'"
-                                        />
-                                        <span class="o_easyocr_quota_plan_name"><t t-esc="state.account.plan.name"/></span>
-                                        <span class="o_easyocr_quota_compact">
-                                            <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/> Pages
-                                        </span>
-                                    </span>
-                                    <span class="o_easyocr_quota_toggle_right">
-                                        <span class="o_easyocr_quota_remaining"><t t-esc="state.account.quota.pages_remaining"/> Left</span>
-                                        <i class="fa fa-chevron-down"/>
-                                    </span>
-                                </button>
-
-                                <div t-if="state.quotaExpanded" class="o_easyocr_quota_details">
-                                    <div class="o_easyocr_quota_head">
-                                        <span class="o_easyocr_quota_plan">
-                                            <i class="fa fa-star me-1"/>
-                                            <t t-esc="state.account.plan.name"/>
-                                            <t t-if="state.account.plan.is_free">
-                                                <span class="o_easyocr_badge o_easyocr_badge_free">FREE</span>
-                                            </t>
-                                        </span>
-                                    </div>
-                                    <div t-if="state.account.quota.pages_used !== undefined" class="o_easyocr_quota_bar">
-                                        <div
-                                            class="o_easyocr_quota_fill"
-                                            t-attf-style="width: {{ quotaPercent() }}%"
-                                        />
-                                    </div>
-                                    <div class="o_easyocr_quota_stats">
-                                        <div class="o_easyocr_quota_stat">
-                                            <span class="o_easyocr_quota_label">Pages</span>
-                                            <span class="o_easyocr_quota_value">
-                                                <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/>
-                                            </span>
-                                        </div>
-                                        <div class="o_easyocr_quota_stat" t-if="state.account.quota.pages_remaining !== undefined">
-                                            <span class="o_easyocr_quota_label">Left</span>
-                                            <span class="o_easyocr_quota_value">
-                                                <t t-esc="state.account.quota.pages_remaining"/>
-                                            </span>
-                                        </div>
-                                        <div class="o_easyocr_quota_stat" t-if="state.account.quota.reset_date">
-                                            <span class="o_easyocr_quota_label">Resets</span>
-                                            <span class="o_easyocr_quota_value" t-esc="resetDateLabel()"/>
-                                        </div>
-                                        <div class="o_easyocr_quota_stat" t-if="state.account.wallet.exists and state.account.wallet.balance_pages">
-                                            <span class="o_easyocr_quota_label">
-                                                <i class="fa fa-credit-card me-1"/>Wallet
-                                            </span>
-                                            <span class="o_easyocr_quota_value">
-                                                <t t-esc="state.account.wallet.balance_pages"/>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
-                        <!-- Not configured: point at the settings, nothing to do here. -->
-                        <div class="o_easyocr_section o_easyocr_ai_hero" t-elif="state.account">
-                            <div class="o_easyocr_ai_hero_head">
-                                <div class="o_easyocr_ai_hero_icon o_easyocr_ai_icon_promo">
-                                    <i class="fa fa-magic"/>
-                                </div>
-                                <div>
-                                    <span class="o_easyocr_ai_hero_title">
-                                        easyOCR AI
-                                        <span class="o_easyocr_badge">PRO</span>
-                                    </span>
-                                    <p class="o_easyocr_ai_hero_hint">
-                                        Configure the service to read scans and photographs.
-                                    </p>
-                                </div>
+                        <!-- Reading, with its bar. -->
+                        <div t-if="state.busy" class="o_easyocr_busy">
+                            <div t-if="state.busyPercent" class="o_easyocr_progress">
+                                <div
+                                    class="o_easyocr_progress_fill"
+                                    t-attf-style="width: {{ state.busyPercent }}%"
+                                />
                             </div>
-                            <p class="o_easyocr_section_note">
-                                Until the service is set in Settings, only PDFs that already carry their text can be read.
+                            <p class="text-muted mb-0">
+                                <i class="fa fa-spinner fa-spin me-1"/>
+                                <t t-esc="state.busyLabel"/>
                             </p>
                         </div>
+
+                        <button
+                            t-if="state.canReadWithAI"
+                            class="o_easyocr_btn_ai w-100"
+                            t-on-click="readWithAI"
+                            t-att-disabled="state.busy"
+                        >
+                            <i class="fa fa-magic me-1"/>
+                            Extract with AI
+                        </button>
+
+                        <div t-if="state.account.blocked" class="o_easyocr_blocked">
+                            <i class="fa fa-exclamation-triangle me-1"/>
+                            <t t-esc="state.account.message"/>
+                        </div>
+
+                        <!-- The plan and what is left, out of the same answer,
+                             folded to one line until the reader opens it. -->
+                        <div t-if="state.account.plan.name" class="o_easyocr_quota">
+                            <button class="o_easyocr_quota_toggle" type="button" t-on-click="toggleQuota">
+                                <span class="o_easyocr_quota_toggle_left">
+                                    <span
+                                        t-att-class="state.account.blocked ? 'o_easyocr_quota_status o_easyocr_quota_status_blocked' : 'o_easyocr_quota_status'"
+                                        t-esc="state.account.blocked ? '⚠️' : '✓'"
+                                    />
+                                    <span class="o_easyocr_quota_plan_name"><t t-esc="state.account.plan.name"/></span>
+                                    <span class="o_easyocr_quota_compact">
+                                        <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/> Pages
+                                    </span>
+                                </span>
+                                <span class="o_easyocr_quota_toggle_right">
+                                    <span class="o_easyocr_quota_remaining"><t t-esc="state.account.quota.pages_remaining"/> Left</span>
+                                    <i class="fa fa-chevron-down"/>
+                                </span>
+                            </button>
+
+                            <div t-if="state.quotaExpanded" class="o_easyocr_quota_details">
+                                <div class="o_easyocr_quota_head">
+                                    <span class="o_easyocr_quota_plan">
+                                        <i class="fa fa-star me-1"/>
+                                        <t t-esc="state.account.plan.name"/>
+                                        <t t-if="state.account.plan.is_free">
+                                            <span class="o_easyocr_badge o_easyocr_badge_free">FREE</span>
+                                        </t>
+                                    </span>
+                                </div>
+                                <div t-if="state.account.quota.pages_used !== undefined" class="o_easyocr_quota_bar">
+                                    <div
+                                        class="o_easyocr_quota_fill"
+                                        t-attf-style="width: {{ quotaPercent() }}%"
+                                    />
+                                </div>
+                                <div class="o_easyocr_quota_stats">
+                                    <div class="o_easyocr_quota_stat">
+                                        <span class="o_easyocr_quota_label">Pages</span>
+                                        <span class="o_easyocr_quota_value">
+                                            <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_easyocr_quota_stat" t-if="state.account.quota.pages_remaining !== undefined">
+                                        <span class="o_easyocr_quota_label">Left</span>
+                                        <span class="o_easyocr_quota_value">
+                                            <t t-esc="state.account.quota.pages_remaining"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_easyocr_quota_stat" t-if="state.account.quota.reset_date">
+                                        <span class="o_easyocr_quota_label">Resets</span>
+                                        <span class="o_easyocr_quota_value" t-esc="resetDateLabel()"/>
+                                    </div>
+                                    <div class="o_easyocr_quota_stat" t-if="state.account.wallet.exists and state.account.wallet.balance_pages">
+                                        <span class="o_easyocr_quota_label">
+                                            <i class="fa fa-credit-card me-1"/>Wallet
+                                        </span>
+                                        <span class="o_easyocr_quota_value">
+                                            <t t-esc="state.account.wallet.balance_pages"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Not configured: point at the settings, nothing to do here. -->
+                    <div class="o_easyocr_section o_easyocr_ai_hero" t-elif="state.account">
+                        <div class="o_easyocr_ai_hero_head">
+                            <div class="o_easyocr_ai_hero_icon o_easyocr_ai_icon_promo">
+                                <i class="fa fa-magic"/>
+                            </div>
+                            <div>
+                                <span class="o_easyocr_ai_hero_title">
+                                    easyOCR AI
+                                    <span class="o_easyocr_badge">PRO</span>
+                                </span>
+                                <p class="o_easyocr_ai_hero_hint">
+                                    Configure the service to read scans and photographs.
+                                </p>
+                            </div>
+                        </div>
+                        <p class="o_easyocr_section_note">
+                            Until the service is set in Settings, only PDFs that already carry their text can be read.
+                        </p>
+                    </div>
+                    </div>
+
+                    <div class="o_easyocr_sidebar_scroll">
 
                         <!-- Nothing to do to a document that is not there yet. -->
                         <div t-if="state.empty" class="o_easyocr_section">

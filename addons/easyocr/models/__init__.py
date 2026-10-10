@@ -9,5 +9,6 @@ from . import easyocr_batch
 from . import easyocr_inbox
 from . import easyocr_template
 from . import easyocr_webhook_log
+from . import easyocr_admin
 from . import res_company
 from . import res_config_settings

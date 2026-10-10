@@ -10,6 +10,11 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app name="easyocr" string="EasyOCR" data-string="EasyOCR" groups="easyocr.group_easyocr_manager">
+                    <!-- The module's configuration tabs, as in the module this is a
+                         port of: this screen is the first one, Setup. -->
+                    <div class="o_easyocr_admin_tabs_host">
+                        <widget name="easyocr_admin_tabs"/>
+                    </div>
                     <block title="AI OCR configuration" id="easyocr_ai_block">
                         <setting id="easyocr_ai_enabled" string="Enable AI OCR" help="Send documents to the EasyOCR service for scans and photos that carry no text layer of their own.">
                             <field name="easyocr_ai_enabled"/>

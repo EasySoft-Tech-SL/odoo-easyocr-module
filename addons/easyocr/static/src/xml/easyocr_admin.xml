@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- The tab bar of the module's configuration, as in the module this is a
+         port of: one tab per page, the active one underlined. -->
+    <t t-name="easyocr.AdminTabs">
+        <nav class="o_easyocr_admin_tabs" role="tablist">
+            <t t-foreach="tabs" t-as="tab" t-key="tab.key">
+                <button
+                    type="button"
+                    role="tab"
+                    t-att-aria-selected="tab.key === active ? 'true' : 'false'"
+                    t-att-class="'o_easyocr_admin_tab' + (tab.key === active ? ' is-active' : '')"
+                    t-on-click="() => this.open(tab.key)"
+                >
+                    <i t-att-class="'fa ' + tab.icon + ' me-2'" t-att-style="'color:' + tab.color" aria-hidden="true"/>
+                    <t t-esc="tab.label"/>
+                </button>
+            </t>
+        </nav>
+    </t>
+
+    <!-- A table with a coloured icon in its title row, the way every block of
+         these pages is drawn. -->
+    <t t-name="easyocr.AdminTableHead">
+        <tr class="o_easyocr_admin_thead">
+            <th t-att-colspan="colspan or 2">
+                <i t-att-class="'fa ' + icon + ' me-2'" t-att-style="'color:' + color" aria-hidden="true"/>
+                <t t-esc="title"/>
+            </th>
+        </tr>
+    </t>
+
+    <t t-name="easyocr.AdminBadge">
+        <span t-att-class="'o_easyocr_admin_badge ' + badge(value).cls"><t t-esc="badge(value).label"/></span>
+    </t>
+
+    <t t-name="easyocr.AdminBar">
+        <t t-set="b" t-value="bar(used, limit)"/>
+        <em t-if="!b">-</em>
+        <div t-else="" class="o_easyocr_admin_bar" role="progressbar" t-att-aria-valuenow="b.pct" aria-valuemin="0" aria-valuemax="100">
+            <div class="o_easyocr_admin_bar_fill" t-att-style="'width:' + b.width + '%;background-color:' + b.color">
+                <t t-if="b.width > 10"><t t-esc="b.pct"/>%</t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="easyocr.AdminYesNo">
+        <span t-if="yes"><i class="fa fa-check me-1" style="color:#27ae60" aria-hidden="true"/>Yes</span>
+        <span t-else=""><i class="fa fa-times me-1" style="color:#e74c3c" aria-hidden="true"/>No</span>
+    </t>
+
+    <t t-name="easyocr.Admin">
+        <div class="o_easyocr_admin o_action">
+            <div class="o_easyocr_admin_inner">
+                <h2 class="o_easyocr_admin_title">EasyOCR</h2>
+                <EasyocrAdminTabs active="tab"/>
+
+                <div t-if="state.loading" class="o_easyocr_admin_note"><i class="fa fa-circle-o-notch fa-spin me-2" aria-hidden="true"/>Loading…</div>
+                <div t-elif="state.error" class="o_easyocr_admin_box is-error" role="alert"><i class="fa fa-exclamation-circle me-2" aria-hidden="true"/><t t-esc="state.error"/></div>
+                <t t-else="">
+
+                    <!-- ============================== Service plan -->
+                    <t t-if="tab === 'plan'">
+                        <div t-if="page.state === 'not_configured'" class="o_easyocr_admin_box is-warning">
+                            <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"/>The AI OCR service is not configured. Configure your API Key in the Setup tab to view your plan information.
+                            <div class="mt-3"><button type="button" class="btn btn-primary" t-on-click="goToSetup">Go to Setup</button></div>
+                        </div>
+                        <div t-elif="page.state === 'auth_error'" class="o_easyocr_admin_box is-error" role="alert">
+                            <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/>Authentication error: <t t-esc="page.error"/>
+                        </div>
+                        <div t-elif="page.state === 'api_error'" class="o_easyocr_admin_box is-error" role="alert">
+                            <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/>Error connecting to API: <t t-esc="page.error"/>
+                        </div>
+                        <div t-elif="page.state === 'no_data'" class="o_easyocr_admin_box is-info">No data available</div>
+                        <t t-else="">
+                            <div t-if="banner" t-att-class="'o_easyocr_admin_banner ' + (banner.blocked ? 'is-blocked' : 'is-warning')" role="status">
+                                <i t-att-class="'fa ' + (banner.blocked ? 'fa-times-circle' : 'fa-exclamation-triangle')" aria-hidden="true"/>
+                                <div>
+                                    <strong><t t-esc="banner.title"/></strong>
+                                    <span t-if="banner.body"><t t-esc="banner.body"/></span>
+                                </div>
+                            </div>
+
+                            <table t-if="has(data.account)" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-user'"/><t t-set="color" t-value="'#3498db'"/><t t-set="title">Account information</t></t>
+                                <tr t-if="account.name"><td>Name</td><td><strong><t t-esc="account.name"/></strong></td></tr>
+                                <tr t-if="account.email"><td>Email</td><td><t t-esc="account.email"/></td></tr>
+                                <tr t-if="account.billing_mode"><td>Billing mode</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="account.billing_mode === 'subscription' ? 'active' : 'trial'"/></t> <t t-esc="capitalize(account.billing_mode)"/></td></tr>
+                                <tr t-if="isSet(account.is_active)"><td>Account status</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="account.is_active ? 'active' : 'inactive'"/></t></td></tr>
+                                <tr t-if="account.created_at"><td>Registration date</td><td><t t-esc="dateTime(account.created_at)"/></td></tr>
+                            </table>
+
+                            <table t-if="has(data.subscription)" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-refresh'"/><t t-set="color" t-value="'#9b59b6'"/><t t-set="title">Subscription</t></t>
+                                <tr t-if="subscription.status"><td>Status</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="subscription.status"/></t></td></tr>
+                                <tr t-if="subscription.billing_cycle"><td>Billing cycle</td><td><t t-esc="billingCycle(subscription.billing_cycle).text"/> <span t-if="billingCycle(subscription.billing_cycle).extra" class="text-muted">(<t t-esc="billingCycle(subscription.billing_cycle).extra"/>)</span></td></tr>
+                                <tr t-if="subscription.current_period_start"><td>Period start</td><td><t t-esc="dateTime(subscription.current_period_start)"/></td></tr>
+                                <tr t-if="subscription.current_period_end"><td>Period end</td><td><t t-esc="dateTime(subscription.current_period_end)"/></td></tr>
+                                <tr t-if="subscription.trial_ends_at"><td>Trial ends</td><td><t t-esc="dateTime(subscription.trial_ends_at)"/></td></tr>
+                                <tr t-if="subscription.cancelled_at"><td>Cancelled on</td><td><span style="color:#e74c3c"><t t-esc="dateTime(subscription.cancelled_at)"/></span></td></tr>
+                                <tr t-if="subscription.is_overdue"><td>Renewal status</td><td><span class="o_easyocr_admin_badge is-solid-bad">Expired without renewal</span> <span class="text-muted ms-1">Automatic charge was not processed. Contact support if it persists.</span></td></tr>
+                                <tr><td>Can process now?</td><td>
+                                    <span t-if="canProcess" class="o_easyocr_admin_badge is-solid-ok">Yes</span>
+                                    <t t-else=""><span class="o_easyocr_admin_badge is-solid-bad">No</span> <code t-if="status.block_code" class="o_easyocr_admin_code_bad"><t t-esc="status.block_code"/></code></t>
+                                </td></tr>
+                            </table>
+
+                            <table t-if="has(data.plan)" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-star'"/><t t-set="color" t-value="'#f39c12'"/><t t-set="title">Current plan</t></t>
+                                <tr t-if="plan.name"><td>Plan name</td><td><strong class="fs-6"><t t-esc="plan.name"/></strong> <span t-if="plan.is_free" class="o_easyocr_admin_badge is-warn">Free</span></td></tr>
+                                <tr t-if="plan.slug"><td>Identifier</td><td><code><t t-esc="plan.slug"/></code></td></tr>
+                                <tr t-if="isSet(plan.price_monthly)"><td>Monthly price</td><td><strong><t t-esc="price(plan.price_monthly)"/></strong> / month</td></tr>
+                                <tr t-if="isSet(plan.price_yearly)"><td>Yearly price</td><td><strong><t t-esc="price(plan.price_yearly)"/></strong> / year</td></tr>
+                            </table>
+
+                            <table t-if="has(data.quota)" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-bar-chart'"/><t t-set="color" t-value="'#27ae60'"/><t t-set="title">Usage quota</t><t t-set="colspan" t-value="3"/></t>
+                                <tr t-if="quota.period"><td>Current period</td><td colspan="2"><strong><t t-esc="quota.period"/></strong></td></tr>
+                                <t t-if="isSet(quota.pages_used) and isSet(quota.pages_limit)">
+                                    <tr>
+                                        <td>Pages processed</td>
+                                        <td class="o_easyocr_admin_used"><strong><t t-esc="quota.pages_used"/></strong> / <t t-esc="quota.pages_limit"/> <span t-if="pagesPercentage > 100" class="o_easyocr_admin_badge is-bad"><t t-esc="pagesPercentage"/>%</span></td>
+                                        <td><t t-call="easyocr.AdminBar"><t t-set="used" t-value="quota.pages_used"/><t t-set="limit" t-value="quota.pages_limit"/></t></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pages remaining</td>
+                                        <td colspan="2"><strong t-att-style="'color:' + (pagesRemaining > 0 ? '#27ae60' : '#e74c3c')"><t t-esc="pagesRemaining"/></strong> pages <span class="text-muted small ms-2">(arithmetic; may not be consumable if blocked)</span></td>
+                                    </tr>
+                                    <tr t-if="isSet(quota.pages_available_now)">
+                                        <td><strong>Available now</strong></td>
+                                        <td colspan="2"><strong t-att-style="'font-size:1.05em;color:' + (quota.pages_available_now > 0 ? '#27ae60' : '#e74c3c')"><t t-esc="quota.pages_available_now"/></strong> pages <span t-if="quota.pages_available_now == 0 and pagesRemaining > 0" class="text-muted small ms-2">Blocked by account state</span></td>
+                                    </tr>
+                                </t>
+                                <t t-if="isSet(quota.documents_used) and isSet(quota.documents_limit)">
+                                    <tr>
+                                        <td>Documents processed</td>
+                                        <td class="o_easyocr_admin_used"><strong><t t-esc="quota.documents_used"/></strong> / <t t-esc="quota.documents_limit"/></td>
+                                        <td><t t-call="easyocr.AdminBar"><t t-set="used" t-value="quota.documents_used"/><t t-set="limit" t-value="quota.documents_limit"/></t></td>
+                                    </tr>
+                                    <tr><td>Documents remaining</td><td colspan="2"><strong t-att-style="'color:' + (docsRemaining > 0 ? '#27ae60' : '#e74c3c')"><t t-esc="docsRemaining"/></strong> documents</td></tr>
+                                </t>
+                                <tr t-if="quota.reset_date"><td>Quota renewal</td><td colspan="2"><i class="fa fa-calendar me-1" aria-hidden="true"/><t t-esc="dateTime(quota.reset_date)"/></td></tr>
+                            </table>
+
+                            <table t-if="has(quota.tokens) or has(quota.requests)" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-database'"/><t t-set="color" t-value="'#e67e22'"/><t t-set="title">Usage statistics</t></t>
+                                <tr t-if="quota.tokens and isSet(quota.tokens.input)"><td>Input tokens</td><td><t t-esc="number(quota.tokens.input)"/></td></tr>
+                                <tr t-if="quota.tokens and isSet(quota.tokens.output)"><td>Output tokens</td><td><t t-esc="number(quota.tokens.output)"/></td></tr>
+                                <tr t-if="quota.tokens and isSet(quota.tokens.total)"><td>Total tokens</td><td><strong><t t-esc="number(quota.tokens.total)"/></strong></td></tr>
+                                <tr t-if="quota.requests and isSet(quota.requests.total)"><td>Total requests</td><td><t t-esc="number(quota.requests.total)"/></td></tr>
+                                <tr t-if="quota.requests and isSet(quota.requests.failed)"><td>Failed requests</td><td><span t-att-style="'color:' + (quota.requests.failed > 0 ? '#e74c3c' : '#27ae60')"><t t-esc="quota.requests.failed"/></span></td></tr>
+                                <tr t-if="quota.requests and isSet(quota.requests.success_rate)"><td>Success rate</td><td><strong style="color:#27ae60"><t t-esc="quota.requests.success_rate"/>%</strong></td></tr>
+                            </table>
+
+                            <table t-if="limitRows.length" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-sliders'"/><t t-set="color" t-value="'#3498db'"/><t t-set="title">Plan limits</t></t>
+                                <tr t-foreach="limitRows" t-as="row" t-key="row.key"><td><t t-esc="row.label"/></td><td><strong><t t-esc="row.value"/></strong></td></tr>
+                            </table>
+
+                            <table t-if="featureRows.length" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-puzzle-piece'"/><t t-set="color" t-value="'#9b59b6'"/><t t-set="title">Plan features</t></t>
+                                <tr t-foreach="featureRows" t-as="row" t-key="row.key">
+                                    <td><t t-esc="row.label"/></td>
+                                    <td>
+                                        <t t-if="row.yesNo"><t t-call="easyocr.AdminYesNo"><t t-set="yes" t-value="row.yes"/></t></t>
+                                        <strong t-elif="row.numeric"><t t-esc="row.value"/></strong>
+                                        <t t-else=""><t t-esc="row.value"/></t>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table t-if="has(data.current_api_key)" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-key'"/><t t-set="color" t-value="'#1abc9c'"/><t t-set="title">Current API key</t></t>
+                                <tr t-if="apiKey.name"><td>Key name</td><td><strong><t t-esc="apiKey.name"/></strong></td></tr>
+                                <tr t-if="apiKey.prefix"><td>Prefix</td><td><code><t t-esc="apiKey.prefix"/>...</code></td></tr>
+                                <tr t-if="apiKey.environment"><td>Environment</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="apiKey.environment"/></t></td></tr>
+                                <tr t-if="isSet(apiKey.is_active)"><td>Status</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="apiKey.is_active ? 'active' : 'inactive'"/></t></td></tr>
+                                <tr t-if="apiKey.created_at"><td>Creation date</td><td><t t-esc="dateTime(apiKey.created_at)"/></td></tr>
+                                <tr t-if="apiKey.last_used_at"><td>Last used</td><td><t t-esc="dateTime(apiKey.last_used_at)"/></td></tr>
+                                <tr><td>Expiration date</td><td><t t-if="apiKey.expires_at"><t t-esc="dateTime(apiKey.expires_at)"/></t><span t-else="" class="text-muted">No expiration</span></td></tr>
+                            </table>
+
+                            <table t-if="has(data.wallet) and wallet.exists" class="o_easyocr_admin_table">
+                                <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-credit-card'"/><t t-set="color" t-value="'#e74c3c'"/><t t-set="title">Prepaid wallet</t><t t-set="colspan" t-value="3"/></t>
+                                <tr t-if="isSet(wallet.balance_pages)"><td>Available balance</td><td colspan="2"><strong style="font-size:1.2em;color:#27ae60"><t t-esc="number(wallet.balance_pages)"/></strong> pages</td></tr>
+                                <tr t-if="isSet(wallet.total_purchased_pages) and isSet(wallet.total_consumed_pages)">
+                                    <td>Purchased pages</td>
+                                    <td class="o_easyocr_admin_purchased"><t t-esc="number(wallet.total_purchased_pages)"/> pages</td>
+                                    <td><t t-call="easyocr.AdminBar"><t t-set="used" t-value="wallet.total_consumed_pages"/><t t-set="limit" t-value="wallet.total_purchased_pages"/></t></td>
+                                </tr>
+                                <tr t-if="isSet(wallet.total_consumed_pages)"><td>Consumed pages</td><td colspan="2"><t t-esc="number(wallet.total_consumed_pages)"/> pages</td></tr>
+                                <tr t-if="isSet(wallet.is_active)"><td>Status</td><td colspan="2"><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="wallet.is_active ? 'active' : 'inactive'"/></t></td></tr>
+                                <tr t-if="isSet(wallet.can_process)"><td>Can process</td><td colspan="2"><t t-call="easyocr.AdminYesNo"><t t-set="yes" t-value="wallet.can_process"/></t></td></tr>
+                            </table>
+                        </t>
+                    </t>
+
+                    <!-- ============================== License -->
+                    <t t-if="tab === 'license'">
+                        <table class="o_easyocr_admin_table is-fields">
+                            <tr><td>License</td><td><strong>GNU Lesser General Public License v3.0 (LGPL-3)</strong></td></tr>
+                            <tr><td>Author</td><td>EasySoft Tech S.L. (CIF: B16885766)</td></tr>
+                            <tr><td>Contact</td><td><a href="mailto:info@easysoft.es">info@easysoft.es</a></td></tr>
+                            <tr><td>Website</td><td><a href="https://easyocr.easysoft.es/" target="_blank" rel="noopener">easyocr.easysoft.es</a></td></tr>
+                        </table>
+                        <div class="o_easyocr_admin_box is-info">
+                            <strong>GNU LGPL v3 License</strong>
+                            <p>This module is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License version 3, the same licence Odoo Community uses. You can use, study, modify and distribute it freely, as long as changes to the module itself keep the same licence.</p>
+                        </div>
+                        <div class="o_easyocr_admin_box is-warning">
+                            <strong>AI Services Notice</strong>
+                            <p>The easyOCR AI functionality uses third-party artificial intelligence services for processing and extracting data from PDF documents. By activating and using the AI function, you agree that the content of processed documents will be sent to these external services. EasySoft Tech S.L. does not store or retain data processed by these third-party services. The user is responsible for ensuring that processed documents do not contain information that should not be shared with external services.</p>
+                        </div>
+                        <table class="o_easyocr_admin_table">
+                            <tr class="o_easyocr_admin_thead"><th>Full license text</th></tr>
+                            <tr><td><pre t-if="page.license_text" class="o_easyocr_admin_pre"><t t-esc="page.license_text"/></pre><span t-else="" class="text-muted">License file not found (COPYING or LICENSE).</span></td></tr>
+                        </table>
+                    </t>
+
+                    <!-- ============================== Telemetry -->
+                    <t t-if="tab === 'telemetry'">
+                        <table class="o_easyocr_admin_table is-fields">
+                            <tr><td>Module</td><td><strong>easyOCR AI</strong> - EasySoft Tech S.L. (CIF: B16885766)</td></tr>
+                            <tr><td>Purpose</td><td>Transparency about data transmitted when using AI OCR functionality for invoice data extraction.</td></tr>
+                            <tr><td>Contact</td><td><a href="mailto:info@easysoft.es">info@easysoft.es</a></td></tr>
+                        </table>
+                        <table class="o_easyocr_admin_table">
+                            <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-android'"/><t t-set="color" t-value="'#8e44ad'"/><t t-set="title">Third-party AI services</t></t>
+                            <tr><td>What does the AI do?</td><td>When you activate easyOCR AI, PDF documents are processed by an artificial intelligence service that automatically extracts supplier, tax ID, dates, amounts and invoice lines.</td></tr>
+                            <tr><td>What data is sent?</td><td>Only the content of the documents you choose to read: when you press Extract with AI, send a batch, or take a photo from the phone with AI reading on.</td></tr>
+                            <tr><td>What is NOT sent?</td><td>ERP data (customers, suppliers, existing invoices, banking data, passwords) is never sent. Only the content of the PDF you choose to process.</td></tr>
+                            <tr><td>Service provider</td><td>The AI service is provided by a configurable microservice. URL and API key are configured in the Settings tab. EasySoft Tech S.L. may offer a managed service or you can connect your own service.</td></tr>
+                        </table>
+                        <table class="o_easyocr_admin_table">
+                            <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-check-circle'"/><t t-set="color" t-value="'#27ae60'"/><t t-set="title">Data transmitted to the AI service</t></t>
+                            <tr><td class="o_easyocr_admin_icon">✅</td><td>Content of the processed PDF document (text and images from the PDF you select)</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">✅</td><td>The instructions written on the template or the batch, when there are any</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">✅</td><td>
+                                Your own company's name and tax ID, only when "Tell the service who we are" is on in the settings
+                                <span t-att-class="'o_easyocr_admin_badge ms-2 ' + (page.receiver_context ? 'is-ok' : 'is-neutral')"><t t-if="page.receiver_context">On</t><t t-else="">Off</t></span>
+                            </td></tr>
+                        </table>
+                        <table class="o_easyocr_admin_table">
+                            <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-ban'"/><t t-set="color" t-value="'#e74c3c'"/><t t-set="title">Data NEVER transmitted</t></t>
+                            <tr><td class="o_easyocr_admin_icon">❌</td><td>Customer or supplier data from your ERP</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">❌</td><td>Existing invoices, amounts or descriptions from your system</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">❌</td><td>Banking or payment information</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">❌</td><td>Passwords, credentials or access tokens</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">❌</td><td>Personal data of ERP users</td></tr>
+                        </table>
+                        <table class="o_easyocr_admin_table">
+                            <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-lock'"/><t t-set="color" t-value="'#2c3e50'"/><t t-set="title">Security &amp; Privacy</t></t>
+                            <tr><td class="o_easyocr_admin_icon">🔒</td><td>All communications are encrypted via HTTPS/TLS</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">🔒</td><td>Data is processed on servers located in the European Union</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">🔒</td><td>Restricted access: only authorized EasySoft personnel</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">🔒</td><td>GDPR compliant: processing in accordance with European data protection regulations</td></tr>
+                            <tr><td class="o_easyocr_admin_icon">🔒</td><td>Processed data is NOT sold, commercialized or used to train AI models</td></tr>
+                        </table>
+                        <table class="o_easyocr_admin_table">
+                            <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-gavel'"/><t t-set="color" t-value="'#2980b9'"/><t t-set="title">European Artificial Intelligence Regulation</t></t>
+                            <tr><td>Applicable regulation</td><td>Regulation (EU) 2024/1689 of the European Parliament and of the Council, of 13 June 2024, establishes harmonized rules on artificial intelligence (AI Act). This module uses third-party AI services and complies with applicable obligations as an operator/end-user.</td></tr>
+                            <tr><td>Article 50 — Transparency</td><td>Article 50 of the AI Regulation, enforceable from August 2026, requires expressly informing individuals that they are interacting with an artificial intelligence system. Following the recommendations of the Spanish Data Protection Agency (AEPD), this module anticipates compliance and clearly informs about AI usage.</td></tr>
+                            <tr><td>Risk level</td><td>AI usage in this module is limited to data extraction from invoices between businesses (B2B). This use is classified as minimal risk, as it does not evaluate, diagnose or make autonomous decisions about natural persons. No additional special measures are required beyond informational transparency.</td></tr>
+                            <tr><td>Anticipated compliance</td><td>Although Article 50 will not be fully enforceable until August 2026, this module anticipates compliance with transparency and information requirements, in line with AEPD recommendations and in accordance with GDPR (General Data Protection Regulation).</td></tr>
+                        </table>
+                        <div class="o_easyocr_admin_box is-warning">
+                            <strong><i class="fa fa-info-circle me-1" aria-hidden="true"/>Transparency Notice on the use of Artificial Intelligence</strong>
+                            <p>This module may use artificial intelligence-based tools to support certain tasks such as invoicing processes. Specifically, the easyOCR AI functionality employs a third-party AI service for automatic data extraction from PDF documents (supplier, tax ID, dates, amounts and invoice lines). The use of this functionality is voluntary and requires explicit user action. AI-generated results are always reviewable and editable by the user before application, ensuring human oversight at all times.</p>
+                        </div>
+                        <table class="o_easyocr_admin_table">
+                            <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-user-secret'"/><t t-set="color" t-value="'#e67e22'"/><t t-set="title">User obligations as AI operator</t></t>
+                            <tr><td>Use according to instructions</td><td>The user must use AI systems according to the instructions provided by the developer, following the documentation and configuration established in the module.</td></tr>
+                            <tr><td>Human oversight</td><td>The user must ensure human oversight in decisions, especially sensitive ones. AI results are always reviewable and editable before generating any invoice or record in the system.</td></tr>
+                            <tr><td>Inform affected persons</td><td>The user must inform affected persons (employees, clients, suppliers) that AI tools may be used in invoicing processes. This Telemetry page constitutes part of that information.</td></tr>
+                            <tr><td>Data validation</td><td>The user is responsible for validating input data and AI-extracted results to avoid biases or errors before final application in the ERP.</td></tr>
+                        </table>
+                        <table class="o_easyocr_admin_table">
+                            <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-balance-scale'"/><t t-set="color" t-value="'#8e44ad'"/><t t-set="title">Legal basis for processing</t></t>
+                            <tr><td>Contract execution</td><td>Document processing is a service actively requested by the user when clicking the AI extraction button.</td></tr>
+                            <tr><td>Legitimate interest</td><td>Providing an accurate and secure data extraction service, protecting system integrity.</td></tr>
+                            <tr><td>GDPR Rights</td><td>The user retains all rights of access, rectification, erasure and portability under GDPR.</td></tr>
+                            <tr><td>AI Regulation (EU) 2024/1689</td><td>Data processing through AI is carried out in accordance with Regulation (EU) 2024/1689 on Artificial Intelligence, complying with transparency obligations (Art. 50) and user responsibilities as an operator/deployer of AI systems.</td></tr>
+                        </table>
+                        <div class="o_easyocr_admin_box is-info">
+                            <strong>Your rights</strong>
+                            <p>You have the right to: access data we process, request rectification or deletion, object to processing, and request data portability. AI usage is completely voluntary: if you do not activate the function or do not click the extraction button, no data will be transmitted.</p>
+                        </div>
+                    </t>
+
+                    <!-- ============================== About -->
+                    <t t-if="tab === 'about'">
+                        <div t-if="page.readme_html" class="o_easyocr_admin_doc"><t t-out="readmeHtml"/></div>
+                        <div t-else="" class="o_easyocr_admin_box is-warning">README file not found</div>
+                    </t>
+
+                    <!-- ============================== Changelog -->
+                    <t t-if="tab === 'changelog'">
+                        <div t-if="page.changelog" class="o_easyocr_admin_doc"><t t-out="changelogHtml"/></div>
+                        <div t-else="" class="o_easyocr_admin_box is-warning">ChangeLog file not found</div>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

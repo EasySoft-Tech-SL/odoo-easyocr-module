@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
+     License LGPL-3 (see LICENSE file).
+
+     EasyOCR > Configuration: the module's own settings, with the tabs the
+     module this is a port of has on its setup page. -->
+<odoo>
+
+    <record id="action_easyocr_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'easyocr', 'bin_size': False}</field>
+    </record>
+
+    <menuitem
+        id="menu_easyocr_configuration"
+        name="Configuration"
+        parent="menu_easyocr_root"
+        action="action_easyocr_settings"
+        groups="group_easyocr_manager"
+        sequence="90"
+    />
+
+</odoo>

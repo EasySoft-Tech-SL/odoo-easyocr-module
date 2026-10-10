@@ -1,3 +1,4 @@
+from . import test_easyocr_admin
 from . import test_easyocr_apply_boxes
 from . import test_easyocr_bill
 from . import test_easyocr_client_actions
@@ -16,6 +17,7 @@ from . import test_easyocr_template
 from . import test_easyocr_template_apply
 from . import test_easyocr_templates
 from . import test_easyocr_upload
+from . import test_easyocr_viewer_layout
 from . import test_easyocr_translations
 from . import test_easyocr_webhook
 from . import test_easyocr_webhook_payment

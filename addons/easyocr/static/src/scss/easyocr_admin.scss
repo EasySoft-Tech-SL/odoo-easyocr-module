@@ -1,0 +1,218 @@
+// The module's configuration pages: the tab bar shared with the settings
+// screen, and the tables of the plan, licence, telemetry, about and changelog.
+
+.o_easyocr_admin_tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 0 0 1.25rem;
+    border-bottom: 1px solid #d5d8dc;
+
+    .o_easyocr_admin_tab {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.65rem 1.1rem;
+        border: 0;
+        border-bottom: 3px solid transparent;
+        background: transparent;
+        color: #263c5c;
+        font-size: 0.95rem;
+        white-space: nowrap;
+
+        &:hover {
+            background: #f4f6f8;
+        }
+
+        &:focus-visible {
+            outline: 2px solid #71639e;
+            outline-offset: -2px;
+        }
+
+        &.is-active {
+            border-bottom-color: #263c5c;
+            font-weight: 600;
+        }
+    }
+}
+
+// On the settings screen the bar sits on top of the EasyOCR section.
+.o_easyocr_admin_tabs_host {
+    padding: 0.75rem 1rem 0;
+    background: #fff;
+}
+
+.o_easyocr_admin {
+    height: 100%;
+    overflow: auto;
+    background: #fff;
+
+    .o_easyocr_admin_inner {
+        max-width: 1200px;
+        padding: 1.25rem 1.5rem 2rem;
+    }
+
+    .o_easyocr_admin_title {
+        margin: 0 0 1rem;
+        font-size: 1.35rem;
+        font-weight: 600;
+    }
+
+    .o_easyocr_admin_note {
+        padding: 1rem;
+        color: #6c757d;
+    }
+}
+
+.o_easyocr_admin_table {
+    width: 100%;
+    margin-bottom: 1.25rem;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+
+    td, th {
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid #eceff1;
+        vertical-align: top;
+    }
+
+    td:first-child {
+        width: 25%;
+        color: #4a5560;
+    }
+
+    .o_easyocr_admin_thead th {
+        padding: 0.55rem 0.75rem;
+        background: #f1f3f6;
+        color: #263c5c;
+        font-weight: 600;
+        text-align: start;
+    }
+
+    &.is-fields {
+        border-top: 2px solid #d5d8dc;
+    }
+
+    .o_easyocr_admin_used {
+        width: 200px;
+        white-space: nowrap;
+    }
+
+    .o_easyocr_admin_purchased {
+        width: 150px;
+        white-space: nowrap;
+    }
+
+    .o_easyocr_admin_icon {
+        width: 3rem;
+        text-align: center;
+    }
+}
+
+.o_easyocr_admin_pre {
+    max-height: 500px;
+    margin: 0;
+    overflow-y: auto;
+    font-size: 11px;
+    white-space: pre-wrap;
+}
+
+.o_easyocr_admin_box {
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+
+    p {
+        margin: 0.5rem 0 0;
+    }
+
+    &.is-info { background: #eef6fc; border-color: #b7d7f0; color: #1f4e79; }
+    &.is-warning { background: #fff8e6; border-color: #f2d58a; color: #6b4e00; }
+    &.is-error { background: #fdecea; border-color: #f1b0a8; color: #8a1f11; }
+}
+
+.o_easyocr_admin_banner {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 14px 16px;
+    border: 1px solid;
+    border-radius: 6px;
+
+    > .fa {
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-size: 20px;
+    }
+
+    strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+    }
+
+    span {
+        font-size: 13px;
+    }
+
+    &.is-blocked { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    &.is-warning { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
+}
+
+.o_easyocr_admin_badge {
+    display: inline-block;
+    padding: 0.1rem 0.55rem;
+    border-radius: 0.25rem;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    &.is-ok { background: #25a580; }
+    &.is-bad { background: #994013; }
+    &.is-warn { background: #bc9526; }
+    &.is-neutral { background: #cbd3d3; color: #263c5c; }
+    &.is-solid-ok { background: #16a34a; }
+    &.is-solid-bad { background: #dc2626; }
+}
+
+.o_easyocr_admin_code_bad {
+    margin-left: 6px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.o_easyocr_admin_bar {
+    width: 100%;
+    height: 20px;
+    margin-top: 5px;
+    overflow: hidden;
+    border-radius: 3px;
+    background-color: #f0f0f0;
+
+    .o_easyocr_admin_bar_fill {
+        height: 20px;
+        border-radius: 3px;
+        color: #fff;
+        font-size: 11px;
+        line-height: 20px;
+        text-align: center;
+        transition: width 0.3s ease;
+    }
+}
+
+.o_easyocr_admin_doc {
+    max-width: 900px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+
+    h1, h2 { margin: 1.5rem 0 0.6rem; font-size: 1.3rem; }
+    h3 { margin: 1.2rem 0 0.5rem; font-size: 1.08rem; }
+    ul { padding-left: 1.4rem; }
+    li { margin-bottom: 0.35rem; }
+    code { padding: 0 0.25rem; border-radius: 3px; background: #f1f3f5; }
+    pre { padding: 0.6rem; border-radius: 4px; background: #f8f9fa; }
+}

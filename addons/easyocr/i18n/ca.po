@@ -157,7 +157,9 @@ msgid "Action Needed"
 msgstr "Acció necessària"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__active
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
 msgid "Active"
 msgstr "Actiu"
 
@@ -419,7 +421,9 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_batch__state__cancelled
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
 msgid "Cancelled"
 msgstr "Cancel·lat"
 
@@ -840,7 +844,9 @@ msgstr "EasyOCR: recollir els lots acabats"
 
 #. module: easyocr
 #. odoo-python
+#. odoo-javascript
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
 msgid "Email"
 msgstr "Correu"
 
@@ -851,10 +857,12 @@ msgid "Employee expense"
 msgstr "Despesa d'empleat"
 
 #. module: easyocr
+#. odoo-javascript
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_document__state__error
 #: model:ir.model.fields.selection,name:easyocr.selection__easyocr_webhook_log__status__error
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_document_search
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
 msgid "Error"
 msgstr "Error"
 
@@ -1454,6 +1462,7 @@ msgstr "Els meus elements"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__name:0
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
 #: code:addons/easyocr/static/src/js/easyocr_ocr_result_dialog.js:0
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
 msgid "Name"
 msgstr "Nom"
 
@@ -2264,6 +2273,8 @@ msgstr "URL del servei"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+#: model:ir.actions.act_window,name:easyocr.action_easyocr_settings
 msgid "Settings"
 msgstr "Configuració"
 
@@ -2310,6 +2321,7 @@ msgstr "Alguns d'aquests fitxers ja s'han llegit"
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_search
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
 msgid "Status"
 msgstr "Estat"
 
@@ -3241,7 +3253,9 @@ msgid "Webhook Log"
 msgstr "Registre de webhooks"
 
 #. module: easyocr
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
 msgid "Webhooks"
 msgstr "Webhooks"
 
@@ -3945,6 +3959,7 @@ msgstr "Accés ràpid"
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_invoice_list
+#: model:ir.actions.act_window,name:easyocr.action_easyocr_invoice
 msgid "Invoices"
 msgstr "Factures"
 
@@ -3963,6 +3978,9 @@ msgstr "Importeu un PDF i extraieu visualment dades de factures de proveïdor."
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+#: model:ir.actions.client,name:easyocr.action_easyocr_new_batch
+#: model:ir.ui.menu,name:easyocr.menu_easyocr_new_batch
 msgid "Batch processing"
 msgstr "Enviament per lots"
 
@@ -4016,6 +4034,7 @@ msgstr ""
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
 msgid "Setup"
 msgstr "Configuració"
 
@@ -4179,7 +4198,9 @@ msgstr "Completat el"
 
 #. module: easyocr
 #. odoo-python
+#. odoo-javascript
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__include_extracted_text:0
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
 msgid "Include extracted text"
 msgstr "Incloure text extret"
 
@@ -4299,6 +4320,7 @@ msgstr "Tancar"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
 msgid "Loading…"
 msgstr "Carregant…"
 
@@ -4419,6 +4441,8 @@ msgstr ""
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_list
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_search
+#: model:ir.actions.act_window,name:easyocr.action_easyocr_batch
+#: model:ir.ui.menu,name:easyocr.menu_easyocr_batch
 msgid "Batch history"
 msgstr "Historial de lots"
 
@@ -4439,6 +4463,7 @@ msgstr "Cancel·lar aquest lot? Aquesta acció no es pot desfer."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
+#: model:ir.ui.menu,name:easyocr.menu_easyocr_configuration
 msgid "Configuration"
 msgstr "Configuració"
 
@@ -4450,3 +4475,1259 @@ msgid ""
 msgstr ""
 "Ex: Aquest proveïdor sempre inclou ports a l'última línia. L'IVA és sempre "
 "el 21%..."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The AI OCR service is not configured. Configure your API Key in the Setup "
+"tab to view your plan information."
+msgstr ""
+"El servei d'IA OCR no està configurat. Configureu la vostra clau API a la "
+"pestanya de Configuració per veure la informació del vostre pla."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Go to Setup"
+msgstr "Anar a Configuració"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "No data available"
+msgstr "No hi ha dades disponibles"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Account information"
+msgstr "Informació del compte"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Billing mode"
+msgstr "Mode de facturació"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Account status"
+msgstr "Estat del compte"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Registration date"
+msgstr "Data de registre"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Subscription"
+msgstr "Subscripció"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Billing cycle"
+msgstr "Cicle de facturació"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Period start"
+msgstr "Inici del període"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Period end"
+msgstr "Fi del període"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Trial ends"
+msgstr "Fi del període de prova"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Cancelled on"
+msgstr "Cancel·lada el"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Renewal status"
+msgstr "Estat de la renovació"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Expired without renewal"
+msgstr "Vençuda sense renovar"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Automatic charge was not processed. Contact support if it persists."
+msgstr ""
+"El cobrament automàtic no s'ha processat. Contacteu amb suport si "
+"persisteix."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Can process now?"
+msgstr "Pot processar ara?"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Current plan"
+msgstr "Pla actual"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Plan name"
+msgstr "Nom del pla"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Free"
+msgstr "Gratuït"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Identifier"
+msgstr "Identificador"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Monthly price"
+msgstr "Preu mensual"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Yearly price"
+msgstr "Preu anual"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Usage quota"
+msgstr "Quota d'ús"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Current period"
+msgstr "Període actual"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Pages processed"
+msgstr "Pàgines processades"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Pages remaining"
+msgstr "Pàgines restants"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "pages"
+msgstr "pàgines"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "(arithmetic; may not be consumable if blocked)"
+msgstr "(càlcul aritmètic; pot no ser consumible si hi ha bloqueig)"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Available now"
+msgstr "Disponibles ara"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Blocked by account state"
+msgstr "Bloquejat per l'estat del compte"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Documents processed"
+msgstr "Documents processats"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Documents remaining"
+msgstr "Documents restants"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "documents"
+msgstr "documents"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Quota renewal"
+msgstr "Renovació de quota"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Usage statistics"
+msgstr "Estadístiques d'ús"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Input tokens"
+msgstr "Tokens d'entrada"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Output tokens"
+msgstr "Tokens de sortida"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Total tokens"
+msgstr "Tokens totals"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Total requests"
+msgstr "Total de peticions"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Failed requests"
+msgstr "Peticions fallides"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Success rate"
+msgstr "Taxa d'èxit"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Plan limits"
+msgstr "Límits del pla"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Plan features"
+msgstr "Característiques del pla"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Current API key"
+msgstr "Clau API actual"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Key name"
+msgstr "Nom de la clau"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Prefix"
+msgstr "Prefix"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Environment"
+msgstr "Entorn"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Creation date"
+msgstr "Data de creació"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Last used"
+msgstr "Últim ús"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Expiration date"
+msgstr "Data d'expiració"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "No expiration"
+msgstr "Sense expiració"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Prepaid wallet"
+msgstr "Moneder prepagament"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Available balance"
+msgstr "Saldo disponible"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Purchased pages"
+msgstr "Pàgines comprades"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Consumed pages"
+msgstr "Pàgines consumides"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Can process"
+msgstr "Pot processar"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "License"
+msgstr "Llicència"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Author"
+msgstr "Autor"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Contact"
+msgstr "Contacte"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Website"
+msgstr "Lloc web"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "AI Services Notice"
+msgstr "Avís sobre serveis d'IA"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The easyOCR AI functionality uses third-party artificial intelligence "
+"services for processing and extracting data from PDF documents. By "
+"activating and using the AI function, you agree that the content of "
+"processed documents will be sent to these external services. EasySoft Tech "
+"S.L. does not store or retain data processed by these third-party services. "
+"The user is responsible for ensuring that processed documents do not contain"
+" information that should not be shared with external services."
+msgstr ""
+"La funcionalitat easyOCR AI utilitza serveis d'intel·ligència artificial de "
+"tercers per al processament i extracció de dades de documents PDF. En "
+"activar i utilitzar la funció d'IA, accepteu que el contingut dels documents"
+" processats serà enviat a aquests serveis externs. EasySoft Tech S.L. no "
+"emmagatzema ni reté les dades processades per aquests serveis de tercers. "
+"L'usuari és responsable d'assegurar-se que els documents processats no "
+"contenen informació que no s'hagi de compartir amb serveis externs."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Full license text"
+msgstr "Text complet de la llicència"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "License file not found (COPYING or LICENSE)."
+msgstr "Fitxer de llicència no trobat (COPYING o LICENSE)."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Module"
+msgstr "Mòdul"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Purpose"
+msgstr "Finalitat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Transparency about data transmitted when using AI OCR functionality for "
+"invoice data extraction."
+msgstr ""
+"Transparència sobre les dades transmeses quan s'utilitza la funcionalitat IA"
+" OCR per a l'extracció de dades de factures."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Third-party AI services"
+msgstr "Serveis d'IA de tercers"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "What does the AI do?"
+msgstr "Què fa la IA?"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"When you activate easyOCR AI, PDF documents are processed by an artificial "
+"intelligence service that automatically extracts supplier, tax ID, dates, "
+"amounts and invoice lines."
+msgstr ""
+"Quan activeu easyOCR AI, els documents PDF són processats per un servei "
+"d'intel·ligència artificial que extreu automàticament proveïdor, CIF, dates,"
+" imports i línies de factura."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "What data is sent?"
+msgstr "Quines dades s'envien?"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "What is NOT sent?"
+msgstr "Què NO s'envia?"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"ERP data (customers, suppliers, existing invoices, banking data, passwords) "
+"is never sent. Only the content of the PDF you choose to process."
+msgstr ""
+"Mai s'envien dades del vostre ERP (clients, proveïdors, factures existents, "
+"dades bancàries, contrasenyes). Només el contingut del PDF que decidiu "
+"processar."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Service provider"
+msgstr "Proveïdor del servei"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The AI service is provided by a configurable microservice. URL and API key "
+"are configured in the Settings tab. EasySoft Tech S.L. may offer a managed "
+"service or you can connect your own service."
+msgstr ""
+"El servei d'IA és proporcionat per un microservei configurable. La URL i "
+"clau API es configuren a la pestanya de Configuració. EasySoft Tech S.L. pot"
+" oferir un servei gestionat o podeu connectar el vostre propi servei."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Data transmitted to the AI service"
+msgstr "Dades transmeses al servei d'IA"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Content of the processed PDF document (text and images from the PDF you "
+"select)"
+msgstr ""
+"Contingut del document PDF processat (text i imatges del PDF seleccionat)"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Data NEVER transmitted"
+msgstr "Dades que MAI es transmeten"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Customer or supplier data from your ERP"
+msgstr "Dades de clients o proveïdors del vostre ERP"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Existing invoices, amounts or descriptions from your system"
+msgstr "Factures existents, imports o descripcions del vostre sistema"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Banking or payment information"
+msgstr "Informació bancària o dades de pagament"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Passwords, credentials or access tokens"
+msgstr "Contrasenyes, credencials o tokens d'accés"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Personal data of ERP users"
+msgstr "Dades personals d'usuaris de l'ERP"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Security & Privacy"
+msgstr "Seguretat i privadesa"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "All communications are encrypted via HTTPS/TLS"
+msgstr "Totes les comunicacions estan xifrades mitjançant HTTPS/TLS"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Data is processed on servers located in the European Union"
+msgstr "Les dades es processen en servidors ubicats a la Unió Europea"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Restricted access: only authorized EasySoft personnel"
+msgstr "Accés restringit: només personal autoritzat d'EasySoft"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"GDPR compliant: processing in accordance with European data protection "
+"regulations"
+msgstr ""
+"Compliment RGPD: tractament conforme a la normativa europea de protecció de "
+"dades"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Processed data is NOT sold, commercialized or used to train AI models"
+msgstr ""
+"Les dades processades NO es venen, comercialitzen ni s'utilitzen per "
+"entrenar models d'IA"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "European Artificial Intelligence Regulation"
+msgstr "Reglament Europeu d'Intel·ligència Artificial"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Applicable regulation"
+msgstr "Normativa aplicable"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Regulation (EU) 2024/1689 of the European Parliament and of the Council, of "
+"13 June 2024, establishes harmonized rules on artificial intelligence (AI "
+"Act). This module uses third-party AI services and complies with applicable "
+"obligations as an operator/end-user."
+msgstr ""
+"El Reglament (UE) 2024/1689 del Parlament Europeu i del Consell, de 13 de "
+"juny de 2024, estableix normes harmonitzades en matèria d'intel·ligència "
+"artificial (Reglament d'IA). Aquest mòdul utilitza serveis d'IA de tercers i"
+" compleix amb les obligacions aplicables com a operador/usuari final."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Article 50 — Transparency"
+msgstr "Article 50 — Transparència"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Article 50 of the AI Regulation, enforceable from August 2026, requires "
+"expressly informing individuals that they are interacting with an artificial"
+" intelligence system. Following the recommendations of the Spanish Data "
+"Protection Agency (AEPD), this module anticipates compliance and clearly "
+"informs about AI usage."
+msgstr ""
+"L'article 50 del Reglament d'IA, exigible des d'agost de 2026, obliga a "
+"informar expressament les persones que estan interactuant amb un sistema "
+"d'intel·ligència artificial. Seguint la recomanació de l'Agència Espanyola "
+"de Protecció de Dades (AEPD), aquest mòdul anticipa aquest compliment i "
+"informa de forma clara sobre l'ús d'IA."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Risk level"
+msgstr "Nivell de risc"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"AI usage in this module is limited to data extraction from invoices between "
+"businesses (B2B). This use is classified as minimal risk, as it does not "
+"evaluate, diagnose or make autonomous decisions about natural persons. No "
+"additional special measures are required beyond informational transparency."
+msgstr ""
+"L'ús d'IA en aquest mòdul es limita a l'extracció de dades de factures entre"
+" empreses (B2B). Aquest ús es classifica com de risc mínim, ja que no "
+"avalua, diagnostica ni pren decisions autònomes sobre persones físiques. No "
+"es requereixen mesures especials addicionals més enllà de la transparència "
+"informativa."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Anticipated compliance"
+msgstr "Compliment anticipat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Although Article 50 will not be fully enforceable until August 2026, this "
+"module anticipates compliance with transparency and information "
+"requirements, in line with AEPD recommendations and in accordance with GDPR "
+"(General Data Protection Regulation)."
+msgstr ""
+"Tot i que l'article 50 no serà plenament exigible fins a l'agost de 2026, "
+"aquest mòdul compleix de forma anticipada amb els requisits de transparència"
+" i informació, en línia amb les recomanacions de l'AEPD i en concordança amb"
+" el RGPD."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Transparency Notice on the use of Artificial Intelligence"
+msgstr "Avís de Transparència sobre l'ús d'Intel·ligència Artificial"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"This module may use artificial intelligence-based tools to support certain "
+"tasks such as invoicing processes. Specifically, the easyOCR AI "
+"functionality employs a third-party AI service for automatic data extraction"
+" from PDF documents (supplier, tax ID, dates, amounts and invoice lines). "
+"The use of this functionality is voluntary and requires explicit user "
+"action. AI-generated results are always reviewable and editable by the user "
+"before application, ensuring human oversight at all times."
+msgstr ""
+"Aquest mòdul pot utilitzar eines basades en intel·ligència artificial per "
+"donar suport a determinades tasques com els processos de facturació. En "
+"concret, la funcionalitat easyOCR AI empra un servei d'IA de tercers per a "
+"l'extracció automàtica de dades de documents PDF (proveïdor, CIF/NIF, dates,"
+" imports i línies de factura). L'ús d'aquesta funcionalitat és voluntari i "
+"requereix l'acció expressa de l'usuari. Els resultats generats per la IA són"
+" sempre revisables i editables per l'usuari abans de la seva aplicació, "
+"garantint la intervenció humana en tot moment."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "User obligations as AI operator"
+msgstr "Obligacions de l'usuari com a operador d'IA"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Use according to instructions"
+msgstr "Ús conforme a indicacions"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The user must use AI systems according to the instructions provided by the "
+"developer, following the documentation and configuration established in the "
+"module."
+msgstr ""
+"L'usuari ha d'utilitzar els sistemes d'IA conforme a les indicacions "
+"proporcionades pel desenvolupador, seguint la documentació i configuració "
+"establerta al mòdul."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Human oversight"
+msgstr "Intervenció humana"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The user must ensure human oversight in decisions, especially sensitive "
+"ones. AI results are always reviewable and editable before generating any "
+"invoice or record in the system."
+msgstr ""
+"L'usuari ha de garantir la intervenció humana en les decisions, especialment"
+" en les més sensibles. Els resultats de la IA són sempre revisables i "
+"editables abans de generar qualsevol factura o registre al sistema."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Inform affected persons"
+msgstr "Informar les persones afectades"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The user must inform affected persons (employees, clients, suppliers) that "
+"AI tools may be used in invoicing processes. This Telemetry page constitutes"
+" part of that information."
+msgstr ""
+"L'usuari ha d'informar les persones afectades (treballadors, clients, "
+"proveïdors) que es poden utilitzar eines d'IA en els processos de "
+"facturació. Aquesta pàgina de Telemetria constitueix part d'aquesta "
+"informació."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Data validation"
+msgstr "Validació de dades"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The user is responsible for validating input data and AI-extracted results "
+"to avoid biases or errors before final application in the ERP."
+msgstr ""
+"L'usuari és responsable de validar les dades introduïdes i els resultats "
+"extrets per la IA per evitar biaixos o errors abans de la seva aplicació "
+"definitiva a l'ERP."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Legal basis for processing"
+msgstr "Base legal del tractament"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Contract execution"
+msgstr "Execució de contracte"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Document processing is a service actively requested by the user when "
+"clicking the AI extraction button."
+msgstr ""
+"El processament de documents és un servei sol·licitat activament per "
+"l'usuari en fer clic al botó d'extracció d'IA."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Legitimate interest"
+msgstr "Interès legítim"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Providing an accurate and secure data extraction service, protecting system "
+"integrity."
+msgstr ""
+"Proporcionar un servei d'extracció de dades precís i segur, protegint la "
+"integritat del sistema."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "GDPR Rights"
+msgstr "Drets RGPD"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The user retains all rights of access, rectification, erasure and "
+"portability under GDPR."
+msgstr ""
+"L'usuari manté tots els seus drets d'accés, rectificació, supressió i "
+"portabilitat conforme al RGPD."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "AI Regulation (EU) 2024/1689"
+msgstr "Reglament d'IA (UE) 2024/1689"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Data processing through AI is carried out in accordance with Regulation (EU)"
+" 2024/1689 on Artificial Intelligence, complying with transparency "
+"obligations (Art. 50) and user responsibilities as an operator/deployer of "
+"AI systems."
+msgstr ""
+"El tractament de dades mitjançant IA es realitza conforme al Reglament (UE) "
+"2024/1689 d'Intel·ligència Artificial, complint amb les obligacions de "
+"transparència (Art. 50) i les responsabilitats de l'usuari com a "
+"operador/desplegador de sistemes d'IA."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Your rights"
+msgstr "Els vostres drets"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"You have the right to: access data we process, request rectification or "
+"deletion, object to processing, and request data portability. AI usage is "
+"completely voluntary: if you do not activate the function or do not click "
+"the extraction button, no data will be transmitted."
+msgstr ""
+"Teniu dret a: accedir a les dades que processem, sol·licitar la seva "
+"rectificació o eliminació, oposar-vos al tractament, i sol·licitar la "
+"portabilitat de les vostres dades. L'ús de la IA és completament voluntari: "
+"si no activeu la funció o no feu clic al botó d'extracció, cap dada serà "
+"transmesa."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "README file not found"
+msgstr "Fitxer README no trobat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Service Plan"
+msgstr "Pla de Servei"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "License Agreement"
+msgstr "Acord de llicència"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Telemetry & Data Protection"
+msgstr "Telemetria i protecció de dades"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "About"
+msgstr "Sobre"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "ChangeLog"
+msgstr "Historial de canvis"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Inactive"
+msgstr "Inactiu"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Trial"
+msgstr "Prova"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Expired"
+msgstr "Expirada"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Production"
+msgstr "Producció"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Sandbox"
+msgstr "Proves"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "monthly"
+msgstr "mensual"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "yearly"
+msgstr "anual"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Subscription expired without renewal"
+msgstr "Subscripció vençuda sense renovar"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Wallet empty"
+msgstr "Cartera buida"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Monthly quota exhausted"
+msgstr "Quota mensual exhaurida"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Account disabled"
+msgstr "Compte desactivat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Warning: renewal pending"
+msgstr "Avís: renovació pendent"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Processing blocked"
+msgstr "Processament bloquejat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid ""
+"Your subscription expired on %s and renewal has not been processed yet. "
+"Update billing or contact support."
+msgstr ""
+"La vostra subscripció va vèncer el %s i encara no s'ha processat la "
+"renovació. Regularitzeu des de Facturació o contacteu amb suport."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Maximum pages per month"
+msgstr "Pàgines màximes per mes"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Maximum documents per month"
+msgstr "Documents màxims per mes"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Maximum pages per document"
+msgstr "Pàgines màximes per document"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Maximum file size"
+msgstr "Mida màxima de fitxer"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Maximum batch size"
+msgstr "Mida màxima de lot"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Maximum API keys"
+msgstr "Claus API màximes"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Request limit"
+msgstr "Límit de peticions"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "per minute"
+msgstr "per minut"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Maximum concurrent requests"
+msgstr "Peticions concurrents màximes"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Document retention"
+msgstr "Retenció de documents"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "API access"
+msgstr "Accés a l'API"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Real-time streaming"
+msgstr "Streaming en temps real"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Custom instructions"
+msgstr "Instruccions personalitzades"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Priority queue"
+msgstr "Cua de prioritat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Document storage"
+msgstr "Emmagatzematge de documents"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Text auto-correction"
+msgstr "Autocorrecció de text"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "Image analysis (Vision)"
+msgstr "Anàlisi d'imatges (Vision)"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Yes"
+msgstr "Sí"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "No"
+msgstr "No"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Authentication error:"
+msgstr "Error d'autenticació:"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Error connecting to API:"
+msgstr "Error en connectar amb l'API:"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "/ month"
+msgstr "/ mes"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "/ year"
+msgstr "/ any"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "GNU Lesser General Public License v3.0 (LGPL-3)"
+msgstr "GNU Lesser General Public License v3.0 (LGPL-3)"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "EasySoft Tech S.L. (CIF: B16885766)"
+msgstr "EasySoft Tech S.L. (NIF: B16885766)"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "info@easysoft.es"
+msgstr "info@easysoft.es"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "easyocr.easysoft.es"
+msgstr "easyocr.easysoft.es"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "GNU LGPL v3 License"
+msgstr "Llicència GNU LGPL v3"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"This module is free software: you can redistribute it and/or modify it under"
+" the terms of the GNU Lesser General Public License version 3, the same "
+"licence Odoo Community uses. You can use, study, modify and distribute it "
+"freely, as long as changes to the module itself keep the same licence."
+msgstr ""
+"Aquest mòdul és programari lliure: el podeu redistribuir i/o modificar "
+"segons els termes de la GNU Lesser General Public License versió 3, la "
+"mateixa llicència que fa servir Odoo Community. El podeu usar, estudiar, "
+"modificar i distribuir lliurement, sempre que els canvis al mòdul mateix "
+"mantinguin la mateixa llicència."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "- EasySoft Tech S.L. (CIF: B16885766)"
+msgstr "- EasySoft Tech S.L. (NIF: B16885766)"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Only the content of the documents you choose to read: when you press Extract"
+" with AI, send a batch, or take a photo from the phone with AI reading on."
+msgstr ""
+"Només el contingut dels documents que vostè decideix llegir: en prémer "
+"Extreure amb IA, en enviar un lot o en fer una foto des del mòbil amb la "
+"lectura amb IA activada."
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"The instructions written on the template or the batch, when there are any"
+msgstr "Les instruccions escrites a la plantilla o al lot, quan n'hi ha"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid ""
+"Your own company's name and tax ID, only when \"Tell the service who we "
+"are\" is on in the settings"
+msgstr ""
+"El nom i el NIF de la vostra empresa, només quan «Dir-li al servei qui som» "
+"està activat a la configuració"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "On"
+msgstr "Activat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Off"
+msgstr "Desactivat"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "ChangeLog file not found"
+msgstr "No es troba l'historial de canvis"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/js/easyocr_admin.js:0
+msgid "days"
+msgstr "dies"
+
+#. module: easyocr
+#: model:ir.model,name:easyocr.model_easyocr_admin
+msgid "EasyOCR configuration pages"
+msgstr "Pàgines de configuració d'EasyOCR"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_admin.py:0
+msgid "Only EasyOCR managers can see the module's configuration."
+msgstr ""
+"Només els responsables d'EasyOCR poden veure la configuració del mòdul."

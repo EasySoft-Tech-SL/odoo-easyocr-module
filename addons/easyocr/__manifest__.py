@@ -2,7 +2,7 @@
 # License LGPL-3 (see LICENSE file).
 {
     'name': 'EasyOCR',
-    'version': '19.0.1.0.7',
+    'version': '19.0.1.0.8',
     'summary': 'Extract supplier invoices and expense receipts from PDF and image files',
     'author': 'EasySoft Tech S.L.',
     'website': 'https://easysoft.es',
@@ -47,6 +47,7 @@
         'views/easyocr_upload_views.xml',
         'views/expense_capture_views.xml',
         'views/res_config_settings_views.xml',
+        'views/easyocr_admin_views.xml',
         'data/easyocr_cron.xml',
     ],
     'assets': {

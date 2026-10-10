@@ -115,6 +115,13 @@
             min-height: 0;
             overflow-y: auto;
         }
+
+        // The AI block: fixed above the scrolling middle, never scrolled away.
+        .o_easyocr_sidebar_fixed {
+            flex: 0 0 auto;
+            border-bottom: 1px solid #dee2e6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
     }
 
     .o_easyocr_sidebar_head {
