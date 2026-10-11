@@ -30,6 +30,39 @@ function inline(text) {
     return html;
 }
 
+/**
+ * The changelog cut at its version headings.
+ *
+ * The file is one section per version (`## [1.0.10] - 2026-10-11`), and the page
+ * shows each of them as a block that opens and closes, the newest one open, the
+ * way the module this is a port of does. What is written above the first
+ * heading -- the title of the file and what it is -- comes back on its own.
+ */
+export function splitVersions(source) {
+    const lines = (source || "").replace(/\r\n/g, "\n").split("\n");
+    const intro = [];
+    const versions = [];
+    let current = null;
+    for (const line of lines) {
+        const head = /^##\s+(.*)$/.exec(line);
+        if (head) {
+            current = { header: head[1].trim(), lines: [] };
+            versions.push(current);
+        } else if (current) {
+            current.lines.push(line);
+        } else {
+            intro.push(line);
+        }
+    }
+    return {
+        intro: intro.join("\n").trim(),
+        versions: versions.map((version) => ({
+            header: version.header,
+            body: version.lines.join("\n").trim(),
+        })),
+    };
+}
+
 export function markdownToHtml(source) {
     const lines = (source || "").replace(/\r\n/g, "\n").split("\n");
     const out = [];

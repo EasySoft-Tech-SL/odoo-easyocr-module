@@ -206,7 +206,7 @@
                             <tr><td>License</td><td><strong>GNU Lesser General Public License v3.0 (LGPL-3)</strong></td></tr>
                             <tr><td>Author</td><td>EasySoft Tech S.L. (CIF: B16885766)</td></tr>
                             <tr><td>Contact</td><td><a href="mailto:info@easysoft.es">info@easysoft.es</a></td></tr>
-                            <tr><td>Website</td><td><a href="https://easyocr.easysoft.es/" target="_blank" rel="noopener">easyocr.easysoft.es</a></td></tr>
+                            <tr><td>Website</td><td><a href="https://easyocr.es/" target="_blank" rel="noopener">easyocr.es</a></td></tr>
                         </table>
                         <div class="o_easyocr_admin_box is-info">
                             <strong>GNU LGPL v3 License</strong>
@@ -299,8 +299,28 @@
                     </t>
 
                     <!-- ============================== Changelog -->
+                    <!-- One block per version, the newest open, as the module
+                         this is a port of shows it. The file has one section
+                         per released version, so a reader who opens the page
+                         sees which version brought what instead of a wall of
+                         everything the module ever did. -->
                     <t t-if="tab === 'changelog'">
-                        <div t-if="page.changelog" class="o_easyocr_admin_doc"><t t-out="changelogHtml"/></div>
+                        <div t-if="page.changelog" class="o_easyocr_admin_doc">
+                            <div class="o_easyocr_admin_doc_intro"><t t-out="changelogIntroHtml"/></div>
+                            <details
+                                t-foreach="changelogVersions"
+                                t-as="version"
+                                t-key="version.header"
+                                class="o_easyocr_admin_version"
+                                t-att-open="version.open"
+                            >
+                                <summary class="o_easyocr_admin_version_head">
+                                    <span class="o_easyocr_admin_version_title" t-esc="version.header"/>
+                                    <i class="fa fa-caret-right o_easyocr_admin_caret" aria-hidden="true"/>
+                                </summary>
+                                <div class="o_easyocr_admin_version_body"><t t-out="version.html"/></div>
+                            </details>
+                        </div>
                         <div t-else="" class="o_easyocr_admin_box is-warning">ChangeLog file not found</div>
                     </t>
                 </t>

@@ -4,7 +4,7 @@ import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/core/utils/numbers";
-import { markdownToHtml } from "./easyocr_markdown";
+import { markdownToHtml, splitVersions } from "./easyocr_markdown";
 
 const { DateTime } = luxon;
 
@@ -245,8 +245,19 @@ export class EasyocrAdminPage extends Component {
     }
 
     // ------------------------------------------------------- other pages
-    get changelogHtml() {
-        return markup(markdownToHtml(this.page.changelog || ""));
+    get changelogIntroHtml() {
+        const { intro } = splitVersions(this.page.changelog || "");
+        return markup(markdownToHtml(intro));
+    }
+
+    /** One block per version, the newest first and open. */
+    get changelogVersions() {
+        const { versions } = splitVersions(this.page.changelog || "");
+        return versions.map((version, index) => ({
+            header: version.header,
+            open: index === 0,
+            html: markup(markdownToHtml(version.body)),
+        }));
     }
 
     get readmeHtml() {

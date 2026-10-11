@@ -371,6 +371,16 @@ The four of the AI service are already here. The fourteen that follow are not.
 
 ---
 
+## Not yet done
+
+- **IGIC.** The Canary Islands' tax is not handled yet. IRPF and the equivalence
+  surcharge read on a line become the company's taxes with those rates, when it
+  has them.
+
+Went here on 11-oct-2026, out of the module's changelog: the ChangeLog page shows
+what each version brought, and a list of what is missing from all of them is not
+that. The three `EASYOCR_EXPENSE_VARIOUS_*` settings are already above, in Phase 9.
+
 ## Differences from the Dolibarr module
 
 These are deliberate, not gaps:
@@ -381,6 +391,13 @@ These are deliberate, not gaps:
   newer than the one the Dolibarr module used, so initialisation differs.
 - **Rectangle coordinates** are stored in PDF user space, not in screen pixels, so a
   template saved on one screen size works on another.
+- **The configuration pages carry Odoo's chrome.** The module this ports draws the
+  headings of those pages and the header row of their tables its own way, in the
+  weights and the colours of its own theme. Here they use what Odoo gives a heading
+  and a table on any other screen of its settings. Decided on 11-oct-2026, after the
+  changelog and the README came out with every heading smaller than the text it
+  introduces: a screen inside Odoo reads as a foreign body when it borrows the theme
+  of the module it was ported from.
 
 ## Not planned
 
