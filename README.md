@@ -22,10 +22,11 @@ does the reading: it keeps the file on screen, pulls the vendor, the number, the
 and the amounts out of it, and builds the supplier bill (or the employee expense) from
 what it read.
 
-**The module is free and complete, under LGPL-3.** What the subscription pays for is the
-**extraction service** it can talk to. The module works without it for any PDF that
-already carries a text layer, which is what most suppliers send by email; scans,
-photographs and handwritten paper are what needs the service.
+It runs on Odoo Community 18.0 and 19.0. No Enterprise app is behind it.
+
+**A PDF that already carries its text is read for free**, in the browser, with nothing to
+configure. Scans, photographs and handwritten paper need the **EasyOCR extraction
+service**, and that is what a subscription pays for.
 
 This is the Odoo counterpart of EasyOCR for Dolibarr. Maintained by
 [EasySoft Tech S.L.](https://easysoft.es).
@@ -45,7 +46,7 @@ before anything is created.
 One click and it is a supplier bill, with the lines, the tax and the vendor the reading
 found.
 
-![The supplier bill created from the document](docs/manual/img/12-factura-borrador.png)
+![The supplier bill created from the document](docs/manual/img/12-factura-creada.png)
 
 The same thing from a phone: an installable page where an employee photographs a receipt
 and it lands in Odoo as a bill or as an expense claim.
@@ -54,25 +55,25 @@ and it lands in Odoo as a bill or as an expense claim.
 
 ## ✨ What it does
 
-<table>
-<tr><td>📄 <b>Workbench</b></td><td>One screen for the whole job: open or drop a file, read it, review it, turn it into an entry. The document never leaves the screen, and the screen carries its own way back to it.</td></tr>
-<tr><td>✏️ <b>Rectangle templates</b></td><td>Draw a rectangle over each field once and save it under that vendor. Their next invoice opens with the rectangles already painted and their text read from the new file.</td></tr>
-<tr><td>🖱️ <b>Rectangles you can move</b></td><td>Drag one to move it, or pull a corner to resize it, and the text under it is read again on letting go. A rectangle cannot leave the page.</td></tr>
-<tr><td>🆓 <b>Read without the service</b></td><td>The text layer of a digital PDF is read in the browser and costs nothing. An amount printed <code>320,77 EUR</code> and a date printed <code>30/09/2026</code> are read as such, and a rectangle that read nothing leaves its field alone instead of emptying it.</td></tr>
-<tr><td>🤖 <b>Read with the service</b></td><td>Scans and photographs are sent to the EasyOCR extraction service and come back as lines, taxes and dates. A <b>Test the connection</b> button checks your key without spending a reading.</td></tr>
-<tr><td>👀 <b>AI result</b></td><td>A reading ends on a dialog, not on a toast: how sure the service was and what it cost, one card per part of the document, the lines with their VAT, surcharge and withholding ready to correct, a warning when they do not add up to the totals, and the bill's status, journal, type and payment. One button makes the bill.</td></tr>
-<tr><td>🔁 <b>Read again, on purpose</b></td><td>A file that was already read is recognised by its content, and the module asks before spending a second reading, saying which document it came from and when. Saying yes reads it; leaving the question alone costs nothing.</td></tr>
-<tr><td>🗂️ <b>Batches</b></td><td>Hand over a folder's worth of documents in one call. Choose the files on their own screen, press Send once, and follow the batch while it is read, file by file.</td></tr>
-<tr><td>🧾 <b>Supplier bills</b></td><td>A bill from what was read, validated or in draft as the company prefers, one line per line, with the product, discount and rates of each. A supplier that is not on file is created from the reading. A document that came back with nothing but its two amounts still gets its tax: the rate is worked back from them.</td></tr>
-<tr><td>↩️ <b>Credit notes</b></td><td>A rectificativa becomes a vendor credit note instead of a bill, with its entries the other way round. The reading notices the negative total by itself.</td></tr>
-<tr><td>📸 <b>Photographed receipts</b></td><td>An installable capture page for a phone. The receipt becomes a supplier bill or an employee expense, with the photo attached.</td></tr>
-<tr><td>🏗️ <b>Charged to a project</b></td><td>The document carries the analytic account, so a receipt or a bill line lands on the project it belongs to. No separate app is needed for it.</td></tr>
-<tr><td>🔔 <b>Webhooks</b></td><td>The service can call Odoo when a reading finishes, and the call is logged. A company that wants to can let it create the bill and register the payment with nobody in front of the screen.</td></tr>
-<tr><td>📥 <b>Inbox</b></td><td>Another module can hand documents over before anyone has looked at them, with its own list and its own pending count.</td></tr>
-<tr><td>⚙️ <b>Settings</b></td><td>Sixteen switches over the service, over what a document becomes, and over what a webhook may do on its own. Off by default where the safe answer is off.</td></tr>
-<tr><td>🌐 <b>Languages</b></td><td>Spanish, Catalan, Galician, German, French, Italian and Portuguese, with a test that checks every label, help text and runtime message actually reaches the reader.</td></tr>
-<tr><td>✅ <b>Tests</b></td><td>250 of them, each one proven to fail when the thing it guards is broken. A test for a switch checks what the switch does, so a switch that stores the right value and changes nothing still fails; a test for a template checks every binding against the component, because a name that is not there raises no error and paints nothing.</td></tr>
-</table>
+|  |  |
+|---|---|
+| 📄 **Workbench** | One screen for the whole job: open or drop a file, read it, review it, turn it into an entry. |
+| ✏️ **Rectangle templates** | Draw a rectangle per field once, save it under that vendor, and their next invoice opens with the rectangles painted. |
+| 🖱️ **Rectangles you can move** | Drag one to move it, pull a corner to resize it, and the text under it is read again on letting go. |
+| 🆓 **Reading without the service** | The text layer of a digital PDF, read in the browser. An amount printed `320,77 EUR` and a date printed `30/09/2026` come through as they are. |
+| 🤖 **Reading with the service** | Scans and photographs go to the EasyOCR extraction service and come back as lines, taxes and dates. |
+| 👀 **A readable result** | A reading ends on a dialog, not on a toast: how sure the service was, what it cost, the lines with their VAT ready to correct, and a warning when they do not add up. |
+| 🔁 **Read again, on purpose** | A file that was already read is recognised by its content, and the module asks before spending a second reading. |
+| 🗂️ **Batches** | Choose a folder's worth of files on their own screen, press Send once, and follow the batch while it is read. |
+| 🧾 **Supplier bills** | One line per line read, with the product, discount and rates of each. A supplier that is not on file is created from the reading. |
+| ↩️ **Credit notes** | A rectificativa becomes a vendor credit note, with its entries the other way round. |
+| 📸 **Photographed receipts** | A capture page for a phone. The receipt becomes a supplier bill or an employee expense, with the photo attached. |
+| 🏗️ **Charged to a project** | The document carries the analytic account, so a receipt or a bill line lands on the project it belongs to. No separate app needed. |
+| 🔔 **Webhooks** | The service can call Odoo when a reading finishes, and the call is logged. A company that wants to can let it create the bill and register the payment with nobody in front of the screen. |
+| 📥 **Inbox** | Another module can hand documents over before anyone has looked at them, with its own list and its own pending count. |
+| ⚙️ **Settings** | Sixteen of them, over the service, over what a document becomes, and over what a webhook may do on its own. Off by default where the safe answer is off. |
+| 🌐 **Seven languages** | Spanish, Catalan, Galician, German, French, Italian and Portuguese, with a test that checks every label reaches the reader. |
+| ✅ **Tested** | One test per behaviour, and each one checked by breaking what it guards: a switch that stores the right value and changes nothing still fails. |
 
 ## 📦 What you need
 
@@ -86,16 +87,15 @@ and it lands in Odoo as a bill or as an expense claim.
 ## 🚀 Install
 
 1. Download the ZIP from the [Releases page](https://github.com/EasySoft-Tech-SL/odoo-easyocr-module/releases), taking the one that starts with your Odoo series.
-2. Unzip it into your addons path, so that the module sits at `easyocr/` (the archive
-   already carries the folder, with no wrapper around it).
+2. Unzip it into your addons path, so that the module sits at `easyocr/`. The archive
+   already carries the folder, with no wrapper around it.
 3. Restart Odoo and pick **Apps → Update Apps List**.
 4. Install **EasyOCR**. It brings its own menu, its own groups and its own settings page.
 
-Nothing else to install: no external library, no second module.
+Nothing else to install: no external library, no second module, no patch to the core.
 
-> An Odoo Apps Store listing is on the way. Until then the release ZIP is the way to
-> install it, and the only thing the ZIP has that the store listing will not is the
-> screenshots in `docs/`.
+> The module is not in the Odoo Apps Store yet. Until it is, the release ZIP is the way
+> to install it.
 
 ## 🔑 Configure
 
@@ -115,12 +115,23 @@ Everything lives in **Settings → EasyOCR**:
    dates and its amounts, and it keeps its state (pending, received, processed, error).
 2. **Read it**: draw the rectangles by hand, which costs nothing, or press **Read with
    AI** for a scan or a photograph.
-3. **Review it.** What was read sits next to the field it came from, and reading a
-   document wrong is normal, so it is corrected on the document and not on the bill
-   afterwards.
-4. **Create the bill.** It is validated (or left in draft, if you asked for that), with the
-   vendor matched by tax number (or created from the reading), the lines, the tax, and the analytic account of the
-   project if the document carries one.
+3. **Review it.** What was read sits next to the field it came from. Reading a document
+   wrong is normal, so it is corrected on the document and not on the bill afterwards.
+4. **Create the bill.** It is validated (or left in draft, if you asked for that), with
+   the vendor matched by tax number or created from the reading, the lines, the tax, and
+   the analytic account of the project if the document carries one.
+
+## 🚧 Where it stops
+
+Worth knowing before you install it:
+
+- **Scans and photographs need the service.** A PDF that carries its text is read without
+  it; a photograph of a receipt is not.
+- **IGIC (Canary Islands) is not handled.** IVA, the equivalence surcharge and IRPF are.
+- **A rate the company has no purchase tax for leaves the line without tax.** The module
+  does not invent one.
+- **XML invoices (UBL, CII, Factur-X) are not imported.** Odoo core already does that, for
+  free, and better than we would.
 
 ## 🌐 Languages
 
@@ -140,8 +151,8 @@ One branch per Odoo series, as is the norm in the Odoo ecosystem:
 
 | Branch | Odoo series | Module version |
 | --- | --- | --- |
-| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.10` |
-| `18.0` | Odoo Community 18.0 | `18.0.1.0.10` |
+| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.11` |
+| `18.0` | Odoo Community 18.0 | `18.0.1.0.11` |
 
 The branch name and the first two digits of the module version always match, and the CI
 checks it. One module covers one series: the code is the same on both, except where the
@@ -149,10 +160,10 @@ two series genuinely differ.
 
 ## 🗺️ Status
 
-Feature complete for a first release, and tested on both series.
+Feature complete, tested on both series, and out in version 1.0.11.
 
-[`ROADMAP.md`](ROADMAP.md) is the map: what each phase added and what is deliberately left
-out. The differences from the Dolibarr module, and why, are written down there too.
+[`ROADMAP.md`](ROADMAP.md) is the map: what each phase added, what is deliberately left
+out, and how the module differs from the Dolibarr one.
 
 ## 🛠️ Development
 

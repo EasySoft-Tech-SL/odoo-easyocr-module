@@ -64,8 +64,16 @@ class EasyocrAdmin(models.AbstractModel):
 
     @api.model
     def _readme_html(self):
-        """The module's README, as the page shows it: rendered, not raw."""
-        text = self._read_file('README.rst')
+        """The README in the reader's language, as the page shows it: rendered.
+
+        The file ships in English and in Spanish, the pair the changelog comes
+        in, and for the same reason: the page is read by the person who runs
+        the module, and handing a Spanish screen an English page is handing it
+        a page it cannot read. A reader whose language has no file of its own
+        gets the English one, which is the file the module is written in.
+        """
+        code = (self.env.user.lang or 'en_US')[:2].lower()
+        text = self._read_file('README.%s.rst' % code) or self._read_file('README.rst')
         if not text:
             return ''
         from docutils.core import publish_parts

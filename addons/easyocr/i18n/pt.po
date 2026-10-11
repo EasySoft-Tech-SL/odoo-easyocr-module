@@ -1607,11 +1607,22 @@ msgid "Number of Actions"
 msgstr "Número de Ações"
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__document_count
+msgid "Number of documents"
+msgstr "Número de documentos"
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__message_has_error_counter
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__message_has_error_counter
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__message_has_error_counter
 msgid "Number of errors"
 msgstr "Número de erros"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__line_count
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__line_count
+msgid "Number of lines"
+msgstr "Número de linhas"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_document__message_needaction_counter
