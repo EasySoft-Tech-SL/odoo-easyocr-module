@@ -1,8 +1,8 @@
 ---
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
-version: 19.0.1.0.8 / 18.0.1.0.8
-date: 2026-10-10
+version: 19.0.1.0.9 / 18.0.1.0.9
+date: 2026-10-11
 author: EasySoft Tech S.L.
 ---
 
@@ -179,7 +179,9 @@ abierto. Si no va a usar esta vía, no tiene que hacer nada.
 
 ## Las otras pestañas
 
-Solo las ven los usuarios con el rol **Responsable** de EasyOCR.
+Solo las ven los usuarios con el rol **Responsable** de EasyOCR. Se abren dentro
+de la misma pantalla de Ajustes, así que el menú de la izquierda sigue a mano y
+para volver a los ajustes basta con pulsar la pestaña **Configuración**.
 
 - **Plan de Servicio.** Lo que el servicio sabe de su cuenta: el plan contratado,
   las páginas que lleva gastadas este mes y las que le quedan, las estadísticas,

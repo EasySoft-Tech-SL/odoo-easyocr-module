@@ -1,4 +1,4 @@
-import { Component, markup, onWillStart, useState } from "@odoo/owl";
+import { Component, markup, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
@@ -10,8 +10,8 @@ const { DateTime } = luxon;
 
 /**
  * The tabs of the module's configuration, the ones the module this is a port
- * of has on its setup page. Each tab is its own page, as there: the setup is
- * Odoo's own settings screen, the rest are this client action.
+ * of has on its setup page. The first one is Odoo's own settings screen, which
+ * the bar sits on top of; the other five are pages.
  */
 export function adminTabs() {
     return [
@@ -24,67 +24,22 @@ export function adminTabs() {
     ];
 }
 
-/** Go to one tab, in place of the current one, as a tab bar does. */
-export function openAdminTab(actionService, key) {
-    if (key === "setup") {
-        return actionService.doAction({
-            type: "ir.actions.act_window",
-            name: _t("Settings"),
-            res_model: "res.config.settings",
-            views: [[false, "form"]],
-            context: { module: "easyocr", bin_size: false },
-        }, { stackPosition: "replaceCurrentAction" });
-    }
-    return actionService.doAction({
-        type: "ir.actions.client",
-        tag: "easyocr.admin",
-        name: adminTabs().find((tab) => tab.key === key)?.label,
-        params: { tab: key },
-    }, { stackPosition: "replaceCurrentAction" });
-}
-
-/** The tab bar, on the settings screen and on every page. */
-export class EasyocrAdminTabs extends Component {
-    static template = "easyocr.AdminTabs";
-    static props = { active: { type: String, optional: true }, "*": true };
-
-    setup() {
-        this.actionService = useService("action");
-        this.tabs = adminTabs();
-    }
-
-    get active() {
-        return this.props.active || "setup";
-    }
-
-    open(key) {
-        if (key !== this.active) {
-            openAdminTab(this.actionService, key);
-        }
-    }
-}
-
-registry.category("view_widgets").add("easyocr_admin_tabs", { component: EasyocrAdminTabs });
-
-/** The five pages other than the settings. */
-export class EasyocrAdmin extends Component {
-    static template = "easyocr.Admin";
-    static components = { EasyocrAdminTabs };
+/** One of the five pages other than the settings. */
+export class EasyocrAdminPage extends Component {
+    static template = "easyocr.AdminPage";
     static props = {
-        action: Object,
-        actionId: { type: [Number, Boolean], optional: true },
-        "*": true,
+        tab: String,
+        onNavigate: { type: Function, optional: true },
     };
 
     setup() {
         this.orm = useService("orm");
-        this.actionService = useService("action");
         this.state = useState({ loading: true, page: null, error: "" });
         onWillStart(() => this.load());
     }
 
     get tab() {
-        return this.props.action.params?.tab || "plan";
+        return this.props.tab;
     }
 
     async load() {
@@ -106,7 +61,7 @@ export class EasyocrAdmin extends Component {
     }
 
     goToSetup() {
-        openAdminTab(this.actionService, "setup");
+        this.props.onNavigate?.("setup");
     }
 
     // -------------------------------------------------------------- formats
@@ -299,4 +254,47 @@ export class EasyocrAdmin extends Component {
     }
 }
 
-registry.category("actions").add("easyocr.admin", EasyocrAdmin);
+/** The tab bar, on the settings screen. */
+export class EasyocrAdminTabs extends Component {
+    static template = "easyocr.AdminTabs";
+    static components = { EasyocrAdminPage };
+    static props = { active: { type: String, optional: true }, "*": true };
+
+    setup() {
+        this.rootRef = useRef("root");
+        this.tabs = adminTabs();
+        this.state = useState({ tab: this.props.active || "setup" });
+        // The five pages are drawn here, inside the settings screen, and not as
+        // an action of their own. A screen of their own would leave the settings
+        // form behind, and the left panel of the settings lives in that form:
+        // it went away with it. Here the panel stays, and the scroll is the
+        // screen's own, so a page longer than the window scrolls like any other.
+        //
+        // Odoo wraps each app of the screen in a block of its own, settings
+        // fields and all; while a page of ours is showing, those fields step
+        // aside, so the page is what the block shows.
+        useEffect(
+            () => {
+                const block = this.rootRef.el?.closest(".app_settings_block");
+                if (!block) {
+                    return;
+                }
+                block.classList.toggle("o_easyocr_admin_page_mode", this.state.tab !== "setup");
+                return () => block.classList.remove("o_easyocr_admin_page_mode");
+            },
+            () => [this.state.tab],
+        );
+    }
+
+    get active() {
+        return this.state.tab;
+    }
+
+    open(key) {
+        if (key !== this.state.tab) {
+            this.state.tab = key;
+        }
+    }
+}
+
+registry.category("view_widgets").add("easyocr_admin_tabs", { component: EasyocrAdminTabs });
