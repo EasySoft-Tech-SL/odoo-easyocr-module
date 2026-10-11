@@ -83,10 +83,15 @@
         color: #4a5560;
     }
 
+    // The row that names a block of rows. It carried the grey bar of the module
+    // this is a port of; a heading here is a heading, with the weight and the
+    // rule any other screen of Odoo gives one.
     .o_easyocr_admin_thead th {
-        padding: 0.55rem 0.75rem;
-        background: #f1f3f6;
-        color: #263c5c;
+        padding: 1.1rem 0.75rem 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+        background: none;
+        color: #212529;
+        font-size: 0.95rem;
         font-weight: 600;
         text-align: start;
     }
@@ -207,15 +212,84 @@
     }
 }
 
-.o_easyocr_admin_doc {
+// The changelog and the README, as the pages draw them.
+.o_easyocr_admin_page .o_easyocr_admin_doc {
     max-width: 900px;
     font-size: 0.92rem;
     line-height: 1.55;
 
-    h1, h2 { margin: 1.5rem 0 0.6rem; font-size: 1.3rem; }
-    h3 { margin: 1.2rem 0 0.5rem; font-size: 1.08rem; }
     ul { padding-left: 1.4rem; }
     li { margin-bottom: 0.35rem; }
     code { padding: 0 0.25rem; border-radius: 3px; background: #f1f3f5; }
     pre { padding: 0.6rem; border-radius: 4px; background: #f8f9fa; }
+
+    .o_easyocr_admin_doc_intro {
+        margin-bottom: 1.25rem;
+    }
+}
+
+// The headings of those two files. Odoo's own settings styles name their
+// target five classes deep and call an `h3` 13px and weight 400, smaller and
+// lighter than the text around it, while an `h2` comes out as the grey band
+// that opens a group of settings. These headings come from a file that is
+// neither of those things, so the path below goes one step further in than
+// Odoo's and what the file says is what gets drawn.
+.o_base_settings_view .o_form_renderer .o_setting_container .settings .app_settings_block
+        .o_easyocr_admin_page .o_easyocr_admin_doc {
+    h1, h2, h3, h4 {
+        padding: 0;
+        background: none;
+        color: inherit;
+        text-transform: none;
+    }
+
+    h1 { margin: 0 0 0.75rem; font-size: 1.35rem; font-weight: 600; }
+    h2 { margin: 1.75rem 0 0.6rem; font-size: 1.1rem; font-weight: 600; }
+    h3 { margin: 1.25rem 0 0.5rem; font-size: 0.95rem; font-weight: 600; }
+    h4 { margin: 1rem 0 0.4rem; font-size: 0.92rem; font-weight: 600; }
+}
+
+// One block per released version, the newest one open. The file has a section
+// for each version and the page folds them, the way the module this is a port
+// of does; the chrome around each one is Odoo's accordion, not that module's.
+.o_easyocr_admin_version {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    background: #fff;
+
+    + .o_easyocr_admin_version {
+        margin-top: 0.5rem;
+    }
+
+    > summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        list-style: none;
+
+        &::-webkit-details-marker { display: none; }
+
+        &:hover { background: #f8f9fa; }
+        &:focus-visible { outline: 2px solid #71639e; outline-offset: -2px; }
+    }
+
+    .o_easyocr_admin_caret {
+        color: #6c757d;
+        font-size: 0.9rem;
+        transition: transform 0.15s ease;
+    }
+
+    &[open] > summary .o_easyocr_admin_caret { transform: rotate(90deg); }
+
+    .o_easyocr_admin_version_body {
+        padding: 0.25rem 1rem 0.85rem;
+        border-top: 1px solid #dee2e6;
+
+        > :last-child { margin-bottom: 0; }
+    }
 }

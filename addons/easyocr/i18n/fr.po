@@ -4934,8 +4934,8 @@ msgstr "Site web"
 #. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
-msgid "easyocr.easysoft.es"
-msgstr "easyocr.easysoft.es"
+msgid "easyocr.es"
+msgstr "easyocr.es"
 
 #. module: easyocr
 #. odoo-javascript

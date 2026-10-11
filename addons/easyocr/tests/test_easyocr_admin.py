@@ -42,8 +42,92 @@ class TestEasyocrAdmin(TransactionCase):
         self.assertIn('EasyOCR', about['readme_html'])
         self.assertIn('<', about['readme_html'], "The README comes back rendered, not raw.")
         self.assertIn('GNU LESSER GENERAL PUBLIC LICENSE', license_page['license_text'])
-        self.assertIn('## [Unreleased]', changelog['changelog'])
+        self.assertRegex(
+            changelog['changelog'], r'(?m)^## \[\d+\.\d+\.\d+\] - \d{4}-\d{2}-\d{2}$',
+            "The changelog no longer carries one section per released version: the "
+            "page has nothing to fold and shows every bullet the module ever had.",
+        )
+        self.assertNotIn(
+            '[Unreleased]', changelog['changelog'],
+            "A block with no version in it is a block with no date and no release "
+            "behind it: the page hangs it off nothing.",
+        )
         self.assertEqual(about['module']['license'], 'LGPL-3')
+
+    def test_the_changelog_is_read_in_the_readers_language(self):
+        if not self.env['res.lang']._activate_lang('es_ES'):
+            self.skipTest("Spanish is not loaded in this database, so there is nothing to read.")
+
+        admin = self.env['easyocr.admin']
+        self.env.user.write({'lang': 'en_US'})
+        english = admin.action_admin_page('changelog')['changelog']
+        self.env.user.write({'lang': 'es_ES'})
+        spanish = admin.action_admin_page('changelog')['changelog']
+
+        self.assertIn('# Changelog', english)
+        self.assertIn('# Registro de cambios', spanish)
+        self.assertNotEqual(english, spanish, "Spanish is served the English file.")
+        self.assertEqual(
+            re.findall(r'(?m)^## .*$', spanish), re.findall(r'(?m)^## .*$', english),
+            "The two files do not carry the same versions.",
+        )
+
+    def test_the_spanish_changelog_keeps_up_with_the_english_one(self):
+        """The two files are one changelog in two languages, not two changelogs.
+
+        They are edited apart, so they drift apart: a version that lands in one
+        and not in the other, or a bullet that grew a translation and no twin.
+        Nothing on screen says so, and the reader of the other language is told
+        about a release that, as far as they can see, never happened.
+        """
+        with open(os.path.join(MODULE_ROOT, 'CHANGELOG.md'), encoding='utf-8') as handle:
+            english = handle.read()
+        with open(os.path.join(MODULE_ROOT, 'CHANGELOG.es.md'), encoding='utf-8') as handle:
+            spanish = handle.read()
+
+        count = lambda text, mark: len(re.findall(r'(?m)^%s ' % mark, text))
+        self.assertEqual(
+            re.findall(r'(?m)^## .*$', spanish), re.findall(r'(?m)^## .*$', english),
+            "One of the two files carries a version the other does not.",
+        )
+        self.assertEqual(count(spanish, '-'), count(english, '-'),
+                         "A bullet was written in one language and not in the other.")
+        self.assertEqual(count(spanish, '###'), count(english, '###'),
+                         "A version has a section in one language and not in the other.")
+        self.assertGreater(count(english, '##'), 1, "The changelog has no versions to keep in step.")
+
+    def test_the_website_the_module_points_at_is_the_product_one(self):
+        """The licence tab sends the reader to easyocr.es, not to a dead name.
+
+        The product has a site of its own, and it used to be written as a
+        subdomain of the company's one. That address never answered. Nothing
+        breaks when it is wrong either: the reader clicks and lands nowhere,
+        and a test that only counts links would stay green.
+        """
+        with open(os.path.join(MODULE_ROOT, 'static', 'src', 'xml', 'easyocr_admin.xml'),
+                  encoding='utf-8') as handle:
+            template = handle.read()
+
+        self.assertIn('https://easyocr.es/', template)
+        for href in re.findall(r'href="([^"]+)"', template):
+            if href.startswith('mailto:'):
+                continue
+            self.assertNotIn(
+                'easysoft.es', href,
+                "The module sends the reader to the company's site where the product's goes.",
+            )
+        self.assertNotIn('easyocr.easysoft.es', template)
+
+        i18n = os.path.join(MODULE_ROOT, 'i18n')
+        for name in sorted(os.listdir(i18n)):
+            if not name.endswith('.po'):
+                continue
+            with open(os.path.join(i18n, name), encoding='utf-8') as handle:
+                content = handle.read()
+            self.assertNotIn(
+                'easyocr.easysoft.es', content,
+                "%s still translates the retired address." % name,
+            )
 
     def test_telemetry_says_whether_our_identity_goes_with_the_request(self):
         self.company.easyocr_ai_receiver_context = True
@@ -123,6 +207,34 @@ class TestEasyocrAdmin(TransactionCase):
         )
         self.assertIn('setup', page.get('t-if') or '',
                       "The page is drawn on the settings tab as well.")
+
+    def test_the_changelog_is_drawn_one_block_per_version(self):
+        """Folding the changelog is two halves that have to agree.
+
+        The file is cut into versions in the JavaScript and the template draws
+        one block per piece. Lose either half and the page shows the whole file
+        flat again, or nothing at all, and neither of those is an error
+        anywhere: the page just comes out wrong.
+        """
+        tree = ElementTree.parse(
+            os.path.join(MODULE_ROOT, 'static', 'src', 'xml', 'easyocr_admin.xml'))
+        page = tree.find(".//t[@t-name='easyocr.AdminPage']")
+        self.assertIsNotNone(page, "The page's template is gone.")
+
+        blocks = list(page.iter('details'))
+        self.assertEqual(len(blocks), 1, "The changelog is no longer drawn as blocks.")
+        self.assertEqual(blocks[0].get('t-foreach'), 'changelogVersions',
+                         "The blocks are not the versions of the file.")
+        self.assertIn('version.open', blocks[0].get('t-att-open') or '',
+                      "No version is the one open when the page opens.")
+        self.assertIsNotNone(blocks[0].find('summary'),
+                             "A block has no heading to click, so it cannot be folded.")
+
+        with open(os.path.join(MODULE_ROOT, 'static', 'src', 'js', 'easyocr_admin.js'),
+                  encoding='utf-8') as handle:
+            script = handle.read()
+        self.assertIn('index === 0', script,
+                      "The versions come back without one of them marked to open.")
 
     def test_the_bar_sits_where_the_rule_that_hides_the_fields_can_reach_it(self):
         """While a page shows, the settings fields step aside by a CSS rule.

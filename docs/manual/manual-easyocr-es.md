@@ -1,7 +1,7 @@
 ---
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
-version: 19.0.1.0.9 / 18.0.1.0.9
+version: 19.0.1.0.10 / 18.0.1.0.10
 date: 2026-10-11
 author: EasySoft Tech S.L.
 ---
@@ -94,7 +94,7 @@ desde **Ajustes > Usuarios**, como cualquier otro permiso de Odoo.
 
 La configuración vive en **Ajustes > EasyOCR**, y también se llega desde el menú
 **Configuración** de la propia aplicación. Arriba tiene una fila de pestañas; la
-primera, **Configuración**, es la de los ajustes y viene en dos bloques.
+primera, **Configuración**, es la de los ajustes y viene en cuatro bloques.
 
 ![La sección EasyOCR en Ajustes, con las pestañas arriba](img/03-ajustes.png)
 
@@ -126,38 +126,38 @@ servicio a nombre de quién va esa clave, y contesta una de estas cosas:
 Esta comprobación **no consume ninguna lectura**: solo pregunta quién es, no
 manda ningún documento. Por eso se puede pulsar tantas veces como haga falta.
 
-## Documentos y facturas
+## Configuración general
 
 |[tabla: Qué hace el módulo con lo que lee]|
 |---|---|
 | **Crear facturas como borrador** | Deja la factura en borrador en lugar de validarla al crearla. Apagado viene, como en Dolibarr: la factura se valida, se contabiliza y recibe su número. Si al validar falla algo, la factura se queda en borrador con el motivo escrito en ella. En la pantalla de resultado se puede elegir otra cosa para una factura concreta. |
-| **Crear los productos que no existan** | Cuando una línea trae una referencia de proveedor que no casa con ningún producto, lo crea. Apagado viene, para que el catálogo no crezca solo. |
+| **Crear productos automáticamente** | Cuando una línea trae una referencia de proveedor que no casa con ningún producto, lo crea. Apagado viene, para que el catálogo no crezca solo. |
 | **Aceptar nuestra propia empresa como proveedor** | Permite contabilizar un documento cuyo NIF sea el suyo. Apagado viene, porque casi siempre es un documento que se ha leído al revés. |
 | **Preguntar antes de leer un documento ya leído** | Antes de enviar un archivo al servicio, busca otro documento con el mismo contenido que ya se haya leído y le pregunta si quiere leerlo otra vez. Encendido viene: leerlo otra vez cuesta una lectura, y dejarlo no cuesta nada. |
-| **Ventana de duplicados** | Hasta dónde mira esa comprobación, en días. 0 significa sin límite. Sirve para un proveedor cuyo documento mensual es exactamente el mismo archivo cada mes. |
+| **Ventana de duplicados (días)** | Hasta dónde mira esa comprobación, en días. 0 significa sin límite. Sirve para un proveedor cuyo documento mensual es exactamente el mismo archivo cada mes. |
 
-## Tickets fotografiados
+## Gastos de empleado (móvil)
 
 |[tabla: Dónde acaba un ticket fotografiado desde el móvil]|
 |---|---|
-| **Un ticket fotografiado acaba en** | **Factura de proveedor** (viene así) o **gasto de empleado**. Una factura de proveedor necesita un proveedor; un ticket de gasolinera no lo es, así que el gasto de empleado suele encajar mejor cuando quien hace la foto es quien ha pagado. |
+| **Registrar el gasto como** | **Factura de proveedor** (viene así) o **gasto de empleado**. Una factura de proveedor necesita un proveedor; un ticket de gasolinera no lo es, así que el gasto de empleado suele encajar mejor cuando quien hace la foto es quien ha pagado. |
 | **Dejar que el móvil envíe el gasto** | Permite que quien hizo la foto presente el gasto para aprobación en ese momento, en lugar de dejarlo en borrador hasta que entre en Odoo. Aprobar sigue siendo cosa de quien aprueba: nadie aprueba su propio gasto. |
 
 Para el gasto de empleado hace falta que quien fotografía tenga **ficha de
 empleado** en Odoo. Si no la tiene, el ticket se guarda igual y la página del
 móvil se lo dirá, en lugar de perderse.
 
-## Webhooks
+## Pago automático (Webhook)
 
-Estos tres solo importan si va a recibir documentos por la vía automática, sin
+Estos cuatro solo importan si va a recibir documentos por la vía automática, sin
 nadie delante. De serie, un aviso del servicio **solo deja el documento**: no
 factura nada.
 
 |[tabla: Qué puede hacer un aviso del servicio por su cuenta]|
 |---|---|
 | **Crear la factura desde un webhook** | Cuando el servicio avisa de que ha terminado de leer, crear la factura sin esperar a nadie. Apagado viene: un webhook es un mensaje de fuera y una factura es un apunte contable. |
-| **Marcar la factura como pagada** | Registrar el pago en esas facturas, como si el dinero ya hubiera salido. Solo se aplica a una factura confirmada: una en borrador no tiene contra qué pagarse, y el registro lo dirá. |
-| **Cuenta bancaria** | Dónde se registra ese pago. |
+| **Marcar como pagadas las facturas del webhook** | Registrar el pago en esas facturas, como si el dinero ya hubiera salido. Solo se aplica a una factura confirmada: una en borrador no tiene contra qué pagarse, y el registro lo dirá. |
+| **Cuenta bancaria del pago** | Dónde se registra ese pago. |
 | **Forma de pago** | Cómo se registra en esa cuenta. Si se deja vacío, Odoo coge el que la cuenta tenga por defecto. |
 
 Cuando termine, pulse **Guardar**. El botón **Descartar** deja todo como estaba.
@@ -194,7 +194,8 @@ para volver a los ajustes basta con pulsar la pestaña **Configuración**.
   qué no sale nunca. La línea del nombre y el NIF de su empresa marca si ahora
   mismo se envían o no, según el ajuste «Decirle al servicio quiénes somos».
 - **Acerca de.** La descripción del módulo.
-- **Historial de cambios.** Lo que trae cada versión.
+- **Historial de cambios.** Lo que trae cada versión, una sección plegable por
+  versión con la más reciente abierta.
 
 ![La pestaña Telemetría y Protección de Datos](img/30-telemetria.png)
 
@@ -265,7 +266,7 @@ pestaña es más barato que arreglarlo luego en la factura. El **Importe neto** 
 recalcula solo al cambiar la cantidad, el precio o el descuento.
 
 Para quitar una línea que no debería estar, la papelera de su derecha. Para
-añadir una que el servicio no vio, **Añadir una línea**.
+añadir una que el servicio no vio, **Añadir línea**.
 
 Si el documento se lee otra vez, estas líneas se reemplazan por las de la nueva
 lectura, no se suman.
@@ -280,7 +281,9 @@ y, en una columna a la derecha, todo lo que se puede hacer con él.
 
 La columna, de arriba abajo, tiene estos apartados:
 
-| **Cuenta** | El botón **Extraer con IA** y, debajo, lo que tiene contratado: el plan y lo que le queda de la cuota del mes —cuántas páginas ha usado, cuántas le quedan, cuándo se renuevan y el saldo del monedero—. |
+|[tabla: Los apartados de la columna del visor]|
+|---|---|
+| **easyOCR AI** | El botón **Extraer con IA** y, debajo, lo que tiene contratado: el plan y lo que le queda de la cuota del mes —cuántas páginas ha usado, cuántas le quedan, cuándo se renuevan y el saldo del monedero—. |
 | **Etiquetas** | Los nueve datos que se pueden leer, uno por botón. El color de cada botón es el color con el que se pintará su recuadro, así que siempre se sabe qué recuadro es qué. |
 | **Plantilla** | Ponerle nombre a los recuadros y guardarlos. |
 | **Datos extraídos** | Los valores que van saliendo de cada recuadro. Aparece en cuanto hay uno. |
@@ -319,7 +322,7 @@ Esta lectura **no cuesta nada**, porque el texto estaba en el propio archivo; la
 de **Extraer con IA** es la que se paga. Si un recuadro cogió lo que no era, ese
 campo se queda como estaba y los demás se rellenan igual.
 
-El botón **Extraer con IA** —dentro del apartado **Cuenta**— manda el documento al
+El botón **Extraer con IA** —dentro del bloque **easyOCR AI**— manda el documento al
 servicio y rellena la ficha con lo que lea; es el mismo de la ficha del
 documento. **Generar factura**, en el pie de la columna, prepara la factura de
 proveedor con lo que hay en la ficha y la abre.
@@ -335,7 +338,7 @@ guárdelos como plantilla antes de salir: lo que no se guarda se va con la
 pantalla.
 
 Si la cuenta no puede leer —cuota agotada, suscripción vencida—, el módulo lo
-avisa en el apartado **Cuenta** en cuanto se abre el visor, antes de que nadie lo
+avisa en el bloque **easyOCR AI** en cuanto se abre el visor, antes de que nadie lo
 intente.
 
 Con esto ya tiene lo importante: los datos del proveedor leídos del documento,
@@ -575,8 +578,8 @@ pantalla de inicio del teléfono y usarse como una aplicación.
 
 ![La página de captura en un móvil](img/14-movil.png)
 
-1. **Hacer una foto** abre la cámara. También puede **elegir una foto** que ya
-   tenga en el teléfono.
+1. **Hacer una foto** abre la cámara. También puede **Elegir una foto del teléfono**,
+   de las que ya tenga en el teléfono.
 2. La foto se encoge en el propio móvil antes de salir, para no gastar datos.
 3. Al enviarla, queda en la bandeja de entrada, con origen `expense-capture`.
 
@@ -688,7 +691,7 @@ Las dos respuestas hacen lo que dicen:
   pendientes, por si los quiere mandar otro día.
 
 Esta comprobación es la misma que protege al documento suelto, y respeta el
-**Margen de duplicados** de los ajustes: una factura que se repite todos los
+**Ventana de duplicados (días)** de los ajustes: una factura que se repite todos los
 meses se puede volver a leer cuando pasa el tiempo que haya configurado.
 
 # 13. Preguntas frecuentes

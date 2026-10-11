@@ -92,7 +92,8 @@ The module talks to the same service the Dolibarr module uses
 
 - [x] Model for documents handed over by other modules, with their origin.
 - [x] Nothing is sent to the AI service on arrival; the user decides when.
-- [x] The same file is refused twice, by fingerprint.
+- [x] The same file is recognised twice, by fingerprint, and the reader decides:
+      the module asks before spending a second reading.
 - [x] Discarded documents can be brought back.
 - [x] Public helper (`recibir`) so another module can drop a file in.
 
@@ -135,8 +136,16 @@ The module talks to the same service the Dolibarr module uses
       artifact: the organization's artifact quota is shared and small).
 - [x] `LICENSE` file: LGPL-3, shipped at the root and inside the module.
 - [x] The module is free; what is sold is the extraction service.
-- [ ] Publish on the Odoo Apps Store. Note it is fed from the **repository**,
-      not from the ZIP: the ZIP is for the release and for installing by hand.
+- [ ] Publish on the Odoo Apps Store. It is fed from the **repository**, not
+      from the ZIP: the ZIP is for the release and for installing by hand.
+      The repository side is ready as of 8-oct-2026 -- `static/description/
+      index.html` written from the real screens and the real steps, the icon at
+      the 100x100 and 512x512 the official modules ship, a cover and five
+      screenshots declared in the manifest's `images` key, and `support`. What
+      is left is the submission itself, which needs the store account: the
+      repository, the branch, and the two branches become one card with two
+      versions. Steps and the rules that cost a rejection are in
+      `docs/PUBLICAR-EN-ODOO-APPS.md`.
 - [x] User guide written from the screens themselves, in `docs/manual/`, with
       its screenshots. Every version from now on carries its updated guide:
       the source lives in the repository and the same text goes to the company
@@ -219,6 +228,37 @@ Closed the same day, after using the module against the real service:
   out -- and the same method is asked again after a reading, because a reading is
   what usually gives a nameless file a tax number. The only template in the
   development database had no vendor at all, which is how the gap was found.
+
+Closed again on 8-oct-2026, after the module went in front of a real reader.
+Three things of the Dolibarr process were missing, and the port had one of them
+backwards:
+
+- **A file that was already read is asked about, not turned away.** Dolibarr
+  opens a dialog with what it knows -- the file, the day, the bill it became --
+  and reads it again if the answer is yes. Here the guard refused it outright,
+  which is not the same decision: this month's fixed fee really is the same file
+  as last month's, and only the person in front of it knows. The question is
+  asked from the form and from the viewer alike, and leaving it alone costs
+  nothing and changes nothing.
+- **A reading ends on the screen that says what was read.** Dolibarr opens a
+  summary with the confidence, the time and the data of the vendor, and the port
+  ended on a notice that disappeared on its own. Everything on that screen comes
+  back out of the answer that was already being kept, so nothing had to be
+  stored twice: the vendor's address, town, phone, email and payment method were
+  being read and dropped, because the document has no field for them.
+- **The reader can see the reading work, and can leave.** The service takes
+  seconds and says nothing while it works, so the module walks the stages of a
+  reading on a bar of its own -- the same stages the Dolibarr screen names -- and
+  stops short of the end until the answer is really in. The viewer covers the
+  whole screen and Odoo paints no breadcrumb over it, so it carries its own way
+  back to the document.
+- **And one that the suite could not see.** The way back was written, translated
+  and tested, and it hung off a name the component never puts on its state: the
+  condition was false for ever and the button was on no screen. Nothing raises
+  for that. It was found by looking, and kept found by a test that reads every
+  binding of every template against the components, which is where the next one
+  of these will be caught. The same sweep is what showed a clean install of the
+  released ZIP dying on the menu order, which no upgrade could ever have shown.
 
 Every row below was read in the Dolibarr source, in the file named, so what is
 ported is what that setting actually does and not what its name suggests.
@@ -331,6 +371,16 @@ The four of the AI service are already here. The fourteen that follow are not.
 
 ---
 
+## Not yet done
+
+- **IGIC.** The Canary Islands' tax is not handled yet. IRPF and the equivalence
+  surcharge read on a line become the company's taxes with those rates, when it
+  has them.
+
+Went here on 11-oct-2026, out of the module's changelog: the ChangeLog page shows
+what each version brought, and a list of what is missing from all of them is not
+that. The three `EASYOCR_EXPENSE_VARIOUS_*` settings are already above, in Phase 9.
+
 ## Differences from the Dolibarr module
 
 These are deliberate, not gaps:
@@ -341,6 +391,13 @@ These are deliberate, not gaps:
   newer than the one the Dolibarr module used, so initialisation differs.
 - **Rectangle coordinates** are stored in PDF user space, not in screen pixels, so a
   template saved on one screen size works on another.
+- **The configuration pages carry Odoo's chrome.** The module this ports draws the
+  headings of those pages and the header row of their tables its own way, in the
+  weights and the colours of its own theme. Here they use what Odoo gives a heading
+  and a table on any other screen of its settings. Decided on 11-oct-2026, after the
+  changelog and the README came out with every heading smaller than the text it
+  introduces: a screen inside Odoo reads as a foreign body when it borrows the theme
+  of the module it was ported from.
 
 ## Not planned
 

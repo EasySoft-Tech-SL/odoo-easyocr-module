@@ -4,11 +4,203 @@ All notable changes to this module are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the version numbering is Odoo's:
 `<odoo series>.<major>.<minor>.<patch>`.
 
-## [Unreleased]
+One section per published version, the newest first. The heading carries the module
+version without the series (1.0.9 is 19.0.1.0.9 on 19.0 and 18.0.1.0.9 on 18.0, both
+published the same day) and the day it was published.
 
-The module reads supplier invoices and expense receipts and turns them into
-accounting entries. What follows is everything in this version, in the order the
-work was done.
+This file ships inside the module: it is what the ChangeLog page of the module's
+configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
+
+## [1.0.10] - 2026-10-11
+
+### Changed
+
+- **The configuration pages carry Odoo's chrome, not the Dolibarr module's.** The
+  headings of the changelog and of the README came out drawn with the weights and
+  the colours of the module this ports, which left each one smaller and lighter
+  than the text under it, and the header row of the tables kept its grey bar. Both
+  are now what Odoo gives a heading and a table on any other screen of its
+  settings.
+- **The changelog is one section per published version.** It was a single block
+  holding everything since the first release, so the page had no version and no
+  day to hang a reading on. It is rebuilt from the repository's own history: one
+  section per version, the newest first, each with the day it went out.
+- **The changelog folds, one block per version, the newest one open.** A file
+  that grows with every release is read from the top; the rest is one click away.
+
+### Fixed
+
+- **The licence page sent the reader to a website that never answered.** The
+  product's address was written as a subdomain of the company's. It is
+  `easyocr.es`.
+- **The changelog was read in English whatever the reader's language.** It now
+  ships in English and in Spanish, and a test keeps the two in step, so a version
+  cannot land in one file and not in the other.
+
+## [1.0.9] - 2026-10-11
+
+### Fixed
+
+- **The five configuration pages left the settings screen behind.** Each page
+  opened as a screen of its own, and the menu on the left belongs to the settings
+  screen, so it went away with it. The pages are drawn inside the settings screen
+  now, under the tab bar, and the menu stays where it is.
+- **Those pages could not be scrolled.** Odoo fixes the height of a screen and
+  leaves the scrolling to the settings pane; a screen of its own has no such pane.
+  A page longer than the window showed the part that fitted and nothing below it.
+  The page is drawn inside that pane now, so the pane is what scrolls it.
+- **A page showed what the tab before it had asked for.** Opening the changelog
+  right after the plan said "ChangeLog file not found", because the tab bar reused
+  the page instead of drawing a new one and what it held was still the plan's
+  answer. Each tab is a page of its own now.
+
+## [1.0.8] - 2026-10-10
+
+### Added
+
+- **Configuration pages.** The tabs the module this is a port of has over its
+  setup: Setup, Service Plan, License Agreement, Telemetry & Data Protection,
+  About and ChangeLog, under a Configuration menu of their own and only for
+  EasyOCR managers. The plan page asks the service for the account, the
+  subscription, the monthly quota, the statistics, the limits and the wallet, and
+  tells a rejected key apart from a service that is down. The telemetry page says
+  what this module actually sends, including whether our own name goes along.
+- **Tests.** 274 of them, covering each switch by its effect rather than by its
+  value, each one proven to fail when the thing it guards is broken. That
+  includes what a template asks a component for: a binding naming something the
+  component does not have raises no error anywhere, and one of them left a button
+  in the file and on no screen until it was measured.
+
+### Fixed
+
+- **The AI block and the footer scrolled away with the fields.** In the viewer's
+  right column only the middle part scrolls now, as in the module this ports:
+  the AI banner stays on top, and the actions, help and shortcuts at the bottom.
+- **Saving a template over the one in use proposed a new name.** The dialog now
+  offers the name of the template that was applied.
+
+## [1.0.7] - 2026-10-09
+
+### Fixed
+
+- **A template picked from the dropdown came back with no boxes.** The dropdown
+  hands its value over as text, and the server looked the template up by that
+  text and found nothing. Ids are now read as numbers on both sides, and the
+  supplier dropdown had the same fault.
+- **Name tags covered the neighbouring box.** On fields printed a line apart,
+  the tag above a box sat on the box above. Each tag now goes where it covers no
+  other box and no other tag: above, below, or beside.
+- **A box read the line under it.** A field drawn round one line also took the
+  line it only grazed ("01/07/2026 02/07/2026"). A line now counts only when most
+  of it is inside the box.
+- **Drawing next to a box took hold of its corner.** With a field picked, only
+  the painted corner square still grabs; anywhere else, the press draws.
+
+## [1.0.6] - 2026-10-09
+
+### Fixed
+
+- **The module's own description said it could not read anything.** The
+  README shipped inside the module still listed extraction and bill creation as
+  pending. It now says what the module does and how to set it up.
+
+## [1.0.5] - 2026-10-09
+
+### Fixed
+
+- **Screenshots retaken on a made-up invoice.** The Apps Store gallery and the
+  user guide showed a real quote, with a real customer's name and tax number,
+  and an interface that is no longer the module's. Every screenshot is now taken
+  from the current screens on a fictitious supplier.
+- **Words written straight into the views reached the screen in English.** A
+  view's own help or label is a term of its own, looked up under that view: the
+  draft setting's explanation, the batch history and its buttons, and the AI
+  instructions' example stayed in English on a Spanish screen. Every one of them
+  is now checked by a test.
+
+## [1.0.4] - 2026-10-09
+
+### Fixed
+
+- **Making the bill from the reading result said only that it failed.** A
+  supplier nobody had on file stopped the bill, and the dialog swallowed the
+  reason. The supplier is now created from what was read (name, tax number,
+  address, town, postal code, country, phone and email), as the module this is
+  a port of does, and when the server does refuse, the dialog says why.
+- **The reading result, redone.** Every card is a grid of labelled fields; the
+  ones that reach the bill (invoice number, dates, the supplier's details) can be
+  corrected there and are written onto the document first. The supplier's tax
+  number says whether the contact exists or will be created. The lines carry
+  code, product, type, quantity, price, discount, VAT, RE, IRPF and their total,
+  in the reader's own number format, and a warning shows when they do not add
+  up to the document's totals. The footer groups status, journal and document
+  type (bill or credit note), and the payment uses the method and bank picked,
+  or the company's bank journal. The VAT, RE and IRPF typed on a line become
+  the company's taxes with those rates, which the edited lines used to lose.
+  The dialog can be used from the keyboard: Esc closes it, Ctrl+Enter makes the
+  bill, Tab stays inside it, and every control has a name a screen reader says.
+- **The reading-result dialog would not close.** It opens in the main area,
+  where Odoo's own "close" does nothing, so the cross, Cancel, Esc and a click
+  outside all left it on screen. It now goes back to the screen it came from.
+- **Saving a template never asked for its name.** The viewer read the function
+  that closes the dialog as if it were the answer, so every template was saved
+  without showing the dialog and under the name "removeCurrentOverlay". The
+  dialog now opens, and its name, supplier and instructions are what is saved.
+  The template dropdown also shows the template in use instead of "No template".
+- **Four of the viewer's labels stayed in English.** "Invoice date", "Total
+  excl. tax", "Total price" and "Tax amount" had their translation, but Odoo only
+  sends the browser the terms a script or template points to, and these only
+  pointed to a model. Every term a script asks for is now checked by a test.
+- **The viewer and the batch screen did not open in debug mode.** Odoo hands a
+  client action more properties than they listed, and in debug mode that stops
+  them dead.
+- **A box pulled past its opposite corner became a line.** Starting a new box
+  next to an old one could grab its corner and squash it to nothing. A pull that
+  leaves a box smaller than the minimum is now undone, and drawing a box lets go
+  of the field, as Dolibarr does.
+- **Small wording.** The document's button reads "Extract with AI" like the
+  viewer's; the note under the AI banner no longer points to a button that is
+  not there when the service is off; and a name ending in a full stop no longer
+  reads "S.L.." in the already-read warning.
+
+## [1.0.3] - 2026-10-09
+
+### Fixed
+
+- **Lined up with the module it ports.** The home, the viewer, the reading
+  result, the templates, the invoices, the webhook log, the batch screen and the
+  settings now read like the Dolibarr module's, screen by screen: the same
+  labels, the same sections, the same keyboard and the same order, in the seven
+  languages. The reading result gained its collapsible cards and its raw payload,
+  its editable lines and the payment, and the viewer its completeness checklist,
+  the quota, the AI instructions, the supplier dropdown and undo.
+
+## [1.0.2] - 2026-10-08
+
+### Added
+
+- **The workbench.** One screen for the whole job: it opens waiting for a file --
+  open it or drop it, straight from the app's first card -- and becomes the
+  viewer in place once one is chosen. The file on the left, and on the right the
+  column the module this is a port of has: the AI banner with the plan and what
+  is left of the monthly quota, read with AI (which says so when the account
+  cannot read), the nine fields to draw a box over, the template, the values
+  read from each box -- taken from the PDF's own text layer -- and a footer with
+  the two actions that finish the job, save the template and make the bill. It
+  keeps Odoo's own navigation around it, so the menus stay reachable, and it
+  carries a way back to the document it belongs to.
+
+### Fixed
+
+- **The viewer hid Odoo's menus.** It opened full-screen, so the app's own
+  navigation -- and with it every other screen -- was gone until the reader left
+  the viewer. It now opens inside Odoo with the menus still there, and its
+  sidebar is the one the module this is a port of has: the plan and what is left
+  of the quota at the top of the column, and the keyboard spelled out at the
+  bottom (1-8 pick a field, Ctrl+S saves the template, Ctrl+Enter makes the
+  bill, Esc releases the field).
+
+## [1.0.1] - 2026-10-08
 
 ### Added
 
@@ -24,16 +216,6 @@ work was done.
   was. The question is the same from the form and from the viewer.
 - **Document inbox.** What another module hands over before anyone has looked at
   it, with its own list, form and search.
-- **The workbench.** One screen for the whole job: it opens waiting for a file --
-  open it or drop it, straight from the app's first card -- and becomes the
-  viewer in place once one is chosen. The file on the left, and on the right the
-  column the module this is a port of has: the AI banner with the plan and what
-  is left of the monthly quota, read with AI (which says so when the account
-  cannot read), the nine fields to draw a box over, the template, the values
-  read from each box -- taken from the PDF's own text layer -- and a footer with
-  the two actions that finish the job, save the template and make the bill. It
-  keeps Odoo's own navigation around it, so the menus stay reachable, and it
-  carries a way back to the document it belongs to.
 - **Watching a reading work.** Reading a scan takes seconds and the button that
   started it goes dead while it runs, which used to leave the screen saying
   nothing at all. A bar walks the stages of a reading -- the file going out, the
@@ -94,23 +276,11 @@ work was done.
   the bill and register its payment without anyone in front of the screen.
 - **Settings.** Sixteen switches over the service, what a document becomes and
   what a webhook may do on its own.
-- **Configuration pages.** The tabs the module this is a port of has over its
-  setup: Setup, Service Plan, License Agreement, Telemetry & Data Protection,
-  About and ChangeLog, under a Configuration menu of their own and only for
-  EasyOCR managers. The plan page asks the service for the account, the
-  subscription, the monthly quota, the statistics, the limits and the wallet, and
-  tells a rejected key apart from a service that is down. The telemetry page says
-  what this module actually sends, including whether our own name goes along.
 - **Languages.** Spanish, Catalan, Galician, German, French, Italian and
   Portuguese, with a test that checks every term reaches the reader -- field
   labels, help texts, selection labels, model and action names, the sentences the
   module writes at runtime, the words its own templates paint, and the labels of
   the fields it borrows from Odoo and puts on the screen.
-- **Tests.** 274 of them, covering each switch by its effect rather than by its
-  value, each one proven to fail when the thing it guards is broken. That
-  includes what a template asks a component for: a binding naming something the
-  component does not have raises no error anywhere, and one of them left a button
-  in the file and on no screen until it was measured.
 - **CI.** Python syntax, manifest and layout check, and XML well-formedness on
   both branches.
 
@@ -128,108 +298,3 @@ work was done.
   a name the component never puts on its state, so the condition was false for
   ever and nothing was painted. Found by looking at the screen, and kept found by
   a test that reads every binding of every template against the components.
-- **The viewer hid Odoo's menus.** It opened full-screen, so the app's own
-  navigation -- and with it every other screen -- was gone until the reader left
-  the viewer. It now opens inside Odoo with the menus still there, and its
-  sidebar is the one the module this is a port of has: the plan and what is left
-  of the quota at the top of the column, and the keyboard spelled out at the
-  bottom (1-8 pick a field, Ctrl+S saves the template, Ctrl+Enter makes the
-  bill, Esc releases the field).
-- **Lined up with the module it ports.** The home, the viewer, the reading
-  result, the templates, the invoices, the webhook log, the batch screen and the
-  settings now read like the Dolibarr module's, screen by screen: the same
-  labels, the same sections, the same keyboard and the same order, in the seven
-  languages. The reading result gained its collapsible cards and its raw payload,
-  its editable lines and the payment, and the viewer its completeness checklist,
-  the quota, the AI instructions, the supplier dropdown and undo.
-
-- **Making the bill from the reading result said only that it failed.** A
-  supplier nobody had on file stopped the bill, and the dialog swallowed the
-  reason. The supplier is now created from what was read (name, tax number,
-  address, town, postal code, country, phone and email), as the module this is
-  a port of does, and when the server does refuse, the dialog says why.
-- **The reading result, redone.** Every card is a grid of labelled fields; the
-  ones that reach the bill (invoice number, dates, the supplier's details) can be
-  corrected there and are written onto the document first. The supplier's tax
-  number says whether the contact exists or will be created. The lines carry
-  code, product, type, quantity, price, discount, VAT, RE, IRPF and their total,
-  in the reader's own number format, and a warning shows when they do not add
-  up to the document's totals. The footer groups status, journal and document
-  type (bill or credit note), and the payment uses the method and bank picked,
-  or the company's bank journal. The VAT, RE and IRPF typed on a line become
-  the company's taxes with those rates, which the edited lines used to lose.
-  The dialog can be used from the keyboard: Esc closes it, Ctrl+Enter makes the
-  bill, Tab stays inside it, and every control has a name a screen reader says.
-- **The reading-result dialog would not close.** It opens in the main area,
-  where Odoo's own "close" does nothing, so the cross, Cancel, Esc and a click
-  outside all left it on screen. It now goes back to the screen it came from.
-- **Saving a template never asked for its name.** The viewer read the function
-  that closes the dialog as if it were the answer, so every template was saved
-  without showing the dialog and under the name "removeCurrentOverlay". The
-  dialog now opens, and its name, supplier and instructions are what is saved.
-  The template dropdown also shows the template in use instead of "No template".
-- **Four of the viewer's labels stayed in English.** "Invoice date", "Total
-  excl. tax", "Total price" and "Tax amount" had their translation, but Odoo only
-  sends the browser the terms a script or template points to, and these only
-  pointed to a model. Every term a script asks for is now checked by a test.
-- **The viewer and the batch screen did not open in debug mode.** Odoo hands a
-  client action more properties than they listed, and in debug mode that stops
-  them dead.
-- **A box pulled past its opposite corner became a line.** Starting a new box
-  next to an old one could grab its corner and squash it to nothing. A pull that
-  leaves a box smaller than the minimum is now undone, and drawing a box lets go
-  of the field, as Dolibarr does.
-- **Small wording.** The document's button reads "Extract with AI" like the
-  viewer's; the note under the AI banner no longer points to a button that is
-  not there when the service is off; and a name ending in a full stop no longer
-  reads "S.L.." in the already-read warning.
-- **Screenshots retaken on a made-up invoice.** The Apps Store gallery and the
-  user guide showed a real quote, with a real customer's name and tax number,
-  and an interface that is no longer the module's. Every screenshot is now taken
-  from the current screens on a fictitious supplier.
-- **Words written straight into the views reached the screen in English.** A
-  view's own help or label is a term of its own, looked up under that view: the
-  draft setting's explanation, the batch history and its buttons, and the AI
-  instructions' example stayed in English on a Spanish screen. Every one of them
-  is now checked by a test.
-- **The module's own description said it could not read anything.** The
-  README shipped inside the module still listed extraction and bill creation as
-  pending. It now says what the module does and how to set it up.
-- **A template picked from the dropdown came back with no boxes.** The dropdown
-  hands its value over as text, and the server looked the template up by that
-  text and found nothing. Ids are now read as numbers on both sides, and the
-  supplier dropdown had the same fault.
-- **Name tags covered the neighbouring box.** On fields printed a line apart,
-  the tag above a box sat on the box above. Each tag now goes where it covers no
-  other box and no other tag: above, below, or beside.
-- **A box read the line under it.** A field drawn round one line also took the
-  line it only grazed ("01/07/2026 02/07/2026"). A line now counts only when most
-  of it is inside the box.
-- **Drawing next to a box took hold of its corner.** With a field picked, only
-  the painted corner square still grabs; anywhere else, the press draws.
-- **The AI block and the footer scrolled away with the fields.** In the viewer's
-  right column only the middle part scrolls now, as in the module this ports:
-  the AI banner stays on top, and the actions, help and shortcuts at the bottom.
-- **Saving a template over the one in use proposed a new name.** The dialog now
-  offers the name of the template that was applied.
-- **The five configuration pages left the settings screen behind.** Each page
-  opened as a screen of its own, and the menu on the left belongs to the settings
-  screen, so it went away with it. The pages are drawn inside the settings screen
-  now, under the tab bar, and the menu stays where it is.
-- **Those pages could not be scrolled.** Odoo fixes the height of a screen and
-  leaves the scrolling to the settings pane; a screen of its own has no such pane.
-  A page longer than the window showed the part that fitted and nothing below it.
-  The page is drawn inside that pane now, so the pane is what scrolls it.
-- **A page showed what the tab before it had asked for.** Opening the changelog
-  right after the plan said "ChangeLog file not found", because the tab bar reused
-  the page instead of drawing a new one and what it held was still the plan's
-  answer. Each tab is a page of its own now.
-
-### Pending
-
-- **IGIC.** The Canary Islands' tax is not handled yet. IRPF and the
-  equivalence surcharge read on a line become the company's taxes with those
-  rates, when it has them.
-- **The three `EASYOCR_EXPENSE_VARIOUS_*` settings** of the module this is a port
-  of are not here: the object they file against does not exist in Odoo, so
-  bringing them over would have been a switch that does nothing.

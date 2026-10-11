@@ -51,6 +51,18 @@ class EasyocrAdmin(models.AbstractModel):
         }
 
     @api.model
+    def _changelog(self):
+        """The changelog in the reader's language, or the English one.
+
+        The file ships in English and in Spanish, one section per released
+        version. A reader whose language has no file of its own reads the
+        English one, which is the file the module is written in.
+        """
+        code = (self.env.user.lang or 'en_US')[:2].lower()
+        translated = self._read_file('CHANGELOG.%s.md' % code)
+        return translated or self._read_file('CHANGELOG.md')
+
+    @api.model
     def _readme_html(self):
         """The module's README, as the page shows it: rendered, not raw."""
         text = self._read_file('README.rst')
@@ -81,7 +93,7 @@ class EasyocrAdmin(models.AbstractModel):
         elif tab == 'license':
             answer['license_text'] = self._read_file('LICENSE')
         elif tab == 'changelog':
-            answer['changelog'] = self._read_file('CHANGELOG.md')
+            answer['changelog'] = self._changelog()
         elif tab == 'telemetry':
             answer['ai_enabled'] = bool(company.easyocr_ai_enabled)
             answer['receiver_context'] = bool(company.easyocr_ai_receiver_context)
