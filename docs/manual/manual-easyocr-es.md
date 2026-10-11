@@ -100,7 +100,9 @@ primera, **Configuración**, es la de los ajustes y viene en cuatro bloques.
 
 ## Configuración IA OCR
 
-|[tabla: Opciones del servicio de lectura]|
+[[tabla: Opciones del servicio de lectura]]
+
+| Opción | Qué hace |
 |---|---|
 | **Habilitar IA OCR** | Enciende o apaga el envío de documentos al servicio. Mientras está apagado, el módulo no manda nada a ningún sitio. |
 | **URL del servicio OCR** | La dirección del servicio de EasyOCR. Se escribe sin nada más: el módulo añade por su cuenta la parte final de la dirección. |
@@ -116,7 +118,9 @@ primera, **Configuración**, es la de los ajustes y viene en cuatro bloques.
 Antes de leer el primer documento, pulse **Probar la conexión**. Pregunta al
 servicio a nombre de quién va esa clave, y contesta una de estas cosas:
 
-|[tabla: Qué contesta la comprobación de la conexión]|
+[[tabla: Qué contesta la comprobación de la conexión]]
+
+| Respuesta | Qué significa |
 |---|---|
 | **La cuenta y el plan** | La clave vale. Además dice cuántas páginas le quedan este mes. |
 | **El servicio ha rechazado la clave API** | La clave no es válida, o es de otra cuenta. Cópiela otra vez desde el panel de EasyOCR. |
@@ -128,7 +132,9 @@ manda ningún documento. Por eso se puede pulsar tantas veces como haga falta.
 
 ## Configuración general
 
-|[tabla: Qué hace el módulo con lo que lee]|
+[[tabla: Qué hace el módulo con lo que lee]]
+
+| Ajuste | Qué hace |
 |---|---|
 | **Crear facturas como borrador** | Deja la factura en borrador en lugar de validarla al crearla. Apagado viene, como en Dolibarr: la factura se valida, se contabiliza y recibe su número. Si al validar falla algo, la factura se queda en borrador con el motivo escrito en ella. En la pantalla de resultado se puede elegir otra cosa para una factura concreta. |
 | **Crear productos automáticamente** | Cuando una línea trae una referencia de proveedor que no casa con ningún producto, lo crea. Apagado viene, para que el catálogo no crezca solo. |
@@ -138,7 +144,9 @@ manda ningún documento. Por eso se puede pulsar tantas veces como haga falta.
 
 ## Gastos de empleado (móvil)
 
-|[tabla: Dónde acaba un ticket fotografiado desde el móvil]|
+[[tabla: Dónde acaba un ticket fotografiado desde el móvil]]
+
+| Ajuste | Qué hace |
 |---|---|
 | **Registrar el gasto como** | **Factura de proveedor** (viene así) o **gasto de empleado**. Una factura de proveedor necesita un proveedor; un ticket de gasolinera no lo es, así que el gasto de empleado suele encajar mejor cuando quien hace la foto es quien ha pagado. |
 | **Dejar que el móvil envíe el gasto** | Permite que quien hizo la foto presente el gasto para aprobación en ese momento, en lugar de dejarlo en borrador hasta que entre en Odoo. Aprobar sigue siendo cosa de quien aprueba: nadie aprueba su propio gasto. |
@@ -153,7 +161,9 @@ Estos cuatro solo importan si va a recibir documentos por la vía automática, s
 nadie delante. De serie, un aviso del servicio **solo deja el documento**: no
 factura nada.
 
-|[tabla: Qué puede hacer un aviso del servicio por su cuenta]|
+[[tabla: Qué puede hacer un aviso del servicio por su cuenta]]
+
+| Ajuste | Qué hace |
 |---|---|
 | **Crear la factura desde un webhook** | Cuando el servicio avisa de que ha terminado de leer, crear la factura sin esperar a nadie. Apagado viene: un webhook es un mensaje de fuera y una factura es un apunte contable. |
 | **Marcar como pagadas las facturas del webhook** | Registrar el pago en esas facturas, como si el dinero ya hubiera salido. Solo se aplica a una factura confirmada: una en borrador no tiene contra qué pagarse, y el registro lo dirá. |
@@ -241,7 +251,9 @@ arriba:
 
 ![La ficha de un documento pendiente](img/05-ficha-documento.png)
 
-|[tabla: Los botones de la ficha de un documento]|
+[[tabla: Los botones de la ficha de un documento]]
+
+| Botón | Qué hace |
 |---|---|
 | **Abrir el visor** | Abre la pantalla grande donde se ve el documento y se dibujan las casillas. |
 | **Extraer con IA** | Manda el archivo al servicio. Solo aparece si hay archivo adjunto y si tiene usted el permiso de responsable. |
@@ -281,7 +293,9 @@ y, en una columna a la derecha, todo lo que se puede hacer con él.
 
 La columna, de arriba abajo, tiene estos apartados:
 
-|[tabla: Los apartados de la columna del visor]|
+[[tabla: Los apartados de la columna del visor]]
+
+| Apartado | Qué contiene |
 |---|---|
 | **easyOCR AI** | El botón **Extraer con IA** y, debajo, lo que tiene contratado: el plan y lo que le queda de la cuota del mes —cuántas páginas ha usado, cuántas le quedan, cuándo se renuevan y el saldo del monedero—. |
 | **Etiquetas** | Los nueve datos que se pueden leer, uno por botón. El color de cada botón es el color con el que se pintará su recuadro, así que siempre se sabe qué recuadro es qué. |
@@ -404,7 +418,9 @@ el motivo escrito, y puede corregirlo a mano o volver a intentarlo.
 
 Los avisos que se ve son estos:
 
-|[tabla: Motivos por los que una lectura puede fallar]|
+[[tabla: Motivos por los que una lectura puede fallar]]
+
+| Mensaje | Qué significa |
 |---|---|
 | **La extracción con IA está desactivada** | No está encendida la opción en Ajustes. Actívela y vuelva a intentarlo. |
 | **El servicio no se ha podido alcanzar** | La dirección no es correcta o no hay conexión. Revise la URL del servicio. |
@@ -613,7 +629,9 @@ queda registrada en **EasyOCR > Registro de webhooks**.
 
 ![El registro de las llamadas recibidas](img/15-webhooks.png)
 
-|[tabla: Lo que guarda cada línea del registro de webhooks]|
+[[tabla: Lo que guarda cada línea del registro de webhooks]]
+
+| Dato | Qué guarda |
 |---|---|
 | **Recibido el** | Cuándo llegó la llamada. |
 | **Evento** | Qué avisaba el servicio. |
@@ -645,7 +663,9 @@ lectura, y por eso nada sale antes.
 
 Dos casillas, las dos apagadas de fábrica:
 
-|[tabla: Lo que se le puede pedir a un lote]|
+[[tabla: Lo que se le puede pedir a un lote]]
+
+| Opción | Qué hace |
 |---|---|
 | **Guardar el texto que leyó** | Le pide al servicio, además, el texto tal cual de cada página. No hace falta para crear la factura y el módulo no lo guarda. |
 | **Dejar que corrija lo que lee** | Deja que el servicio arregle lo que acierta a leer y marque lo que ha cambiado, en vez de devolver el documento tal cual está. |
