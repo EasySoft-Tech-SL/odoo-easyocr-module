@@ -11,6 +11,27 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.11] - 2026-10-12
+
+### Changed
+
+- **The About page is read in the reader's language.** It drew the module's README
+  in English whatever the screen spoke, which left the one page that explains the
+  module as the one page a Spanish reader had to work through in a language that is
+  not theirs. The file now ships in the same pair the changelog comes in, and a test
+  keeps the two in step.
+
+### Fixed
+
+- **Two fields of a model shared a label, and Odoo warned at every install for it.**
+  A document's line count and its lines both showed as "Lines", and a batch's
+  document count and its documents both showed as "Documents". They are "Number of
+  lines" and "Number of documents" now, which is also what lets the two be told
+  apart on screen.
+- **The repository's README pointed at a screenshot that is not there.** The file
+  was renamed in the user guide and the README kept the old name, so GitHub drew the
+  caption over an empty box.
+
 ## [1.0.10] - 2026-10-11
 
 ### Changed

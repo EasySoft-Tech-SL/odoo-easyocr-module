@@ -96,6 +96,96 @@ class TestEasyocrAdmin(TransactionCase):
                          "A version has a section in one language and not in the other.")
         self.assertGreater(count(english, '##'), 1, "The changelog has no versions to keep in step.")
 
+    def test_the_about_tab_is_read_in_the_readers_language(self):
+        """The page hands the reader a README they can read.
+
+        The changelog has been served in the reader's language for as long as
+        the page has folded it. The README beside it was served in English
+        whatever the screen spoke, which turns the one page that explains the
+        module into the one page a Spanish reader has to work through in a
+        language that is not theirs.
+        """
+        if not self.env['res.lang']._activate_lang('es_ES'):
+            self.skipTest("Spanish is not loaded in this database, so there is nothing to read.")
+
+        admin = self.env['easyocr.admin']
+        self.env.user.write({'lang': 'en_US'})
+        english = admin.action_admin_page('about')['readme_html']
+        self.env.user.write({'lang': 'es_ES'})
+        spanish = admin.action_admin_page('about')['readme_html']
+
+        self.assertIn('The module depends on', english)
+        self.assertIn('El módulo depende de', spanish)
+        self.assertNotEqual(english, spanish, "Spanish is served the English README.")
+        self.assertEqual(
+            len(re.findall(r'<h[1-6]', english)), len(re.findall(r'<h[1-6]', spanish)),
+            "The two pages do not carry the same sections: a heading of one of the "
+            "files is not underlined the way rst needs it, so it reads as a paragraph.",
+        )
+
+    def test_a_language_without_a_readme_gets_the_english_one(self):
+        """No reader is left with an empty About page.
+
+        Only English and Spanish ship a README, and the interface speaks five
+        more languages. A reader of one of those has no file of their own, and
+        the page is the only place that explains the module. Serving them an
+        empty page would take it away from them, so the English one stands in.
+        """
+        admin = self.env['easyocr.admin']
+        missing = sorted(
+            lang.code
+            for lang in self.env['res.lang'].search([('active', '=', True)])
+            if not os.path.isfile(
+                os.path.join(MODULE_ROOT, 'README.%s.rst' % lang.code[:2].lower())
+            )
+        )
+        if not missing:
+            self.skipTest("Every active language ships a README of its own.")
+
+        for code in missing:
+            self.env.user.write({'lang': code})
+            page = admin.action_admin_page('about')['readme_html']
+            self.assertIn(
+                'The module depends on', page,
+                "The About page came out empty for %s, which has no README of "
+                "its own and should have been served the English one." % code,
+            )
+
+    def test_the_spanish_readme_keeps_up_with_the_english_one(self):
+        """The two files are one README in two languages, not two READMEs.
+
+        They are edited apart, so they drift apart: an install step or a caveat
+        added to one and not to the other. Nothing on screen says so, and the
+        reader of the other language is never told about it.
+        """
+        english = self._readme_sections('README.rst')
+        spanish = self._readme_sections('README.es.rst')
+
+        self.assertGreater(len(english), 4, "The README has no sections to keep in step.")
+        self.assertEqual(
+            spanish, english,
+            "One of the two files carries a section the other does not.",
+        )
+
+    def _readme_sections(self, name):
+        """The shape of an rst file: one character per section, in order.
+
+        The two READMEs say the same thing in two languages, so their words
+        differ on purpose and comparing the words would compare nothing. What
+        has to match is the shape.
+        """
+        with open(os.path.join(MODULE_ROOT, name), encoding='utf-8') as handle:
+            lines = handle.read().splitlines()
+        sections = []
+        for index in range(1, len(lines)):
+            title, underline = lines[index - 1].strip(), lines[index].strip()
+            if not title or not underline:
+                continue
+            if len(underline) >= len(title) and len(set(underline)) == 1 \
+                    and underline[0] in '=-~^"\'`#*+':
+                sections.append(underline[0])
+        return sections
+
     def test_the_website_the_module_points_at_is_the_product_one(self):
         """The licence tab sends the reader to easyocr.es, not to a dead name.
 

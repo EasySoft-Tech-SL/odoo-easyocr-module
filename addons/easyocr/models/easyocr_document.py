@@ -142,7 +142,9 @@ class EasyocrDocument(models.Model):
         copy=True,
         help='What the service read line by line. The bill is built from these.',
     )
-    line_count = fields.Integer(string='Lines', compute='_compute_line_count')
+    # Not "Lines": line_ids above already carries that label, and two fields of
+    # one model sharing it makes Odoo warn on every install.
+    line_count = fields.Integer(string='Number of lines', compute='_compute_line_count')
     error_message = fields.Text(string='Error Detail', readonly=True)
     note = fields.Text(string='Notes')
     file_hash = fields.Char(

@@ -1,8 +1,8 @@
 ---
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
-version: 19.0.1.0.10 / 18.0.1.0.10
-date: 2026-10-11
+version: 19.0.1.0.11 / 18.0.1.0.11
+date: 2026-10-12
 author: EasySoft Tech S.L.
 ---
 
@@ -203,7 +203,8 @@ para volver a los ajustes basta con pulsar la pestaña **Configuración**.
 - **Telemetría y Protección de Datos.** Qué sale de su Odoo cuando lee con IA y
   qué no sale nunca. La línea del nombre y el NIF de su empresa marca si ahora
   mismo se envían o no, según el ajuste «Decirle al servicio quiénes somos».
-- **Acerca de.** La descripción del módulo.
+- **Acerca de.** La descripción del módulo, en el idioma en el que tenga la
+  interfaz.
 - **Historial de cambios.** Lo que trae cada versión, una sección plegable por
   versión con la más reciente abierta.
 

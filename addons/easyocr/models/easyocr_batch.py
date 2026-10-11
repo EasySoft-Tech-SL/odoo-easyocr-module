@@ -76,7 +76,9 @@ class EasyocrBatch(models.Model):
         inverse_name='batch_id',
         string='Documents',
     )
-    document_count = fields.Integer(string='Documents', compute='_compute_counts')
+    # Not "Documents": document_ids above already carries that label, and two
+    # fields of one model sharing it makes Odoo warn on every install.
+    document_count = fields.Integer(string='Number of documents', compute='_compute_counts')
     completed_count = fields.Integer(string='Completed documents', compute='_compute_counts')
     failed_count = fields.Integer(string='Failed documents', compute='_compute_counts')
     progress = fields.Float(string='Progress', compute='_compute_counts')

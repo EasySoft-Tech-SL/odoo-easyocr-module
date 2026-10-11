@@ -10,6 +10,7 @@ from . import test_easyocr_extractor
 from . import test_easyocr_home
 from . import test_easyocr_icons
 from . import test_easyocr_inbox
+from . import test_easyocr_labels
 from . import test_easyocr_lines
 from . import test_easyocr_result_dialog
 from . import test_easyocr_settings

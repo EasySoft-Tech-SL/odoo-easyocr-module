@@ -11,9 +11,14 @@ import argparse
 import ast
 import os
 import pathlib
+import re
 import sys
 
 ADDONS_DIR = pathlib.Path(__file__).resolve().parent.parent / 'addons'
+
+# A screenshot as markdown shows it. Only the image form: a plain link is often
+# a file that is meant to be absent (a release asset, a page of the wiki).
+MARKDOWN_IMAGE = re.compile(r'!\[[^\]]*\]\(\s*<?([^)>\s]+)')
 
 REQUIRED_KEYS = (
     'name',
@@ -77,6 +82,31 @@ def check_module(module_dir, expected_branch):
     return errors
 
 
+def check_documentation_images(root):
+    """Every screenshot the documentation shows has to be there.
+
+    A path that stops pointing at a file is invisible from both ends. GitHub
+    draws the caption over an empty box and says nothing, the wiki shows a gap,
+    and nothing in the repository reads that path, so no test turns red. It got
+    as far as the front page of a released version once: the file was renamed
+    while writing the user guide and the README kept the old name.
+    """
+    errors = []
+    for page in sorted(root.rglob('*.md')):
+        if '.git' in page.parts:
+            continue
+        text = page.read_text(encoding='utf-8')
+        for target in MARKDOWN_IMAGE.findall(text):
+            if '://' in target or target.startswith(('#', '<', 'mailto:')):
+                continue
+            if not (page.parent / target).is_file():
+                errors.append(
+                    f'{page.relative_to(root).as_posix()} shows {target}, '
+                    f'which is not there'
+                )
+    return errors
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -98,6 +128,7 @@ def main():
     errors = []
     for module_dir in modules:
         errors.extend(check_module(module_dir, args.branch))
+    errors.extend(check_documentation_images(ADDONS_DIR.parent))
 
     for error in errors:
         print(f'FAIL  {error}', file=sys.stderr)

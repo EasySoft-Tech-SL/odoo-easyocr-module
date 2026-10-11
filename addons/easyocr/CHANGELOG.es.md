@@ -11,6 +11,27 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Junto a él va una traducción al español, en `CHANGELOG.es.md`.
 
+## [1.0.11] - 2026-10-12
+
+### Cambiado
+
+- **La página Acerca de se lee en el idioma del lector.** Dibujaba el README del
+  módulo en inglés sea cual sea el idioma de la pantalla, lo que dejaba la única
+  página que explica el módulo como la única que un lector en español tenía que
+  tragarse en un idioma que no es el suyo. El fichero viaja ahora en el mismo par
+  que el historial, y una prueba mantiene los dos al mismo paso.
+
+### Corregido
+
+- **Dos campos de un modelo compartían etiqueta, y Odoo avisaba en cada
+  instalación.** El número de líneas de un documento y sus líneas salían ambos como
+  "Líneas", y el número de documentos de un lote y sus documentos, ambos como
+  "Documentos". Ahora son "Número de líneas" y "Número de documentos", que es además
+  lo que permite distinguir los unos de los otros en pantalla.
+- **El README del repositorio apuntaba a una captura que no está.** El fichero se
+  renombró en la guía de usuario y el README se quedó con el nombre viejo, así que
+  GitHub dibujaba el pie sobre un recuadro vacío.
+
 ## [1.0.10] - 2026-10-11
 
 ### Cambiado
