@@ -2,22 +2,29 @@
 <templates xml:space="preserve">
 
     <!-- The tab bar of the module's configuration, as in the module this is a
-         port of: one tab per page, the active one underlined. -->
+         port of: one tab per page, the active one underlined. The page itself
+         is drawn under the bar, inside the settings screen. -->
     <t t-name="easyocr.AdminTabs">
-        <nav class="o_easyocr_admin_tabs" role="tablist">
-            <t t-foreach="tabs" t-as="tab" t-key="tab.key">
-                <button
-                    type="button"
-                    role="tab"
-                    t-att-aria-selected="tab.key === active ? 'true' : 'false'"
-                    t-att-class="'o_easyocr_admin_tab' + (tab.key === active ? ' is-active' : '')"
-                    t-on-click="() => this.open(tab.key)"
-                >
-                    <i t-att-class="'fa ' + tab.icon + ' me-2'" t-att-style="'color:' + tab.color" aria-hidden="true"/>
-                    <t t-esc="tab.label"/>
-                </button>
-            </t>
-        </nav>
+        <div t-ref="root">
+            <nav class="o_easyocr_admin_tabs" role="tablist">
+                <t t-foreach="tabs" t-as="tab" t-key="tab.key">
+                    <button
+                        type="button"
+                        role="tab"
+                        t-att-aria-selected="tab.key === active ? 'true' : 'false'"
+                        t-att-class="'o_easyocr_admin_tab' + (tab.key === active ? ' is-active' : '')"
+                        t-on-click="() => this.open(tab.key)"
+                    >
+                        <i t-att-class="'fa ' + tab.icon + ' me-2'" t-att-style="'color:' + tab.color" aria-hidden="true"/>
+                        <t t-esc="tab.label"/>
+                    </button>
+                </t>
+            </nav>
+            <!-- The key is what the tab is: without it the page is patched in
+                 place when the tab changes, and it keeps showing what the tab
+                 before it had asked for. With it, each tab is a fresh page. -->
+            <EasyocrAdminPage t-if="active !== 'setup'" t-key="active" tab="active" onNavigate="(key) => this.open(key)"/>
+        </div>
     </t>
 
     <!-- A table with a coloured icon in its title row, the way every block of
@@ -50,12 +57,9 @@
         <span t-else=""><i class="fa fa-times me-1" style="color:#e74c3c" aria-hidden="true"/>No</span>
     </t>
 
-    <t t-name="easyocr.Admin">
-        <div class="o_easyocr_admin o_action">
-            <div class="o_easyocr_admin_inner">
-                <h2 class="o_easyocr_admin_title">EasyOCR</h2>
-                <EasyocrAdminTabs active="tab"/>
-
+    <t t-name="easyocr.AdminPage">
+        <div class="o_easyocr_admin_page">
+            <div class="o_easyocr_admin_body">
                 <div t-if="state.loading" class="o_easyocr_admin_note"><i class="fa fa-circle-o-notch fa-spin me-2" aria-hidden="true"/>Loading…</div>
                 <div t-elif="state.error" class="o_easyocr_admin_box is-error" role="alert"><i class="fa fa-exclamation-circle me-2" aria-hidden="true"/><t t-esc="state.error"/></div>
                 <t t-else="">

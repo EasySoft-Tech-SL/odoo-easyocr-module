@@ -41,26 +41,29 @@
     background: #fff;
 }
 
-.o_easyocr_admin {
-    height: 100%;
-    overflow: auto;
+// The five pages other than the settings are drawn here, under the bar and
+// inside the settings screen, so the screen keeps its left panel and its own
+// scroll. A screen of their own would leave the settings form behind, and the
+// left panel lives in that form.
+.o_easyocr_admin_page {
+    padding: 1.25rem 1rem 2rem;
     background: #fff;
 
-    .o_easyocr_admin_inner {
+    .o_easyocr_admin_body {
         max-width: 1200px;
-        padding: 1.25rem 1.5rem 2rem;
-    }
-
-    .o_easyocr_admin_title {
-        margin: 0 0 1rem;
-        font-size: 1.35rem;
-        font-weight: 600;
     }
 
     .o_easyocr_admin_note {
         padding: 1rem;
         color: #6c757d;
     }
+}
+
+// While one of those pages is showing, the settings fields of the block step
+// aside. Odoo wraps every app of the screen in a block of its own, and the
+// block the bar is in is this one.
+.app_settings_block.o_easyocr_admin_page_mode > :not(.o_easyocr_admin_tabs_host) {
+    display: none;
 }
 
 .o_easyocr_admin_table {

@@ -212,6 +212,18 @@ work was done.
   the AI banner stays on top, and the actions, help and shortcuts at the bottom.
 - **Saving a template over the one in use proposed a new name.** The dialog now
   offers the name of the template that was applied.
+- **The five configuration pages left the settings screen behind.** Each page
+  opened as a screen of its own, and the menu on the left belongs to the settings
+  screen, so it went away with it. The pages are drawn inside the settings screen
+  now, under the tab bar, and the menu stays where it is.
+- **Those pages could not be scrolled.** Odoo fixes the height of a screen and
+  leaves the scrolling to the settings pane; a screen of its own has no such pane.
+  A page longer than the window showed the part that fitted and nothing below it.
+  The page is drawn inside that pane now, so the pane is what scrolls it.
+- **A page showed what the tab before it had asked for.** Opening the changelog
+  right after the plan said "ChangeLog file not found", because the tab bar reused
+  the page instead of drawing a new one and what it held was still the plan's
+  answer. Each tab is a page of its own now.
 
 ### Pending
 
