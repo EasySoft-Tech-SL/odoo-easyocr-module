@@ -25,7 +25,7 @@
                 <select id="template_dialog_supplier" class="form-select" t-model="state.supplierId">
                     <option value="">No vendor (generic)</option>
                     <t t-foreach="props.suppliers" t-as="supplier" t-key="supplier.id">
-                        <option t-att-value="supplier.id"><t t-esc="supplier.name"/></option>
+                        <option t-att-value="supplier.id"><t t-out="supplier.name"/></option>
                     </t>
                 </select>
             </div>

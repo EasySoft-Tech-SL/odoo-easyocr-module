@@ -64,6 +64,29 @@ class TestEasyocrTemplateApply(TransactionCase):
         self.assertEqual(template.box_count, 2)
         self.assertIn(self.vendor.name, answer['label'])
 
+    def test_the_vendor_is_named_once_when_the_label_already_carries_it(self):
+        """The name suggested for a new template is the vendor's own.
+
+        The label used to append the vendor whatever the name said, so accepting
+        the suggestion printed the vendor twice on the same line.
+        """
+        document = self._document(partner_vat='B3186006')
+
+        answer = document.action_save_template(self.vendor.display_name, BOXES)
+
+        self.assertEqual(answer['label'], self.vendor.display_name)
+        self.assertEqual(answer['label'].count(self.vendor.name), 1)
+
+    def test_the_vendor_is_named_after_a_template_that_does_not_carry_it(self):
+        """Two vendors can have a template called the same thing."""
+        document = self._document(partner_vat='B3186006')
+
+        answer = document.action_save_template('Facturas del norte', BOXES)
+
+        self.assertEqual(
+            answer['label'], 'Facturas del norte (%s)' % self.vendor.name,
+        )
+
     def test_the_vendor_is_found_by_name_when_there_is_no_tax_number(self):
         document = self._document(partner_name='Ferreteria Industrial del Norte SL')
 

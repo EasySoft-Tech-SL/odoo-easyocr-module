@@ -44,8 +44,8 @@
                      with the two actions that finish the job. -->
                 <div class="o_easyocr_sidebar">
                     <div class="o_easyocr_sidebar_head">
-                        <h4 t-esc="state.documentName"/>
-                        <p class="text-muted" t-if="state.pages.length" t-esc="pagesLabel()"/>
+                        <h4 t-out="state.documentName"/>
+                        <p class="text-muted" t-if="state.pages.length" t-out="pagesLabel()"/>
                         <button
                             t-if="!state.empty"
                             class="btn btn-link btn-sm px-0"
@@ -90,7 +90,7 @@
                             </div>
                             <p class="text-muted mb-0">
                                 <i class="fa fa-spinner fa-spin me-1"/>
-                                <t t-esc="state.busyLabel"/>
+                                <t t-out="state.busyLabel"/>
                             </p>
                         </div>
 
@@ -106,7 +106,7 @@
 
                         <div t-if="state.account.blocked" class="o_easyocr_blocked">
                             <i class="fa fa-exclamation-triangle me-1"/>
-                            <t t-esc="state.account.message"/>
+                            <t t-out="state.account.message"/>
                         </div>
 
                         <!-- The plan and what is left, out of the same answer,
@@ -116,15 +116,15 @@
                                 <span class="o_easyocr_quota_toggle_left">
                                     <span
                                         t-att-class="state.account.blocked ? 'o_easyocr_quota_status o_easyocr_quota_status_blocked' : 'o_easyocr_quota_status'"
-                                        t-esc="state.account.blocked ? '⚠️' : '✓'"
+                                        t-out="state.account.blocked ? '⚠️' : '✓'"
                                     />
-                                    <span class="o_easyocr_quota_plan_name"><t t-esc="state.account.plan.name"/></span>
+                                    <span class="o_easyocr_quota_plan_name"><t t-out="state.account.plan.name"/></span>
                                     <span class="o_easyocr_quota_compact">
-                                        <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/> Pages
+                                        <t t-out="state.account.quota.pages_used"/> / <t t-out="state.account.quota.pages_limit"/> Pages
                                     </span>
                                 </span>
                                 <span class="o_easyocr_quota_toggle_right">
-                                    <span class="o_easyocr_quota_remaining"><t t-esc="state.account.quota.pages_remaining"/> Left</span>
+                                    <span class="o_easyocr_quota_remaining"><t t-out="state.account.quota.pages_remaining"/> Left</span>
                                     <i class="fa fa-chevron-down"/>
                                 </span>
                             </button>
@@ -133,7 +133,7 @@
                                 <div class="o_easyocr_quota_head">
                                     <span class="o_easyocr_quota_plan">
                                         <i class="fa fa-star me-1"/>
-                                        <t t-esc="state.account.plan.name"/>
+                                        <t t-out="state.account.plan.name"/>
                                         <t t-if="state.account.plan.is_free">
                                             <span class="o_easyocr_badge o_easyocr_badge_free">FREE</span>
                                         </t>
@@ -149,25 +149,25 @@
                                     <div class="o_easyocr_quota_stat">
                                         <span class="o_easyocr_quota_label">Pages</span>
                                         <span class="o_easyocr_quota_value">
-                                            <t t-esc="state.account.quota.pages_used"/> / <t t-esc="state.account.quota.pages_limit"/>
+                                            <t t-out="state.account.quota.pages_used"/> / <t t-out="state.account.quota.pages_limit"/>
                                         </span>
                                     </div>
                                     <div class="o_easyocr_quota_stat" t-if="state.account.quota.pages_remaining !== undefined">
                                         <span class="o_easyocr_quota_label">Left</span>
                                         <span class="o_easyocr_quota_value">
-                                            <t t-esc="state.account.quota.pages_remaining"/>
+                                            <t t-out="state.account.quota.pages_remaining"/>
                                         </span>
                                     </div>
                                     <div class="o_easyocr_quota_stat" t-if="state.account.quota.reset_date">
                                         <span class="o_easyocr_quota_label">Resets</span>
-                                        <span class="o_easyocr_quota_value" t-esc="resetDateLabel()"/>
+                                        <span class="o_easyocr_quota_value" t-out="resetDateLabel()"/>
                                     </div>
                                     <div class="o_easyocr_quota_stat" t-if="state.account.wallet.exists and state.account.wallet.balance_pages">
                                         <span class="o_easyocr_quota_label">
                                             <i class="fa fa-credit-card me-1"/>Wallet
                                         </span>
                                         <span class="o_easyocr_quota_value">
-                                            <t t-esc="state.account.wallet.balance_pages"/>
+                                            <t t-out="state.account.wallet.balance_pages"/>
                                         </span>
                                     </div>
                                 </div>
@@ -222,9 +222,9 @@
                                         t-on-click="() => this.setActiveField(field.key)"
                                         t-att-title="field.label"
                                     >
-                                        <span class="o_easyocr_field_key"><t t-esc="field_index + 1"/></span>
+                                        <span class="o_easyocr_field_key"><t t-out="field_index + 1"/></span>
                                         <span class="o_easyocr_swatch"/>
-                                        <t t-esc="field.label"/>
+                                        <t t-out="field.label"/>
                                     </button>
                                 </t>
                             </div>
@@ -236,7 +236,7 @@
                         <div t-if="!state.empty" class="o_easyocr_section">
                             <h5>Templates</h5>
                             <p t-if="state.appliedTemplate and state.boxes.length" class="o_easyocr_applied">
-                                <i class="fa fa-check-circle me-1"/><t t-esc="appliedLabel()"/>
+                                <i class="fa fa-check-circle me-1"/><t t-out="appliedLabel()"/>
                             </p>
                             <div class="o_easyocr_template_row">
                                 <select
@@ -245,7 +245,7 @@
                                 >
                                     <option value="">No template</option>
                                     <t t-foreach="state.templates" t-as="template" t-key="template.id">
-                                        <option t-att-value="template.id"><t t-esc="template.label"/></option>
+                                        <option t-att-value="template.id"><t t-out="template.label"/></option>
                                     </t>
                                 </select>
                                 <button
@@ -285,21 +285,21 @@
                         <div class="o_easyocr_section" t-if="state.boxes.length">
                             <h5>
                                 Extracted data
-                                <span class="o_easyocr_badge"><t t-esc="state.boxes.length"/></span>
+                                <span class="o_easyocr_badge"><t t-out="state.boxes.length"/></span>
                             </h5>
                             <div class="o_easyocr_supplier mb-2">
                                 <label class="o_easyocr_supplier_label">Supplier</label>
                                 <select class="form-select form-select-sm" t-model="state.supplierId" t-on-change="setSupplier">
                                     <option value="">Select supplier</option>
                                     <t t-foreach="state.suppliers" t-as="supplier" t-key="supplier.id">
-                                        <option t-att-value="supplier.id"><t t-esc="supplier.name"/></option>
+                                        <option t-att-value="supplier.id"><t t-out="supplier.name"/></option>
                                     </t>
                                 </select>
                             </div>
                             <div class="o_easyocr_fields">
                                 <div t-foreach="state.boxes" t-as="box" t-key="box.uid" class="o_easyocr_field_row">
-                                    <span class="o_easyocr_field_label" t-esc="this.labelFor(box.field_key)"/>
-                                    <span class="o_easyocr_field_value" t-esc="box.text"/>
+                                    <span class="o_easyocr_field_label" t-out="this.labelFor(box.field_key)"/>
+                                    <span class="o_easyocr_field_value" t-out="box.text"/>
                                     <button
                                         class="o_easyocr_remove"
                                         t-on-click="() => this.removeBox(box.uid)"
@@ -327,8 +327,8 @@
                                     t-key="item.key"
                                     class="o_easyocr_readiness_row"
                                 >
-                                    <span t-att-class="item.done ? 'o_easyocr_chk o_easyocr_chk_done' : 'o_easyocr_chk'"><t t-esc="item.done ? '●' : '○'"/></span>
-                                    <t t-esc="item.label"/>
+                                    <span t-att-class="item.done ? 'o_easyocr_chk o_easyocr_chk_done' : 'o_easyocr_chk'"><t t-out="item.done ? '●' : '○'"/></span>
+                                    <t t-out="item.label"/>
                                 </div>
                                 <div
                                     t-foreach="readiness.optional"
@@ -336,11 +336,11 @@
                                     t-key="item.key"
                                     class="o_easyocr_readiness_row o_easyocr_readiness_optional"
                                 >
-                                    <span t-att-class="item.done ? 'o_easyocr_chk o_easyocr_chk_done' : 'o_easyocr_chk'"><t t-esc="item.done ? '●' : '○'"/></span>
-                                    <t t-esc="item.label"/>
+                                    <span t-att-class="item.done ? 'o_easyocr_chk o_easyocr_chk_done' : 'o_easyocr_chk'"><t t-out="item.done ? '●' : '○'"/></span>
+                                    <t t-out="item.label"/>
                                     <small class="o_easyocr_optional_badge">optional</small>
                                 </div>
-                                <div class="o_easyocr_readiness_summary"><t>Completeness</t>: <t t-esc="readiness.done + '/' + readiness.total"/></div>
+                                <div class="o_easyocr_readiness_summary"><t>Completeness</t>: <t t-out="readiness.done + '/' + readiness.total"/></div>
                             </div>
                         </div>
 

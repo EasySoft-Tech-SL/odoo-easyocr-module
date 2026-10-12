@@ -75,8 +75,13 @@ class EasyocrTemplate(models.Model):
     @api.depends('partner_id', 'name')
     def _compute_display_name(self):
         for template in self:
-            if template.partner_id:
-                template.display_name = f'{template.name} ({template.partner_id.display_name})'
+            vendor = template.partner_id
+            # The plain name of the vendor, not its display name, and only when
+            # the template does not carry it already: the name suggested when a
+            # template is saved is the vendor's, so asking for the whole display
+            # name printed the vendor twice on the same line.
+            if vendor and vendor.name and vendor.name not in template.name:
+                template.display_name = f'{template.name} ({vendor.name})'
             else:
                 template.display_name = template.name
 
