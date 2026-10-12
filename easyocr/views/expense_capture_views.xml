@@ -10,27 +10,36 @@
 <odoo>
 
     <template id="expense_capture_page" name="Expense Capture">
-        <t t-call="web.layout">
-            <t t-set="title">Capture a receipt</t>
-            <t t-set="head">
-                <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-                <meta name="theme-color" content="#2c3e50"/>
-                <link rel="manifest" t-att-href="manifest_url"/>
-                <link rel="icon" t-att-href="icon_url" type="image/svg+xml"/>
-                <!-- Only the styles of the backend bundle are wanted here: the
-                     page is plain JavaScript, and pulling the web client in
-                     would put megabytes on a phone for one camera button. -->
-                <t t-call-assets="web.assets_backend" t-js="false"/>
-                <!-- The sentences the page's script writes, translated on the
-                     server: the page carries no web client, so it has no way to
-                     translate them itself. Read where the script is written. -->
-                <script type="application/json" id="easyocr_capture_strings" t-out="strings_json"/>
-                <!-- The version in the URL is what keeps a phone from running
-                     last month's script: Odoo caches anything under static/ for
-                     a week. See capture_script_version(). -->
-                <script type="module" t-att-src="script_url"/>
-            </t>
+        <!-- The two values web.layout reads are passed as ATTRIBUTES of the
+             t-call, not as a t-set inside its body. Up to 19 a t-set written in
+             the body also reached the called template, through a
+             retrocompatibility branch that was already flagged as deprecated
+             and which 20 dropped (_compile_directive_call). Left as a t-set,
+             the title fell back to "Odoo" and the whole head was dropped: no
+             manifest, no strings, no script, which is what the page is. The
+             shape below is the one web.webclient_bootstrap itself uses in 20,
+             and it is the one every series understands. -->
+        <t t-set="title">Capture a receipt</t>
+        <t t-set="head">
+            <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+            <meta name="theme-color" content="#2c3e50"/>
+            <link rel="manifest" t-att-href="manifest_url"/>
+            <link rel="icon" t-att-href="icon_url" type="image/svg+xml"/>
+            <!-- Only the styles of the backend bundle are wanted here: the
+                 page is plain JavaScript, and pulling the web client in
+                 would put megabytes on a phone for one camera button. -->
+            <t t-call-assets="web.assets_backend" t-js="false"/>
+            <!-- The sentences the page's script writes, translated on the
+                 server: the page carries no web client, so it has no way to
+                 translate them itself. Read where the script is written. -->
+            <script type="application/json" id="easyocr_capture_strings" t-out="strings_json"/>
+            <!-- The version in the URL is what keeps a phone from running
+                 last month's script: Odoo caches anything under static/ for
+                 a week. See capture_script_version(). -->
+            <script type="module" t-att-src="script_url"/>
+        </t>
 
+        <t t-call="web.layout" title="title" head="head">
             <div class="o_easyocr_capture" id="easyocr_capture_root"
                  t-att-data-upload-url="upload_url"
                  t-att-data-service-worker-url="service_worker_url"
