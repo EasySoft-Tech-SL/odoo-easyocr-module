@@ -6,7 +6,7 @@
     # es tambien el nombre de la barra de aplicaciones, asi que no pasa de 25
     # caracteres.
     'name': 'EasyOCR Invoice Capture',
-    'version': '19.0.1.0.12',
+    'version': '20.0.1.0.12',
     'summary': 'Read supplier invoices and receipts into Odoo - free, AI for scans',
     'author': 'EasySoft Tech S.L.',
     'website': 'https://easysoft.es',
@@ -35,7 +35,14 @@
     ],
     'data': [
         'security/easyocr_security.xml',
-        'security/ir.model.access.csv',
+        # Odoo 20 replaced ir.model.access with ir.access, and the loader takes
+        # the model out of the FILE NAME, so this one cannot keep the old name:
+        # a security/ir.model.access.csv is looked up as the model
+        # 'ir.model.access', which no longer exists, and the install dies with
+        # KeyError. The columns changed with it (perm_read/write/create/unlink
+        # are now a single 'crud' subset). Branches 16.0 to 19.0 keep the old
+        # file.
+        'security/ir.access.csv',
         # El menu raiz, antes que nada: todo lo demas cuelga de el y Odoo
         # resuelve un xmlid mientras lee el fichero que lo usa.
         'views/easyocr_menu_views.xml',
