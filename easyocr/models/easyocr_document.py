@@ -1,6 +1,7 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
+import base64
 import hashlib
 import json
 import logging
@@ -13,6 +14,23 @@ from odoo.tools import format_datetime
 from .easyocr_values import to_amount, to_date, to_float
 
 _logger = logging.getLogger(__name__)
+
+
+def file_content(datas):
+    """The bytes of a file a screen hands over as base64 text.
+
+    The screens read a file in the browser and send it base64-encoded, and until
+    19 the binary field of the attachment did the decoding on the way in. Since
+    20 an attachment is written with raw bytes, so the decoding is done here.
+    Whatever is not base64 answers with nothing, and every caller already treats
+    that as an empty file.
+    """
+    if isinstance(datas, str):
+        try:
+            return base64.b64decode(datas)
+        except ValueError:
+            return b''
+    return bytes(datas or b'')
 
 # What the service says each line is. Anything it does not name is put under
 # "Other" rather than dropped, so a line is never lost for being odd.
@@ -184,7 +202,9 @@ class EasyocrDocument(models.Model):
         if not self.attachment_id:
             return False
         try:
-            content = self.attachment_id.raw
+            # bytes(): reading a binary field hands back a proxy in 20, and the
+            # hash is worked out from the file itself.
+            content = bytes(self.attachment_id.raw)
         except Exception:  # noqa: BLE001 - an unreadable file just has no fingerprint
             _logger.warning("EasyOCR: could not read the file of document %s", self.id)
             return False
@@ -1027,7 +1047,8 @@ class EasyocrDocument(models.Model):
         Returns the id of the new document, which the viewer then opens on.
         """
         filename = (filename or '').strip()
-        if not datas:
+        content = file_content(datas)
+        if not content:
             raise UserError(_("Choose a file first."))
         if not filename.lower().endswith(READABLE_EXTENSIONS):
             raise UserError(_(
@@ -1041,7 +1062,10 @@ class EasyocrDocument(models.Model):
         })
         document.attachment_id = self.env['ir.attachment'].create({
             'name': filename or document.name,
-            'datas': datas,
+            # raw and not datas: 20 removed the base64 field from attachments,
+            # and a write to it is ignored without a word, which files an empty
+            # file and leaves the viewer with nothing to paint.
+            'raw': content,
             'res_model': 'easyocr.document',
             'res_id': document.id,
         }).id

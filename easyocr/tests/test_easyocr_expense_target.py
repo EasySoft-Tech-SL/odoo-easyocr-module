@@ -90,10 +90,10 @@ class TestEasyocrExpenseTarget(TransactionCase):
 
     def test_the_photo_travels_with_the_expense(self):
         """Whoever approves it has to be able to see the paper."""
-        import base64
         attachment = self.env['ir.attachment'].create({
             'name': 'ticket.pdf',
-            'datas': base64.b64encode(b'%PDF-1.4 ticket'),
+            # raw and not datas: 20 removed the base64 field from attachments.
+            'raw': b'%PDF-1.4 ticket',
             'mimetype': 'application/pdf',
         })
         document = self._document(attachment_id=attachment.id)

@@ -48,8 +48,9 @@ class TestEasyocrInbox(TransactionCase):
         self.assertFalse(item.document_id)
         self.assertEqual(item.file_size, len(PDF_BYTES))
         self.assertEqual(item.file_hash, hashlib.sha256(PDF_BYTES).hexdigest())
-        # The file has to come back out of the tray byte for byte.
-        self.assertEqual(base64.b64decode(item.datas), PDF_BYTES)
+        # The file has to come back out of the tray byte for byte. bytes(): the
+        # value in cache is a proxy since 20, and it is the bytes that are read.
+        self.assertEqual(bytes(item.datas), PDF_BYTES)
 
     def test_the_same_file_is_not_taken_twice(self):
         """The same bytes under a different name are still the same file."""
@@ -127,7 +128,7 @@ class TestEasyocrInbox(TransactionCase):
     def test_a_file_uploaded_by_hand_gets_its_fingerprint(self):
         item = self.Inbox.create({
             'name': 'scan.pdf',
-            'datas': base64.b64encode(PDF_BYTES),
+            'datas': base64.b64encode(PDF_BYTES).decode(),
         })
 
         self.assertEqual(item.file_hash, hashlib.sha256(PDF_BYTES).hexdigest())
@@ -137,11 +138,11 @@ class TestEasyocrInbox(TransactionCase):
         """Otherwise the tray would keep a fingerprint of a file it no longer holds."""
         item = self.Inbox.create({
             'name': 'scan.pdf',
-            'datas': base64.b64encode(PDF_BYTES),
+            'datas': base64.b64encode(PDF_BYTES).decode(),
         })
         other = b'%PDF-1.4\n% another invoice\n%%EOF\n'
 
-        item.write({'datas': base64.b64encode(other)})
+        item.write({'datas': base64.b64encode(other).decode()})
 
         self.assertEqual(item.file_hash, hashlib.sha256(other).hexdigest())
         self.assertEqual(item.file_size, len(other))
@@ -151,13 +152,13 @@ class TestEasyocrInbox(TransactionCase):
         hand the same scan over at the same moment."""
         self.Inbox.create({
             'name': 'scan.pdf',
-            'datas': base64.b64encode(PDF_BYTES),
+            'datas': base64.b64encode(PDF_BYTES).decode(),
         })
 
         with self.assertRaises(IntegrityError):
             self.Inbox.create({
                 'name': 'scan.pdf',
-                'datas': base64.b64encode(PDF_BYTES),
+                'datas': base64.b64encode(PDF_BYTES).decode(),
             })
 
     # ------------------------------------------------------------------
@@ -172,8 +173,10 @@ class TestEasyocrInbox(TransactionCase):
         self.assertTrue(item.document_id)
         self.assertEqual(item.document_id.name, item.name)
         self.assertEqual(item.document_id.company_id, item.company_id)
+        # raw and not datas: 20 removed the base64 field from attachments, and a
+        # write to it is dropped without a word, which files an empty file.
         self.assertEqual(
-            base64.b64decode(item.document_id.attachment_id.datas), PDF_BYTES,
+            bytes(item.document_id.attachment_id.raw), PDF_BYTES,
         )
         # And the viewer opens on the document that was just built.
         self.assertEqual(action['tag'], 'easyocr.document_viewer')

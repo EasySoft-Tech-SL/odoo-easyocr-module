@@ -508,6 +508,7 @@ msgid "Companies"
 msgstr "Aziende"
 
 #. module: easyocr
+#: model:ir.model,name:easyocr.model_res_company
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__company_id
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line__company_id

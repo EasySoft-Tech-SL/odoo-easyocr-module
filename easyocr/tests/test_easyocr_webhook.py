@@ -21,7 +21,7 @@ class TestEasyocrWebhook(HttpCase):
         super().setUpClass()
         cls.Document = cls.env['easyocr.document']
         cls.Log = cls.env['easyocr.webhook.log']
-        cls.env['ir.config_parameter'].sudo().set_param('easyocr.webhook_secret', SECRET)
+        cls.env['ir.config_parameter'].sudo().set_str('easyocr.webhook_secret', SECRET)
 
     # ------------------------------------------------------------------
     # Helpers

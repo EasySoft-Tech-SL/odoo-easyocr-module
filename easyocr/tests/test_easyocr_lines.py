@@ -8,7 +8,6 @@ first: a document read with five articles used to arrive as a single line with
 the total on it, and every article had to be typed again.
 """
 
-import base64
 from unittest import mock
 
 from odoo.tests import tagged
@@ -47,7 +46,7 @@ class TestEasyocrLines(TransactionCase):
         """A document whose extraction answer carries these lines."""
         attachment = self.env['ir.attachment'].create({
             'name': 'invoice.pdf',
-            'datas': base64.b64encode(b'%PDF-1.4 lines'),
+            'raw': b'%PDF-1.4 lines',
             'mimetype': 'application/pdf',
         })
         values.setdefault('name', 'FAC-2026-0007')
@@ -344,7 +343,7 @@ class TestEasyocrLines(TransactionCase):
             'name': 'FAC-2026-0009',
             'attachment_id': self.env['ir.attachment'].create({
                 'name': 'otra.pdf',
-                'datas': base64.b64encode(b'%PDF-1.4 otra'),
+                'raw': b'%PDF-1.4 otra',
                 'mimetype': 'application/pdf',
             }).id,
         })
@@ -370,7 +369,7 @@ class TestEasyocrLines(TransactionCase):
             'name': 'FAC-2026-0010',
             'attachment_id': self.env['ir.attachment'].create({
                 'name': 'tercera.pdf',
-                'datas': base64.b64encode(b'%PDF-1.4 tercera'),
+                'raw': b'%PDF-1.4 tercera',
                 'mimetype': 'application/pdf',
             }).id,
         })

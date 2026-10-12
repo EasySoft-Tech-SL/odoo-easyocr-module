@@ -16,7 +16,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 FILE_BYTES = b'%PDF-1.4 a supplier invoice'
-PDF = base64.b64encode(FILE_BYTES)
+PDF = base64.b64encode(FILE_BYTES).decode()
 
 
 @tagged('post_install', '-at_install')
@@ -35,7 +35,7 @@ class TestEasyocrUpload(TransactionCase):
 
         self.assertEqual(document.name, 'factura.pdf')
         self.assertEqual(document.attachment_id.name, 'factura.pdf')
-        self.assertEqual(document.attachment_id.raw, FILE_BYTES)
+        self.assertEqual(bytes(document.attachment_id.raw), FILE_BYTES)
         self.assertEqual(document.attachment_id.res_model, 'easyocr.document')
         self.assertEqual(document.attachment_id.res_id, document.id)
 

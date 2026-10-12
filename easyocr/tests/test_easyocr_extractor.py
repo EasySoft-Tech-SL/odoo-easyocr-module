@@ -1,7 +1,6 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
-import base64
 import json
 from unittest import mock
 
@@ -32,7 +31,8 @@ class TestEasyocrExtractor(TransactionCase):
     def _document(self, **values):
         attachment = self.env['ir.attachment'].create({
             'name': 'invoice.pdf',
-            'datas': base64.b64encode(b'%PDF-1.4 fake invoice'),
+            # raw and not datas: 20 removed the base64 field from attachments.
+            'raw': b'%PDF-1.4 fake invoice',
             'mimetype': 'application/pdf',
         })
         values.setdefault('name', 'INV/2026/0001')

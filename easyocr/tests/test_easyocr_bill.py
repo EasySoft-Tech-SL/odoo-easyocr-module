@@ -304,7 +304,8 @@ class TestEasyocrBill(TransactionCase):
     def test_asking_to_pay_without_a_bank_journal_does_not_crash(self):
         """A bank with no journal is paid by nobody, and nothing breaks."""
         bank = self.env['res.partner.bank'].create({
-            'acc_number': 'ES9121000418450200051332',
+            # account_number, not acc_number: 20 renamed the field.
+            'account_number': 'ES9121000418450200051332',
             'partner_id': self.env.company.partner_id.id,
         })
         document = self._document(

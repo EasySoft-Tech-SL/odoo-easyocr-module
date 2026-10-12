@@ -109,6 +109,14 @@ class EasyocrInboxItem(models.Model):
         if isinstance(source, str):
             source = source.encode('utf-8')
         if not isinstance(source, (bytes, bytearray)):
+            # A binary field does not hand back bytes any more: since 20 the
+            # value in cache is a BinaryValue proxy that knows how to become
+            # bytes and nothing else. Asking for bytes() instead of testing
+            # for the type reads the value the same way in every series and
+            # keeps whatever cannot be read out of the tray.
+            with contextlib.suppress(TypeError):
+                source = bytes(source)
+        if not isinstance(source, (bytes, bytearray)):
             return b''
         content = bytes(source)
         if content.startswith(PDF_MAGIC):
@@ -214,7 +222,9 @@ class EasyocrInboxItem(models.Model):
         try:
             item = self.with_user(user).create({
                 'name': filename,
-                'datas': base64.b64encode(content),
+                # Base64 as text: 20 refuses raw bytes in a binary field and
+                # asks for the encoded string instead.
+                'datas': base64.b64encode(content).decode('ascii'),
                 'origin': origin or '',
                 'company_id': company.id,
             })
@@ -256,7 +266,11 @@ class EasyocrInboxItem(models.Model):
         })
         attachment = self.env['ir.attachment'].create({
             'name': self.name,
-            'datas': self.datas,
+            # raw and not datas: 20 removed the base64 field from attachments,
+            # and it drops a write to it without a word, which files an empty
+            # file. The field of this model is still called datas, and reading
+            # it hands the bytes over already decoded.
+            'raw': bytes(self.datas),
             'res_model': 'easyocr.document',
             'res_id': document.id,
         })

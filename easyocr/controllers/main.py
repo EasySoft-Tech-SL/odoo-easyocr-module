@@ -180,7 +180,9 @@ class EasyocrWebhook(http.Controller):
         the secret travels in it -- the same way the module this is a port of
         carries its instance identifier.
         """
-        expected = request.env['ir.config_parameter'].sudo().get_param(WEBHOOK_SECRET_PARAM) or ''
+        # get_str: Odoo 20 reads every parameter as its own type and no longer
+        # offers the untyped get_param.
+        expected = request.env['ir.config_parameter'].sudo().get_str(WEBHOOK_SECRET_PARAM) or ''
         if not expected:
             return False
         provided = (

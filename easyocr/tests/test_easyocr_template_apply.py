@@ -10,8 +10,6 @@ it was a template nothing would ever look up again. These tests are about that
 link, and about the boxes coming back where they were left.
 """
 
-import base64
-
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -239,7 +237,8 @@ class TestEasyocrTemplateFromTheService(TransactionCase):
             'name': 'escaneo.pdf',
             'company_id': self.company.id,
             'attachment_id': self.env['ir.attachment'].create({
-                'name': 'escaneo.pdf', 'datas': base64.b64encode(b'%PDF-1.4 x'),
+                # raw and not datas: 20 removed the base64 field from attachments.
+                'name': 'escaneo.pdf', 'raw': b'%PDF-1.4 x',
             }).id,
         })
         self.assertFalse(document.action_template_for_reading()['template'])

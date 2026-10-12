@@ -9,7 +9,6 @@ that stores a value and changes nothing is exactly the failure this file exists
 to catch, and it is invisible from the settings screen.
 """
 
-import base64
 from datetime import timedelta
 from unittest import mock
 
@@ -64,7 +63,8 @@ class TestEasyocrSettings(TransactionCase):
     def _attachment(self, content=FILE_BYTES, name='invoice.pdf'):
         return self.env['ir.attachment'].create({
             'name': name,
-            'datas': base64.b64encode(content),
+            # raw and not datas: 20 removed the base64 field from attachments.
+            'raw': content,
             'mimetype': 'application/pdf',
         })
 

@@ -1,7 +1,6 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
-import base64
 import io
 import json
 import re
@@ -131,7 +130,7 @@ class TestEasyocrExpenseCapture(HttpCase):
         self.assertTrue(item.name.endswith('.pdf'), item.name)
         # The tray only takes PDFs, and the viewer paints a PDF, so the photo
         # has to arrive as one.
-        self.assertTrue(base64.b64decode(item.datas).startswith(b'%PDF'))
+        self.assertTrue(bytes(item.datas).startswith(b'%PDF'))
 
         self.assertTrue(item.document_id)
         self.assertEqual(

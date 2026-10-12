@@ -7,7 +7,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-from .easyocr_document import READABLE_EXTENSIONS
+from .easyocr_document import READABLE_EXTENSIONS, file_content
 
 _logger = logging.getLogger(__name__)
 
@@ -146,8 +146,8 @@ class EasyocrBatch(models.Model):
 
         for chosen in files or []:
             filename = (chosen.get('filename') or '').strip()
-            datas = chosen.get('datas')
-            if not filename or not datas:
+            content = file_content(chosen.get('datas'))
+            if not filename or not content:
                 refused.append({
                     'filename': filename or '?',
                     'reason': _("The file arrived empty."),
@@ -172,7 +172,9 @@ class EasyocrBatch(models.Model):
             })
             document.attachment_id = self.env['ir.attachment'].create({
                 'name': filename,
-                'datas': datas,
+                # raw and not datas: 20 removed the base64 field from
+                # attachments and drops a write to it without a word.
+                'raw': content,
                 'res_model': 'easyocr.document',
                 'res_id': document.id,
             }).id
@@ -274,7 +276,9 @@ class EasyocrBatch(models.Model):
         for document in self.document_ids:
             attachment = document.attachment_id
             try:
-                content = attachment.raw
+                # bytes(): reading a binary field hands back a proxy in 20, and
+                # a proxy is not something a multipart body can carry.
+                content = bytes(attachment.raw)
             except Exception:  # noqa: BLE001 - any read failure is the same here
                 _logger.exception("EasyOCR: could not read file of document %s", document.id)
                 content = False
@@ -367,11 +371,13 @@ class EasyocrBatch(models.Model):
         service is given to call back on.
         """
         self.ensure_one()
+        # get_str, not get_param: Odoo 20 dropped the untyped pair
+        # get_param/set_param and reads every parameter as its own type.
         parameters = self.env['ir.config_parameter'].sudo()
-        secret = parameters.get_param('easyocr.webhook_secret') or ''
+        secret = parameters.get_str('easyocr.webhook_secret') or ''
         if not secret:
             return ''
-        base = (parameters.get_param('web.base.url') or '').strip().rstrip('/')
+        base = (parameters.get_str('web.base.url') or '').strip().rstrip('/')
         if not base:
             return ''
         return '%s/easyocr/webhook?batch=%s&secret=%s' % (base, self.id, secret)

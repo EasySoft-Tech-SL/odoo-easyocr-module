@@ -63,8 +63,8 @@ class TestEasyocrBatch(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.env['ir.config_parameter'].sudo().set_param('easyocr.webhook_secret', '')
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://erp.example.test')
+        self.env['ir.config_parameter'].sudo().set_str('easyocr.webhook_secret', '')
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', 'https://erp.example.test')
 
     # ------------------------------------------------------------------
     # Helpers
@@ -153,7 +153,7 @@ class TestEasyocrBatch(TransactionCase):
         read = self.env['easyocr.document'].create({
             'name': 'ya-leido.pdf',
             'attachment_id': self.env['ir.attachment'].create({
-                'name': 'ya-leido.pdf', 'datas': base64.b64encode(_pdf(b'old')),
+                'name': 'ya-leido.pdf', 'raw': _pdf(b'old'),
             }).id,
         })
         read.state = 'processed'
@@ -211,7 +211,7 @@ class TestEasyocrBatch(TransactionCase):
         read = self.env['easyocr.document'].create({
             'name': 'leido.pdf',
             'attachment_id': self.env['ir.attachment'].create({
-                'name': 'leido.pdf', 'datas': base64.b64encode(_pdf(b'dup')),
+                'name': 'leido.pdf', 'raw': _pdf(b'dup'),
             }).id,
         })
         read.state = 'processed'
@@ -236,7 +236,7 @@ class TestEasyocrBatch(TransactionCase):
         read = self.env['easyocr.document'].create({
             'name': 'leido.pdf',
             'attachment_id': self.env['ir.attachment'].create({
-                'name': 'leido.pdf', 'datas': base64.b64encode(_pdf(b'dup')),
+                'name': 'leido.pdf', 'raw': _pdf(b'dup'),
             }).id,
         })
         read.state = 'processed'
@@ -269,7 +269,7 @@ class TestEasyocrBatch(TransactionCase):
         read = self.env['easyocr.document'].create({
             'name': 'leido.pdf',
             'attachment_id': self.env['ir.attachment'].create({
-                'name': 'leido.pdf', 'datas': base64.b64encode(_pdf(b'solo')),
+                'name': 'leido.pdf', 'raw': _pdf(b'solo'),
             }).id,
         })
         read.state = 'processed'
@@ -290,7 +290,7 @@ class TestEasyocrBatch(TransactionCase):
         read = self.env['easyocr.document'].create({
             'name': 'leido.pdf',
             'attachment_id': self.env['ir.attachment'].create({
-                'name': 'leido.pdf', 'datas': base64.b64encode(_pdf(b'dup')),
+                'name': 'leido.pdf', 'raw': _pdf(b'dup'),
             }).id,
         })
         read.state = 'processed'
@@ -619,7 +619,7 @@ class TestEasyocrBatch(TransactionCase):
         self.assertFalse(self._batch(1)._default_notify_url())
 
     def test_with_a_secret_the_address_carries_the_batch(self):
-        self.env['ir.config_parameter'].sudo().set_param('easyocr.webhook_secret', 's3cr3t')
+        self.env['ir.config_parameter'].sudo().set_str('easyocr.webhook_secret', 's3cr3t')
         batch = self._batch(1)
 
         url = batch._default_notify_url()
@@ -629,7 +629,7 @@ class TestEasyocrBatch(TransactionCase):
         self.assertIn('secret=s3cr3t', url)
 
     def test_the_address_travels_with_the_send(self):
-        self.env['ir.config_parameter'].sudo().set_param('easyocr.webhook_secret', 's3cr3t')
+        self.env['ir.config_parameter'].sudo().set_str('easyocr.webhook_secret', 's3cr3t')
         batch = self._batch(1)
 
         with mock.patch(GET, return_value=self._account_ok()), \
@@ -664,11 +664,14 @@ class TestEasyocrBatchPlumbing(TransactionCase):
 
     def test_a_manager_may_delete_a_batch_and_a_user_may_not(self):
         """The same split the documents have: looking is not deleting."""
-        access = self.env['ir.model.access'].search([
+        # ir.model.access went away in 20 and ir.access took its place: one row
+        # per model, group and operation, with the flags of each operation
+        # worked out from the operation the row carries.
+        access = self.env['ir.access'].search([
             ('model_id.model', '=', 'easyocr.batch'),
         ])
         by_group = {
-            entry.group_id: entry
+            entry.group_id: entry.for_unlink
             for entry in access
         }
         user = self.env.ref('easyocr.group_easyocr_user')
@@ -676,8 +679,8 @@ class TestEasyocrBatchPlumbing(TransactionCase):
 
         self.assertIn(user, by_group)
         self.assertIn(manager, by_group)
-        self.assertFalse(by_group[user].perm_unlink)
-        self.assertTrue(by_group[manager].perm_unlink)
+        self.assertFalse(by_group[user])
+        self.assertTrue(by_group[manager])
 
     def test_the_job_that_collects_the_batches_is_installed(self):
         cron = self.env.ref('easyocr.ir_cron_easyocr_batch')

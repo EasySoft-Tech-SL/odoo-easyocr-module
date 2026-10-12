@@ -529,7 +529,9 @@ class EasyocrDocument(models.Model):
             return self._fail_extraction(_("This document has no file attached."))
 
         try:
-            content = attachment.raw
+            # bytes(): the read of a binary field hands back a proxy in 20, and
+            # the call to the service sends the file itself.
+            content = bytes(attachment.raw)
         except Exception:  # noqa: BLE001 - any read failure is the same to the user
             _logger.exception('Could not read the file of OCR document %s', self.id)
             content = False
