@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -31,17 +31,18 @@ let nextDialogId = 0;
  */
 export class OCRResultDialog extends Component {
     static template = "easyocr.OCRResultDialog";
-    static props = {
-        action: Object,
-        actionId: { type: [Number, Boolean], optional: true },
-        "*": true,
-    };
+    // Odoo hands a client action more than these (updateActionState, className
+    // ...); the shape is loose, so the extra ones are accepted and ignored.
+    props = useProps({
+        action: t.object(),
+        actionId: t.or([t.number(), t.boolean()]).optional(),
+    });
 
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
         this.notification = useService("notification");
-        this.modalRef = useRef("modal");
+        this.modalRef = signal.ref();
         this.uid = `o_easyocr_result_${++nextDialogId}`;
         this.itemTypes = [
             ["product", _t("Product")],
@@ -52,7 +53,7 @@ export class OCRResultDialog extends Component {
             ["discount", _t("Discount")],
             ["other", _t("Other")],
         ];
-        this.state = useState({
+        this.state = proxy({
             loading: true,
             showPayload: false,
             data: null,
@@ -74,9 +75,9 @@ export class OCRResultDialog extends Component {
             paymentModeId: "",
             bankId: "",
         });
-        useExternalListener(window, "keydown", this.onKeydown.bind(this));
+        useListener(window, "keydown", this.onKeydown.bind(this));
         onWillStart(() => this.load());
-        onMounted(() => this.modalRef.el?.focus());
+        onMounted(() => this.modalRef()?.focus());
     }
 
     get documentId() {
@@ -420,7 +421,7 @@ export class OCRResultDialog extends Component {
 
     /** Keep the keyboard inside the dialog while it is open. */
     trapFocus(ev) {
-        const modal = this.modalRef.el;
+        const modal = this.modalRef();
         if (!modal) {
             return;
         }

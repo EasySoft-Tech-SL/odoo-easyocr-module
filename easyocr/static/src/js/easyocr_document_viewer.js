@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -101,24 +101,23 @@ const CORNER_CURSORS = {
  */
 export class EasyocrDocumentViewer extends Component {
     static template = "easyocr.DocumentViewer";
-    static props = {
-        action: Object,
-        actionId: { type: [Number, Boolean], optional: true },
-        // Odoo hands every client action more than these (updateActionState,
-        // className...), and in debug mode a component that does not accept
-        // them refuses to open.
-        "*": true,
-    };
+    // Odoo hands every client action more than these (updateActionState,
+    // className...); the shape is loose, so the extra ones are accepted and
+    // ignored instead of refusing to open the viewer.
+    props = useProps({
+        action: t.object(),
+        actionId: t.or([t.number(), t.boolean()]).optional(),
+    });
 
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
         this.actionService = useService("action");
-        this.containerRef = useRef("pdfContainer");
-        this.fileInputRef = useRef("fileInput");
+        this.containerRef = signal.ref();
+        this.fileInputRef = signal.ref();
 
-        this.state = useState({
+        this.state = proxy({
             loading: true,
             error: false,
             // No document yet: the screen is waiting for a file. It opens this
@@ -376,10 +375,14 @@ export class EasyocrDocumentViewer extends Component {
             return;
         }
 
-        // Odoo ships PDF.js in core on both series, but 18.0 has no
-        // @web/core/utils/pdfjs wrapper, so the two files are loaded by hand.
-        await loadJS("/web/static/lib/pdfjs/build/pdf.js");
-        await loadJS("/web/static/lib/pdfjs/build/pdf.worker.js");
+        // Odoo ships PDF.js in core on every series, but the API to reach it
+        // is not the same. On 20.0 the build carries `import.meta`, so it only
+        // parses as a module: as a classic script the whole file fails with
+        // "Cannot use 'import.meta' outside a module", `pdfjsLib` never lands
+        // on the window and the reader gives up on a file that is right there.
+        // Core does the same in @web/core/utils/pdfjs (loadPDFJSAssets).
+        await loadJS("/web/static/lib/pdfjs/build/pdf.js", { type: "module" });
+        await loadJS("/web/static/lib/pdfjs/build/pdf.worker.js", { type: "module" });
         const pdfjsLib = window.pdfjsLib;
         pdfjsLib.GlobalWorkerOptions.workerSrc = "/web/static/lib/pdfjs/build/pdf.worker.js";
 
@@ -444,10 +447,10 @@ export class EasyocrDocumentViewer extends Component {
 
     /** Paint every page once, and keep the rendered image to repaint boxes over. */
     async paintPages() {
-        if (!this.pdfDocument || !this.containerRef.el) {
+        if (!this.pdfDocument || !this.containerRef()) {
             return;
         }
-        const container = this.containerRef.el;
+        const container = this.containerRef();
         container.replaceChildren();
         this.baseImages = [];
         this.painted = true;
@@ -487,7 +490,7 @@ export class EasyocrDocumentViewer extends Component {
 
     /** Repaint one page: the rendered image, then its boxes on top. */
     redrawPage(pageNumber) {
-        const wrapper = this.containerRef.el?.querySelector(
+        const wrapper = this.containerRef()?.querySelector(
             `.o_easyocr_page_wrapper:nth-child(${pageNumber})`,
         );
         if (!wrapper) {

@@ -14,7 +14,7 @@
                     id="template_dialog_name"
                     type="text"
                     class="form-control"
-                    t-model="this.state.name"
+                    t-model.proxy="this.state.name"
                     t-on-keydown="this.onNameKeydown"
                     autofocus="true"
                 />
@@ -22,7 +22,7 @@
 
             <div class="mb-2" t-if="this.props.suppliers and this.props.suppliers.length">
                 <label class="form-label" for="template_dialog_supplier">Vendor</label>
-                <select id="template_dialog_supplier" class="form-select" t-model="this.state.supplierId">
+                <select id="template_dialog_supplier" class="form-select" t-model.proxy="this.state.supplierId">
                     <option value="">No vendor (generic)</option>
                     <t t-foreach="this.props.suppliers" t-as="supplier" t-key="supplier.id">
                         <option t-att-value="supplier.id"><t t-out="supplier.name"/></option>
@@ -36,7 +36,7 @@
                     id="template_dialog_instructions"
                     class="form-control"
                     rows="3"
-                    t-model="this.state.instructions"
+                    t-model.proxy="this.state.instructions"
                 />
             </div>
         </div>

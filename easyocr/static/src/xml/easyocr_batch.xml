@@ -64,7 +64,7 @@
                             type="text"
                             class="form-control"
                             placeholder="March invoices"
-                            t-model="this.state.name"
+                            t-model.proxy="this.state.name"
                         />
                     </div>
                     <div class="o_easyocr_batch_field">
@@ -73,17 +73,17 @@
                             id="eo_batch_instructions"
                             class="form-control"
                             rows="3"
-                            t-model="this.state.customInstructions"
+                            t-model.proxy="this.state.customInstructions"
                             placeholder="Anything the service should know about these files. Leave it out and it works them out one by one."
                         />
                     </div>
                     <div class="o_easyocr_batch_checks">
                         <label class="form-check">
-                            <input type="checkbox" class="form-check-input" t-model="this.state.includeText"/>
+                            <input type="checkbox" class="form-check-input" t-model.proxy="this.state.includeText"/>
                             <span class="form-check-label">Keep the text it read</span>
                         </label>
                         <label class="form-check">
-                            <input type="checkbox" class="form-check-input" t-model="this.state.autoCorrect"/>
+                            <input type="checkbox" class="form-check-input" t-model.proxy="this.state.autoCorrect"/>
                             <span class="form-check-label">Let it correct what it reads</span>
                         </label>
                     </div>
