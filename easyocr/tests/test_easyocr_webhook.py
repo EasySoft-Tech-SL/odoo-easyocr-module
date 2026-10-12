@@ -131,6 +131,23 @@ class TestEasyocrWebhook(HttpCase):
         self.assertFalse(self.Document.search([('ref', '=', 'A/123')]))
         self.assertEqual(self._the_log().status, 'ignored')
 
+    def test_a_body_that_is_not_json_is_turned_away(self):
+        """A body nobody can parse is a bad request, not a crash. Answering 500
+        would make the sender retry the same garbage for ever.
+
+        Here it is the dispatcher that turns it away, before the route is
+        reached, so the answer is its own 400 and not the JSON object this
+        route builds. What matters is the code and that nothing was written.
+        """
+        response = self.url_open(
+            WEBHOOK_URL,
+            data='not json at all',
+            headers={'X-Webhook-Secret': SECRET, 'Content-Type': 'application/json'},
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(self._the_log())
+
     def test_a_value_we_cannot_read_is_logged_as_an_error(self):
         """A business failure answers 200: a 500 would make the sender retry."""
         payload = self._completed_payload()

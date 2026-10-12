@@ -1,13 +1,15 @@
 # Publicar en la Odoo Apps Store
 
-Estado a 12-oct-2026: **está publicado**. Las dos ramas están registradas,
-escaneadas sin errores y la ficha está viva en el catálogo:
+Estado a 12-oct-2026: **está publicado para 18.0 y 19.0.** Esas dos ramas están
+registradas, escaneadas sin errores y la ficha está viva en el catálogo. Las otras
+tres series (16.0, 17.0 y 20.0) están en el repositorio y todavía **no** en la
+tienda: se registran igual, y cada una añade una versión a la misma ficha.
 
 - Odoo 19: <https://apps.odoo.com/apps/modules/19.0/easyocr>
 - Odoo 18: <https://apps.odoo.com/apps/modules/18.0/easyocr>
 
-Es **una sola ficha con las dos versiones** (el mismo nombre técnico en las dos
-ramas), con selector de versión. El alta la hace sola la skill
+Es **una sola ficha con una versión por serie** (el mismo nombre técnico en todas
+las ramas), con selector de versión. El alta la hace sola la skill
 `publicar-modulo-odoo-apps` (`~/.claude/skills/`): entra en la tienda sin
 navegador, registra la URL, fuerza el escaneo y lee el resultado. El estado de
 cada repositorio registrado se ve en <https://apps.odoo.com/apps/dashboard/repos>
@@ -34,7 +36,7 @@ instalar a mano). Escanea la rama y monta la ficha con lo que encuentre:
 | Icono | `static/description/icon.png`, **100x100**, como los módulos oficiales de Odoo |
 | Icono en grande | `static/description/icon_hi.png`, 512x512 |
 | Portada y capturas | La clave `images` del manifiesto: la **primera** es la portada del catálogo, las demás van a la galería |
-| Nombre, resumen, categoría | Manifiesto: `EasyOCR`, `Accounting/Accounting` |
+| Nombre, resumen, categoría | Manifiesto: `EasyOCR Invoice Capture`, `Accounting/Accounting` |
 | Autor y soporte | `author`, `website`, `support` (`info@easysoft.es`) |
 
 Sin las tres primeras, la revisión de Odoo contesta «the module has no icon»,
@@ -48,10 +50,11 @@ ahí ella clona y escanea por su cuenta. Por eso lo hace la skill
 `publicar-modulo-odoo-apps` (`auth`, `repos`, `register`, `scan`), y por eso el
 ZIP no es el canal de publicación.
 
-1. Se registra una vez por rama: `19.0` alimenta las fichas de Odoo 19 y `18.0`
-   las de Odoo 18. El mismo nombre técnico en las dos ramas **es una sola ficha
-   con dos versiones**, así que van las dos. La URL va en forma ssh, con la rama
-   detrás de la almohadilla: `ssh://git@github.com/EasySoft-Tech-SL/odoo-easyocr-module.git#19.0`.
+1. Se registra una vez por rama: `19.0` alimenta la versión de Odoo 19 y `18.0`
+   la de Odoo 18. El mismo nombre técnico en todas las ramas **es una sola ficha
+   con una versión por serie**, así que se registran las cinco. La URL va en forma
+   ssh, con la rama detrás de la almohadilla:
+   `ssh://git@github.com/EasySoft-Tech-SL/odoo-easyocr-module.git#19.0`.
 2. La tienda vuelve a escanear a su ritmo (horas o días): la ficha no cambia en
    el momento. El escaneo se puede forzar desde el panel de cada repositorio.
 
@@ -65,7 +68,7 @@ Medido el 12-oct-2026 en el primer escaneo real, con el módulo todavía en
 > even if there is only one module.
 
 La tienda lista los hijos directos de la raíz y **no recursiona**, igual que hace
-Odoo con cada addons path. Así que el módulo se movió a `easyocr/` en las dos
+Odoo con cada addons path. Así que el módulo se movió a `easyocr/` en todas las
 ramas y todo lo que apuntaba a `addons/` se movió con él (el montaje de
 `docker-compose.yml`, los dos workflows, `tools/` y el README). El ZIP no cambia:
 ya llevaba `easyocr/` arriba, y el layout de la raíz es el que sirve para los dos

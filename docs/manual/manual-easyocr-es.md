@@ -1,7 +1,7 @@
 ---
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
-version: 19.0.1.0.12 / 18.0.1.0.12
+version: 1.0.13 (Odoo Community 16.0 a 20.0)
 date: 2026-10-12
 author: EasySoft Tech S.L.
 ---
@@ -48,17 +48,17 @@ que ya traen texto, no necesita contratar nada.
 
 # 2. Instalación
 
-El módulo se llama **EasyOCR** y se instala como cualquier otra aplicación de
-Odoo: entre en **Aplicaciones**, borre el filtro «Aplicaciones» y busque
-«EasyOCR».
+El módulo se llama **EasyOCR Invoice Capture** y se instala como cualquier otra
+aplicación de Odoo: entre en **Aplicaciones**, borre el filtro «Aplicaciones» y
+busque «EasyOCR».
 
-![La aplicación EasyOCR en la pantalla de Aplicaciones](img/01-instalacion.png)
+![La aplicación EasyOCR Invoice Capture en la pantalla de Aplicaciones](img/01-instalacion.png)
 
 Sobre la ficha verá el botón para instalarla. Si ya está instalada, la ficha se
 limita a ofrecerle más información, como en la imagen.
 
-Al terminar la instalación aparece una aplicación nueva llamada **EasyOCR** en
-el menú principal. Al abrirla entra en su pantalla de inicio:
+Al terminar la instalación aparece una aplicación nueva en el menú principal,
+con el nombre corto **EasyOCR**. Al abrirla entra en su pantalla de inicio:
 
 ![La pantalla de inicio de EasyOCR](img/02-inicio.png)
 
