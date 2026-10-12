@@ -11,6 +11,65 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.13] - 2026-10-12
+
+### Changed
+
+- **The module runs on five Odoo series, 16.0 to 20.0.** One branch per series, the same
+  code in all of them except where a series genuinely differs: the tag a list view is
+  written with, how a view declares its modifiers, how the webhook route reads its body,
+  and the templates of Odoo 20, which are Owl 3 and no longer Owl 2. `docs/SERIES.md` is
+  the list of those differences, measured on each series. Until now the module covered
+  18.0 and 19.0.
+- **It is called EasyOCR Invoice Capture.** That is the name the Apps Store card, the
+  Apps list and the module's own screens show. The technical name and the folder stay
+  `easyocr`: they are what an installed instance holds in its database, and renaming
+  them would leave an update looking for a module that is not there.
+- **The store page opens with the whole flow in one animation.** Three steps, from the
+  file to the entry, in a few seconds, instead of a paragraph asking the reader to
+  picture them.
+
+### Fixed
+
+- **The Invoices screen asked for a view type its series does not have.** The action
+  declared its list as a `tree` on 18 and 19, where the tag has been `list` since 18,
+  and the arch carried the `list` tag on 16 and 17, where only `tree` exists. Each
+  series names now the view its own version of Odoo looks for.
+- **A webhook body that is not JSON came back as a server error.** Something posting to
+  the webhook with a body nobody can parse was answered with a 500, which invites the
+  sender to retry the same unreadable call. It is answered with a 400 now, and nothing
+  is written to the log.
+- **The buttons on a batch did not know whether it had already been sent.** They asked
+  about the batch's reference at the service, a field the same form hides from anybody
+  who is not in the technical group. Odoo 16 refused to load the view over it, 17
+  refused it on `readonly`, and 18 to 20 loaded it and decided on a field the reader had
+  not been given. They ask about the date it went out instead, which is written at the
+  same moment and only once the service has taken the files, so it says the same thing.
+  A test reads the views and fails when a condition names a field its own view hides.
+- **The web client did not start at all on 16 and 17.** Up to 17 the backend bundle reaches
+  the browser as a classic script, and a file is only made a module by `/** @odoo-module **/`
+  at the very top. Every script of the module opened with its `import`s and nothing else,
+  so the browser stopped at the first one and left a blank screen with nothing in the log
+  to say why. The marker now opens all nine of them on those two series; from 18 the bundle
+  is a module already and the marker buys nothing.
+- **The templates of 16 never reached the app.** Odoo 16 collects them with the
+  `[t-name][owl]` selector and no other, so a template written like every other series'
+  arrives nowhere and the first screen that asks for it dies with "Missing template". The
+  attribute is on the 13 templates of that branch alone; from 17 on it is not read, and the
+  file is written as on the rest.
+- **The screens that ask about the reader's group asked the wrong way.** Up to 17 the user
+  is a service whose `hasGroup` answers with a promise, and there is no `@web/core/user` at
+  all: importing it left the module with an unmet dependency and neither screen loaded.
+  From 18 it is the other way round. Each branch takes the user where its own series keeps
+  it.
+- **The configuration screen did not render on 16.** The registry of view widgets holds the
+  component itself up to 16 and a `{ component: ... }` wrapper from 17 on, and written the
+  other way the screen does not render: 16 throws "C is not a constructor" and the newer
+  series say nothing at all.
+- **A test reads the four of those off the files.** `tests/test_easyocr_assets.py` is the
+  same file on all five branches and checks only what the series it runs on reads, so a rule
+  borrowed from a neighbouring series fails there instead of in a blank screen.
+
 ## [1.0.12] - 2026-10-12
 
 ### Changed

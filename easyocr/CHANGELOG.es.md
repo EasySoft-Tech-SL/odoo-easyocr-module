@@ -11,6 +11,65 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Junto a él va una traducción al español, en `CHANGELOG.es.md`.
 
+## [1.0.13] - 2026-10-12
+
+### Cambiado
+
+- **El módulo corre en cinco series de Odoo, de la 16.0 a la 20.0.** Una rama por serie,
+  el mismo código en todas salvo donde una serie difiere de verdad: la etiqueta con la
+  que se escribe una vista de lista, cómo declara sus modificadores una vista, cómo lee
+  el cuerpo la ruta del webhook, y las plantillas de Odoo 20, que son Owl 3 y ya no Owl
+  2. `docs/SERIES.md` es la lista de esas diferencias, medida en cada serie. Hasta ahora
+  el módulo cubría la 18.0 y la 19.0.
+- **Se llama EasyOCR Invoice Capture.** Ese es el nombre que muestran la ficha de la Apps
+  Store, la lista de aplicaciones y las propias pantallas del módulo. El nombre técnico y
+  la carpeta siguen siendo `easyocr`: son lo que una instancia instalada guarda en su
+  base de datos, y cambiarlos dejaría a una actualización buscando un módulo que no está.
+- **La ficha de la tienda abre con todo el flujo en una animación.** Tres pasos, del
+  fichero al asiento, en unos segundos, en lugar de un párrafo pidiéndole al lector que
+  se los imagine.
+
+### Corregido
+
+- **La pantalla de Facturas pedía un tipo de vista que su serie no tiene.** La acción
+  declaraba su lista como `tree` en la 18 y la 19, donde la etiqueta es `list` desde la
+  18, y el archivo llevaba la etiqueta `list` en la 16 y la 17, donde solo existe `tree`.
+  Cada serie nombra ahora la vista que busca su propia versión de Odoo.
+- **Un cuerpo de webhook que no es JSON salía como error de servidor.** Algo que
+  publicara en el webhook un cuerpo que nadie puede leer recibía un 500, lo que invita al
+  emisor a repetir la misma llamada ilegible. Ahora recibe un 400 y no se escribe nada en
+  el registro.
+- **Los botones de un lote no sabían si ya se había enviado.** Preguntaban por la
+  referencia del lote en el servicio, un campo que ese mismo formulario esconde a quien no
+  está en el grupo técnico. Odoo 16 se negaba a cargar la vista por ello, la 17 se negaba
+  en `readonly`, y de la 18 a la 20 cargaba y decidía sobre un campo que a ese lector no se
+  le había dado. Preguntan por la fecha de salida, que se escribe en el mismo momento y
+  solo cuando el servicio ya ha tomado los ficheros, así que dice lo mismo. Una prueba lee
+  las vistas y falla cuando una condición nombra un campo que su propia vista esconde.
+- **El cliente web no arrancaba en la 16 y la 17.** Hasta la 17 el paquete del backend llega
+  al navegador como script clásico, y un fichero solo se convierte en módulo si lo dice en
+  la primera línea: `/** @odoo-module **/`. Todos los scripts del módulo empezaban con sus
+  `import` y nada más, así que el navegador se paraba en el primero y dejaba la pantalla en
+  blanco, sin nada en el registro que dijera por qué. Ahora el marcador abre los nueve en
+  esas dos series; desde la 18 el paquete ya es un módulo y el marcador no aporta nada.
+- **Las plantillas de la 16 no llegaban a la aplicación.** Odoo 16 las recoge solo con el
+  selector `[t-name][owl]`, así que una plantilla escrita como en cualquier otra serie no
+  llega a ningún sitio y la primera pantalla que la pide muere con "Missing template". El
+  atributo está en las 13 plantillas de esa rama y solo en ellas; desde la 17 no se lee y el
+  fichero se escribe como en las demás.
+- **Las pantallas que preguntan por el grupo del lector preguntaban de la otra forma.** Hasta
+  la 17 el usuario es un servicio cuyo `hasGroup` contesta con una promesa, y no existe
+  `@web/core/user`: importarlo dejaba al módulo con una dependencia sin resolver y ninguna
+  de las dos pantallas cargaba. Desde la 18 es al revés. Cada rama toma el usuario de donde
+  lo guarda su propia serie.
+- **La pantalla de configuración no se dibujaba en la 16.** El registro de widgets de vista
+  guarda el propio componente hasta la 16 y un envoltorio `{ component: ... }` desde la 17,
+  y escrito al revés la pantalla no se dibuja: la 16 lanza "C is not a constructor" y las
+  series nuevas no dicen nada.
+- **Una prueba lee las cuatro cosas de los ficheros.** `tests/test_easyocr_assets.py` es el
+  mismo fichero en las cinco ramas y comprueba solo lo que lee la serie en la que corre, así
+  que una regla copiada de la serie de al lado falla ahí y no en una pantalla en blanco.
+
 ## [1.0.12] - 2026-10-12
 
 ### Cambiado

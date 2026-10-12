@@ -21,6 +21,17 @@ class TestEasyocrClientActions(TransactionCase):
     """
 
     def test_every_client_action_accepts_the_props_odoo_passes(self):
+        """The list Odoo hands a client action is the core's, not ours.
+
+        Owl 3 ignores a ``static props`` (the compatibility layer warns about
+        it) and takes the schema through ``useProps``. Its object schema is
+        loose, so nothing refuses to open over a prop that is not named -- but
+        the props are not guesswork: the core names them in
+        ``standardActionServiceProps`` and its own client actions pass it
+        along. A component that names its own two and leaves out the rest is
+        the same bug the earlier series kept out with ``"*": true``, one prop
+        away.
+        """
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         folder = os.path.join(root, 'static', 'src', 'js')
         checked = 0
@@ -34,15 +45,15 @@ class TestEasyocrClientActions(TransactionCase):
                     r'class\s+%s\b.*?\n}' % re.escape(component), source, re.S,
                 )
                 self.assertTrue(body, "%s registers %s but does not define it" % (name, component))
-                props = re.search(r'static props = \{(.*?)\n    \};', body.group(0), re.S)
+                props = re.search(r'props = useProps\((.*?)\);', body.group(0), re.S)
                 if not props:
-                    # Without a props declaration OWL checks nothing.
+                    # No schema at all: Owl takes whatever arrives.
                     continue
                 checked += 1
-                self.assertIn(
-                    '"*": true', props.group(1),
-                    "%s (%s) lists its props and nothing else: in debug mode it "
-                    "will not open." % (component, name),
+                self.assertTrue(
+                    re.search(r'\bstandardActionServiceProps\b', props.group(1)),
+                    "%s (%s) names its own props and leaves out the ones the "
+                    "client action is handed." % (component, name),
                 )
         self.assertGreater(checked, 1, "No client action with props was found to check.")
 

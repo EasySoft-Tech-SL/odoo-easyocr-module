@@ -41,25 +41,33 @@
         <field name="model">easyocr.batch</field>
         <field name="arch" type="xml">
             <form string="Batch">
+                <!-- What tells a batch apart as "already sent" is sent_at and not
+                     service_uuid: the date is written in the same transaction, and
+                     only when the service has taken the files, so the two say the
+                     same thing. service_uuid stays out of these conditions because
+                     the field is hidden behind base.group_no_one a few lines down,
+                     and a view that hides a field from a group cannot name it in a
+                     modifier: Odoo 16 refuses the whole view, 17 refuses it on
+                     readonly. -->
                 <header>
                     <button
                         name="action_send_button"
                         type="object"
                         string="Process batch"
                         class="btn-primary"
-                        invisible="service_uuid"
+                        invisible="sent_at"
                     />
                     <button
                         name="action_refresh_button"
                         type="object"
                         string="Refresh"
-                        invisible="not service_uuid or state in ('completed', 'partial', 'failed', 'cancelled')"
+                        invisible="not sent_at or state in ('completed', 'partial', 'failed', 'cancelled')"
                     />
                     <button
                         name="action_cancel_button"
                         type="object"
                         string="Cancel"
-                        invisible="not service_uuid or state in ('completed', 'partial', 'failed', 'cancelled')"
+                        invisible="not sent_at or state in ('completed', 'partial', 'failed', 'cancelled')"
                         confirm="Cancel this batch? This action cannot be undone."
                     />
                     <field name="state" widget="statusbar" statusbar_visible="pending,processing,completed,partial,failed"/>
@@ -93,7 +101,7 @@
                     </group>
                     <notebook>
                         <page string="Files" name="documents">
-                            <field name="document_ids" readonly="service_uuid">
+                            <field name="document_ids" readonly="sent_at">
                                 <list>
                                     <field name="name"/>
                                     <field name="state" widget="badge"/>
@@ -106,11 +114,11 @@
                         </page>
                         <page string="Configuration" name="options">
                             <group>
-                                <field name="include_extracted_text" readonly="service_uuid"/>
-                                <field name="auto_correct" readonly="service_uuid"/>
+                                <field name="include_extracted_text" readonly="sent_at"/>
+                                <field name="auto_correct" readonly="sent_at"/>
                             </group>
-                            <field name="custom_instructions" readonly="service_uuid" placeholder="E.g.: This supplier always includes shipping in the last line. VAT is always 21%. Discounts are on separate lines..."/>
-                            <field name="notify_url" readonly="service_uuid" placeholder="Leave empty to be told here"/>
+                            <field name="custom_instructions" readonly="sent_at" placeholder="E.g.: This supplier always includes shipping in the last line. VAT is always 21%. Discounts are on separate lines..."/>
+                            <field name="notify_url" readonly="sent_at" placeholder="Leave empty to be told here"/>
                         </page>
                         <page string="Detail" name="detail" invisible="not error_message">
                             <field name="error_message" nolabel="1"/>

@@ -290,8 +290,10 @@ class TestEasyocrAdmin(TransactionCase):
 
         page = bar.find('.//EasyocrAdminPage')
         self.assertIsNotNone(page, "The bar no longer draws the pages.")
+        # Owl 3 wants a component's own values named as ``this.`` in a template
+        # expression; up to 19 the bare name was read as the component's.
         self.assertEqual(
-            page.get('t-key'), 'active',
+            page.get('t-key'), 'this.active',
             "The page is drawn without a key: switching tabs patches it in place "
             "and it keeps showing the tab before it.",
         )
@@ -313,7 +315,9 @@ class TestEasyocrAdmin(TransactionCase):
 
         blocks = list(page.iter('details'))
         self.assertEqual(len(blocks), 1, "The changelog is no longer drawn as blocks.")
-        self.assertEqual(blocks[0].get('t-foreach'), 'changelogVersions',
+        # ``this.`` for the same reason as the page key above: Owl 3 reads the
+        # template expression with the component as its scope.
+        self.assertEqual(blocks[0].get('t-foreach'), 'this.changelogVersions',
                          "The blocks are not the versions of the file.")
         self.assertIn('version.open', blocks[0].get('t-att-open') or '',
                       "No version is the one open when the page opens.")

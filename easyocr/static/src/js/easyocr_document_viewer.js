@@ -1,9 +1,10 @@
-import { Component, onMounted, onPatched, onWillStart, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, onWillUnmount, proxy, signal, useProps } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { loadJS } from "@web/core/assets";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 // Not a service: `user` is an object the web client fills from the session.
 // Asking the service registry for it throws "Service user is not available"
 // and takes the whole viewer down with it.
@@ -101,13 +102,11 @@ const CORNER_CURSORS = {
  */
 export class EasyocrDocumentViewer extends Component {
     static template = "easyocr.DocumentViewer";
-    // Odoo hands every client action more than these (updateActionState,
-    // className...); the shape is loose, so the extra ones are accepted and
-    // ignored instead of refusing to open the viewer.
-    props = useProps({
-        action: t.object(),
-        actionId: t.or([t.number(), t.boolean()]).optional(),
-    });
+    // Odoo hands every client action more than the action itself
+    // (updateActionState, className...); the core lists all of them in
+    // ``standardActionServiceProps``, and taking that list is what ``"*": true``
+    // did on the earlier series.
+    props = useProps(standardActionServiceProps);
 
     setup() {
         this.orm = useService("orm");

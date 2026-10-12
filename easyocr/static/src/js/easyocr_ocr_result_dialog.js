@@ -1,9 +1,10 @@
-import { Component, onMounted, onWillStart, proxy, signal, t, useListener, useProps } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, signal, useListener, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat as parseLocalFloat } from "@web/views/fields/parsers";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 // What the reader may correct on each card, and hand back with the bill. The
 // rest is shown read-only: a box that accepts typing and then ignores it is
@@ -31,12 +32,11 @@ let nextDialogId = 0;
  */
 export class OCRResultDialog extends Component {
     static template = "easyocr.OCRResultDialog";
-    // Odoo hands a client action more than these (updateActionState, className
-    // ...); the shape is loose, so the extra ones are accepted and ignored.
-    props = useProps({
-        action: t.object(),
-        actionId: t.or([t.number(), t.boolean()]).optional(),
-    });
+    // Owl 3 takes the schema through ``useProps``, and the props Odoo gives a
+    // client action are the ones the core lists in
+    // ``standardActionServiceProps``; naming them is what ``"*": true`` did on
+    // the earlier series.
+    props = useProps(standardActionServiceProps);
 
     setup() {
         this.orm = useService("orm");

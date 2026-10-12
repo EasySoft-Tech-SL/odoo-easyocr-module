@@ -1,8 +1,9 @@
-import { Component, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, signal, useProps } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 /**
  * How often a running batch is asked about while its screen is open.
@@ -24,13 +25,11 @@ const POLL_EVERY_MS = 8000;
 export class EasyocrBatch extends Component {
     static template = "easyocr.Batch";
     // Owl 3 ignores a static ``props``: the schema goes through ``useProps``,
-    // which checks what is named here and lets everything else through. The
-    // rest is what Odoo hands every client action (updateActionState,
-    // className...), and the old ``"*": true`` was there for exactly that.
-    props = useProps({
-        action: t.object().optional(),
-        actionId: t.or(t.number(), t.boolean()).optional(),
-    });
+    // and the props Odoo hands to a client action are the ones the core names
+    // in ``standardActionServiceProps`` (the action, its id, the class name,
+    // the action state). Taking that list is what ``"*": true`` did on the
+    // earlier series.
+    props = useProps(standardActionServiceProps);
 
     // Owl 3 replaced `useRef("name")` with a signal the template writes into:
     // `t-ref="this.fileInputRef"`, read back here as `this.fileInputRef()`,
