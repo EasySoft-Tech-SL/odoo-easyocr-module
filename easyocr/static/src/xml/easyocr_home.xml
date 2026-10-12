@@ -15,17 +15,17 @@
             <div class="o_easyocr_home_header">
                 <img
                     class="o_easyocr_home_logo"
-                    t-att-src="logoSrc"
+                    t-att-src="this.logoSrc"
                     alt="EasyOCR"
                 />
                 <div class="o_easyocr_home_header_text">
-                    <h1 t-out="title"/>
-                    <p t-out="subtitle"/>
+                    <h1 t-out="this.title"/>
+                    <p t-out="this.subtitle"/>
                 </div>
             </div>
 
             <div class="o_easyocr_home_stats">
-                <t t-foreach="stats" t-as="stat" t-key="stat.key">
+                <t t-foreach="this.stats" t-as="stat" t-key="stat.key">
                     <button
                         type="button"
                         class="o_easyocr_stat"
@@ -45,10 +45,10 @@
                 </t>
             </div>
 
-            <div class="o_easyocr_home_section" t-out="sectionTitle"/>
+            <div class="o_easyocr_home_section" t-out="this.sectionTitle"/>
 
             <div class="o_easyocr_home_grid">
-                <t t-foreach="cards" t-as="card" t-key="card.key">
+                <t t-foreach="this.cards" t-as="card" t-key="card.key">
                     <button
                         type="button"
                         class="o_easyocr_card"
@@ -61,7 +61,7 @@
                         <h3 t-out="card.title"/>
                         <p t-out="card.note"/>
                         <span class="o_easyocr_card_footer">
-                            <span t-out="openLabel"/>
+                            <span t-out="this.openLabel"/>
                             <i class="oi" data-icon="arrow_forward"/>
                         </span>
                     </button>

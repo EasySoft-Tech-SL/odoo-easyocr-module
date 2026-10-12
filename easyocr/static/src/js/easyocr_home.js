@@ -1,4 +1,4 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -41,7 +41,7 @@ export class EasyocrHome extends Component {
         this.sectionTitle = _t("Quick access");
         this.openLabel = _t("Open");
 
-        this.state = useState({ counts: false, canConfigure: false });
+        this.state = proxy({ counts: false, canConfigure: false });
 
         onWillStart(() => this.loadCounts());
     }

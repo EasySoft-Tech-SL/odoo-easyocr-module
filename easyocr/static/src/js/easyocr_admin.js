@@ -1,4 +1,4 @@
-import { Component, markup, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, markup, onWillStart, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
@@ -27,14 +27,14 @@ export function adminTabs() {
 /** One of the five pages other than the settings. */
 export class EasyocrAdminPage extends Component {
     static template = "easyocr.AdminPage";
-    static props = {
-        tab: String,
-        onNavigate: { type: Function, optional: true },
-    };
+    props = useProps({
+        tab: t.string(),
+        onNavigate: t.function().optional(),
+    });
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({ loading: true, page: null, error: "" });
+        this.state = proxy({ loading: true, page: null, error: "" });
         onWillStart(() => this.load());
     }
 
@@ -269,12 +269,13 @@ export class EasyocrAdminPage extends Component {
 export class EasyocrAdminTabs extends Component {
     static template = "easyocr.AdminTabs";
     static components = { EasyocrAdminPage };
-    static props = { active: { type: String, optional: true }, "*": true };
+    props = useProps({ active: t.string().optional() });
+
+    rootRef = signal.ref();
 
     setup() {
-        this.rootRef = useRef("root");
         this.tabs = adminTabs();
-        this.state = useState({ tab: this.props.active || "setup" });
+        this.state = proxy({ tab: this.props.active || "setup" });
         // The five pages are drawn here, inside the settings screen, and not as
         // an action of their own. A screen of their own would leave the settings
         // form behind, and the left panel of the settings lives in that form:
@@ -284,17 +285,18 @@ export class EasyocrAdminTabs extends Component {
         // Odoo wraps each app of the screen in a block of its own, settings
         // fields and all; while a page of ours is showing, those fields step
         // aside, so the page is what the block shows.
-        useEffect(
-            () => {
-                const block = this.rootRef.el?.closest(".app_settings_block");
-                if (!block) {
-                    return;
-                }
-                block.classList.toggle("o_easyocr_admin_page_mode", this.state.tab !== "setup");
-                return () => block.classList.remove("o_easyocr_admin_page_mode");
-            },
-            () => [this.state.tab],
-        );
+        //
+        // Owl 3's `useEffect` has no dependency list: it follows whatever the
+        // body reads, which here is the tab and the root element. That is
+        // enough, and leaving the list in would read as if it did something.
+        useEffect(() => {
+            const block = this.rootRef()?.closest(".app_settings_block");
+            if (!block) {
+                return;
+            }
+            block.classList.toggle("o_easyocr_admin_page_mode", this.state.tab !== "setup");
+            return () => block.classList.remove("o_easyocr_admin_page_mode");
+        });
     }
 
     get active() {

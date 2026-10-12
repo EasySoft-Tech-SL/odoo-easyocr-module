@@ -6,7 +6,7 @@
          boxes. It mirrors the module this is a port of, which asks for them in
          a small modal rather than typing the name into the column. -->
     <t t-name="easyocr.TemplateDialog">
-        <Dialog title="props.title" size="'md'">
+        <Dialog title="this.props.title" size="'md'">
         <div class="o_easyocr_template_dialog">
             <div class="mb-2">
                 <label class="form-label" for="template_dialog_name">Template name</label>
@@ -14,34 +14,34 @@
                     id="template_dialog_name"
                     type="text"
                     class="form-control"
-                    t-model="state.name"
-                    t-on-keydown="onNameKeydown"
+                    t-model="this.state.name"
+                    t-on-keydown="this.onNameKeydown"
                     autofocus="true"
                 />
             </div>
 
-            <div class="mb-2" t-if="props.suppliers and props.suppliers.length">
+            <div class="mb-2" t-if="this.props.suppliers and this.props.suppliers.length">
                 <label class="form-label" for="template_dialog_supplier">Vendor</label>
-                <select id="template_dialog_supplier" class="form-select" t-model="state.supplierId">
+                <select id="template_dialog_supplier" class="form-select" t-model="this.state.supplierId">
                     <option value="">No vendor (generic)</option>
-                    <t t-foreach="props.suppliers" t-as="supplier" t-key="supplier.id">
+                    <t t-foreach="this.props.suppliers" t-as="supplier" t-key="supplier.id">
                         <option t-att-value="supplier.id"><t t-out="supplier.name"/></option>
                     </t>
                 </select>
             </div>
 
-            <div class="mb-2" t-if="props.aiEnabled">
+            <div class="mb-2" t-if="this.props.aiEnabled">
                 <label class="form-label" for="template_dialog_instructions">Extra instructions</label>
                 <textarea
                     id="template_dialog_instructions"
                     class="form-control"
                     rows="3"
-                    t-model="state.instructions"
+                    t-model="this.state.instructions"
                 />
             </div>
         </div>
         <t t-set-slot="footer">
-            <button class="btn btn-primary" t-on-click="save">Save</button>
+            <button class="btn btn-primary" t-on-click="this.save">Save</button>
             <button class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
         </t>
         </Dialog>

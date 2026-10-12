@@ -1,4 +1,4 @@
-import { Component, onWillUnmount, useRef, useState } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -23,23 +23,27 @@ const POLL_EVERY_MS = 8000;
  */
 export class EasyocrBatch extends Component {
     static template = "easyocr.Batch";
-    static props = {
-        action: { type: Object, optional: true },
-        actionId: { type: [Number, Boolean], optional: true },
-        // Odoo hands every client action more than these (updateActionState,
-        // className...), and in debug mode a component that does not accept
-        // them refuses to open.
-        "*": true,
-    };
+    // Owl 3 ignores a static ``props``: the schema goes through ``useProps``,
+    // which checks what is named here and lets everything else through. The
+    // rest is what Odoo hands every client action (updateActionState,
+    // className...), and the old ``"*": true`` was there for exactly that.
+    props = useProps({
+        action: t.object().optional(),
+        actionId: t.or(t.number(), t.boolean()).optional(),
+    });
+
+    // Owl 3 replaced `useRef("name")` with a signal the template writes into:
+    // `t-ref="this.fileInputRef"`, read back here as `this.fileInputRef()`,
+    // which is the element itself and no longer a wrapper around it.
+    fileInputRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.actionService = useService("action");
         this.dialog = useService("dialog");
-        this.fileInputRef = useRef("fileInput");
 
-        this.state = useState({
+        this.state = proxy({
             files: [],
             name: "",
             customInstructions: "",

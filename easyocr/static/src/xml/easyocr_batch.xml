@@ -8,43 +8,43 @@
                  and saying how to read them happen here, and nothing leaves the
                  machine until Send is pressed: a batch is where the readings are
                  paid for all at once, so the decision is made once. -->
-            <div t-if="!state.sent" class="o_easyocr_batch_picker">
+            <div t-if="!this.state.sent" class="o_easyocr_batch_picker">
                 <h1>Send documents in a batch</h1>
                 <p class="text-muted">
                     Choose the invoices you want read, or drop them here.
                 </p>
 
                 <div
-                    t-attf-class="o_easyocr_batch_drop {{ state.dragging ? 'dragging' : '' }}"
-                    t-on-click="() => this.fileInputRef.el.click()"
-                    t-on-dragover="onDragOver"
-                    t-on-dragleave="onDragLeave"
-                    t-on-drop="onDrop"
+                    t-attf-class="o_easyocr_batch_drop {{ this.state.dragging ? 'dragging' : '' }}"
+                    t-on-click="() => this.fileInputRef().click()"
+                    t-on-dragover="this.onDragOver"
+                    t-on-dragleave="this.onDragLeave"
+                    t-on-drop="this.onDrop"
                 >
                     <i class="oi" data-icon="content_copy"/>
                     <p class="o_easyocr_batch_drop_title">Drop the files here, or choose them</p>
                     <p class="o_easyocr_batch_drop_hint">PDF or photo. Several at a time.</p>
                     <button class="btn btn-primary" type="button">Choose files</button>
                     <input
-                        t-ref="fileInput"
+                        t-ref="this.fileInputRef"
                         type="file"
                         class="d-none"
                         multiple="multiple"
                         accept=".pdf,.jpg,.jpeg,.png"
-                        t-on-change="onFilesChosen"
+                        t-on-change="this.onFilesChosen"
                     />
                 </div>
 
-                <div t-if="state.files.length" class="o_easyocr_batch_files">
+                <div t-if="this.state.files.length" class="o_easyocr_batch_files">
                     <!-- The count and the total weight are one sentence, so it
                          is written as one and translated as one: a sentence
                          glued together in the markup leaves its words in
                          English whatever the .po says. -->
                     <div class="o_easyocr_batch_files_head">
-                        <span t-out="filesLabel()"/>
-                        <button class="btn btn-link btn-sm" t-on-click="clearFiles">Clear</button>
+                        <span t-out="this.filesLabel()"/>
+                        <button class="btn btn-link btn-sm" t-on-click="this.clearFiles">Clear</button>
                     </div>
-                    <div t-foreach="state.files" t-as="file" t-key="file.uid" class="o_easyocr_batch_file">
+                    <div t-foreach="this.state.files" t-as="file" t-key="file.uid" class="o_easyocr_batch_file">
                         <i class="oi" data-icon="description"/>
                         <span class="o_easyocr_batch_file_name" t-out="file.name"/>
                         <span class="o_easyocr_batch_file_size" t-out="this.sizeLabel(file.size)"/>
@@ -64,7 +64,7 @@
                             type="text"
                             class="form-control"
                             placeholder="March invoices"
-                            t-model="state.name"
+                            t-model="this.state.name"
                         />
                     </div>
                     <div class="o_easyocr_batch_field">
@@ -73,34 +73,34 @@
                             id="eo_batch_instructions"
                             class="form-control"
                             rows="3"
-                            t-model="state.customInstructions"
+                            t-model="this.state.customInstructions"
                             placeholder="Anything the service should know about these files. Leave it out and it works them out one by one."
                         />
                     </div>
                     <div class="o_easyocr_batch_checks">
                         <label class="form-check">
-                            <input type="checkbox" class="form-check-input" t-model="state.includeText"/>
+                            <input type="checkbox" class="form-check-input" t-model="this.state.includeText"/>
                             <span class="form-check-label">Keep the text it read</span>
                         </label>
                         <label class="form-check">
-                            <input type="checkbox" class="form-check-input" t-model="state.autoCorrect"/>
+                            <input type="checkbox" class="form-check-input" t-model="this.state.autoCorrect"/>
                             <span class="form-check-label">Let it correct what it reads</span>
                         </label>
                     </div>
                 </div>
 
-                <div t-if="state.blockMessage" class="o_easyocr_batch_blocked">
+                <div t-if="this.state.blockMessage" class="o_easyocr_batch_blocked">
                     <i class="oi me-1" data-icon="warning"/>
-                    <t t-out="state.blockMessage"/>
+                    <t t-out="this.state.blockMessage"/>
                 </div>
 
                 <div class="o_easyocr_batch_actions">
                     <button
                         class="btn btn-primary"
-                        t-on-click="send"
-                        t-att-disabled="state.busy || !state.files.length"
-                    ><t>Send them</t><i t-if="state.busy" class="oi oi-spin ms-1" data-icon="progress_activity"/></button>
-                    <span t-if="state.busy" class="text-muted ms-2" t-out="state.busyLabel"/>
+                        t-on-click="this.send"
+                        t-att-disabled="this.state.busy || !this.state.files.length"
+                    ><t>Send them</t><i t-if="this.state.busy" class="oi oi-spin ms-1" data-icon="progress_activity"/></button>
+                    <span t-if="this.state.busy" class="text-muted ms-2" t-out="this.state.busyLabel"/>
                 </div>
             </div>
 
@@ -108,47 +108,47 @@
                  another and can take a while, so the screen stays and says how
                  far it has got, instead of sending the reader to a list to
                  guess. -->
-            <div t-if="state.sent" class="o_easyocr_batch_progress">
-                <h1 t-out="state.name || 'Batch'"/>
+            <div t-if="this.state.sent" class="o_easyocr_batch_progress">
+                <h1 t-out="this.state.name || 'Batch'"/>
                 <p class="text-muted">
-                    <t t-out="state.summary"/>
+                    <t t-out="this.state.summary"/>
                 </p>
 
                 <div class="o_easyocr_batch_bar">
                     <div
                         class="o_easyocr_batch_bar_fill"
-                        t-attf-style="width: {{ state.progress }}%"
+                        t-attf-style="width: {{ this.state.progress }}%"
                     />
                 </div>
-                <p class="o_easyocr_batch_counts" t-out="countsLabel()"/>
+                <p class="o_easyocr_batch_counts" t-out="this.countsLabel()"/>
 
-                <div t-if="state.errorMessage" class="o_easyocr_batch_blocked">
+                <div t-if="this.state.errorMessage" class="o_easyocr_batch_blocked">
                     <i class="oi me-1" data-icon="warning"/>
-                    <t t-out="state.errorMessage"/>
+                    <t t-out="this.state.errorMessage"/>
                 </div>
 
                 <div class="o_easyocr_batch_actions">
                     <button
                         class="btn btn-secondary"
-                        t-on-click="refresh"
-                        t-att-disabled="state.busy || state.done"
+                        t-on-click="this.refresh"
+                        t-att-disabled="this.state.busy || this.state.done"
                     >
                         Look again
                     </button>
-                    <button class="btn btn-link" t-on-click="openDocuments">
+                    <button class="btn btn-link" t-on-click="this.openDocuments">
                         See the documents
                     </button>
                     <button
-                        t-if="!state.done"
+                        t-if="!this.state.done"
                         class="btn btn-link text-danger"
-                        t-on-click="cancelBatch"
+                        t-on-click="this.cancelBatch"
                     >
                         Cancel
                     </button>
                     <button
-                        t-if="state.done"
+                        t-if="this.state.done"
                         class="btn btn-link"
-                        t-on-click="startAnother"
+                        t-on-click="this.startAnother"
                     >
                         Send another batch
                     </button>
