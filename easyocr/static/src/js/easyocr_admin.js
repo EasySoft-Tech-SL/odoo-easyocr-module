@@ -15,12 +15,12 @@ const { DateTime } = luxon;
  */
 export function adminTabs() {
     return [
-        { key: "setup", label: _t("Setup"), icon: "fa-sliders", color: "#6c5ce7" },
-        { key: "plan", label: _t("Service Plan"), icon: "fa-star", color: "#f39c12" },
-        { key: "license", label: _t("License Agreement"), icon: "fa-file-text", color: "#34495e" },
-        { key: "telemetry", label: _t("Telemetry & Data Protection"), icon: "fa-shield", color: "#3498db" },
-        { key: "about", label: _t("About"), icon: "fa-info-circle", color: "#3498db" },
-        { key: "changelog", label: _t("ChangeLog"), icon: "fa-list-ul", color: "#52c41a" },
+        { key: "setup", label: _t("Setup"), icon: "tune", color: "#6c5ce7" },
+        { key: "plan", label: _t("Service Plan"), icon: "star", color: "#f39c12" },
+        { key: "license", label: _t("License Agreement"), icon: "description", color: "#34495e" },
+        { key: "telemetry", label: _t("Telemetry & Data Protection"), icon: "security", color: "#3498db" },
+        { key: "about", label: _t("About"), icon: "info", color: "#3498db" },
+        { key: "changelog", label: _t("ChangeLog"), icon: "format_list_bulleted", color: "#52c41a" },
     ];
 }
 

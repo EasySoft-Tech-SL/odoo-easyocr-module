@@ -21,7 +21,7 @@
                     t-on-dragleave="onDragLeave"
                     t-on-drop="onDrop"
                 >
-                    <i class="fa fa-files-o"/>
+                    <i class="oi" data-icon="content_copy"/>
                     <p class="o_easyocr_batch_drop_title">Drop the files here, or choose them</p>
                     <p class="o_easyocr_batch_drop_hint">PDF or photo. Several at a time.</p>
                     <button class="btn btn-primary" type="button">Choose files</button>
@@ -45,7 +45,7 @@
                         <button class="btn btn-link btn-sm" t-on-click="clearFiles">Clear</button>
                     </div>
                     <div t-foreach="state.files" t-as="file" t-key="file.uid" class="o_easyocr_batch_file">
-                        <i class="fa fa-file-o"/>
+                        <i class="oi" data-icon="description"/>
                         <span class="o_easyocr_batch_file_name" t-out="file.name"/>
                         <span class="o_easyocr_batch_file_size" t-out="this.sizeLabel(file.size)"/>
                         <button
@@ -90,7 +90,7 @@
                 </div>
 
                 <div t-if="state.blockMessage" class="o_easyocr_batch_blocked">
-                    <i class="fa fa-exclamation-triangle me-1"/>
+                    <i class="oi me-1" data-icon="warning"/>
                     <t t-out="state.blockMessage"/>
                 </div>
 
@@ -99,7 +99,7 @@
                         class="btn btn-primary"
                         t-on-click="send"
                         t-att-disabled="state.busy || !state.files.length"
-                    ><t>Send them</t><i t-if="state.busy" class="fa fa-spinner fa-spin ms-1"/></button>
+                    ><t>Send them</t><i t-if="state.busy" class="oi oi-spin ms-1" data-icon="progress_activity"/></button>
                     <span t-if="state.busy" class="text-muted ms-2" t-out="state.busyLabel"/>
                 </div>
             </div>
@@ -123,7 +123,7 @@
                 <p class="o_easyocr_batch_counts" t-out="countsLabel()"/>
 
                 <div t-if="state.errorMessage" class="o_easyocr_batch_blocked">
-                    <i class="fa fa-exclamation-triangle me-1"/>
+                    <i class="oi me-1" data-icon="warning"/>
                     <t t-out="state.errorMessage"/>
                 </div>
 

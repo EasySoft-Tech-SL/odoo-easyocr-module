@@ -64,7 +64,7 @@ export class EasyocrHome extends Component {
         return [
             {
                 key: "invoices",
-                icon: "fa-money",
+                icon: "payments",
                 label: _t("Invoices"),
                 count: counts ? counts.invoices : null,
                 action: "easyocr.action_easyocr_invoice",
@@ -73,7 +73,7 @@ export class EasyocrHome extends Component {
             },
             {
                 key: "templates",
-                icon: "fa-th-large",
+                icon: "grid_view",
                 label: _t("Templates"),
                 count: counts ? counts.templates : null,
                 action: "easyocr.action_easyocr_template",
@@ -89,7 +89,7 @@ export class EasyocrHome extends Component {
                 // First, as it is in the module this is a port of: uploading a
                 // file and landing in the viewer is what most visits are for.
                 key: "upload",
-                icon: "fa-file-pdf-o",
+                icon: "picture_as_pdf",
                 title: _t("Upload PDF"),
                 note: _t("Import a PDF and visually extract supplier invoice data."),
                 action: "easyocr.action_easyocr_new_document",
@@ -97,7 +97,7 @@ export class EasyocrHome extends Component {
             },
             {
                 key: "batch",
-                icon: "fa-files-o",
+                icon: "content_copy",
                 title: _t("Batch processing"),
                 note: _t("Process multiple PDFs at once with AI-powered automatic extraction."),
                 action: "easyocr.action_easyocr_batch",
@@ -105,7 +105,7 @@ export class EasyocrHome extends Component {
             },
             {
                 key: "capture",
-                icon: "fa-camera",
+                icon: "photo_camera",
                 title: _t("Scan expense"),
                 note: _t("Scan an expense receipt from your phone and register it automatically."),
                 url: "/easyocr/capture",
@@ -113,7 +113,7 @@ export class EasyocrHome extends Component {
             },
             {
                 key: "templates",
-                icon: "fa-th-large",
+                icon: "grid_view",
                 title: _t("Templates"),
                 note: _t("Manage zone selection templates linked to suppliers."),
                 action: "easyocr.action_easyocr_template",
@@ -121,7 +121,7 @@ export class EasyocrHome extends Component {
             },
             {
                 key: "invoices",
-                icon: "fa-money",
+                icon: "payments",
                 title: _t("Invoices"),
                 note: _t("View the history of invoices generated from imported PDFs."),
                 action: "easyocr.action_easyocr_invoice",
@@ -129,7 +129,7 @@ export class EasyocrHome extends Component {
             },
             {
                 key: "webhooks",
-                icon: "fa-exchange",
+                icon: "swap_horiz",
                 title: _t("Webhook logs"),
                 note: _t("Audit incoming webhook notifications and review processing failures."),
                 action: "easyocr.action_easyocr_webhook_log",
@@ -140,7 +140,7 @@ export class EasyocrHome extends Component {
         if (this.state.canConfigure) {
             cards.push({
                 key: "settings",
-                icon: "fa-cog",
+                icon: "settings",
                 title: _t("Setup"),
                 note: _t("Configure the API key, cloud service and module options."),
                 url: "/odoo/settings#easyocr",

@@ -162,7 +162,7 @@
         gap: 0.35rem;
         cursor: pointer;
 
-        .fa-chevron-down {
+        .oi[data-icon="expand_more"] {
             color: #90a4ae;
         }
     }
@@ -542,7 +542,7 @@
         text-align: center;
         cursor: pointer;
 
-        .fa {
+        .oi {
             font-size: 3rem;
             opacity: 0.7;
         }

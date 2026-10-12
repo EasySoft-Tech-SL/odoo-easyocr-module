@@ -283,13 +283,13 @@ export class OCRResultDialog extends Component {
             return null;
         }
         if (match.status === "found") {
-            return { cls: "is-found", icon: "fa-check-circle", text: _t("Supplier on file: %s", match.name) };
+            return { cls: "is-found", icon: "check_circle", text: _t("Supplier on file: %s", match.name) };
         }
         if (match.status === "new") {
-            return { cls: "is-new", icon: "fa-plus-circle", text: _t("New supplier: it will be created from this data") };
+            return { cls: "is-new", icon: "add_circle", text: _t("New supplier: it will be created from this data") };
         }
         if (match.status === "own") {
-            return { cls: "is-own", icon: "fa-exclamation-triangle", text: _t("This tax ID is your own company's") };
+            return { cls: "is-own", icon: "warning", text: _t("This tax ID is your own company's") };
         }
         return null;
     }

@@ -61,7 +61,7 @@
                             name="action_open_document"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-file-text-o"
+                            icon="description"
                             invisible="not document_id"
                         >
                             <div class="o_stat_info">

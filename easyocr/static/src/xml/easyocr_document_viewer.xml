@@ -14,7 +14,7 @@
                         t-on-dragleave="onDragLeave"
                         t-on-drop="onDrop"
                     >
-                        <i class="fa fa-file-pdf-o"/>
+                        <i class="oi" data-icon="picture_as_pdf"/>
                         <p class="o_easyocr_empty_title">Open a PDF, or drop one here</p>
                         <p class="o_easyocr_empty_hint">A PDF or a photo of an invoice or a receipt.</p>
                         <button class="btn btn-primary" type="button">
@@ -31,10 +31,10 @@
                 </div>
                 <div t-else="" class="o_easyocr_viewer_pdf" t-ref="pdfContainer">
                     <div t-if="state.loading" class="o_easyocr_viewer_message">
-                        <i class="fa fa-spinner fa-spin me-2"/><t>Loading the document...</t>
+                        <i class="oi oi-spin me-2" data-icon="progress_activity"/><t>Loading the document...</t>
                     </div>
                     <div t-if="state.error" class="o_easyocr_viewer_message text-danger">
-                        <i class="fa fa-exclamation-triangle me-2"/><t>This document has no file attached, or the file could not be read.</t>
+                        <i class="oi me-2" data-icon="warning"/><t>This document has no file attached, or the file could not be read.</t>
                     </div>
                 </div>
 
@@ -51,7 +51,7 @@
                             class="btn btn-link btn-sm px-0"
                             t-on-click="backToDocument"
                         >
-                            <i class="fa fa-arrow-left me-1"/>Back to the document
+                            <i class="oi me-1" data-icon="arrow_back"/>Back to the document
                         </button>
                     </div>
 
@@ -67,7 +67,7 @@
                     <div class="o_easyocr_section o_easyocr_ai_hero" t-if="state.account and state.account.ai_enabled">
                         <div class="o_easyocr_ai_hero_head">
                             <div class="o_easyocr_ai_hero_icon">
-                                <i class="fa fa-magic"/>
+                                <i class="oi" data-icon="wand_stars"/>
                             </div>
                             <div>
                                 <span class="o_easyocr_ai_hero_title">
@@ -89,7 +89,7 @@
                                 />
                             </div>
                             <p class="text-muted mb-0">
-                                <i class="fa fa-spinner fa-spin me-1"/>
+                                <i class="oi oi-spin me-1" data-icon="progress_activity"/>
                                 <t t-out="state.busyLabel"/>
                             </p>
                         </div>
@@ -100,12 +100,12 @@
                             t-on-click="readWithAI"
                             t-att-disabled="state.busy"
                         >
-                            <i class="fa fa-magic me-1"/>
+                            <i class="oi me-1" data-icon="wand_stars"/>
                             Extract with AI
                         </button>
 
                         <div t-if="state.account.blocked" class="o_easyocr_blocked">
-                            <i class="fa fa-exclamation-triangle me-1"/>
+                            <i class="oi me-1" data-icon="warning"/>
                             <t t-out="state.account.message"/>
                         </div>
 
@@ -125,14 +125,14 @@
                                 </span>
                                 <span class="o_easyocr_quota_toggle_right">
                                     <span class="o_easyocr_quota_remaining"><t t-out="state.account.quota.pages_remaining"/> Left</span>
-                                    <i class="fa fa-chevron-down"/>
+                                    <i class="oi" data-icon="expand_more"/>
                                 </span>
                             </button>
 
                             <div t-if="state.quotaExpanded" class="o_easyocr_quota_details">
                                 <div class="o_easyocr_quota_head">
                                     <span class="o_easyocr_quota_plan">
-                                        <i class="fa fa-star me-1"/>
+                                        <i class="oi me-1" data-icon="star"/>
                                         <t t-out="state.account.plan.name"/>
                                         <t t-if="state.account.plan.is_free">
                                             <span class="o_easyocr_badge o_easyocr_badge_free">FREE</span>
@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="o_easyocr_quota_stat" t-if="state.account.wallet.exists and state.account.wallet.balance_pages">
                                         <span class="o_easyocr_quota_label">
-                                            <i class="fa fa-credit-card me-1"/>Wallet
+                                            <i class="oi me-1" data-icon="credit_card"/>Wallet
                                         </span>
                                         <span class="o_easyocr_quota_value">
                                             <t t-out="state.account.wallet.balance_pages"/>
@@ -179,7 +179,7 @@
                     <div class="o_easyocr_section o_easyocr_ai_hero" t-elif="state.account">
                         <div class="o_easyocr_ai_hero_head">
                             <div class="o_easyocr_ai_hero_icon o_easyocr_ai_icon_promo">
-                                <i class="fa fa-magic"/>
+                                <i class="oi" data-icon="wand_stars"/>
                             </div>
                             <div>
                                 <span class="o_easyocr_ai_hero_title">
@@ -236,7 +236,7 @@
                         <div t-if="!state.empty" class="o_easyocr_section">
                             <h5>Templates</h5>
                             <p t-if="state.appliedTemplate and state.boxes.length" class="o_easyocr_applied">
-                                <i class="fa fa-check-circle me-1"/><t t-out="appliedLabel()"/>
+                                <i class="oi me-1" data-icon="check_circle"/><t t-out="appliedLabel()"/>
                             </p>
                             <div class="o_easyocr_template_row">
                                 <select
@@ -269,7 +269,7 @@
                         <div t-if="!state.empty and state.account and state.account.ai_enabled" class="o_easyocr_section">
                             <h5 class="o_easyocr_collapsible" t-on-click="toggleCustom">
                                 AI Instructions
-                                <i class="fa fa-chevron-down ms-auto"/>
+                                <i class="oi ms-auto" data-icon="expand_more"/>
                             </h5>
                             <textarea
                                 t-if="state.customExpanded"
@@ -370,9 +370,9 @@
                          chips, which is how a whole page is drawn without the
                          mouse. One sentence, so it translates as one. -->
                     <div class="o_easyocr_help" t-if="!state.empty">
-                        <i class="fa fa-keyboard-o me-1"/>
+                        <i class="oi me-1" data-icon="keyboard"/>
                         Help and shortcuts
-                        <i class="fa fa-question-circle ms-1" t-att-title="helpText()"/>
+                        <i class="oi ms-1" data-icon="help" t-att-title="helpText()"/>
                     </div>
                 </div>
             </div>

@@ -35,7 +35,7 @@
                             class="o_easyocr_stat_icon"
                             t-attf-style="background: {{ stat.bg }}; color: {{ stat.accent }}"
                         >
-                            <i t-attf-class="fa {{ stat.icon }}"/>
+                            <i class="oi" t-att-data-icon="stat.icon"/>
                         </span>
                         <span class="o_easyocr_stat_info">
                             <strong t-out="stat.count === null ? '—' : stat.count"/>
@@ -56,13 +56,13 @@
                         t-on-click="() => this.open(card)"
                     >
                         <span class="o_easyocr_card_icon">
-                            <i t-attf-class="fa {{ card.icon }}"/>
+                            <i class="oi" t-att-data-icon="card.icon"/>
                         </span>
                         <h3 t-out="card.title"/>
                         <p t-out="card.note"/>
                         <span class="o_easyocr_card_footer">
                             <span t-out="openLabel"/>
-                            <i class="fa fa-arrow-right"/>
+                            <i class="oi" data-icon="arrow_forward"/>
                         </span>
                     </button>
                 </t>

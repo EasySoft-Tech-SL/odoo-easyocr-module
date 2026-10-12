@@ -70,7 +70,7 @@
                             name="action_open_documents"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-file-text-o"
+                            icon="description"
                             invisible="not document_count"
                         >
                             <field name="document_count" widget="statinfo"/>

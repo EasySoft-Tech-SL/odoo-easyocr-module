@@ -24,7 +24,7 @@
                         t-att-class="'o_easyocr_result_supplier_hint ' + supplierHint().cls"
                         role="status"
                     >
-                        <i t-att-class="'fa ' + supplierHint().icon + ' me-1'" aria-hidden="true"/>
+                        <i class="oi me-1" t-att-data-icon="supplierHint().icon" aria-hidden="true"/>
                         <t t-out="supplierHint().text"/>
                     </div>
                 </div>
@@ -42,10 +42,10 @@
             t-att-aria-controls="uid + '_card_' + card"
             t-on-click="() => this.toggleCard(card)"
         >
-            <span t-att-class="'o_easyocr_result_card_icon is-' + card" aria-hidden="true"><i t-att-class="'fa ' + icon"/></span>
+            <span t-att-class="'o_easyocr_result_card_icon is-' + card" aria-hidden="true"><i class="oi" t-att-data-icon="icon"/></span>
             <span class="o_easyocr_result_card_title"><t t-out="title"/></span>
             <span t-if="count !== undefined" class="o_easyocr_result_count"><t t-out="count"/></span>
-            <i t-att-class="'fa fa-chevron-down o_easyocr_result_chevron' + (isCollapsed(card) ? ' is-collapsed' : '')" aria-hidden="true"/>
+            <i t-attf-class="oi o_easyocr_result_chevron {{ isCollapsed(card) ? 'is-collapsed' : '' }}" data-icon="expand_more" aria-hidden="true"/>
         </button>
     </t>
 
@@ -66,7 +66,7 @@
 
                 <div class="o_easyocr_result_header">
                     <div class="o_easyocr_result_title">
-                        <span class="o_easyocr_result_title_icon" aria-hidden="true"><i class="fa fa-magic"/></span>
+                        <span class="o_easyocr_result_title_icon" aria-hidden="true"><i class="oi" data-icon="wand_stars"/></span>
                         <div>
                             <h4 t-att-id="uid + '_title'">AI Result</h4>
                             <ul class="o_easyocr_result_pills" t-if="pills().length">
@@ -84,10 +84,10 @@
                             t-att-aria-controls="uid + '_payload'"
                             t-on-click="togglePayload"
                         >
-                            <i class="fa fa-code me-1" aria-hidden="true"/>JSON
+                            <i class="oi me-1" data-icon="code" aria-hidden="true"/>JSON
                         </button>
                         <button type="button" class="o_easyocr_result_close" t-on-click="close" title="Close" aria-label="Close">
-                            <i class="fa fa-times" aria-hidden="true"/>
+                            <i class="oi" data-icon="close" aria-hidden="true"/>
                         </button>
                     </div>
                 </div>
@@ -98,11 +98,11 @@
 
                 <div class="o_easyocr_result_body">
                     <div t-if="state.loading" class="o_easyocr_result_loading" role="status">
-                        <i class="fa fa-circle-o-notch fa-spin me-2" aria-hidden="true"/>Loading…
+                        <i class="oi oi-spin me-2" data-icon="progress_activity" aria-hidden="true"/>Loading…
                     </div>
 
                     <div t-if="mismatch()" class="o_easyocr_result_warning" role="alert">
-                        <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"/>
+                        <i class="oi me-2" data-icon="warning" aria-hidden="true"/>
                         <strong>Lines do not match document totals</strong>
                         <span class="ms-1"><t t-out="mismatch()"/></span>
                     </div>
@@ -110,7 +110,7 @@
                     <section t-if="hasSection('document')" class="o_easyocr_result_card">
                         <t t-call="easyocr.OCRResultDialog.cardHead">
                             <t t-set="card" t-value="'document'"/>
-                            <t t-set="icon" t-value="'fa-file-text-o'"/>
+                            <t t-set="icon" t-value="'description'"/>
                             <t t-set="title">Document</t>
                         </t>
                         <div t-if="!isCollapsed('document')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_document'">
@@ -121,7 +121,7 @@
                     <section t-if="hasSection('supplier')" class="o_easyocr_result_card">
                         <t t-call="easyocr.OCRResultDialog.cardHead">
                             <t t-set="card" t-value="'supplier'"/>
-                            <t t-set="icon" t-value="'fa-building-o'"/>
+                            <t t-set="icon" t-value="'business'"/>
                             <t t-set="title">Supplier</t>
                         </t>
                         <div t-if="!isCollapsed('supplier')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_supplier'">
@@ -132,7 +132,7 @@
                     <section t-if="hasSection('customer')" class="o_easyocr_result_card">
                         <t t-call="easyocr.OCRResultDialog.cardHead">
                             <t t-set="card" t-value="'customer'"/>
-                            <t t-set="icon" t-value="'fa-user-o'"/>
+                            <t t-set="icon" t-value="'person'"/>
                             <t t-set="title">Customer</t>
                         </t>
                         <div t-if="!isCollapsed('customer')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_customer'">
@@ -143,14 +143,14 @@
                     <section t-if="hasSection('lines')" class="o_easyocr_result_card">
                         <t t-call="easyocr.OCRResultDialog.cardHead">
                             <t t-set="card" t-value="'lines'"/>
-                            <t t-set="icon" t-value="'fa-list-ul'"/>
+                            <t t-set="icon" t-value="'format_list_bulleted'"/>
                             <t t-set="title">Invoice lines</t>
                             <t t-set="count" t-value="items().length"/>
                         </t>
                         <div t-if="!isCollapsed('lines')" class="o_easyocr_result_card_body o_easyocr_result_lines" t-att-id="uid + '_card_lines'">
                             <div class="o_easyocr_result_lines_toolbar">
                                 <button class="o_easyocr_result_add_line" type="button" t-on-click="addLine">
-                                    <i class="fa fa-plus me-1" aria-hidden="true"/>Add line
+                                    <i class="oi me-1" data-icon="add" aria-hidden="true"/>Add line
                                 </button>
                             </div>
                             <div class="o_easyocr_result_table_wrap">
@@ -179,7 +179,7 @@
                                             <tr>
                                                 <td><input class="o_easyocr_result_cell" t-model="item.code" t-on-change="resolveProducts" t-att-aria-label="cellLabel('code', item_index)"/></td>
                                                 <td class="col-product">
-                                                    <span t-if="productOf(item)" class="o_easyocr_result_product is-linked" t-att-title="productOf(item)"><i class="fa fa-link me-1" aria-hidden="true"/><t t-out="productOf(item)"/></span>
+                                                    <span t-if="productOf(item)" class="o_easyocr_result_product is-linked" t-att-title="productOf(item)"><i class="oi me-1" data-icon="link" aria-hidden="true"/><t t-out="productOf(item)"/></span>
                                                     <span t-else="" class="o_easyocr_result_product" title="No product linked: the line goes as free text">—</span>
                                                 </td>
                                                 <td><input class="o_easyocr_result_cell" t-model="item.description" t-att-aria-label="cellLabel('description', item_index)"/></td>
@@ -199,7 +199,7 @@
                                                 <td class="o_easyocr_result_line_total"><t t-out="lineTotal(item)"/></td>
                                                 <td class="col-actions">
                                                     <button class="o_easyocr_result_remove" type="button" t-on-click="() => this.removeLine(item_index)" title="Delete" aria-label="Delete">
-                                                        <i class="fa fa-times" aria-hidden="true"/>
+                                                        <i class="oi" data-icon="close" aria-hidden="true"/>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -213,7 +213,7 @@
                     <section t-if="hasSection('totals')" class="o_easyocr_result_card">
                         <t t-call="easyocr.OCRResultDialog.cardHead">
                             <t t-set="card" t-value="'totals'"/>
-                            <t t-set="icon" t-value="'fa-eur'"/>
+                            <t t-set="icon" t-value="'euro'"/>
                             <t t-set="title">Totals</t>
                         </t>
                         <div t-if="!isCollapsed('totals')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_totals'">
@@ -224,7 +224,7 @@
                     <section t-if="hasSection('payment')" class="o_easyocr_result_card">
                         <t t-call="easyocr.OCRResultDialog.cardHead">
                             <t t-set="card" t-value="'payment'"/>
-                            <t t-set="icon" t-value="'fa-credit-card'"/>
+                            <t t-set="icon" t-value="'credit_card'"/>
                             <t t-set="title">Payment</t>
                         </t>
                         <div t-if="!isCollapsed('payment')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_payment'">
@@ -235,7 +235,7 @@
                     <section t-if="hasSection('notes')" class="o_easyocr_result_card">
                         <t t-call="easyocr.OCRResultDialog.cardHead">
                             <t t-set="card" t-value="'notes'"/>
-                            <t t-set="icon" t-value="'fa-pencil'"/>
+                            <t t-set="icon" t-value="'edit'"/>
                             <t t-set="title">Notes</t>
                         </t>
                         <div t-if="!isCollapsed('notes')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_notes'">
@@ -246,7 +246,7 @@
 
                 <div class="o_easyocr_result_footer">
                     <div t-if="state.error" class="o_easyocr_result_error" role="alert">
-                        <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/><t t-out="state.error"/>
+                        <i class="oi me-2" data-icon="error" aria-hidden="true"/><t t-out="state.error"/>
                     </div>
                     <div class="o_easyocr_result_footer_options">
                         <div class="o_easyocr_result_footer_row">
@@ -308,7 +308,7 @@
                             t-att-disabled="state.busy or state.loading"
                             aria-keyshortcuts="Control+Enter"
                         >
-                            <i t-att-class="'fa me-1 ' + (state.busy ? 'fa-circle-o-notch fa-spin' : 'fa-check')" aria-hidden="true"/>Create invoice
+                            <i t-attf-class="oi me-1 {{ state.busy ? 'oi-spin' : '' }}" t-att-data-icon="state.busy ? 'progress_activity' : 'check'" aria-hidden="true"/>Create invoice
                         </button>
                     </div>
                 </div>
