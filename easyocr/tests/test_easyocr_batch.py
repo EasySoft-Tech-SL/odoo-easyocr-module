@@ -587,6 +587,12 @@ class TestEasyocrBatch(TransactionCase):
     # The job that keeps an eye on them
     # ------------------------------------------------------------------
     def test_the_job_only_looks_at_batches_that_are_still_going(self):
+        # The job sweeps the whole table, so a batch left behind by an earlier
+        # run of this server would answer in place of one of these four. This is
+        # not a database of its own: park whatever is already here out of the
+        # window first, so the four below are the only ones in it.
+        self.Batch.search([]).write({'sent_at': False})
+
         running = self._batch(1)
         self._send(running)
         running.sent_at = fields.Datetime.now() - timedelta(minutes=30)

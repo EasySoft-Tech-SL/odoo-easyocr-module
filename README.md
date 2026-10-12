@@ -6,10 +6,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/EasySoft-Tech-SL/odoo-easyocr-module/releases"><img src="https://img.shields.io/github/v/release/EasySoft-Tech-SL/odoo-easyocr-module?filter=v19*&label=release%2019.0&style=for-the-badge&color=43ff7d" alt="Release 19.0"></a>
-  <a href="https://github.com/EasySoft-Tech-SL/odoo-easyocr-module/releases"><img src="https://img.shields.io/github/v/release/EasySoft-Tech-SL/odoo-easyocr-module?filter=v18*&label=release%2018.0&style=for-the-badge&color=43ff7d" alt="Release 18.0"></a>
+  <a href="https://github.com/EasySoft-Tech-SL/odoo-easyocr-module/releases"><img src="https://img.shields.io/github/v/release/EasySoft-Tech-SL/odoo-easyocr-module?label=release&style=for-the-badge&color=43ff7d" alt="Latest release"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-LGPL--3.0-green?style=for-the-badge" alt="License: LGPL-3"></a>
-  <img src="https://img.shields.io/badge/Odoo-18.0%20%7C%2019.0-714B67?style=for-the-badge&logo=odoo&logoColor=white" alt="Odoo 18.0 and 19.0">
+  <img src="https://img.shields.io/badge/Odoo-16.0%20%7C%2017.0%20%7C%2018.0%20%7C%2019.0%20%7C%2020.0-714B67?style=for-the-badge&logo=odoo&logoColor=white" alt="Odoo 16.0, 17.0, 18.0, 19.0 and 20.0">
   <img src="https://img.shields.io/badge/i18n-ES%20CA%20GL%20DE%20FR%20IT%20PT-43ff7d?style=for-the-badge" alt="Languages">
   <a href="https://easysoft.es"><img src="https://img.shields.io/badge/Built%20by-EasySoft%20Tech%20S.L.-8a2be2?style=for-the-badge" alt="Built by EasySoft Tech S.L."></a>
 </p>
@@ -22,7 +21,8 @@ does the reading: it keeps the file on screen, pulls the vendor, the number, the
 and the amounts out of it, and builds the supplier bill (or the employee expense) from
 what it read.
 
-It runs on Odoo Community 18.0 and 19.0. No Enterprise app is behind it.
+It runs on Odoo Community 16.0 to 20.0, one branch per series. No Enterprise app is
+behind it.
 
 **A PDF that already carries its text is read for free**, in the browser, with nothing to
 configure. Scans, photographs and handwritten paper need the **EasyOCR extraction
@@ -79,14 +79,14 @@ and it lands in Odoo as a bill or as an expense claim.
 
 | | |
 |---|---|
-| **Odoo** | Community 18.0 or 19.0. Enterprise is **not** required. |
+| **Odoo** | Community 16.0, 17.0, 18.0, 19.0 or 20.0. Enterprise is **not** required. |
 | **Other modules** | None to buy. It depends only on what Community ships with (`base`, `mail`, `account`, `hr_expense`). |
-| **Database** | Whatever your Odoo already runs on: PostgreSQL, or MySQL/MariaDB. |
+| **Database** | PostgreSQL, the one your Odoo already runs on. |
 | **For scans and photographs** | The EasyOCR extraction service, with its URL and an API key. Digital PDFs need nothing. |
 
 ## 🚀 Install
 
-1. Download the ZIP from the [Releases page](https://github.com/EasySoft-Tech-SL/odoo-easyocr-module/releases), taking the one that starts with your Odoo series.
+1. Download the ZIP from the [Releases page](https://github.com/EasySoft-Tech-SL/odoo-easyocr-module/releases), taking the one that starts with your Odoo series (16.0 to 20.0).
 2. Unzip it into your addons path, so that the module sits at `easyocr/`. The archive
    already carries the folder, with no wrapper around it.
 3. Restart Odoo and pick **Apps → Update Apps List**.
@@ -95,8 +95,8 @@ and it lands in Odoo as a bill or as an expense claim.
 Nothing else to install: no external library, no second module, no patch to the core.
 
 > The module is on the [Odoo Apps Store](https://apps.odoo.com/apps/modules/19.0/easyocr)
-> as well, one card covering both series. The release ZIP is what you use on a server that
-> cannot reach the store.
+> as well, where one card carries a version per series. The release ZIP is what you use
+> on a server that cannot reach the store.
 
 ## 🔑 Configure
 
@@ -152,23 +152,27 @@ One branch per Odoo series, as is the norm in the Odoo ecosystem:
 
 | Branch | Odoo series | Module version |
 | --- | --- | --- |
-| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.12` |
-| `18.0` | Odoo Community 18.0 | `18.0.1.0.12` |
+| `20.0` | Odoo Community 20.0 | `20.0.1.0.13` |
+| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.13` |
+| `18.0` | Odoo Community 18.0 | `18.0.1.0.13` |
+| `17.0` | Odoo Community 17.0 | `17.0.1.0.13` |
+| `16.0` | Odoo Community 16.0 | `16.0.1.0.13` |
 
 The branch name and the first two digits of the module version always match, and the CI
-checks it. One module covers one series: the code is the same on both, except where the
-two series genuinely differ.
+checks it. One module covers one series: the code is the same on all five, except where a
+series genuinely differs. [`docs/SERIES.md`](docs/SERIES.md) is the list of those
+differences, measured on each series and not read off a changelog.
 
 ## 🗺️ Status
 
-Feature complete, tested on both series, and out in version 1.0.12.
+Feature complete, tested on all five series, and out in version 1.0.13.
 
 [`ROADMAP.md`](ROADMAP.md) is the map: what each phase added, what is deliberately left
 out, and how the module differs from the Dolibarr one.
 
 ## 🛠️ Development
 
-Requires Docker. Two Odoo instances and one PostgreSQL share a single compose file:
+Requires Docker. Five Odoo instances and one PostgreSQL share a single compose file:
 
 ```bash
 docker compose up -d
@@ -176,11 +180,27 @@ docker compose up -d
 
 | Service | URL | Database |
 | --- | --- | --- |
+| Odoo 20.0 | http://127.0.0.1:8071 | `odoo20` |
 | Odoo 19.0 | http://127.0.0.1:8069 | `odoo19` |
 | Odoo 18.0 | http://127.0.0.1:8070 | `odoo18` |
+| Odoo 17.0 | http://127.0.0.1:8072 | `odoo17` |
+| Odoo 16.0 | http://127.0.0.1:8073 | `odoo16` |
 
 Default credentials are `admin` / `admin`. Ports are deliberately unusual: on the machine
 this was built on, 8069 and 8070 were free while 8080, 8081 and 5433 were taken.
+
+A folder holds one branch, so each series is a checkout of its own next to the main one,
+and the compose file mounts them by their folder name:
+
+```bash
+git worktree add ../odoo-easyocr-16 -b 16.0
+git worktree add ../odoo-easyocr-17 -b 17.0
+git worktree add ../odoo-easyocr-18 18.0
+git worktree add ../odoo-easyocr-20 -b 20.0
+```
+
+The main tree is the 19.0 one, and compose is lifted from there. The container and volume
+names are fixed, so a second `docker compose up` from another worktree finds them taken.
 
 Install the module into a database:
 
@@ -191,8 +211,14 @@ docker compose exec odoo19 odoo -d odoo19 -i easyocr --stop-after-init
 Run the tests:
 
 ```bash
-docker compose exec odoo19 odoo -d odoo19 -u easyocr --test-enable --test-tags /easyocr --stop-after-init
+docker compose run --rm odoo19 odoo -c /etc/odoo/odoo.conf -d odoo19 \
+  -u easyocr --test-enable --test-tags /easyocr --stop-after-init
 ```
+
+`run` and not `exec`: the test client wants the port the running dev server is on, and
+inside that container the tests end up talking to the dev server instead of to
+themselves. `run` starts a container of its own, on its own port, sharing the database and
+the filestore.
 
 `--test-tags /easyocr` is not optional in practice: without it Odoo also runs the core
 suites, and one of them (`base`'s `test_http_case`) hangs. `-u` rather than `-i` keeps the
@@ -200,9 +226,17 @@ module installed and its translations reloaded. After changing a view or a `.po`
 the container before looking at the screen: the running server keeps the registry it read
 when it started.
 
-The database has to be named `odoo19`: the local configuration sets a `dbfilter` for it,
-which is what lets the web app's manifest be served without a session. The comment in
-`config/odoo19.conf` explains what happens if you point the suite somewhere else.
+The database has to be named after its service: each local configuration sets a
+`dbfilter` for it, which is what lets the web app's manifest be served without a session.
+The comment in `config/odoo19.conf` explains what happens if you point the suite somewhere
+else.
+
+A data record is not rewritten by `-u`: the cron lives under `noupdate="1"`, so a change
+to it only lands on a fresh install.
+
+[`docs/SERIES.md`](docs/SERIES.md) lists what is genuinely different from one series to the
+next: the list view tag, how a view declares its modifiers, the webhook route and how it
+reads the body, the cron, the extra translation term 16 needs.
 
 ### Repository layout
 
@@ -214,10 +248,11 @@ easyocr/                    the module itself, at the root of the repository
   static/description/       icon and the description shown in the Apps store
   tests/                    tests
   i18n/                     translations
-config/                     Odoo configuration for the local environment
+config/                     Odoo configuration and a database name per series
 docs/manual/                the user guide, with the screenshots it shows
+docs/SERIES.md              what differs between the five series
 tools/check_module.py       manifest and layout checks, run by CI
-docker-compose.yml          local Odoo 18 + 19 + PostgreSQL
+docker-compose.yml          local Odoo 16 to 20, and PostgreSQL
 ```
 
 ## 🤝 Contributing
