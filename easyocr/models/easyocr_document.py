@@ -782,7 +782,9 @@ class EasyocrDocument(models.Model):
             'date': self.document_date or fields.Date.context_today(self),
             'total_amount': self.amount_total or self.amount_untaxed or 0.0,
             'product_id': self._expense_product().id,
-            'vendor_id': self.partner_id.id,
+            # No vendor_id on the expense: that field arrived in Odoo 18
+            # and this series has no field for it. The supplier is not
+            # lost -- it is already in the name above, and on the document.
             'description': self.note or False,
             'analytic_distribution': self.analytic_distribution or False,
         })
@@ -808,12 +810,14 @@ class EasyocrDocument(models.Model):
             # as handing it over and no further.
             #
             # 18.0 still calls this action_submit_expenses and 19.0 shortened
-            # it. Branching is cheaper than a version check and says out loud
-            # that the two series disagree.
-            if hasattr(expense, 'action_submit'):
-                expense.action_submit()
-            else:
-                expense.action_submit_expenses()
+            # it. Here in 16 that same call is a trap: it does not submit
+            # anything, it opens the "New Expense Report" form for whoever is at
+            # the screen to confirm, so the receipt would sit in draft and
+            # nobody would be told. The report is built and handed over here.
+            sheet = self.env['hr.expense.sheet'].create(
+                expense._get_default_expense_sheet_values()
+            )
+            sheet.action_submit_sheet()
 
         return expense
 

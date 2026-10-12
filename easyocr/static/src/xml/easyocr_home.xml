@@ -9,7 +9,7 @@
         way in. Reproduced and not invented: anyone coming from that module
         should recognise the screen.
     -->
-    <t t-name="easyocr.Home">
+    <t t-name="easyocr.Home" owl="1">
         <div class="o_easyocr_home">
             <div class="o_easyocr_home_inner">
             <div class="o_easyocr_home_header">

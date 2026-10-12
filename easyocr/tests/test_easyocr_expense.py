@@ -23,6 +23,12 @@ SERVICE_WORKER_URL = '/easyocr/capture/sw.js'
 
 CSRF_RE = re.compile(r'name="csrf_token" value="([^"]+)"')
 
+# The password the session below is opened with. Up to 17 the helper checks it
+# against the real one -- from 18 it patches the check away and takes anything --
+# so the test sets it on the admin it is about to log in as, or the suite would
+# pass on 18 and up and fail here.
+LOGIN_PASSWORD = 'whatever'
+
 def _jpeg():
     """A real JPEG, small enough to build here: the upload is read with Pillow,
     so a made up file would not do."""
@@ -45,13 +51,15 @@ class TestEasyocrExpenseCapture(HttpCase):
         cls.Inbox = cls.env['easyocr.inbox.item']
         cls.Document = cls.env['easyocr.document']
         cls.admin = cls.env.ref('base.user_admin')
+        cls.admin.password = LOGIN_PASSWORD
+        cls.env.flush_all()
 
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
     def _login(self):
         """Open a session as an employee who may file documents."""
-        self.authenticate(self.admin.login, 'whatever')
+        self.authenticate(self.admin.login, LOGIN_PASSWORD)
 
     def _csrf(self):
         page = self.url_open(PAGE_URL)

@@ -181,7 +181,9 @@ class EasyocrInboxItem(models.Model):
         went instead of just failing.
         """
         user = self._as_user(user)
-        if not self.with_user(user).has_access('create'):
+        # check_access_rights() and not has_access(): that one arrived in
+        # Odoo 18. Same answer, older name, and it is the one this series has.
+        if not self.with_user(user).check_access_rights('create', raise_exception=False):
             return self._outcome(
                 False, error=_('You are not allowed to add documents to the inbox.'),
             )

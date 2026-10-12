@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 import { Component, onMounted, onWillStart, useExternalListener, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";

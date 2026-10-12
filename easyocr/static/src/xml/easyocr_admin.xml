@@ -4,7 +4,7 @@
     <!-- The tab bar of the module's configuration, as in the module this is a
          port of: one tab per page, the active one underlined. The page itself
          is drawn under the bar, inside the settings screen. -->
-    <t t-name="easyocr.AdminTabs">
+    <t t-name="easyocr.AdminTabs" owl="1">
         <div t-ref="root">
             <nav class="o_easyocr_admin_tabs" role="tablist">
                 <t t-foreach="tabs" t-as="tab" t-key="tab.key">
@@ -29,7 +29,7 @@
 
     <!-- A table with a coloured icon in its title row, the way every block of
          these pages is drawn. -->
-    <t t-name="easyocr.AdminTableHead">
+    <t t-name="easyocr.AdminTableHead" owl="1">
         <tr class="o_easyocr_admin_thead">
             <th t-att-colspan="colspan or 2">
                 <i t-att-class="'fa ' + icon + ' me-2'" t-att-style="'color:' + color" aria-hidden="true"/>
@@ -38,11 +38,11 @@
         </tr>
     </t>
 
-    <t t-name="easyocr.AdminBadge">
+    <t t-name="easyocr.AdminBadge" owl="1">
         <span t-att-class="'o_easyocr_admin_badge ' + badge(value).cls"><t t-out="badge(value).label"/></span>
     </t>
 
-    <t t-name="easyocr.AdminBar">
+    <t t-name="easyocr.AdminBar" owl="1">
         <t t-set="b" t-value="bar(used, limit)"/>
         <em t-if="!b">-</em>
         <div t-else="" class="o_easyocr_admin_bar" role="progressbar" t-att-aria-valuenow="b.pct" aria-valuemin="0" aria-valuemax="100">
@@ -52,12 +52,12 @@
         </div>
     </t>
 
-    <t t-name="easyocr.AdminYesNo">
+    <t t-name="easyocr.AdminYesNo" owl="1">
         <span t-if="yes"><i class="fa fa-check me-1" style="color:#27ae60" aria-hidden="true"/>Yes</span>
         <span t-else=""><i class="fa fa-times me-1" style="color:#e74c3c" aria-hidden="true"/>No</span>
     </t>
 
-    <t t-name="easyocr.AdminPage">
+    <t t-name="easyocr.AdminPage" owl="1">
         <div class="o_easyocr_admin_page">
             <div class="o_easyocr_admin_body">
                 <div t-if="state.loading" class="o_easyocr_admin_note"><i class="fa fa-circle-o-notch fa-spin me-2" aria-hidden="true"/>Loading…</div>

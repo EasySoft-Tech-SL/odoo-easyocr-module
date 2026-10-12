@@ -82,7 +82,15 @@ class EasyocrWebhook(http.Controller):
                 status=403,
             )
 
-        body = request.httprequest.get_json(silent=True)
+        # The werkzeug this series bundles (1.0.1) has no get_json() on the
+        # request, and calling it is a 500 on every call: from 17 the method is
+        # there. get_json_data() is Odoo's own, it is on every series and it
+        # parses the body the same way. A body that is not JSON has to come out
+        # as the malformed request it is, which is what the except is for.
+        try:
+            body = request.get_json_data()
+        except ValueError:
+            body = None
         if not isinstance(body, dict):
             return self._answer(
                 {'status': 'error', 'message': 'Malformed request: the body must be a JSON object.'},

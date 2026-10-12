@@ -4,8 +4,9 @@ EasyOCR reads supplier invoices and expense receipts from files and turns them i
 accounting entries. This roadmap is the port of EasyOCR for Dolibarr (v2.8.0) to Odoo
 Community.
 
-One branch per Odoo series (`18.0`, `19.0`). Every phase below applies to both branches;
-when a phase needs different code per series it says so explicitly.
+One branch per Odoo series (`16.0`, `17.0`, `18.0`, `19.0`, `20.0`). Every phase below
+applies to all of them; when a phase needs different code per series it says so
+explicitly, and `docs/SERIES.md` is the list of what genuinely differs.
 
 Status: `done` · `in progress` · `pending`
 
@@ -13,7 +14,7 @@ Status: `done` · `in progress` · `pending`
 
 ## Phase 0 — Skeleton · done
 
-- [x] Module `easyocr` installs on 18.0 and 19.0.
+- [x] Module `easyocr` installs on Odoo Community 16.0 to 20.0.
 - [x] Document model with its status flow (pending / processed / error).
 - [x] Access groups (User, Manager) and their access rules.
 - [x] List, form and search views, with menu.
@@ -138,14 +139,20 @@ The module talks to the same service the Dolibarr module uses
 - [x] The module is free; what is sold is the extraction service.
 - [x] Published on the Odoo Apps Store, 12-oct-2026. It is fed from the
       **repository**, not from the ZIP: the ZIP is for the release and for
-      installing by hand. Both branches are registered and scan clean, and they
-      are one card with two versions:
+      installing by hand. `19.0` and `18.0` are registered and scan clean, and
+      each series gets a card of its own:
       <https://apps.odoo.com/apps/modules/19.0/easyocr>. Nothing had to be
       approved first: the scan is what publishes. Odoo reviews the page
       afterwards and scores it on 5 criteria, which decides the order in the
       catalogue, and a page that breaks the seller guidelines gets unpublished
       until it is fixed. Steps and the rules that cost a rejection are in
       `docs/PUBLICAR-EN-ODOO-APPS.md`.
+- [x] Runs on the five series, 16.0 to 20.0, from version 1.0.13 (12-oct-2026):
+      three branches added to the two that were there, and the differences a series
+      brings measured on each one instead of assumed.
+- [ ] `16.0`, `17.0` and `20.0` registered in the Apps Store. The card is one and
+      carries a version per series, so the three are added to it, not as cards of
+      their own.
 - [x] User guide written from the screens themselves, in `docs/manual/`, with
       its screenshots. Every version from now on carries its updated guide:
       the source lives in the repository and the same text goes to the company
@@ -309,7 +316,7 @@ They can -- Odoo renders whatever a client action draws, and the viewer, the
 home screen and the batch screen are already that -- but the decision taken that
 day is to keep the module on Odoo's own views and finish the *behaviour*
 instead. Dolibarr's pages are hand-written PHP; here every screen would be a
-bespoke component to keep alive across two series, and a Dolibarr-looking screen
+bespoke component to keep alive across five series, and a Dolibarr-looking screen
 inside Odoo reads as a foreign body to anyone who uses Odoo. So: native views,
 everything Dolibarr does, and a custom screen only where native cannot express
 it. Where that line falls has held: of the three screens of this phase, the
@@ -385,8 +392,8 @@ that. The three `EASYOCR_EXPENSE_VARIOUS_*` settings are already above, in Phase
 
 These are deliberate, not gaps:
 
-- **Access groups** use `res.groups.privilege` on 19.0 and `category_id` on 18.0.
-  Same feature, different API.
+- **Access groups** use `res.groups.privilege` from 19.0 on and `category_id` on
+  16.0 to 18.0. Same feature, different API.
 - **The PDF.js library** is not bundled: Odoo core already ships one. The version is
   newer than the one the Dolibarr module used, so initialisation differs.
 - **Rectangle coordinates** are stored in PDF user space, not in screen pixels, so a

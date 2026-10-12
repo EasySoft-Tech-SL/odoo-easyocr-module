@@ -5,7 +5,7 @@
          extra instructions, the three things a template carries beyond its
          boxes. It mirrors the module this is a port of, which asks for them in
          a small modal rather than typing the name into the column. -->
-    <t t-name="easyocr.TemplateDialog">
+    <t t-name="easyocr.TemplateDialog" owl="1">
         <Dialog title="props.title" size="'md'">
         <div class="o_easyocr_template_dialog">
             <div class="mb-2">

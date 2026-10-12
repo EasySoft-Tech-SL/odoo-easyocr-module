@@ -4,7 +4,7 @@
     <!-- One card of label/value fields: a two-column grid, the label above
          the box in small capitals, the way the module this is a port of draws
          it. A field the bill does not use is shown read-only. -->
-    <t t-name="easyocr.OCRResultDialog.fields">
+    <t t-name="easyocr.OCRResultDialog.fields" owl="1">
         <div class="o_easyocr_result_grid">
             <t t-foreach="sectionFields(section)" t-as="field" t-key="field.key">
                 <div t-att-class="'o_easyocr_result_field' + (isWide(field.key) ? ' is-wide' : '')">
@@ -34,7 +34,7 @@
 
     <!-- The head of a card: a real button, so it can be reached and opened
          from the keyboard and a screen reader says whether it is open. -->
-    <t t-name="easyocr.OCRResultDialog.cardHead">
+    <t t-name="easyocr.OCRResultDialog.cardHead" owl="1">
         <button
             type="button"
             class="o_easyocr_result_card_head"
@@ -53,7 +53,7 @@
          module this is a port of shows it. One collapsible card per part of the
          answer, the raw payload behind the JSON button, and the footer that
          either leaves it or turns it into the bill. -->
-    <t t-name="easyocr.OCRResultDialog">
+    <t t-name="easyocr.OCRResultDialog" owl="1">
         <div class="o_easyocr_result_overlay" t-on-click.self="close">
             <div
                 class="o_easyocr_result_modal"

@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 import { Component, markup, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
@@ -308,4 +310,7 @@ export class EasyocrAdminTabs extends Component {
     }
 }
 
-registry.category("view_widgets").add("easyocr_admin_tabs", { component: EasyocrAdminTabs });
+// On this series a view widget is the component itself: the registry value is
+// handed to the template as it is. The `{ component: ... }` wrapper the newer
+// series use is read as a component here and the tab bar never renders.
+registry.category("view_widgets").add("easyocr_admin_tabs", EasyocrAdminTabs);

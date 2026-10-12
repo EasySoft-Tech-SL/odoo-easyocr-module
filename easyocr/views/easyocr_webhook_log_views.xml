@@ -7,7 +7,7 @@
         <field name="name">easyocr.webhook.log.list</field>
         <field name="model">easyocr.webhook.log</field>
         <field name="arch" type="xml">
-            <list
+            <tree
                 string="Webhook logs"
                 decoration-warning="status == 'ignored'"
                 decoration-danger="status == 'error'"
@@ -21,7 +21,7 @@
                 <field name="message"/>
                 <field name="move_id"/>
                 <field name="partner_id"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -84,7 +84,7 @@
     <record id="action_easyocr_webhook_log" model="ir.actions.act_window">
         <field name="name">Webhook Log</field>
         <field name="res_model">easyocr.webhook.log</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_easyocr_webhook_log_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

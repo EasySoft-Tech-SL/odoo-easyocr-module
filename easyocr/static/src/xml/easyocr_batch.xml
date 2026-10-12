@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="easyocr.Batch">
+    <t t-name="easyocr.Batch" owl="1">
         <div class="o_easyocr_batch">
 
             <!-- While the stack is still being put together. Choosing the files

@@ -1298,6 +1298,21 @@ msgstr "Última actualització per"
 msgid "Last Updated on"
 msgstr "Última actualització el"
 
+# 16 keeps a legacy alias of write_date, __last_update, whose label Odoo
+# looks up under this very model's field record: without this term the
+# alias would be shown in English on an installation in any other language.
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_batch____last_update
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document____last_update
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document_line____last_update
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item____last_update
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result____last_update
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_reprocess_wizard____last_update
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_template____last_update
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box____last_update
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_webhook_log____last_update
+msgid "Last Modified on"
+msgstr "Última modificació el"
+
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template_box__text
 msgid "Last read"

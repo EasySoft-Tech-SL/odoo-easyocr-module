@@ -7,7 +7,7 @@
         <field name="name">easyocr.document.list</field>
         <field name="model">easyocr.document</field>
         <field name="arch" type="xml">
-            <list
+            <tree
                 string="OCR Documents"
                 decoration-danger="state == 'error'"
                 decoration-success="state == 'processed'"
@@ -17,10 +17,10 @@
                 <field name="ref"/>
                 <field name="document_date"/>
                 <field name="amount_total" widget="monetary"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" widget="badge"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -41,7 +41,7 @@
                         type="object"
                         string="Extract with AI"
                         class="btn-secondary"
-                        invisible="not attachment_id"
+                        attrs="{'invisible': [('attachment_id', '=', False)]}"
                         groups="easyocr.group_easyocr_manager"
                     />
                     <button
@@ -49,20 +49,20 @@
                         type="object"
                         string="Create Bill"
                         class="btn-primary"
-                        invisible="move_id"
+                        attrs="{'invisible': [('move_id', '!=', False)]}"
                     />
                     <button
                         name="action_mark_processed"
                         type="object"
                         string="Mark as Processed"
                         class="btn-primary"
-                        invisible="state == 'processed'"
+                        attrs="{'invisible': [('state', '=', 'processed')]}"
                     />
                     <button
                         name="action_reset_to_draft"
                         type="object"
                         string="Reset to Pending"
-                        invisible="state == 'draft'"
+                        attrs="{'invisible': [('state', '=', 'draft')]}"
                     />
                     <field name="state" widget="statusbar" statusbar_visible="draft,processed"/>
                 </header>
@@ -74,8 +74,8 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
-                            <field name="partner_name" invisible="partner_id"/>
-                            <field name="partner_vat" invisible="partner_id"/>
+                            <field name="partner_name" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                            <field name="partner_vat" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                             <field name="ref"/>
                             <field name="document_date"/>
                             <field name="due_date"/>
@@ -105,7 +105,7 @@
                                  wrong is normal, and fixing it here is cheaper
                                  than fixing it on the bill afterwards. -->
                             <field name="line_ids" nolabel="1">
-                                <list string="Lines" editable="bottom">
+                                <tree string="Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="product_code" optional="show"/>
@@ -116,17 +116,17 @@
                                     <field name="tax_rate" optional="show"/>
                                     <field name="net_amount" optional="show"/>
                                     <field name="product_id" optional="show"/>
-                                    <field name="currency_id" column_invisible="1"/>
-                                </list>
+                                    <field name="currency_id" optional="hide"/>
+                                </tree>
                             </field>
                         </page>
                         <page string="File" name="file">
                             <field name="attachment_id"/>
-                            <field name="move_id" invisible="not move_id"/>
+                            <field name="move_id" attrs="{'invisible': [('move_id', '=', False)]}"/>
                         </page>
                         <page string="Notes" name="notes">
                             <field name="note" placeholder="Anything worth keeping about this document..."/>
-                            <field name="error_message" invisible="not error_message"/>
+                            <field name="error_message" attrs="{'invisible': [('error_message', '=', False)]}"/>
                         </page>
                         <page string="Extraction" name="extraction">
                             <field name="extraction_confidence"/>
@@ -164,7 +164,7 @@
     <record id="action_easyocr_document" model="ir.actions.act_window">
         <field name="name">Documents</field>
         <field name="res_model">easyocr.document</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_easyocr_document_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

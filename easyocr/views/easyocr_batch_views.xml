@@ -15,7 +15,7 @@
         <field name="name">easyocr.batch.list</field>
         <field name="model">easyocr.batch</field>
         <field name="arch" type="xml">
-            <list
+            <tree
                 string="Batch history"
                 decoration-info="state == 'processing'"
                 decoration-success="state == 'completed'"
@@ -32,7 +32,7 @@
                 <field name="finished_at" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" widget="badge"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -41,25 +41,33 @@
         <field name="model">easyocr.batch</field>
         <field name="arch" type="xml">
             <form string="Batch">
+                <!-- What tells a batch apart as "already sent" is sent_at and not
+                     service_uuid: the date is written in the same transaction, and
+                     only when the service has taken the files, so the two say the
+                     same thing. service_uuid stays out of these conditions because
+                     the field is hidden behind base.group_no_one a few lines down,
+                     and a view that hides a field from a group cannot name it in a
+                     modifier: Odoo 16 refuses the whole view, 17 refuses it on
+                     readonly. -->
                 <header>
                     <button
                         name="action_send_button"
                         type="object"
                         string="Process batch"
                         class="btn-primary"
-                        invisible="service_uuid"
+                        attrs="{'invisible': [('sent_at', '!=', False)]}"
                     />
                     <button
                         name="action_refresh_button"
                         type="object"
                         string="Refresh"
-                        invisible="not service_uuid or state in ('completed', 'partial', 'failed', 'cancelled')"
+                        attrs="{'invisible': ['|', ('sent_at', '=', False), ('state', 'in', ['completed', 'partial', 'failed', 'cancelled'])]}"
                     />
                     <button
                         name="action_cancel_button"
                         type="object"
                         string="Cancel"
-                        invisible="not service_uuid or state in ('completed', 'partial', 'failed', 'cancelled')"
+                        attrs="{'invisible': ['|', ('sent_at', '=', False), ('state', 'in', ['completed', 'partial', 'failed', 'cancelled'])]}"
                         confirm="Cancel this batch? This action cannot be undone."
                     />
                     <field name="state" widget="statusbar" statusbar_visible="pending,processing,completed,partial,failed"/>
@@ -71,7 +79,7 @@
                             type="object"
                             class="oe_stat_button"
                             icon="fa-file-text-o"
-                            invisible="not document_count"
+                            attrs="{'invisible': [('document_count', '=', 0)]}"
                         >
                             <field name="document_count" widget="statinfo"/>
                         </button>
@@ -93,26 +101,26 @@
                     </group>
                     <notebook>
                         <page string="Files" name="documents">
-                            <field name="document_ids" readonly="service_uuid">
-                                <list>
+                            <field name="document_ids" attrs="{'readonly': [('sent_at', '!=', False)]}">
+                                <tree>
                                     <field name="name"/>
                                     <field name="state" widget="badge"/>
                                     <field name="partner_name" optional="show"/>
                                     <field name="ref" optional="show"/>
                                     <field name="amount_total" optional="show"/>
                                     <field name="error_message" optional="hide"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                         <page string="Configuration" name="options">
                             <group>
-                                <field name="include_extracted_text" readonly="service_uuid"/>
-                                <field name="auto_correct" readonly="service_uuid"/>
+                                <field name="include_extracted_text" attrs="{'readonly': [('sent_at', '!=', False)]}"/>
+                                <field name="auto_correct" attrs="{'readonly': [('sent_at', '!=', False)]}"/>
                             </group>
-                            <field name="custom_instructions" readonly="service_uuid" placeholder="E.g.: This supplier always includes shipping in the last line. VAT is always 21%. Discounts are on separate lines..."/>
-                            <field name="notify_url" readonly="service_uuid" placeholder="Leave empty to be told here"/>
+                            <field name="custom_instructions" attrs="{'readonly': [('sent_at', '!=', False)]}" placeholder="E.g.: This supplier always includes shipping in the last line. VAT is always 21%. Discounts are on separate lines..."/>
+                            <field name="notify_url" attrs="{'readonly': [('sent_at', '!=', False)]}" placeholder="Leave empty to be told here"/>
                         </page>
-                        <page string="Detail" name="detail" invisible="not error_message">
+                        <page string="Detail" name="detail" attrs="{'invisible': [('error_message', '=', False)]}">
                             <field name="error_message" nolabel="1"/>
                         </page>
                     </notebook>
@@ -143,7 +151,7 @@
     <record id="action_easyocr_batch" model="ir.actions.act_window">
         <field name="name">Batch history</field>
         <field name="res_model">easyocr.batch</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_easyocr_batch_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
