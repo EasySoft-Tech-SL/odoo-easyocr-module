@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
-"""Sanity checks for every module under addons/ before it reaches a release.
+"""Sanity checks for every module of this repository before it reaches a release.
 
 Runs without Odoo installed: reads the manifests, not the framework.
 Usage: python tools/check_module.py [--branch 19.0]
@@ -14,7 +14,11 @@ import pathlib
 import re
 import sys
 
-ADDONS_DIR = pathlib.Path(__file__).resolve().parent.parent / 'addons'
+REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
+# Where the module folders are looked for, in order: the repository root first
+# (what the Odoo Apps Store scans), then addons/ (the OCA layout this repo used
+# to have). Kept in step with tools/build_zip.py.
+MODULE_ROOTS = (REPO_ROOT, REPO_ROOT / 'addons')
 
 # A screenshot as markdown shows it. Only the image form: a plain link is often
 # a file that is meant to be absent (a release asset, a page of the wiki).
@@ -28,6 +32,24 @@ REQUIRED_KEYS = (
     'depends',
     'installable',
 )
+
+
+def find_modules():
+    """The module folders, sorted. Empty list if there are none.
+
+    Root first, then addons/: only the first root that has a module is read, so
+    a half-finished move cannot check the same module twice.
+    """
+    for root in MODULE_ROOTS:
+        if not root.is_dir():
+            continue
+        modules = sorted(
+            path for path in root.iterdir()
+            if path.is_dir() and (path / '__manifest__.py').is_file()
+        )
+        if modules:
+            return modules
+    return []
 
 
 def read_manifest(path):
@@ -116,19 +138,17 @@ def main():
     )
     args = parser.parse_args()
 
-    if not ADDONS_DIR.is_dir():
-        print(f'No addons directory at {ADDONS_DIR}', file=sys.stderr)
-        return 1
-
-    modules = sorted(path for path in ADDONS_DIR.iterdir() if path.is_dir())
+    modules = find_modules()
     if not modules:
-        print(f'No modules found under {ADDONS_DIR}', file=sys.stderr)
+        roots = ' nor '.join(str(root) for root in MODULE_ROOTS)
+        print(f'No module found at {roots} '
+              '(a module is a folder holding a __manifest__.py)', file=sys.stderr)
         return 1
 
     errors = []
     for module_dir in modules:
         errors.extend(check_module(module_dir, args.branch))
-    errors.extend(check_documentation_images(ADDONS_DIR.parent))
+    errors.extend(check_documentation_images(REPO_ROOT))
 
     for error in errors:
         print(f'FAIL  {error}', file=sys.stderr)

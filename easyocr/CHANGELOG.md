@@ -11,6 +11,18 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.12] - 2026-10-12
+
+### Changed
+
+- **The module folder sits at the root of the repository now, which is where the Odoo
+  Apps Store looks for it.** The store reads the direct children of the repository root
+  and does not go any deeper, so `addons/easyocr/` came back from it as "No module found
+  in repository". The tooling that pointed at `addons/` moved with the module: the
+  packager, the two workflows, the local `docker-compose.yml` and the README. Nothing of
+  what the module does changed, and the only thing different inside the release archive
+  is the version number.
+
 ## [1.0.11] - 2026-10-12
 
 ### Changed

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
-"""Build the installable ZIP of the module(s) under addons/.
+"""Build the installable ZIP of the module(s) of this repository.
 
 One ZIP per Odoo series: the branch *is* the series, and the manifest version
 must start with it (``19.0`` branch -> ``19.0.x.y.z``). The archive carries the
@@ -10,6 +10,12 @@ because that is what the Odoo Apps Store expects and, more to the point, what
 Odoo can find: the addons scan in ``odoo/modules/module.py`` lists the direct
 children of each addons path with ``os.listdir`` and never recurses, so a
 module nested one level deeper is simply not discovered.
+
+The module folder lives at the **root of the repository**, because the Apps
+Store scans the repository root and does not recurse either: it rejected
+``addons/easyocr/`` with "No module found in repository". A repository that
+still keeps it under ``addons/`` is accepted as a fallback, since where the
+module sits is a decision about the repository, not about this script.
 
 Text files are written with LF endings and no BOM. The module runs on Linux
 and this machine has ``core.autocrlf=true``, and the working tree can hold CRLF
@@ -27,7 +33,7 @@ Usage
 Exit codes
 ----------
     0  every ZIP was built and verified
-    1  environment problem: no git, no addons/, no module, bad flags
+    1  environment problem: no git, no module folder, bad flags
     2  the requested series does not match the branch or the manifest
     3  tools/check_module.py refused the module
     4  a ZIP was written but failed its own verification
@@ -45,7 +51,10 @@ import zipfile
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 TOOLS_DIR = pathlib.Path(__file__).resolve().parent
-ADDONS_DIR = REPO_ROOT / 'addons'
+# Where the module folders are looked for, in order: the repository root first
+# (what the Apps Store scans), then addons/ (the OCA layout this repo used to
+# have). The first root that holds a module wins.
+MODULE_ROOTS = (REPO_ROOT, REPO_ROOT / 'addons')
 CHECK_MODULE = TOOLS_DIR / 'check_module.py'
 
 # Extensions and bare names treated as text: these get LF endings and no BOM.
@@ -132,13 +141,21 @@ def load_check_module():
 
 
 def find_modules():
-    """The module folders under addons/, sorted. Empty list if there are none."""
-    if not ADDONS_DIR.is_dir():
-        return []
-    return sorted(
-        path for path in ADDONS_DIR.iterdir()
-        if path.is_dir() and (path / '__manifest__.py').is_file()
-    )
+    """The module folders, sorted. Empty list if there are none.
+
+    Root first, then addons/: only the first root that has a module is read, so
+    a half-finished move cannot package the same module twice.
+    """
+    for root in MODULE_ROOTS:
+        if not root.is_dir():
+            continue
+        modules = sorted(
+            path for path in root.iterdir()
+            if path.is_dir() and (path / '__manifest__.py').is_file()
+        )
+        if modules:
+            return modules
+    return []
 
 
 def is_excluded(rel, include_tests):
@@ -259,7 +276,7 @@ def dirty_entries(module_dir):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Build the installable ZIP of the module(s) under addons/.',
+        description='Build the installable ZIP of the module(s) of this repository.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
@@ -274,7 +291,7 @@ def main():
     )
     parser.add_argument(
         '--module', default='',
-        help='Package only this module (by folder name). Default: every module under addons/.',
+        help='Package only this module (by folder name). Default: every module found.',
     )
     parser.add_argument(
         '--include-tests', action='store_true',
@@ -293,14 +310,14 @@ def main():
 
     modules = find_modules()
     if not modules:
-        fail(f'FAIL  no module found under {ADDONS_DIR}',
-             '      a module is a folder with __manifest__.py, and tools/check_module.py '
-             'expects it under addons/.')
+        roots = ' nor '.join(str(root) for root in MODULE_ROOTS)
+        fail(f'FAIL  no module found at {roots}',
+             '      a module is a folder holding a __manifest__.py.')
         return 1
     if args.module:
         modules = [path for path in modules if path.name == args.module]
         if not modules:
-            fail(f'FAIL  there is no module named "{args.module}" under {ADDONS_DIR}')
+            fail(f'FAIL  there is no module named "{args.module}" in this repository')
             return 1
 
     check_module = load_check_module()

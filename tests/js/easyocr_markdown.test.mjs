@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
 
-import {markdownToHtml, splitVersions} from '../../addons/easyocr/static/src/js/easyocr_markdown.js';
+import {markdownToHtml, splitVersions} from '../../easyocr/static/src/js/easyocr_markdown.js';
 
 test('headings, bullets with continuation lines, bold and code', () => {
     const html = markdownToHtml(
@@ -78,7 +78,7 @@ test('the changelog the module ships carries every bullet inside a version', () 
     // A bullet above the first version heading is a bullet no reader ever
     // sees: the page draws the preamble on its own and the versions folded.
     const source = readFileSync(
-        new URL('../../addons/easyocr/CHANGELOG.md', import.meta.url), 'utf8');
+        new URL('../../easyocr/CHANGELOG.md', import.meta.url), 'utf8');
     const {intro, versions} = splitVersions(source);
     const bullets = (text) => (text.match(/^- /gm) || []).length;
 
