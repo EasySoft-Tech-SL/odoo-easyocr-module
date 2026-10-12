@@ -136,15 +136,15 @@ The module talks to the same service the Dolibarr module uses
       artifact: the organization's artifact quota is shared and small).
 - [x] `LICENSE` file: LGPL-3, shipped at the root and inside the module.
 - [x] The module is free; what is sold is the extraction service.
-- [ ] Publish on the Odoo Apps Store. It is fed from the **repository**, not
-      from the ZIP: the ZIP is for the release and for installing by hand.
-      The repository side is ready as of 8-oct-2026 -- `static/description/
-      index.html` written from the real screens and the real steps, the icon at
-      the 100x100 and 512x512 the official modules ship, a cover and five
-      screenshots declared in the manifest's `images` key, and `support`. What
-      is left is the submission itself, which needs the store account: the
-      repository, the branch, and the two branches become one card with two
-      versions. Steps and the rules that cost a rejection are in
+- [x] Published on the Odoo Apps Store, 12-oct-2026. It is fed from the
+      **repository**, not from the ZIP: the ZIP is for the release and for
+      installing by hand. Both branches are registered and scan clean, and they
+      are one card with two versions:
+      <https://apps.odoo.com/apps/modules/19.0/easyocr>. Nothing had to be
+      approved first: the scan is what publishes. Odoo reviews the page
+      afterwards and scores it on 5 criteria, which decides the order in the
+      catalogue, and a page that breaks the seller guidelines gets unpublished
+      until it is fixed. Steps and the rules that cost a rejection are in
       `docs/PUBLICAR-EN-ODOO-APPS.md`.
 - [x] User guide written from the screens themselves, in `docs/manual/`, with
       its screenshots. Every version from now on carries its updated guide:
