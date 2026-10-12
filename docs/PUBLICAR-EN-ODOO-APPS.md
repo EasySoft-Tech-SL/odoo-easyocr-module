@@ -1,9 +1,27 @@
 # Publicar en la Odoo Apps Store
 
-Estado a 12-oct-2026: **el repositorio está registrado** en las dos ramas y
-aparece en el panel de la tienda como `Draft`. El alta la hace sola la skill
+Estado a 12-oct-2026: **está publicado**. Las dos ramas están registradas,
+escaneadas sin errores y la ficha está viva en el catálogo:
+
+- Odoo 19: <https://apps.odoo.com/apps/modules/19.0/easyocr>
+- Odoo 18: <https://apps.odoo.com/apps/modules/18.0/easyocr>
+
+Es **una sola ficha con las dos versiones** (el mismo nombre técnico en las dos
+ramas), con selector de versión. El alta la hace sola la skill
 `publicar-modulo-odoo-apps` (`~/.claude/skills/`): entra en la tienda sin
-navegador, registra la URL, fuerza el escaneo y lee el resultado.
+navegador, registra la URL, fuerza el escaneo y lee el resultado. El estado de
+cada repositorio registrado se ve en <https://apps.odoo.com/apps/dashboard/repos>
+(pide la sesión de odoo.com): ahí sale `Draft` mientras el escaneo no ha ido bien
+y `Active` cuando ya está publicado.
+
+**No hay aprobación previa.** El escaneo es lo que publica, y hasta que no sale
+limpio el repositorio se queda en `Draft` sin publicar nada. La revisión de Odoo
+es **posterior** y es una puntuación: cada ficha se puntúa por 5 criterios (icono,
+portada, `license` en el manifiesto, valoración, y descripción en HTML) y la nota
+decide el orden dentro del catálogo, no si sale. Lo que sí ocurre es lo contrario:
+incumplir las guías del vendedor despublica la ficha hasta arreglarlo, y Odoo se
+reserva retirar cualquier módulo sin avisar. Con la cuenta abierta, la propia
+página de la ficha enseña la nota cuando no es 5 de 5.
 
 ## Lo que ya está en el repositorio
 

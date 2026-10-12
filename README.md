@@ -94,8 +94,9 @@ and it lands in Odoo as a bill or as an expense claim.
 
 Nothing else to install: no external library, no second module, no patch to the core.
 
-> The module is not in the Odoo Apps Store yet. Until it is, the release ZIP is the way
-> to install it.
+> The module is on the [Odoo Apps Store](https://apps.odoo.com/apps/modules/19.0/easyocr)
+> as well, one card covering both series. The release ZIP is what you use on a server that
+> cannot reach the store.
 
 ## 🔑 Configure
 
