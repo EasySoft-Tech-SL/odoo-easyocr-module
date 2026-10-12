@@ -11,6 +11,17 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Junto a él va una traducción al español, en `CHANGELOG.es.md`.
 
+## [1.0.12] - 2026-10-12
+
+### Cambiado
+
+- **La carpeta del módulo está ahora en la raíz del repositorio, que es donde la Odoo
+  Apps Store la busca.** La tienda lee los hijos directos de la raíz del repositorio y no
+  baja más, así que `addons/easyocr/` le salía como "No module found in repository". Las
+  herramientas que apuntaban a `addons/` se han movido con el módulo: el empaquetador, los
+  dos workflows, el `docker-compose.yml` local y el README. No ha cambiado nada de lo que
+  hace el módulo, y lo único distinto dentro del ZIP de la release es el número de versión.
+
 ## [1.0.11] - 2026-10-12
 
 ### Cambiado

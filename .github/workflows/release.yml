@@ -38,7 +38,7 @@ jobs:
       - name: Python syntax
         # A tag can point at a commit ci.yml never saw, and a tag build skips
         # ci.yml altogether, so the cheapest of its checks is repeated here.
-        run: python -m compileall -q addons
+        run: python -m compileall -q -x '\.git' .
 
       - name: Read the module version
         id: module

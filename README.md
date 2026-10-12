@@ -151,8 +151,8 @@ One branch per Odoo series, as is the norm in the Odoo ecosystem:
 
 | Branch | Odoo series | Module version |
 | --- | --- | --- |
-| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.11` |
-| `18.0` | Odoo Community 18.0 | `18.0.1.0.11` |
+| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.12` |
+| `18.0` | Odoo Community 18.0 | `18.0.1.0.12` |
 
 The branch name and the first two digits of the module version always match, and the CI
 checks it. One module covers one series: the code is the same on both, except where the
@@ -160,7 +160,7 @@ two series genuinely differ.
 
 ## 🗺️ Status
 
-Feature complete, tested on both series, and out in version 1.0.11.
+Feature complete, tested on both series, and out in version 1.0.12.
 
 [`ROADMAP.md`](ROADMAP.md) is the map: what each phase added, what is deliberately left
 out, and how the module differs from the Dolibarr one.
@@ -206,7 +206,7 @@ which is what lets the web app's manifest be served without a session. The comme
 ### Repository layout
 
 ```
-addons/easyocr/             the module itself
+easyocr/                    the module itself, at the root of the repository
   models/                   models
   views/                    list, form, search and menus
   security/                 groups and access rules

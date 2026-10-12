@@ -20,7 +20,11 @@ jobs:
           python-version: '3.12'
 
       - name: Python syntax
-        run: python -m compileall -q addons
+        # The whole repository, not just the module folder: the module now sits
+        # at the root next to tools/ and tests/, so there is no single folder
+        # that holds every file Python parses. .git is the only tree worth
+        # skipping, and compileall filters directories, so it does not descend.
+        run: python -m compileall -q -x '\.git' .
 
       - name: Manifest and layout
         run: python tools/check_module.py
@@ -42,7 +46,9 @@ jobs:
           import xml.etree.ElementTree as ET
 
           failed = False
-          for path in sorted(pathlib.Path('addons').rglob('*.xml')):
+          for path in sorted(pathlib.Path('.').rglob('*.xml')):
+              if '.git' in path.parts:
+                  continue
               try:
                   ET.parse(path)
               except ET.ParseError as error:

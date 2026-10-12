@@ -19,7 +19,7 @@ import {test} from 'node:test';
 import {
     anchorOf, boxAt, clamped, cornerOf, handleAt, labelPlacement, movedTo, overlaps,
     rectangleBetween, resizedTo, textInBox,
-} from '../../addons/easyocr/static/src/js/easyocr_box_geometry.js';
+} from '../../easyocr/static/src/js/easyocr_box_geometry.js';
 
 // A page the size of a sheet of A4 in PDF points, which is what the viewer
 // carries for every page it paints.
