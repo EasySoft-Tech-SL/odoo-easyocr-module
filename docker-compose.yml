@@ -4,10 +4,14 @@
 #   80/443  httpd de Laragon          8080  nginx        5432  PostgreSQL nativo
 #   5433    reservado por docker-pg-db-1 (otro proyecto)
 #   8088    reservado por docker-pg-dolibarr-1
-# Por eso: HTTP 8069 (Odoo 19) y 8070 (Odoo 18), PostgreSQL interno en 5434.
+# Por eso: HTTP 8069 (Odoo 19), 8070 (Odoo 18) y 8071 (Odoo 20), PostgreSQL interno en 5434.
 #
 # restart: "no" a proposito. En esta maquina ya hay 10 contenedores
 # unless-stopped que se levantan solos y se comen la RAM de la WSL.
+#
+# Este fichero es el mismo en las tres ramas salvo por una linea: cada rama
+# monta SU checkout con `.` y los demas por su carpeta hermana. Aqui estamos en
+# 18.0, asi que el 18 monta `.`.
 
 services:
   db:
@@ -23,24 +27,6 @@ services:
       - db-data:/var/lib/postgresql/data
     restart: "no"
 
-  odoo19:
-    image: odoo:19.0
-    container_name: odoo-easyocr-19
-    depends_on:
-      - db
-    ports:
-      - "127.0.0.1:8069:8069"
-    volumes:
-      - ./config/odoo19.conf:/etc/odoo/odoo.conf:ro
-      # The module sits at the root of the repository -- the Apps Store scans
-      # the root and does not recurse -- so the repository root IS the addons
-      # path: the container sees /mnt/extra-addons/easyocr/. Odoo lists the
-      # direct children of the path and only a folder with a __manifest__.py
-      # becomes a module, so tools/, tests/, docs/ and config/ are ignored.
-      - .:/mnt/extra-addons
-      - odoo19-data:/var/lib/odoo
-    restart: "no"
-
   odoo18:
     image: odoo:18.0
     container_name: odoo-easyocr-18
@@ -50,15 +36,58 @@ services:
       - "127.0.0.1:8070:8069"
     volumes:
       - ./config/odoo18.conf:/etc/odoo/odoo.conf:ro
-      # Its own checkout, not this one: one folder cannot hold two branches at
-      # once, and Odoo refuses a module whose version does not match its series
-      # ("incompatible version, setting installable=False"). Created with:
-      #   git worktree add D:/GIT/odoo-easyocr-18 18.0
-      - ../odoo-easyocr-18:/mnt/extra-addons
+      # The module sits at the root of the repository -- the Apps Store scans
+      # the root and does not recurse -- so the repository root IS the addons
+      # path: the container sees /mnt/extra-addons/easyocr/. Odoo lists the
+      # direct children of the path and only a folder with a __manifest__.py
+      # becomes a module, so tools/, tests/, docs/ and config/ are ignored.
+      - .:/mnt/extra-addons
       - odoo18-data:/var/lib/odoo
     restart: "no"
 
+  odoo19:
+    image: odoo:19.0
+    container_name: odoo-easyocr-19
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8069:8069"
+    volumes:
+      - ./config/odoo19.conf:/etc/odoo/odoo.conf:ro
+      # Its own checkout, not this one: one folder cannot hold two branches at
+      # once, and Odoo refuses a module whose version does not match its series
+      # ("incompatible version, setting installable=False"). The 19 checkout is
+      # the main working tree of the repository, without a suffix:
+      #   git worktree add D:/GIT/odoo-easyocr 19.0   (ya existe)
+      - ../odoo-easyocr:/mnt/extra-addons
+      - odoo19-data:/var/lib/odoo
+    restart: "no"
+
+  odoo20:
+    image: odoo:20.0
+    container_name: odoo-easyocr-20
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8071:8069"
+    volumes:
+      - ./config/odoo20.conf:/etc/odoo/odoo.conf:ro
+      # Its own checkout, like the 19. Created with:
+      #   git worktree add D:/GIT/odoo-easyocr-20 -b 20.0
+      - ../odoo-easyocr-20:/mnt/extra-addons
+      - odoo20-data:/var/lib/odoo
+    restart: "no"
+
+# El nombre va fijado a mano para que no lo derive del directorio: el entorno se
+# puede levantar desde cualquiera de las tres ramas, y sin esto compose tomaria
+# cada carpeta por un proyecto distinto y crearia volumenes nuevos y vacios, que
+# es el filestore de los adjuntos. Los que ya existen se llaman asi.
 volumes:
   db-data:
+    name: odoo-easyocr_db-data
   odoo19-data:
+    name: odoo-easyocr_odoo19-data
   odoo18-data:
+    name: odoo-easyocr_odoo18-data
+  odoo20-data:
+    name: odoo-easyocr_odoo20-data
