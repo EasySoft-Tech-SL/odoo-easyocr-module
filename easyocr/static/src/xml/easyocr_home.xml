@@ -19,8 +19,8 @@
                     alt="EasyOCR"
                 />
                 <div class="o_easyocr_home_header_text">
-                    <h1 t-esc="title"/>
-                    <p t-esc="subtitle"/>
+                    <h1 t-out="title"/>
+                    <p t-out="subtitle"/>
                 </div>
             </div>
 
@@ -38,14 +38,14 @@
                             <i t-attf-class="fa {{ stat.icon }}"/>
                         </span>
                         <span class="o_easyocr_stat_info">
-                            <strong t-esc="stat.count === null ? '—' : stat.count"/>
-                            <span t-esc="stat.label"/>
+                            <strong t-out="stat.count === null ? '—' : stat.count"/>
+                            <span t-out="stat.label"/>
                         </span>
                     </button>
                 </t>
             </div>
 
-            <div class="o_easyocr_home_section" t-esc="sectionTitle"/>
+            <div class="o_easyocr_home_section" t-out="sectionTitle"/>
 
             <div class="o_easyocr_home_grid">
                 <t t-foreach="cards" t-as="card" t-key="card.key">
@@ -58,10 +58,10 @@
                         <span class="o_easyocr_card_icon">
                             <i t-attf-class="fa {{ card.icon }}"/>
                         </span>
-                        <h3 t-esc="card.title"/>
-                        <p t-esc="card.note"/>
+                        <h3 t-out="card.title"/>
+                        <p t-out="card.note"/>
                         <span class="o_easyocr_card_footer">
-                            <span t-esc="openLabel"/>
+                            <span t-out="openLabel"/>
                             <i class="fa fa-arrow-right"/>
                         </span>
                     </button>

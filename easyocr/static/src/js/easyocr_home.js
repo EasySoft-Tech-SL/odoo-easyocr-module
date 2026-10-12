@@ -37,7 +37,7 @@ export class EasyocrHome extends Component {
 
         this.logoSrc = "/easyocr/static/description/icon.png";
         this.title = _t("EasyOCR");
-        this.subtitle = _t("Tool for extracting text content from PDF files for automatic creation of supplier invoices in Dolibarr.");
+        this.subtitle = _t("Tool for extracting text content from PDF files for automatic creation of supplier invoices in Odoo.");
         this.sectionTitle = _t("Quick access");
         this.openLabel = _t("Open");
 

@@ -8,7 +8,7 @@
         <div class="o_easyocr_result_grid">
             <t t-foreach="sectionFields(section)" t-as="field" t-key="field.key">
                 <div t-att-class="'o_easyocr_result_field' + (isWide(field.key) ? ' is-wide' : '')">
-                    <label class="o_easyocr_result_field_label" t-att-for="fieldId(section, field.key)"><t t-esc="field.label"/></label>
+                    <label class="o_easyocr_result_field_label" t-att-for="fieldId(section, field.key)"><t t-out="field.label"/></label>
                     <input
                         type="text"
                         t-att-id="fieldId(section, field.key)"
@@ -25,7 +25,7 @@
                         role="status"
                     >
                         <i t-att-class="'fa ' + supplierHint().icon + ' me-1'" aria-hidden="true"/>
-                        <t t-esc="supplierHint().text"/>
+                        <t t-out="supplierHint().text"/>
                     </div>
                 </div>
             </t>
@@ -43,8 +43,8 @@
             t-on-click="() => this.toggleCard(card)"
         >
             <span t-att-class="'o_easyocr_result_card_icon is-' + card" aria-hidden="true"><i t-att-class="'fa ' + icon"/></span>
-            <span class="o_easyocr_result_card_title"><t t-esc="title"/></span>
-            <span t-if="count !== undefined" class="o_easyocr_result_count"><t t-esc="count"/></span>
+            <span class="o_easyocr_result_card_title"><t t-out="title"/></span>
+            <span t-if="count !== undefined" class="o_easyocr_result_count"><t t-out="count"/></span>
             <i t-att-class="'fa fa-chevron-down o_easyocr_result_chevron' + (isCollapsed(card) ? ' is-collapsed' : '')" aria-hidden="true"/>
         </button>
     </t>
@@ -71,7 +71,7 @@
                             <h4 t-att-id="uid + '_title'">AI Result</h4>
                             <ul class="o_easyocr_result_pills" t-if="pills().length">
                                 <t t-foreach="pills()" t-as="pill" t-key="pill_index">
-                                    <li class="o_easyocr_result_pill"><t t-esc="pill"/></li>
+                                    <li class="o_easyocr_result_pill"><t t-out="pill"/></li>
                                 </t>
                             </ul>
                         </div>
@@ -93,7 +93,7 @@
                 </div>
 
                 <div t-if="state.showPayload" class="o_easyocr_result_payload" t-att-id="uid + '_payload'">
-                    <pre tabindex="0"><t t-esc="payloadText()"/></pre>
+                    <pre tabindex="0"><t t-out="payloadText()"/></pre>
                 </div>
 
                 <div class="o_easyocr_result_body">
@@ -104,7 +104,7 @@
                     <div t-if="mismatch()" class="o_easyocr_result_warning" role="alert">
                         <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"/>
                         <strong>Lines do not match document totals</strong>
-                        <span class="ms-1"><t t-esc="mismatch()"/></span>
+                        <span class="ms-1"><t t-out="mismatch()"/></span>
                     </div>
 
                     <section t-if="hasSection('document')" class="o_easyocr_result_card">
@@ -179,14 +179,14 @@
                                             <tr>
                                                 <td><input class="o_easyocr_result_cell" t-model="item.code" t-on-change="resolveProducts" t-att-aria-label="cellLabel('code', item_index)"/></td>
                                                 <td class="col-product">
-                                                    <span t-if="productOf(item)" class="o_easyocr_result_product is-linked" t-att-title="productOf(item)"><i class="fa fa-link me-1" aria-hidden="true"/><t t-esc="productOf(item)"/></span>
+                                                    <span t-if="productOf(item)" class="o_easyocr_result_product is-linked" t-att-title="productOf(item)"><i class="fa fa-link me-1" aria-hidden="true"/><t t-out="productOf(item)"/></span>
                                                     <span t-else="" class="o_easyocr_result_product" title="No product linked: the line goes as free text">—</span>
                                                 </td>
                                                 <td><input class="o_easyocr_result_cell" t-model="item.description" t-att-aria-label="cellLabel('description', item_index)"/></td>
                                                 <td>
                                                     <select class="o_easyocr_result_cell" t-model="item.item_type" t-att-aria-label="cellLabel('item_type', item_index)">
                                                         <t t-foreach="itemTypes" t-as="type" t-key="type[0]">
-                                                            <option t-att-value="type[0]"><t t-esc="type[1]"/></option>
+                                                            <option t-att-value="type[0]"><t t-out="type[1]"/></option>
                                                         </t>
                                                     </select>
                                                 </td>
@@ -196,7 +196,7 @@
                                                 <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.tax_rate" t-att-aria-label="cellLabel('tax_rate', item_index)"/></td>
                                                 <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.re_rate" t-att-aria-label="cellLabel('re_rate', item_index)"/></td>
                                                 <td><input class="o_easyocr_result_cell is-num" inputmode="decimal" t-model="item.irpf_rate" t-att-aria-label="cellLabel('irpf_rate', item_index)"/></td>
-                                                <td class="o_easyocr_result_line_total"><t t-esc="lineTotal(item)"/></td>
+                                                <td class="o_easyocr_result_line_total"><t t-out="lineTotal(item)"/></td>
                                                 <td class="col-actions">
                                                     <button class="o_easyocr_result_remove" type="button" t-on-click="() => this.removeLine(item_index)" title="Delete" aria-label="Delete">
                                                         <i class="fa fa-times" aria-hidden="true"/>
@@ -239,14 +239,14 @@
                             <t t-set="title">Notes</t>
                         </t>
                         <div t-if="!isCollapsed('notes')" class="o_easyocr_result_card_body" t-att-id="uid + '_card_notes'">
-                            <p class="o_easyocr_result_notes"><t t-esc="notes()"/></p>
+                            <p class="o_easyocr_result_notes"><t t-out="notes()"/></p>
                         </div>
                     </section>
                 </div>
 
                 <div class="o_easyocr_result_footer">
                     <div t-if="state.error" class="o_easyocr_result_error" role="alert">
-                        <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/><t t-esc="state.error"/>
+                        <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/><t t-out="state.error"/>
                     </div>
                     <div class="o_easyocr_result_footer_options">
                         <div class="o_easyocr_result_footer_row">
@@ -266,7 +266,7 @@
                                 <select class="o_easyocr_result_select" t-att-id="uid + '_journal'" t-model="state.journalId">
                                     <option value="">-- Automatic --</option>
                                     <t t-foreach="state.journals" t-as="journal" t-key="journal.id">
-                                        <option t-att-value="journal.id"><t t-esc="journal.name"/></option>
+                                        <option t-att-value="journal.id"><t t-out="journal.name"/></option>
                                     </t>
                                 </select>
                             </div>
@@ -287,13 +287,13 @@
                                 <select class="o_easyocr_result_select" t-model="state.paymentModeId" aria-label="Payment method">
                                     <option value="">Payment method: -- Automatic --</option>
                                     <t t-foreach="state.paymentModes" t-as="mode" t-key="mode.id">
-                                        <option t-att-value="mode.id"><t t-esc="mode.name"/></option>
+                                        <option t-att-value="mode.id"><t t-out="mode.name"/></option>
                                     </t>
                                 </select>
                                 <select class="o_easyocr_result_select" t-model="state.bankId" aria-label="Bank account">
                                     <option value="">Bank account: -- Automatic --</option>
                                     <t t-foreach="state.banks" t-as="bank" t-key="bank.id">
-                                        <option t-att-value="bank.id"><t t-esc="bank.name"/></option>
+                                        <option t-att-value="bank.id"><t t-out="bank.name"/></option>
                                     </t>
                                 </select>
                             </t>

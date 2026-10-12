@@ -13,6 +13,29 @@
     </div>
 </section>
 
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">The module is free, and here is what is not</h2>
+        <div class="oe_span12">
+            <p class="oe_mt32">
+                <b>The module is free and stays free.</b> Install it, use it, and read all the
+                documents you want.
+            </p>
+            <p>
+                <b>A PDF that already carries its text</b> is read inside your browser, with no
+                service, no account and no cost. Most invoices that arrive by email are this.
+            </p>
+            <p>
+                <b>Scans and photographs</b> need the EasyOCR reading service: an address and an
+                API key, typed once in the settings. The service works on a plan with a monthly
+                page quota, plus a wallet balance for the pages you go past it. Nothing is
+                charged for the module itself, and there is no surprise line on the bill: what is
+                left of the month is shown on the same screen you read documents on.
+            </p>
+        </div>
+    </div>
+</section>
+
 <section class="oe_container">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
@@ -52,6 +75,29 @@
                 One click turns the document into a supplier bill, with its lines and its
                 taxes. The supplier is matched by tax number, or created from what was read.
                 A credit note becomes a vendor credit note instead.
+            </p>
+        </div>
+    </div>
+    <div class="oe_row oe_spaced">
+        <div class="oe_span4">
+            <h3>Reads many at once</h3>
+            <p>
+                Drop a whole folder and let it run. Each document keeps its own state, so the
+                ones that are ready can be turned into bills while the rest are still going.
+            </p>
+        </div>
+        <div class="oe_span4">
+            <h3>Tells your Odoo when it is done</h3>
+            <p>
+                The reading does not have to be watched: the service calls back when a document
+                is ready, and every call is written down so you can see what came in, and when.
+            </p>
+        </div>
+        <div class="oe_span4">
+            <h3>Spanish taxes as they are</h3>
+            <p>
+                IVA, the equivalence surcharge and IRPF arrive on the lines, and a rectificativa
+                becomes a vendor credit note with its entries the other way round.
             </p>
         </div>
     </div>
@@ -96,20 +142,27 @@
 
 <section class="oe_container">
     <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">What you need</h2>
+        <h2 class="oe_slogan">Install it</h2>
         <div class="oe_span12">
-            <p class="oe_mt32">
-                <b>Odoo Community 18.0 or 19.0.</b> Odoo Enterprise is not required, and no other
-                module has to be bought.
-            </p>
+            <ol class="oe_mt32">
+                <li>Open <b>Apps</b> in your Odoo and search for <b>EasyOCR</b>.</li>
+                <li>
+                    Press <b>Install</b>. It asks for nothing you do not already have: <b>Odoo
+                    Community 18.0 or 19.0</b>, no Enterprise, and nothing else to buy.
+                </li>
+                <li>
+                    Open <b>Settings</b>, look for <b>EasyOCR</b>, and paste the address of the
+                    reading service and your API key. The button beside them checks the key
+                    without spending a reading.
+                </li>
+                <li>
+                    Open the <b>EasyOCR</b> menu, drop a document, and read what came back.
+                </li>
+            </ol>
             <p>
-                <b>A PDF that already carries its text</b> is read inside your browser, with no
-                service and no cost.
-            </p>
-            <p>
-                <b>Scans and photographs</b> need the EasyOCR extraction service, configured once
-                in the settings with its address and an API key. The extraction is what is paid
-                for, per document; this module is free and stays free.
+                The module is translated into Spanish, Catalan, Galician, German, French, Italian
+                and Portuguese besides English, and the reading is returned in the language of
+                the screen.
             </p>
         </div>
     </div>
@@ -130,10 +183,50 @@
 
 <section class="oe_container">
     <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">What it does not do</h2>
+        <div class="oe_span12">
+            <ul class="oe_mt32">
+                <li>
+                    <b>Scans and photographs</b> are not read without the service. A PDF that
+                    carries its text is.
+                </li>
+                <li>
+                    <b>IGIC</b>, the Canary Islands tax, is not handled. IVA, the equivalence
+                    surcharge and IRPF are.
+                </li>
+                <li>
+                    <b>XML invoices</b> (UBL, CII, Factur-X) are left to Odoo, which already
+                    imports them without this module.
+                </li>
+                <li>
+                    <b>A rate your company has no purchase tax for</b> leaves the line without
+                    tax, so it is worth a look before validating the bill.
+                </li>
+            </ul>
+            <p>
+                It is listed here because finding it out afterwards is worse. A reading that
+                fails is not lost either: the document keeps its state and the reason, and can be
+                sent again.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Latest</h2>
+            <p class="oe_mt32">
+                <b>1.0.12</b>, 12 October 2026: the module is published on the Apps Store, with
+                the repository laid out the way the store reads it. The list version by version
+                is in the CHANGELOG of the repository.
+            </p>
+        </div>
         <div class="oe_span12">
             <h4>Need help?</h4>
             <p>
-                Write to <a href="mailto:info@easysoft.es">info@easysoft.es</a>.
+                Write to <a href="mailto:info@easysoft.es">info@easysoft.es</a> with your Odoo
+                series, what you were doing, and the document if a reading went wrong.
                 Made by <a href="https://easysoft.es">EasySoft Tech S.L.</a>
             </p>
         </div>

@@ -16,7 +16,7 @@
                         t-on-click="() => this.open(tab.key)"
                     >
                         <i t-att-class="'fa ' + tab.icon + ' me-2'" t-att-style="'color:' + tab.color" aria-hidden="true"/>
-                        <t t-esc="tab.label"/>
+                        <t t-out="tab.label"/>
                     </button>
                 </t>
             </nav>
@@ -33,13 +33,13 @@
         <tr class="o_easyocr_admin_thead">
             <th t-att-colspan="colspan or 2">
                 <i t-att-class="'fa ' + icon + ' me-2'" t-att-style="'color:' + color" aria-hidden="true"/>
-                <t t-esc="title"/>
+                <t t-out="title"/>
             </th>
         </tr>
     </t>
 
     <t t-name="easyocr.AdminBadge">
-        <span t-att-class="'o_easyocr_admin_badge ' + badge(value).cls"><t t-esc="badge(value).label"/></span>
+        <span t-att-class="'o_easyocr_admin_badge ' + badge(value).cls"><t t-out="badge(value).label"/></span>
     </t>
 
     <t t-name="easyocr.AdminBar">
@@ -47,7 +47,7 @@
         <em t-if="!b">-</em>
         <div t-else="" class="o_easyocr_admin_bar" role="progressbar" t-att-aria-valuenow="b.pct" aria-valuemin="0" aria-valuemax="100">
             <div class="o_easyocr_admin_bar_fill" t-att-style="'width:' + b.width + '%;background-color:' + b.color">
-                <t t-if="b.width > 10"><t t-esc="b.pct"/>%</t>
+                <t t-if="b.width > 10"><t t-out="b.pct"/>%</t>
             </div>
         </div>
     </t>
@@ -61,7 +61,7 @@
         <div class="o_easyocr_admin_page">
             <div class="o_easyocr_admin_body">
                 <div t-if="state.loading" class="o_easyocr_admin_note"><i class="fa fa-circle-o-notch fa-spin me-2" aria-hidden="true"/>Loading…</div>
-                <div t-elif="state.error" class="o_easyocr_admin_box is-error" role="alert"><i class="fa fa-exclamation-circle me-2" aria-hidden="true"/><t t-esc="state.error"/></div>
+                <div t-elif="state.error" class="o_easyocr_admin_box is-error" role="alert"><i class="fa fa-exclamation-circle me-2" aria-hidden="true"/><t t-out="state.error"/></div>
                 <t t-else="">
 
                     <!-- ============================== Service plan -->
@@ -71,129 +71,129 @@
                             <div class="mt-3"><button type="button" class="btn btn-primary" t-on-click="goToSetup">Go to Setup</button></div>
                         </div>
                         <div t-elif="page.state === 'auth_error'" class="o_easyocr_admin_box is-error" role="alert">
-                            <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/>Authentication error: <t t-esc="page.error"/>
+                            <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/>Authentication error: <t t-out="page.error"/>
                         </div>
                         <div t-elif="page.state === 'api_error'" class="o_easyocr_admin_box is-error" role="alert">
-                            <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/>Error connecting to API: <t t-esc="page.error"/>
+                            <i class="fa fa-exclamation-circle me-2" aria-hidden="true"/>Error connecting to API: <t t-out="page.error"/>
                         </div>
                         <div t-elif="page.state === 'no_data'" class="o_easyocr_admin_box is-info">No data available</div>
                         <t t-else="">
                             <div t-if="banner" t-att-class="'o_easyocr_admin_banner ' + (banner.blocked ? 'is-blocked' : 'is-warning')" role="status">
                                 <i t-att-class="'fa ' + (banner.blocked ? 'fa-times-circle' : 'fa-exclamation-triangle')" aria-hidden="true"/>
                                 <div>
-                                    <strong><t t-esc="banner.title"/></strong>
-                                    <span t-if="banner.body"><t t-esc="banner.body"/></span>
+                                    <strong><t t-out="banner.title"/></strong>
+                                    <span t-if="banner.body"><t t-out="banner.body"/></span>
                                 </div>
                             </div>
 
                             <table t-if="has(data.account)" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-user'"/><t t-set="color" t-value="'#3498db'"/><t t-set="title">Account information</t></t>
-                                <tr t-if="account.name"><td>Name</td><td><strong><t t-esc="account.name"/></strong></td></tr>
-                                <tr t-if="account.email"><td>Email</td><td><t t-esc="account.email"/></td></tr>
-                                <tr t-if="account.billing_mode"><td>Billing mode</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="account.billing_mode === 'subscription' ? 'active' : 'trial'"/></t> <t t-esc="capitalize(account.billing_mode)"/></td></tr>
+                                <tr t-if="account.name"><td>Name</td><td><strong><t t-out="account.name"/></strong></td></tr>
+                                <tr t-if="account.email"><td>Email</td><td><t t-out="account.email"/></td></tr>
+                                <tr t-if="account.billing_mode"><td>Billing mode</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="account.billing_mode === 'subscription' ? 'active' : 'trial'"/></t> <t t-out="capitalize(account.billing_mode)"/></td></tr>
                                 <tr t-if="isSet(account.is_active)"><td>Account status</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="account.is_active ? 'active' : 'inactive'"/></t></td></tr>
-                                <tr t-if="account.created_at"><td>Registration date</td><td><t t-esc="dateTime(account.created_at)"/></td></tr>
+                                <tr t-if="account.created_at"><td>Registration date</td><td><t t-out="dateTime(account.created_at)"/></td></tr>
                             </table>
 
                             <table t-if="has(data.subscription)" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-refresh'"/><t t-set="color" t-value="'#9b59b6'"/><t t-set="title">Subscription</t></t>
                                 <tr t-if="subscription.status"><td>Status</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="subscription.status"/></t></td></tr>
-                                <tr t-if="subscription.billing_cycle"><td>Billing cycle</td><td><t t-esc="billingCycle(subscription.billing_cycle).text"/> <span t-if="billingCycle(subscription.billing_cycle).extra" class="text-muted">(<t t-esc="billingCycle(subscription.billing_cycle).extra"/>)</span></td></tr>
-                                <tr t-if="subscription.current_period_start"><td>Period start</td><td><t t-esc="dateTime(subscription.current_period_start)"/></td></tr>
-                                <tr t-if="subscription.current_period_end"><td>Period end</td><td><t t-esc="dateTime(subscription.current_period_end)"/></td></tr>
-                                <tr t-if="subscription.trial_ends_at"><td>Trial ends</td><td><t t-esc="dateTime(subscription.trial_ends_at)"/></td></tr>
-                                <tr t-if="subscription.cancelled_at"><td>Cancelled on</td><td><span style="color:#e74c3c"><t t-esc="dateTime(subscription.cancelled_at)"/></span></td></tr>
+                                <tr t-if="subscription.billing_cycle"><td>Billing cycle</td><td><t t-out="billingCycle(subscription.billing_cycle).text"/> <span t-if="billingCycle(subscription.billing_cycle).extra" class="text-muted">(<t t-out="billingCycle(subscription.billing_cycle).extra"/>)</span></td></tr>
+                                <tr t-if="subscription.current_period_start"><td>Period start</td><td><t t-out="dateTime(subscription.current_period_start)"/></td></tr>
+                                <tr t-if="subscription.current_period_end"><td>Period end</td><td><t t-out="dateTime(subscription.current_period_end)"/></td></tr>
+                                <tr t-if="subscription.trial_ends_at"><td>Trial ends</td><td><t t-out="dateTime(subscription.trial_ends_at)"/></td></tr>
+                                <tr t-if="subscription.cancelled_at"><td>Cancelled on</td><td><span style="color:#e74c3c"><t t-out="dateTime(subscription.cancelled_at)"/></span></td></tr>
                                 <tr t-if="subscription.is_overdue"><td>Renewal status</td><td><span class="o_easyocr_admin_badge is-solid-bad">Expired without renewal</span> <span class="text-muted ms-1">Automatic charge was not processed. Contact support if it persists.</span></td></tr>
                                 <tr><td>Can process now?</td><td>
                                     <span t-if="canProcess" class="o_easyocr_admin_badge is-solid-ok">Yes</span>
-                                    <t t-else=""><span class="o_easyocr_admin_badge is-solid-bad">No</span> <code t-if="status.block_code" class="o_easyocr_admin_code_bad"><t t-esc="status.block_code"/></code></t>
+                                    <t t-else=""><span class="o_easyocr_admin_badge is-solid-bad">No</span> <code t-if="status.block_code" class="o_easyocr_admin_code_bad"><t t-out="status.block_code"/></code></t>
                                 </td></tr>
                             </table>
 
                             <table t-if="has(data.plan)" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-star'"/><t t-set="color" t-value="'#f39c12'"/><t t-set="title">Current plan</t></t>
-                                <tr t-if="plan.name"><td>Plan name</td><td><strong class="fs-6"><t t-esc="plan.name"/></strong> <span t-if="plan.is_free" class="o_easyocr_admin_badge is-warn">Free</span></td></tr>
-                                <tr t-if="plan.slug"><td>Identifier</td><td><code><t t-esc="plan.slug"/></code></td></tr>
-                                <tr t-if="isSet(plan.price_monthly)"><td>Monthly price</td><td><strong><t t-esc="price(plan.price_monthly)"/></strong> / month</td></tr>
-                                <tr t-if="isSet(plan.price_yearly)"><td>Yearly price</td><td><strong><t t-esc="price(plan.price_yearly)"/></strong> / year</td></tr>
+                                <tr t-if="plan.name"><td>Plan name</td><td><strong class="fs-6"><t t-out="plan.name"/></strong> <span t-if="plan.is_free" class="o_easyocr_admin_badge is-warn">Free</span></td></tr>
+                                <tr t-if="plan.slug"><td>Identifier</td><td><code><t t-out="plan.slug"/></code></td></tr>
+                                <tr t-if="isSet(plan.price_monthly)"><td>Monthly price</td><td><strong><t t-out="price(plan.price_monthly)"/></strong> / month</td></tr>
+                                <tr t-if="isSet(plan.price_yearly)"><td>Yearly price</td><td><strong><t t-out="price(plan.price_yearly)"/></strong> / year</td></tr>
                             </table>
 
                             <table t-if="has(data.quota)" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-bar-chart'"/><t t-set="color" t-value="'#27ae60'"/><t t-set="title">Usage quota</t><t t-set="colspan" t-value="3"/></t>
-                                <tr t-if="quota.period"><td>Current period</td><td colspan="2"><strong><t t-esc="quota.period"/></strong></td></tr>
+                                <tr t-if="quota.period"><td>Current period</td><td colspan="2"><strong><t t-out="quota.period"/></strong></td></tr>
                                 <t t-if="isSet(quota.pages_used) and isSet(quota.pages_limit)">
                                     <tr>
                                         <td>Pages processed</td>
-                                        <td class="o_easyocr_admin_used"><strong><t t-esc="quota.pages_used"/></strong> / <t t-esc="quota.pages_limit"/> <span t-if="pagesPercentage > 100" class="o_easyocr_admin_badge is-bad"><t t-esc="pagesPercentage"/>%</span></td>
+                                        <td class="o_easyocr_admin_used"><strong><t t-out="quota.pages_used"/></strong> / <t t-out="quota.pages_limit"/> <span t-if="pagesPercentage > 100" class="o_easyocr_admin_badge is-bad"><t t-out="pagesPercentage"/>%</span></td>
                                         <td><t t-call="easyocr.AdminBar"><t t-set="used" t-value="quota.pages_used"/><t t-set="limit" t-value="quota.pages_limit"/></t></td>
                                     </tr>
                                     <tr>
                                         <td>Pages remaining</td>
-                                        <td colspan="2"><strong t-att-style="'color:' + (pagesRemaining > 0 ? '#27ae60' : '#e74c3c')"><t t-esc="pagesRemaining"/></strong> pages <span class="text-muted small ms-2">(arithmetic; may not be consumable if blocked)</span></td>
+                                        <td colspan="2"><strong t-att-style="'color:' + (pagesRemaining > 0 ? '#27ae60' : '#e74c3c')"><t t-out="pagesRemaining"/></strong> pages <span class="text-muted small ms-2">(arithmetic; may not be consumable if blocked)</span></td>
                                     </tr>
                                     <tr t-if="isSet(quota.pages_available_now)">
                                         <td><strong>Available now</strong></td>
-                                        <td colspan="2"><strong t-att-style="'font-size:1.05em;color:' + (quota.pages_available_now > 0 ? '#27ae60' : '#e74c3c')"><t t-esc="quota.pages_available_now"/></strong> pages <span t-if="quota.pages_available_now == 0 and pagesRemaining > 0" class="text-muted small ms-2">Blocked by account state</span></td>
+                                        <td colspan="2"><strong t-att-style="'font-size:1.05em;color:' + (quota.pages_available_now > 0 ? '#27ae60' : '#e74c3c')"><t t-out="quota.pages_available_now"/></strong> pages <span t-if="quota.pages_available_now == 0 and pagesRemaining > 0" class="text-muted small ms-2">Blocked by account state</span></td>
                                     </tr>
                                 </t>
                                 <t t-if="isSet(quota.documents_used) and isSet(quota.documents_limit)">
                                     <tr>
                                         <td>Documents processed</td>
-                                        <td class="o_easyocr_admin_used"><strong><t t-esc="quota.documents_used"/></strong> / <t t-esc="quota.documents_limit"/></td>
+                                        <td class="o_easyocr_admin_used"><strong><t t-out="quota.documents_used"/></strong> / <t t-out="quota.documents_limit"/></td>
                                         <td><t t-call="easyocr.AdminBar"><t t-set="used" t-value="quota.documents_used"/><t t-set="limit" t-value="quota.documents_limit"/></t></td>
                                     </tr>
-                                    <tr><td>Documents remaining</td><td colspan="2"><strong t-att-style="'color:' + (docsRemaining > 0 ? '#27ae60' : '#e74c3c')"><t t-esc="docsRemaining"/></strong> documents</td></tr>
+                                    <tr><td>Documents remaining</td><td colspan="2"><strong t-att-style="'color:' + (docsRemaining > 0 ? '#27ae60' : '#e74c3c')"><t t-out="docsRemaining"/></strong> documents</td></tr>
                                 </t>
-                                <tr t-if="quota.reset_date"><td>Quota renewal</td><td colspan="2"><i class="fa fa-calendar me-1" aria-hidden="true"/><t t-esc="dateTime(quota.reset_date)"/></td></tr>
+                                <tr t-if="quota.reset_date"><td>Quota renewal</td><td colspan="2"><i class="fa fa-calendar me-1" aria-hidden="true"/><t t-out="dateTime(quota.reset_date)"/></td></tr>
                             </table>
 
                             <table t-if="has(quota.tokens) or has(quota.requests)" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-database'"/><t t-set="color" t-value="'#e67e22'"/><t t-set="title">Usage statistics</t></t>
-                                <tr t-if="quota.tokens and isSet(quota.tokens.input)"><td>Input tokens</td><td><t t-esc="number(quota.tokens.input)"/></td></tr>
-                                <tr t-if="quota.tokens and isSet(quota.tokens.output)"><td>Output tokens</td><td><t t-esc="number(quota.tokens.output)"/></td></tr>
-                                <tr t-if="quota.tokens and isSet(quota.tokens.total)"><td>Total tokens</td><td><strong><t t-esc="number(quota.tokens.total)"/></strong></td></tr>
-                                <tr t-if="quota.requests and isSet(quota.requests.total)"><td>Total requests</td><td><t t-esc="number(quota.requests.total)"/></td></tr>
-                                <tr t-if="quota.requests and isSet(quota.requests.failed)"><td>Failed requests</td><td><span t-att-style="'color:' + (quota.requests.failed > 0 ? '#e74c3c' : '#27ae60')"><t t-esc="quota.requests.failed"/></span></td></tr>
-                                <tr t-if="quota.requests and isSet(quota.requests.success_rate)"><td>Success rate</td><td><strong style="color:#27ae60"><t t-esc="quota.requests.success_rate"/>%</strong></td></tr>
+                                <tr t-if="quota.tokens and isSet(quota.tokens.input)"><td>Input tokens</td><td><t t-out="number(quota.tokens.input)"/></td></tr>
+                                <tr t-if="quota.tokens and isSet(quota.tokens.output)"><td>Output tokens</td><td><t t-out="number(quota.tokens.output)"/></td></tr>
+                                <tr t-if="quota.tokens and isSet(quota.tokens.total)"><td>Total tokens</td><td><strong><t t-out="number(quota.tokens.total)"/></strong></td></tr>
+                                <tr t-if="quota.requests and isSet(quota.requests.total)"><td>Total requests</td><td><t t-out="number(quota.requests.total)"/></td></tr>
+                                <tr t-if="quota.requests and isSet(quota.requests.failed)"><td>Failed requests</td><td><span t-att-style="'color:' + (quota.requests.failed > 0 ? '#e74c3c' : '#27ae60')"><t t-out="quota.requests.failed"/></span></td></tr>
+                                <tr t-if="quota.requests and isSet(quota.requests.success_rate)"><td>Success rate</td><td><strong style="color:#27ae60"><t t-out="quota.requests.success_rate"/>%</strong></td></tr>
                             </table>
 
                             <table t-if="limitRows.length" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-sliders'"/><t t-set="color" t-value="'#3498db'"/><t t-set="title">Plan limits</t></t>
-                                <tr t-foreach="limitRows" t-as="row" t-key="row.key"><td><t t-esc="row.label"/></td><td><strong><t t-esc="row.value"/></strong></td></tr>
+                                <tr t-foreach="limitRows" t-as="row" t-key="row.key"><td><t t-out="row.label"/></td><td><strong><t t-out="row.value"/></strong></td></tr>
                             </table>
 
                             <table t-if="featureRows.length" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-puzzle-piece'"/><t t-set="color" t-value="'#9b59b6'"/><t t-set="title">Plan features</t></t>
                                 <tr t-foreach="featureRows" t-as="row" t-key="row.key">
-                                    <td><t t-esc="row.label"/></td>
+                                    <td><t t-out="row.label"/></td>
                                     <td>
                                         <t t-if="row.yesNo"><t t-call="easyocr.AdminYesNo"><t t-set="yes" t-value="row.yes"/></t></t>
-                                        <strong t-elif="row.numeric"><t t-esc="row.value"/></strong>
-                                        <t t-else=""><t t-esc="row.value"/></t>
+                                        <strong t-elif="row.numeric"><t t-out="row.value"/></strong>
+                                        <t t-else=""><t t-out="row.value"/></t>
                                     </td>
                                 </tr>
                             </table>
 
                             <table t-if="has(data.current_api_key)" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-key'"/><t t-set="color" t-value="'#1abc9c'"/><t t-set="title">Current API key</t></t>
-                                <tr t-if="apiKey.name"><td>Key name</td><td><strong><t t-esc="apiKey.name"/></strong></td></tr>
-                                <tr t-if="apiKey.prefix"><td>Prefix</td><td><code><t t-esc="apiKey.prefix"/>...</code></td></tr>
+                                <tr t-if="apiKey.name"><td>Key name</td><td><strong><t t-out="apiKey.name"/></strong></td></tr>
+                                <tr t-if="apiKey.prefix"><td>Prefix</td><td><code><t t-out="apiKey.prefix"/>...</code></td></tr>
                                 <tr t-if="apiKey.environment"><td>Environment</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="apiKey.environment"/></t></td></tr>
                                 <tr t-if="isSet(apiKey.is_active)"><td>Status</td><td><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="apiKey.is_active ? 'active' : 'inactive'"/></t></td></tr>
-                                <tr t-if="apiKey.created_at"><td>Creation date</td><td><t t-esc="dateTime(apiKey.created_at)"/></td></tr>
-                                <tr t-if="apiKey.last_used_at"><td>Last used</td><td><t t-esc="dateTime(apiKey.last_used_at)"/></td></tr>
-                                <tr><td>Expiration date</td><td><t t-if="apiKey.expires_at"><t t-esc="dateTime(apiKey.expires_at)"/></t><span t-else="" class="text-muted">No expiration</span></td></tr>
+                                <tr t-if="apiKey.created_at"><td>Creation date</td><td><t t-out="dateTime(apiKey.created_at)"/></td></tr>
+                                <tr t-if="apiKey.last_used_at"><td>Last used</td><td><t t-out="dateTime(apiKey.last_used_at)"/></td></tr>
+                                <tr><td>Expiration date</td><td><t t-if="apiKey.expires_at"><t t-out="dateTime(apiKey.expires_at)"/></t><span t-else="" class="text-muted">No expiration</span></td></tr>
                             </table>
 
                             <table t-if="has(data.wallet) and wallet.exists" class="o_easyocr_admin_table">
                                 <t t-call="easyocr.AdminTableHead"><t t-set="icon" t-value="'fa-credit-card'"/><t t-set="color" t-value="'#e74c3c'"/><t t-set="title">Prepaid wallet</t><t t-set="colspan" t-value="3"/></t>
-                                <tr t-if="isSet(wallet.balance_pages)"><td>Available balance</td><td colspan="2"><strong style="font-size:1.2em;color:#27ae60"><t t-esc="number(wallet.balance_pages)"/></strong> pages</td></tr>
+                                <tr t-if="isSet(wallet.balance_pages)"><td>Available balance</td><td colspan="2"><strong style="font-size:1.2em;color:#27ae60"><t t-out="number(wallet.balance_pages)"/></strong> pages</td></tr>
                                 <tr t-if="isSet(wallet.total_purchased_pages) and isSet(wallet.total_consumed_pages)">
                                     <td>Purchased pages</td>
-                                    <td class="o_easyocr_admin_purchased"><t t-esc="number(wallet.total_purchased_pages)"/> pages</td>
+                                    <td class="o_easyocr_admin_purchased"><t t-out="number(wallet.total_purchased_pages)"/> pages</td>
                                     <td><t t-call="easyocr.AdminBar"><t t-set="used" t-value="wallet.total_consumed_pages"/><t t-set="limit" t-value="wallet.total_purchased_pages"/></t></td>
                                 </tr>
-                                <tr t-if="isSet(wallet.total_consumed_pages)"><td>Consumed pages</td><td colspan="2"><t t-esc="number(wallet.total_consumed_pages)"/> pages</td></tr>
+                                <tr t-if="isSet(wallet.total_consumed_pages)"><td>Consumed pages</td><td colspan="2"><t t-out="number(wallet.total_consumed_pages)"/> pages</td></tr>
                                 <tr t-if="isSet(wallet.is_active)"><td>Status</td><td colspan="2"><t t-call="easyocr.AdminBadge"><t t-set="value" t-value="wallet.is_active ? 'active' : 'inactive'"/></t></td></tr>
                                 <tr t-if="isSet(wallet.can_process)"><td>Can process</td><td colspan="2"><t t-call="easyocr.AdminYesNo"><t t-set="yes" t-value="wallet.can_process"/></t></td></tr>
                             </table>
@@ -218,7 +218,7 @@
                         </div>
                         <table class="o_easyocr_admin_table">
                             <tr class="o_easyocr_admin_thead"><th>Full license text</th></tr>
-                            <tr><td><pre t-if="page.license_text" class="o_easyocr_admin_pre"><t t-esc="page.license_text"/></pre><span t-else="" class="text-muted">License file not found (COPYING or LICENSE).</span></td></tr>
+                            <tr><td><pre t-if="page.license_text" class="o_easyocr_admin_pre"><t t-out="page.license_text"/></pre><span t-else="" class="text-muted">License file not found (COPYING or LICENSE).</span></td></tr>
                         </table>
                     </t>
 
@@ -315,7 +315,7 @@
                                 t-att-open="version.open"
                             >
                                 <summary class="o_easyocr_admin_version_head">
-                                    <span class="o_easyocr_admin_version_title" t-esc="version.header"/>
+                                    <span class="o_easyocr_admin_version_title" t-out="version.header"/>
                                     <i class="fa fa-caret-right o_easyocr_admin_caret" aria-hidden="true"/>
                                 </summary>
                                 <div class="o_easyocr_admin_version_body"><t t-out="version.html"/></div>

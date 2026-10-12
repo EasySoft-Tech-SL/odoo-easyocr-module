@@ -3541,10 +3541,8 @@ msgstr "a fatura não está confirmada, por isso ainda não há nada a pagar"
 
 #. module: easyocr
 #: model:ir.module.module,summary:base.module_easyocr
-msgid ""
-"Extract supplier invoices and expense receipts from PDF and image files"
-msgstr ""
-"Extrai faturas de fornecedor e recibos a partir de ficheiros PDF e imagens"
+msgid "Read supplier invoices and receipts into Odoo - free, AI for scans"
+msgstr "Le faturas de fornecedor e recibos no Odoo: grátis, IA para digitalizações"
 
 #. module: easyocr
 #. odoo-javascript
@@ -3952,10 +3950,10 @@ msgstr "+/− para zoom do PDF"
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
 msgid ""
 "Tool for extracting text content from PDF files for automatic creation of "
-"supplier invoices in Dolibarr."
+"supplier invoices in Odoo."
 msgstr ""
 "Ferramenta para extração de conteúdo textual de ficheiros PDF para a criação"
-" automática de faturas de fornecedor no Dolibarr."
+" automática de faturas de fornecedor no Odoo."
 
 #. module: easyocr
 #. odoo-javascript

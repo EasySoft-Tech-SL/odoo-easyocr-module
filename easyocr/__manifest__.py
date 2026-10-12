@@ -1,9 +1,13 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 {
-    'name': 'EasyOCR',
+    # El nombre lleva "Invoice" porque es lo que se teclea en el buscador de la
+    # tienda; la ficha del catalogo es el unico sitio donde se ve. Dentro de Odoo
+    # es tambien el nombre de la barra de aplicaciones, asi que no pasa de 25
+    # caracteres.
+    'name': 'EasyOCR Invoice Capture',
     'version': '18.0.1.0.12',
-    'summary': 'Extract supplier invoices and expense receipts from PDF and image files',
+    'summary': 'Read supplier invoices and receipts into Odoo - free, AI for scans',
     'author': 'EasySoft Tech S.L.',
     'website': 'https://easysoft.es',
     'license': 'LGPL-3',

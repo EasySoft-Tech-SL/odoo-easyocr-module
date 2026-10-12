@@ -41,13 +41,13 @@
                          glued together in the markup leaves its words in
                          English whatever the .po says. -->
                     <div class="o_easyocr_batch_files_head">
-                        <span t-esc="filesLabel()"/>
+                        <span t-out="filesLabel()"/>
                         <button class="btn btn-link btn-sm" t-on-click="clearFiles">Clear</button>
                     </div>
                     <div t-foreach="state.files" t-as="file" t-key="file.uid" class="o_easyocr_batch_file">
                         <i class="fa fa-file-o"/>
-                        <span class="o_easyocr_batch_file_name" t-esc="file.name"/>
-                        <span class="o_easyocr_batch_file_size" t-esc="this.sizeLabel(file.size)"/>
+                        <span class="o_easyocr_batch_file_name" t-out="file.name"/>
+                        <span class="o_easyocr_batch_file_size" t-out="this.sizeLabel(file.size)"/>
                         <button
                             class="o_easyocr_batch_remove"
                             t-on-click="() => this.removeFile(file.uid)"
@@ -91,7 +91,7 @@
 
                 <div t-if="state.blockMessage" class="o_easyocr_batch_blocked">
                     <i class="fa fa-exclamation-triangle me-1"/>
-                    <t t-esc="state.blockMessage"/>
+                    <t t-out="state.blockMessage"/>
                 </div>
 
                 <div class="o_easyocr_batch_actions">
@@ -100,7 +100,7 @@
                         t-on-click="send"
                         t-att-disabled="state.busy || !state.files.length"
                     ><t>Send them</t><i t-if="state.busy" class="fa fa-spinner fa-spin ms-1"/></button>
-                    <span t-if="state.busy" class="text-muted ms-2" t-esc="state.busyLabel"/>
+                    <span t-if="state.busy" class="text-muted ms-2" t-out="state.busyLabel"/>
                 </div>
             </div>
 
@@ -109,9 +109,9 @@
                  far it has got, instead of sending the reader to a list to
                  guess. -->
             <div t-if="state.sent" class="o_easyocr_batch_progress">
-                <h1 t-esc="state.name || 'Batch'"/>
+                <h1 t-out="state.name || 'Batch'"/>
                 <p class="text-muted">
-                    <t t-esc="state.summary"/>
+                    <t t-out="state.summary"/>
                 </p>
 
                 <div class="o_easyocr_batch_bar">
@@ -120,11 +120,11 @@
                         t-attf-style="width: {{ state.progress }}%"
                     />
                 </div>
-                <p class="o_easyocr_batch_counts" t-esc="countsLabel()"/>
+                <p class="o_easyocr_batch_counts" t-out="countsLabel()"/>
 
                 <div t-if="state.errorMessage" class="o_easyocr_batch_blocked">
                     <i class="fa fa-exclamation-triangle me-1"/>
-                    <t t-esc="state.errorMessage"/>
+                    <t t-out="state.errorMessage"/>
                 </div>
 
                 <div class="o_easyocr_batch_actions">

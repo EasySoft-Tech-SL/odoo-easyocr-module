@@ -1,6 +1,7 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
+import ast
 import os
 import re
 import xml.etree.ElementTree as ElementTree
@@ -155,7 +156,7 @@ HOME_STRINGS = (
     "Invoices",
     "Templates",
     "Setup",
-    "Tool for extracting text content from PDF files for automatic creation of supplier invoices in Dolibarr.",
+    "Tool for extracting text content from PDF files for automatic creation of supplier invoices in Odoo.",
     "Upload PDF",
     "Import a PDF and visually extract supplier invoice data.",
     "Batch processing",
@@ -341,8 +342,15 @@ SHOWN_BORROWED = {
         'easyocr.field_easyocr_document__analytic_distribution',
 }
 
-# The summary the Apps screen shows on the module's card.
-SUMMARY = "Extract supplier invoices and expense receipts from PDF and image files"
+# The summary the Apps screen shows on the module's card. It is read from the
+# manifest and not written again here: it used to be copied into this file, the
+# module was renamed with a new summary, and the check kept comparing against the
+# sentence the module no longer had -- so it passed while seven translations
+# still said the old one.
+def _manifest_summary():
+    module_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(os.path.join(module_path, '__manifest__.py'), encoding='utf-8') as handle:
+        return ast.literal_eval(ast.parse(handle.read()).body[0].value)['summary']
 
 
 @tagged('post_install', '-at_install')
@@ -689,10 +697,11 @@ class TestEasyocrTranslations(TransactionCase):
 
     def test_the_module_summary_is_translated(self):
         """The Apps screen shows it on the card, before the module is installed."""
+        summary = _manifest_summary()
         for name in self._po_files():
             po = polib.pofile(os.path.join(self.i18n_path, name))
             self.assertTrue(
-                self._entry(po, SUMMARY).msgstr,
+                self._entry(po, summary).msgstr,
                 "%s leaves the module summary in English" % name,
             )
 
