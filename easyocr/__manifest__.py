@@ -18,6 +18,7 @@
     # modulo (rutas relativas): la tienda lee el repositorio, no el ZIP.
     'images': [
         'static/description/cover.png',
+        'static/description/flow.gif',
         'static/description/shot-1-workbench.jpg',
         'static/description/shot-2-reading.jpg',
         'static/description/shot-3-document.jpg',
