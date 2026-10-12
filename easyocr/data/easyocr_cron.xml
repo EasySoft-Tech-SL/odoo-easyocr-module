@@ -19,6 +19,11 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">10</field>
             <field name="interval_type">minutes</field>
+            <!-- Up to 17 a cron defaults to numbercall = 1: it runs once and
+                 switches itself off, which leaves the batches to the webhook
+                 alone from then on. A negative number is no limit. From 18 the
+                 field is gone and the job runs while the module is installed. -->
+            <field name="numbercall" eval="-1"/>
             <field name="active" eval="True"/>
         </record>
 

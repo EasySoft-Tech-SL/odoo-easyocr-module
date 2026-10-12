@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 // Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 // License LGPL-3 (see LICENSE file).
 

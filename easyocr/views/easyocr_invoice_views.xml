@@ -12,14 +12,14 @@
         <field name="name">easyocr.invoice.list</field>
         <field name="model">account.move</field>
         <field name="arch" type="xml">
-            <list string="Invoices" default_order="invoice_date desc">
+            <tree string="Invoices" default_order="invoice_date desc">
                 <field name="name" string="Ref."/>
                 <field name="ref" string="Supplier Ref."/>
                 <field name="invoice_date" string="Date"/>
                 <field name="partner_id" string="Third party"/>
                 <field name="amount_untaxed"/>
                 <field name="amount_total"/>
-            </list>
+            </tree>
         </field>
     </record>
 

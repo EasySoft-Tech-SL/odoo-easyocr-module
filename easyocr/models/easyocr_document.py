@@ -782,7 +782,9 @@ class EasyocrDocument(models.Model):
             'date': self.document_date or fields.Date.context_today(self),
             'total_amount': self.amount_total or self.amount_untaxed or 0.0,
             'product_id': self._expense_product().id,
-            'vendor_id': self.partner_id.id,
+            # No vendor_id on the expense: that field arrived in Odoo 18
+            # and this series has no field for it. The supplier is not
+            # lost -- it is already in the name above, and on the document.
             'description': self.note or False,
             'analytic_distribution': self.analytic_distribution or False,
         })

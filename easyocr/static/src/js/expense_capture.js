@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 /**
  * The phone page of EasyOCR: photograph a receipt and send it.
  *

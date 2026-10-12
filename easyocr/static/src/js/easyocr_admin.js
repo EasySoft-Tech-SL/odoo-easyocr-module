@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 import { Component, markup, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";

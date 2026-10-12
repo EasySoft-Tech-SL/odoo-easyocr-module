@@ -7,7 +7,7 @@
         <field name="name">easyocr.document.list</field>
         <field name="model">easyocr.document</field>
         <field name="arch" type="xml">
-            <list
+            <tree
                 string="OCR Documents"
                 decoration-danger="state == 'error'"
                 decoration-success="state == 'processed'"
@@ -20,7 +20,7 @@
                 <field name="currency_id" column_invisible="True"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" widget="badge"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -105,7 +105,7 @@
                                  wrong is normal, and fixing it here is cheaper
                                  than fixing it on the bill afterwards. -->
                             <field name="line_ids" nolabel="1">
-                                <list string="Lines" editable="bottom">
+                                <tree string="Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="product_code" optional="show"/>
@@ -117,7 +117,7 @@
                                     <field name="net_amount" optional="show"/>
                                     <field name="product_id" optional="show"/>
                                     <field name="currency_id" column_invisible="1"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                         <page string="File" name="file">
@@ -164,7 +164,7 @@
     <record id="action_easyocr_document" model="ir.actions.act_window">
         <field name="name">Documents</field>
         <field name="res_model">easyocr.document</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_easyocr_document_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

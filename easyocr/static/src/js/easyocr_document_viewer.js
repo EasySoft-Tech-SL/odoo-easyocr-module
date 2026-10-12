@@ -1,13 +1,14 @@
+/** @odoo-module **/
+
 import { Component, onMounted, onPatched, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { loadJS } from "@web/core/assets";
-// Not a service: `user` is an object the web client fills from the session.
-// Asking the service registry for it throws "Service user is not available"
-// and takes the whole viewer down with it.
-import { user } from "@web/core/user";
+// The user is a service on this series: `@web/core/user`, the object the newer
+// ones fill from the session, does not exist here. It is taken from the
+// registry in setup(), not imported.
 
 import {
     anchorOf,
@@ -115,6 +116,7 @@ export class EasyocrDocumentViewer extends Component {
         this.notification = useService("notification");
         this.dialog = useService("dialog");
         this.actionService = useService("action");
+        this.user = useService("user");
         this.containerRef = useRef("pdfContainer");
         this.fileInputRef = useRef("fileInput");
 
@@ -237,7 +239,7 @@ export class EasyocrDocumentViewer extends Component {
     /** Whether the reader may send documents to the service. */
     async loadPermission() {
         try {
-            this.state.canReadWithAI = await user.hasGroup("easyocr.group_easyocr_manager");
+            this.state.canReadWithAI = await this.user.hasGroup("easyocr.group_easyocr_manager");
         } catch {
             // A viewer that refuses to open because a permission could not be
             // asked about is worse than the same viewer without the button.

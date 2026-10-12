@@ -1,7 +1,8 @@
+/** @odoo-module **/
+
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
 // The colour each card carries, taken from the dashboard of the module this one
@@ -34,6 +35,10 @@ export class EasyocrHome extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        // The user is a service on this series: `@web/core/user`, the object
+        // the newer ones export, does not exist here. Its `hasGroup` is
+        // answered asynchronously, which is why the call below is awaited.
+        this.user = useService("user");
 
         this.logoSrc = "/easyocr/static/description/icon.png";
         this.title = _t("EasyOCR");
@@ -53,7 +58,7 @@ export class EasyocrHome extends Component {
             this.orm.searchCount("easyocr.template", []),
             // Asked once, at the start: it is a promise, and a getter cannot
             // wait for one.
-            user.hasGroup("easyocr.group_easyocr_manager"),
+            this.user.hasGroup("easyocr.group_easyocr_manager"),
         ]);
         this.state.counts = { documents, invoices, templates };
         this.state.canConfigure = canConfigure;
