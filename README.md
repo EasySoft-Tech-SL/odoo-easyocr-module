@@ -152,11 +152,11 @@ One branch per Odoo series, as is the norm in the Odoo ecosystem:
 
 | Branch | Odoo series | Module version |
 | --- | --- | --- |
-| `20.0` | Odoo Community 20.0 | `20.0.1.0.14` |
-| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.14` |
-| `18.0` | Odoo Community 18.0 | `18.0.1.0.14` |
-| `17.0` | Odoo Community 17.0 | `17.0.1.0.14` |
-| `16.0` | Odoo Community 16.0 | `16.0.1.0.14` |
+| `20.0` | Odoo Community 20.0 | `20.0.1.0.15` |
+| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.15` |
+| `18.0` | Odoo Community 18.0 | `18.0.1.0.15` |
+| `17.0` | Odoo Community 17.0 | `17.0.1.0.15` |
+| `16.0` | Odoo Community 16.0 | `16.0.1.0.15` |
 
 The branch name and the first two digits of the module version always match, and the CI
 checks it. One module covers one series: the code is the same on all five, except where a
@@ -165,7 +165,7 @@ differences, measured on each series and not read off a changelog.
 
 ## 🗺️ Status
 
-Feature complete, tested on all five series, and out in version 1.0.14.
+Feature complete, tested on all five series, and out in version 1.0.15.
 
 [`ROADMAP.md`](ROADMAP.md) is the map: what each phase added, what is deliberately left
 out, and how the module differs from the Dolibarr one.
@@ -186,8 +186,9 @@ docker compose up -d
 | Odoo 17.0 | http://127.0.0.1:8072 | `odoo17` |
 | Odoo 16.0 | http://127.0.0.1:8073 | `odoo16` |
 
-Default credentials are `admin` / `admin`. Ports are deliberately unusual: on the machine
-this was built on, 8069 and 8070 were free while 8080, 8081 and 5433 were taken.
+Default credentials are `admin` / `admin`. Pick the ports so the five instances can run at
+the same time; if one collides with something else you have running, change it in
+`docker-compose.yml` and in this table.
 
 A folder holds one branch, so each series is a checkout of its own next to the main one,
 and the compose file mounts them by their folder name:
