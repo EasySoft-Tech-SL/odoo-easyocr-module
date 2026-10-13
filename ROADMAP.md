@@ -157,6 +157,14 @@ The module talks to the same service the Dolibarr module uses
       its screenshots. Every version from now on carries its updated guide:
       the source lives in the repository and the same text goes to the company
       wiki, so a release is not finished until the guide matches it.
+- [x] The module says where the key comes from, 1.0.14 (13-oct-2026). Reading a
+      scan needs the service, and the service needs a key, which is exactly what
+      somebody who has just downloaded the module does not have. The three
+      screens that ask for it (the settings, the viewer and the Plan tab) used to
+      ask and stop there. Each one now offers the free account and says what it
+      is: 10 pages a month, no card. The page for photographing a receipt says
+      the same thing from the other side: with the switch on and no key pasted it
+      used to promise a reading it could not do.
 
 ## Phase 9 — Parity with the Dolibarr module · done
 

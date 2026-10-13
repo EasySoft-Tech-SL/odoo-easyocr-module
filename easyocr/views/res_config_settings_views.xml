@@ -22,7 +22,7 @@
                         <setting id="easyocr_ai_url" string="OCR service URL" help="Base address of the EasyOCR service. The /api/v1/ocr/file endpoint is added automatically.">
                             <field name="easyocr_ai_url" placeholder="https://app.easyocr.es"/>
                         </setting>
-                        <setting id="easyocr_ai_apikey" string="API Key" help="Key the service expects in the X-API-Key header.">
+                        <setting id="easyocr_ai_apikey" string="API Key" help="Key the service expects in the X-API-Key header. A free account gives you one: 10 pages a month, no card.">
                             <field name="easyocr_ai_apikey" widget="password"/>
                             <!-- Next to the key because that is what it checks,
                                  and free to press: the service is asked who the
@@ -34,6 +34,13 @@
                                 string="Test the connection"
                                 class="btn-link"
                             />
+                            <!-- The one thing a new reader does not have is the
+                                 key, and this screen is where they find that
+                                 out. The address is the one the site's own
+                                 "Crear cuenta gratis" button opens. -->
+                            <div class="text-muted mt-1">
+                                <a href="https://app.easyocr.es/register" target="_blank" rel="noopener">Create a free account</a>
+                            </div>
                         </setting>
                         <setting id="easyocr_ai_timeout" string="Timeout" help="How long to wait for the service before giving up, in seconds. A scanned page can take a while to read, so keep this generous.">
                             <field name="easyocr_ai_timeout" class="o_light_label"/>

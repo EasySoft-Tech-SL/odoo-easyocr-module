@@ -113,7 +113,7 @@ class EasyocrAdmin(models.AbstractModel):
     @api.model
     def _plan(self, company):
         """The account as the service sees it, or why it cannot be shown."""
-        if not company.easyocr_ai_enabled or not (company.easyocr_ai_apikey or '').strip():
+        if not company._easyocr_ai_ready():
             return {'state': 'not_configured', 'data': {}}
         try:
             data = self.env['easyocr.extractor'].account(company)

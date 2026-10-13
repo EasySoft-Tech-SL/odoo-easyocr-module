@@ -475,6 +475,30 @@ class TestEasyocrSettings(TransactionCase):
         self.assertIn('otra.example.test', get.call_args.args[0])
         self.assertEqual(get.call_args.kwargs['headers']['X-API-Key'], 'otra-clave')
 
+    def test_a_reading_needs_the_switch_and_a_key(self):
+        """Both halves, or the module promises a reading it cannot make.
+
+        The two settings arrive one at a time: the switch is turned on first and
+        the key is pasted after, from an account the reader may still have to
+        open. The screens that answer "can this be read?" read the switch alone
+        until now, so between the two the module offered a reading it had
+        nothing to make. A key of spaces is no key: it is what a paste that did
+        not take leaves behind.
+        """
+        for enabled, key, ready in ((False, 'clave-de-prueba', False),
+                                    (True, False, False),
+                                    (True, '', False),
+                                    (True, '   ', False),
+                                    (True, 'clave-de-prueba', True)):
+            self.company.write({
+                'easyocr_ai_enabled': enabled,
+                'easyocr_ai_apikey': key,
+            })
+            self.assertEqual(
+                self.company._easyocr_ai_ready(), ready,
+                "With the switch %r and the key %r." % (enabled, key),
+            )
+
     def test_the_connection_button_is_on_the_settings_screen(self):
         """A method nobody can press is a method that does not exist."""
         view = self.env.ref('easyocr.res_config_settings_view_form_easyocr')
