@@ -173,6 +173,12 @@ The module talks to the same service the Dolibarr module uses
       store shows opened with the features and left the price to be worked out.
       It opens with it now, and follows the black-and-amber scheme of the
       company's own product sheets so both catalogues look like one brand.
+- [x] The published page can be read again, 1.0.16 (13-oct-2026). The store
+      sanitises the description and drops every `background` written inside a
+      `style` attribute while keeping `color`, so the black band of the header
+      arrived without its fill and its white headline sat white on white. The
+      fills now come from classes and the amber rule from a border, both of
+      which survive the sanitiser.
 
 ## Phase 9 — Parity with the Dolibarr module · done
 

@@ -11,6 +11,20 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Es la traducción al español de `CHANGELOG.md`.
 
+## [1.0.16] - 2026-10-13
+
+### Corregido
+
+- **La descripción publicada mostraba su propio titular en blanco sobre blanco.** La Odoo
+  Apps Store sanea la descripción y descarta todo `background` escrito dentro de un
+  atributo `style`, pero conserva `color`: la banda negra de la cabecera llegaba sin
+  relleno y el titular blanco de 34px quedaba sobre la página blanca de la tienda,
+  invisible. La regla ámbar y las etiquetas negras corrieron la misma suerte. Los bloques
+  oscuros y los paneles claros toman ahora el relleno de clases (`bg-black`, `bg-light`),
+  que sí pasan el saneado, y la regla ámbar se dibuja con un borde, que también pasa. Del
+  resto de lo que usa la ficha (el relleno, el radio, los colores y los demás bordes) no se
+  perdía nada.
+
 ## [1.0.15] - 2026-10-13
 
 ### Cambiado
