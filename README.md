@@ -28,7 +28,8 @@ behind it.
 configure. Scans, photographs and handwritten paper need the **EasyOCR extraction
 service**, and that is what a subscription pays for.
 
-This is the Odoo counterpart of EasyOCR for Dolibarr. Maintained by
+This is the Odoo counterpart of [EasyOCR for Dolibarr](https://easyocr.es/dolibarr),
+and [easyocr.es/odoo](https://easyocr.es/odoo) is this one's page. Maintained by
 [EasySoft Tech S.L.](https://easysoft.es).
 
 ## 📸 What it looks like
@@ -281,4 +282,5 @@ text layer; scanning paper, photographs and email attachments is what needs the 
 
 ## 💬 Support
 
-Write to [info@easysoft.es](mailto:info@easysoft.es).
+Write to [info@easysoft.es](mailto:info@easysoft.es), or see
+[easyocr.es/odoo](https://easyocr.es/odoo) for the service plans and the guides.
