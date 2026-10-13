@@ -51,8 +51,8 @@
                 </button>
 
                 <p class="o_easyocr_capture_hint o_easyocr_capture_hint_ai" t-if="not ai_enabled">
-                    Reading with AI is off for your company: the photo will be saved to the
-                    inbox and read by hand.
+                    Reading with AI is not set up for your company: the photo will be
+                    saved to the inbox and read by hand.
                 </p>
 
                 <!-- Live camera. Hidden until the browser says it can have one. -->

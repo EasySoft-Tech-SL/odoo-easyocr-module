@@ -6,7 +6,7 @@
     # es tambien el nombre de la barra de aplicaciones, asi que no pasa de 25
     # caracteres.
     'name': 'EasyOCR Invoice Capture',
-    'version': '19.0.1.0.13',
+    'version': '19.0.1.0.14',
     'summary': 'Read supplier invoices and receipts into Odoo - free, AI for scans',
     'author': 'EasySoft Tech S.L.',
     'website': 'https://easysoft.es',
