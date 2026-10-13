@@ -11,6 +11,15 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.17] - 2026-10-13
+
+### Changed
+
+- **The source of the store listing no longer carries internal notes.** The published
+  description had working notes written between its markup, about how the sheet is built
+  and where its layout comes from. They are gone. Nothing a user sees changes: the sheet,
+  the screens and the behaviour are the same as in 1.0.16.
+
 ## [1.0.16] - 2026-10-13
 
 ### Fixed

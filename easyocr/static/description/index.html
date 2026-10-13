@@ -1,29 +1,10 @@
-<!-- =============================================================================
-     Ficha del modulo en la Odoo Apps Store.
-     Mismo sistema visual que PLANTILLA_FICHA.html (Dolistore): negro #000000 con
-     acentos #DBAB04, tipografia 34/25/24/17/15/13/11.5, cremas #FFFBF0 y #FCFBF9.
-     NUNCA #DBAB04 sobre fondo claro: los numeros en ambar van siempre sobre negro.
-     Todo el texto con estilo va en <div>: la tienda de Dolibarr borra el style de
-     h2/h3/p/strong/span y aqui se escribe igual para que valga en las dos.
-
-     ⚠️ LA TIENDA DE ODOO BORRA TODO `background` EN LINEA. Medido el 13-oct-2026
-     sobre la ficha publicada: de 137 estilos en linea, ni uno conserva un
-     `background`, mientras que `color`, `padding`, `border-radius`, `font-size`,
-     `width` y `border-*` si sobreviven. Resultado: el bloque negro se quedo sin
-     fondo y el titular blanco de 34px quedo blanco sobre blanco (ilegible), que es
-     el fallo que reporto Alberto. Por eso el fondo NO se pone con `background` en
-     linea sino con CLASES de Bootstrap 5, que la propia tienda carga y que si
-     sobreviven al saneado (`oe_container` llega intacto):
-
-       negro  -> class="bg-black"      (rgb(0,0,0), y la clase ya pone el texto blanco)
-       crema  -> class="bg-light"      (rgb(248,249,250))
-
-     La barra ambar de 52x4 tampoco puede ser un `background`: va con `border-top`,
-     que es de los pocos que pasa el filtro. Los `background` en linea se dejan
-     escritos de todas formas como segunda red: hoy se descartan, y si algun dia la
-     tienda deja de descartarlos, el color que dan es el correcto igualmente.
-     ============================================================================= -->
-
+<!-- La tienda de Odoo descarta el `background` en linea de todo `style` (medido el
+     13-oct-2026 sobre la ficha publicada): el fondo va con CLASES de Bootstrap 5
+     (`bg-black`, `bg-light`) y la barra ambar con `border-top`. Un bloque cuyo fondo
+     sea solo `background` en linea llega sin color, y su texto blanco queda
+     ilegible sobre el blanco de la tienda. Se dejan escritos de todas formas como
+     segunda red: hoy se descartan y, si la tienda deja de descartarlos, el color
+     que dan es el correcto. -->
 <section class="oe_container">
 
   <!-- ============ CABECERA ============ -->
