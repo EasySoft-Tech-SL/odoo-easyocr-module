@@ -11,6 +11,24 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Junto a él va una traducción al español, en `CHANGELOG.es.md`.
 
+## [1.0.14] - 2026-10-13
+
+### Añadido
+
+- **El módulo dice de dónde sale la clave.** Leer un escaneo necesita el servicio, y el
+  servicio necesita una clave, que es justo lo que no tiene quien acaba de instalar el
+  módulo. Las tres pantallas que la piden (los ajustes, el visor de documentos y la pestaña
+  Plan) ofrecen ahora abrir una cuenta gratuita y dicen lo que cuesta: 10 páginas al mes,
+  sin tarjeta.
+
+### Corregido
+
+- **La página para fotografiar un ticket prometía una lectura que la empresa no podía
+  pagar.** Con el interruptor de IA encendido y sin clave pegada, la página le decía al
+  empleado que su foto se leería. Se guarda en la bandeja de entrada y se lee a mano, y eso
+  es lo que dice ahora. Nadie llega ahí a propósito: el interruptor se enciende primero y la
+  clave llega después, de una cuenta que puede que aún no esté abierta.
+
 ## [1.0.13] - 2026-10-12
 
 ### Cambiado

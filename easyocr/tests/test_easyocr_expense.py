@@ -20,6 +20,11 @@ MANIFEST_URL = '/easyocr/capture/manifest.json'
 ICON_URL = '/easyocr/capture/icon.svg'
 SERVICE_WORKER_URL = '/easyocr/capture/sw.js'
 
+# The class of the note the page paints when it cannot read with AI. The copy
+# inside it is translated, so what a test holds on to is the mark, not the
+# sentence: an assertion on the sentence passes in English and fails in Spanish.
+AI_OFF_MARK = 'o_easyocr_capture_hint_ai'
+
 CSRF_RE = re.compile(r'name="csrf_token" value="([^"]+)"')
 
 def _jpeg():
@@ -154,9 +159,55 @@ class TestEasyocrExpenseCapture(HttpCase):
         self.assertFalse(body['read'])
         self.assertTrue(body['message'])
 
+    def test_the_page_does_not_promise_a_reading_without_a_key(self):
+        """The switch on with no key is a page that promises what it cannot do.
+
+        It is the state a reader lands in on the way in: the switch is turned on
+        first, and the key arrives afterwards, from an account they may not have
+        opened yet. A reading there sends the photo out and brings back a
+        failure that looks like the module's fault, on a phone, in front of the
+        person holding the receipt.
+        """
+        self._login()
+        self.env.company.write({
+            'easyocr_ai_enabled': True,
+            'easyocr_ai_apikey': False,
+        })
+
+        page = self.url_open(PAGE_URL)
+        self.assertIn(AI_OFF_MARK, page.text,
+                      "The page promised a reading to a company that has no key.")
+
+        with patch.object(EasyocrExtractor, 'extract') as extract:
+            body = self._upload().json()
+
+        extract.assert_not_called()
+        self.assertTrue(body['ok'], body.get('message'))
+        self.assertFalse(body['read'])
+        self.assertTrue(body['message'])
+
+    def test_the_page_promises_a_reading_once_there_is_a_key(self):
+        """The other half, so the mark above is not simply always painted."""
+        self._login()
+        self.env.company.write({
+            'easyocr_ai_enabled': True,
+            'easyocr_ai_apikey': 'clave-de-prueba',
+        })
+
+        page = self.url_open(PAGE_URL)
+
+        self.assertNotIn(AI_OFF_MARK, page.text)
+
     def test_a_photo_is_read_when_the_ai_is_on(self):
         self._login()
-        self.env.company.easyocr_ai_enabled = True
+        # The switch and the key, because a reading needs both: the switch says
+        # the company wants documents sent, the key says the service will take
+        # them. With the switch alone the module has nothing to send, and this
+        # test used to pass all the same, because nothing looked at the key.
+        self.env.company.write({
+            'easyocr_ai_enabled': True,
+            'easyocr_ai_apikey': 'clave-de-prueba',
+        })
         read = {
             'ok': True,
             'reason': False,

@@ -11,6 +11,24 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.14] - 2026-10-13
+
+### Added
+
+- **The module says where the key comes from.** Reading a scan needs the service, and the
+  service needs a key, which is the one thing somebody who has just installed the module
+  does not have. The three screens that ask for it (the settings, the document viewer and
+  the Plan tab) now offer to open a free account and say what it costs: 10 pages a month,
+  no card.
+
+### Fixed
+
+- **The page for photographing a receipt promised a reading the company could not pay
+  for.** With the AI switch on and no key pasted, the page told the employee their photo
+  would be read. It is saved to the inbox and read by hand, and that is what the page says
+  now. Nobody lands there on purpose: the switch is turned on first and the key arrives
+  afterwards, from an account that may not be open yet.
+
 ## [1.0.13] - 2026-10-12
 
 ### Changed

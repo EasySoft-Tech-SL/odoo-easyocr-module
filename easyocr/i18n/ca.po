@@ -553,6 +553,14 @@ msgid "Create Bill"
 msgstr "Crear factura"
 
 #. module: easyocr
+#. odoo-javascript
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Create a free account"
+msgstr "Crear un compte gratuït"
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_autocreate_product
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_autocreate_product
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -1260,8 +1268,12 @@ msgstr ""
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
-msgid "Key the service expects in the X-API-Key header."
-msgstr "Clau que el servei espera a la capçalera X-API-Key."
+msgid ""
+"Key the service expects in the X-API-Key header. A free account gives you "
+"one: 10 pages a month, no card."
+msgstr ""
+"Clau que el servei espera a la capçalera X-API-Key. Un compte gratuït us en "
+"dona una: 10 pàgines al mes, sense targeta."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__last_extraction
@@ -2019,11 +2031,11 @@ msgstr "Tornar-los a llegir costa el mateix i no canviarà res."
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid ""
-"Reading with AI is off for your company: the photo will be saved to the\n"
-"                    inbox and read by hand."
+"Reading with AI is not set up for your company: the photo will be\n"
+"                    saved to the inbox and read by hand."
 msgstr ""
-"L'extracció amb IA està desactivada a la vostra empresa: la foto es desarà a"
-" la safata d'entrada i es llegirà a mà."
+"L'extracció amb IA no està configurada a la vostra empresa: la foto es "
+"desarà a la safata d'entrada i es llegirà a mà."
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_inbox_list
@@ -2135,11 +2147,11 @@ msgstr "Desat, però no s'ha pogut llegir."
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid ""
-"Saved. Reading with AI is off for your company, so the photo is waiting in "
-"the inbox to be read by hand."
+"Saved. Reading with AI is not set up for your company, so the photo is "
+"waiting in the inbox to be read by hand."
 msgstr ""
-"Desat. L'extracció amb IA està desactivada a la vostra empresa, així que la "
-"foto espera a la safata d'entrada per llegir-la a mà."
+"Desat. L'extracció amb IA no està configurada a la vostra empresa, així que "
+"la foto espera a la safata d'entrada per llegir-la a mà."
 
 #. module: easyocr
 #. odoo-javascript
@@ -3547,7 +3559,8 @@ msgstr "la factura no està confirmada, així que encara no hi ha res a pagar"
 #. module: easyocr
 #: model:ir.module.module,summary:base.module_easyocr
 msgid "Read supplier invoices and receipts into Odoo - free, AI for scans"
-msgstr "Llegeix factures de proveïdor i tiquets a Odoo: gratis, IA per a escanejos"
+msgstr ""
+"Llegeix factures de proveïdor i tiquets a Odoo: gratis, IA per a escanejos"
 
 #. module: easyocr
 #. odoo-javascript

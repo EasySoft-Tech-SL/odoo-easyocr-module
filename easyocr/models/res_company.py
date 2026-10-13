@@ -130,3 +130,18 @@ class ResCompany(models.Model):
         help='How the payment is recorded on that bank account. Left empty, Odoo '
              'takes the one the account has by default.',
     )
+
+    # --------------------------------------------------------------
+    # What the screens are allowed to promise
+    # --------------------------------------------------------------
+    def _easyocr_ai_ready(self):
+        """Whether a document can really be sent, key included.
+
+        The switch and the key are two settings, and they arrive one at a time:
+        the switch is turned on first, the key is pasted after. Between the two
+        the module has nothing to send a document with, and a screen that only
+        reads the switch promises a reading that then fails at the service. The
+        screens that say whether a document can be read ask this instead.
+        """
+        self.ensure_one()
+        return bool(self.easyocr_ai_enabled) and bool((self.easyocr_ai_apikey or '').strip())
