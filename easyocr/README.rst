@@ -41,6 +41,10 @@ Reading scans and photographs needs the EasyOCR service: switch on the AI
 extraction, fill in the service address and the API key, and use *Test the
 connection*, which spends no reading. Settings are per company.
 
+The key comes from an account on the service, and the screens that ask for it
+open the door to one: it is free, it asks for no card and it brings 10 pages a
+month.
+
 Known issues / Roadmap
 ======================
 

@@ -555,6 +555,14 @@ msgid "Create Bill"
 msgstr "Créer la facture"
 
 #. module: easyocr
+#. odoo-javascript
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+#: code:addons/easyocr/static/src/xml/easyocr_document_viewer.xml:0
+#: code:addons/easyocr/static/src/xml/easyocr_admin.xml:0
+msgid "Create a free account"
+msgstr "Créer un compte gratuit"
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_autocreate_product
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_autocreate_product
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -1260,8 +1268,12 @@ msgstr ""
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
-msgid "Key the service expects in the X-API-Key header."
-msgstr "Clé que le service attend dans l'en-tête X-API-Key."
+msgid ""
+"Key the service expects in the X-API-Key header. A free account gives you "
+"one: 10 pages a month, no card."
+msgstr ""
+"Clé que le service attend dans l'en-tête X-API-Key. Un compte gratuit vous "
+"en donne une : 10 pages par mois, sans carte."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__last_extraction
@@ -2036,10 +2048,10 @@ msgstr "Les relire coûte autant et ne changera rien."
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.expense_capture_page
 msgid ""
-"Reading with AI is off for your company: the photo will be saved to the\n"
-"                    inbox and read by hand."
+"Reading with AI is not set up for your company: the photo will be\n"
+"                    saved to the inbox and read by hand."
 msgstr ""
-"La lecture par IA est désactivée pour votre société : la photo sera "
+"La lecture par IA n'est pas configurée pour votre société : la photo sera "
 "enregistrée dans la boîte de réception et lue à la main."
 
 #. module: easyocr
@@ -2152,11 +2164,11 @@ msgstr "Enregistré, mais il n'a pas pu être lu."
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid ""
-"Saved. Reading with AI is off for your company, so the photo is waiting in "
-"the inbox to be read by hand."
+"Saved. Reading with AI is not set up for your company, so the photo is "
+"waiting in the inbox to be read by hand."
 msgstr ""
-"Enregistré. La lecture par IA est désactivée pour votre société, la photo "
-"attend donc dans la boîte de réception d'être lue à la main."
+"Enregistré. La lecture par IA n'est pas configurée pour votre société, la "
+"photo attend donc dans la boîte de réception d'être lue à la main."
 
 #. module: easyocr
 #. odoo-javascript
@@ -3579,7 +3591,9 @@ msgstr "la facture n'est pas confirmée, il n'y a donc encore rien à payer"
 #. module: easyocr
 #: model:ir.module.module,summary:base.module_easyocr
 msgid "Read supplier invoices and receipts into Odoo - free, AI for scans"
-msgstr "Lit les factures fournisseurs et les tickets dans Odoo : gratuit, IA pour les scans"
+msgstr ""
+"Lit les factures fournisseurs et les tickets dans Odoo : gratuit, IA pour "
+"les scans"
 
 #. module: easyocr
 #. odoo-javascript

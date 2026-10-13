@@ -133,7 +133,7 @@ class EasyocrExpenseCapture(http.Controller):
             'icon_url': '/easyocr/capture/icon.svg',
             'service_worker_url': '/easyocr/capture/sw.js',
             'max_size_mb': MAX_SIZE_MB,
-            'ai_enabled': request.env.company.easyocr_ai_enabled,
+            'ai_enabled': request.env.company._easyocr_ai_ready(),
             'strings_json': self._strings_json(),
             'script_url': '%s?v=%s' % (CAPTURE_SCRIPT, capture_script_version()),
         })
@@ -286,11 +286,12 @@ class EasyocrExpenseCapture(http.Controller):
             return self._fail(400, error.args[0] if error.args else str(error))
 
         document = item.document_id
-        if request.env.company.easyocr_ai_enabled:
-            # Only when the company asked for it: with AI off the photo stays on
-            # our own server and is read by hand, which is the whole point of
-            # the setting. A failure here is written on the document, never
-            # raised, so the photo is never lost to a bad reading.
+        if request.env.company._easyocr_ai_ready():
+            # Only when the company asked for it and has a key to send with:
+            # with AI off, or on and still without a key, the photo stays on our
+            # own server and is read by hand, which is the whole point of the
+            # setting. A failure here is written on the document, never raised,
+            # so the photo is never lost to a bad reading.
             document.action_extract()
 
         payload = self._capture_result(item, document)
@@ -389,10 +390,10 @@ class EasyocrExpenseCapture(http.Controller):
             'reason': document.error_message or '',
         }
 
-        if not company.easyocr_ai_enabled:
+        if not company._easyocr_ai_ready():
             message = _(
-                "Saved. Reading with AI is off for your company, so the photo is "
-                "waiting in the inbox to be read by hand."
+                "Saved. Reading with AI is not set up for your company, so the photo "
+                "is waiting in the inbox to be read by hand."
             )
             read = False
         elif document.state == 'processed':

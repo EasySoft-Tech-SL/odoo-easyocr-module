@@ -16,6 +16,13 @@ ACCOUNT = 'odoo.addons.easyocr.models.easyocr_extractor.EasyocrExtractor.account
 
 MODULE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Where an account is opened, and what the module calls that door. The address
+# is the one the product's own site opens from its "Crear cuenta gratis", and
+# the name is written once in the .po, so the three screens that offer it are
+# translated together or not at all.
+REGISTER_URL = 'https://app.easyocr.es/register'
+SIGN_UP = 'Create a free account'
+
 
 @tagged('post_install', '-at_install')
 class TestEasyocrAdmin(TransactionCase):
@@ -217,6 +224,61 @@ class TestEasyocrAdmin(TransactionCase):
             self.assertNotIn(
                 'easyocr.easysoft.es', content,
                 "%s still translates the retired address." % name,
+            )
+
+    def test_the_sign_up_is_offered_wherever_the_key_is_asked_for(self):
+        """Nobody can read a scan without an account, and nothing said so.
+
+        The module is free and the reading service is not, so the key is the one
+        thing a new reader does not have. Three screens ask for it -- the
+        settings, the viewer and the plan tab -- and all three stopped at the
+        wall: nine downloads and no sign-up, which is what a door missing looks
+        like from the outside.
+        """
+        anchors = {}
+
+        settings = ElementTree.parse(
+            os.path.join(MODULE_ROOT, 'views', 'res_config_settings_views.xml'))
+        for setting in settings.iter('setting'):
+            if setting.get('id') != 'easyocr_ai_apikey':
+                continue
+            anchors['settings'] = [
+                node for node in setting.iter('a')
+                if node.get('href') == REGISTER_URL
+            ]
+            help_text = setting.get('help') or ''
+            self.assertIn(
+                'free account', help_text.lower(),
+                "The settings screen asks for the key and does not say what it "
+                "costs: %r" % help_text,
+            )
+
+        for name, where in (('easyocr_document_viewer.xml', 'o_easyocr_ai_hero_hint'),
+                            ('easyocr_admin.xml', 'not_configured')):
+            tree = ElementTree.parse(
+                os.path.join(MODULE_ROOT, 'static', 'src', 'xml', name))
+            inside = [
+                node for node in tree.iter()
+                if where in (node.get('class') or '') or where in (node.get('t-if') or '')
+            ]
+            self.assertTrue(inside, "%s has no %r any more." % (name, where))
+            anchors[name] = [
+                node
+                for block in inside
+                for node in block.iter('a')
+                if node.get('href') == REGISTER_URL
+            ]
+
+        for screen, found in sorted(anchors.items()):
+            self.assertTrue(
+                found,
+                "The %s screen asks for the key without saying where it comes "
+                "from: the reader is on their own there." % screen,
+            )
+            self.assertEqual(
+                found[0].text, SIGN_UP,
+                "The %s screen offers the sign-up under a different name than "
+                "the others, so it is translated (or not) on its own." % screen,
             )
 
     def test_telemetry_says_whether_our_identity_goes_with_the_request(self):

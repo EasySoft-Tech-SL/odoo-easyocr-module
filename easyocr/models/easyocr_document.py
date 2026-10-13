@@ -958,7 +958,7 @@ class EasyocrDocument(models.Model):
         reason to tell someone their subscription lapsed.
         """
         company = self.env.company
-        if not company.easyocr_ai_enabled or not company.easyocr_ai_apikey:
+        if not company._easyocr_ai_ready():
             return {
                 'ai_enabled': False, 'blocked': False, 'message': '',
                 'plan': {}, 'quota': {}, 'wallet': {}, 'has_custom_instructions': False,
