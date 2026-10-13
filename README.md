@@ -152,11 +152,11 @@ One branch per Odoo series, as is the norm in the Odoo ecosystem:
 
 | Branch | Odoo series | Module version |
 | --- | --- | --- |
-| `20.0` | Odoo Community 20.0 | `20.0.1.0.15` |
-| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.15` |
-| `18.0` | Odoo Community 18.0 | `18.0.1.0.15` |
-| `17.0` | Odoo Community 17.0 | `17.0.1.0.15` |
-| `16.0` | Odoo Community 16.0 | `16.0.1.0.15` |
+| `20.0` | Odoo Community 20.0 | `20.0.1.0.16` |
+| `19.0` (default) | Odoo Community 19.0 | `19.0.1.0.16` |
+| `18.0` | Odoo Community 18.0 | `18.0.1.0.16` |
+| `17.0` | Odoo Community 17.0 | `17.0.1.0.16` |
+| `16.0` | Odoo Community 16.0 | `16.0.1.0.16` |
 
 The branch name and the first two digits of the module version always match, and the CI
 checks it. One module covers one series: the code is the same on all five, except where a
@@ -165,7 +165,7 @@ differences, measured on each series and not read off a changelog.
 
 ## 🗺️ Status
 
-Feature complete, tested on all five series, and out in version 1.0.15.
+Feature complete, tested on all five series, and out in version 1.0.16.
 
 [`ROADMAP.md`](ROADMAP.md) is the map: what each phase added, what is deliberately left
 out, and how the module differs from the Dolibarr one.

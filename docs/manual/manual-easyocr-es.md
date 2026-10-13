@@ -1,7 +1,7 @@
 ---
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
-version: 1.0.15 (Odoo Community 16.0 a 20.0)
+version: 1.0.16 (Odoo Community 16.0 a 20.0)
 date: 2026-10-13
 author: EasySoft Tech S.L.
 ---

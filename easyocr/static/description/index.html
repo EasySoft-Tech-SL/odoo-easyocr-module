@@ -5,14 +5,31 @@
      NUNCA #DBAB04 sobre fondo claro: los numeros en ambar van siempre sobre negro.
      Todo el texto con estilo va en <div>: la tienda de Dolibarr borra el style de
      h2/h3/p/strong/span y aqui se escribe igual para que valga en las dos.
+
+     ⚠️ LA TIENDA DE ODOO BORRA TODO `background` EN LINEA. Medido el 13-oct-2026
+     sobre la ficha publicada: de 137 estilos en linea, ni uno conserva un
+     `background`, mientras que `color`, `padding`, `border-radius`, `font-size`,
+     `width` y `border-*` si sobreviven. Resultado: el bloque negro se quedo sin
+     fondo y el titular blanco de 34px quedo blanco sobre blanco (ilegible), que es
+     el fallo que reporto Alberto. Por eso el fondo NO se pone con `background` en
+     linea sino con CLASES de Bootstrap 5, que la propia tienda carga y que si
+     sobreviven al saneado (`oe_container` llega intacto):
+
+       negro  -> class="bg-black"      (rgb(0,0,0), y la clase ya pone el texto blanco)
+       crema  -> class="bg-light"      (rgb(248,249,250))
+
+     La barra ambar de 52x4 tampoco puede ser un `background`: va con `border-top`,
+     que es de los pocos que pasa el filtro. Los `background` en linea se dejan
+     escritos de todas formas como segunda red: hoy se descartan, y si algun dia la
+     tienda deja de descartarlos, el color que dan es el correcto igualmente.
      ============================================================================= -->
 
 <section class="oe_container">
 
   <!-- ============ CABECERA ============ -->
-  <div style="background:#000000;border-radius:14px;padding:32px 40px;margin:0 0 32px 0">
+  <div class="bg-black" style="background:#000000;border-radius:14px;padding:32px 40px;margin:0 0 32px 0">
     <div style="color:#DBAB04;font-size:11.5px;font-weight:700;letter-spacing:2px;margin:0 0 10px 0">EASYOCR INVOICE CAPTURE &middot; ODOO COMMUNITY</div>
-    <div style="width:52px;height:4px;background:#DBAB04;border-radius:2px;margin:0 0 20px 0"></div>
+    <div style="width:52px;border-top:4px solid #DBAB04;border-radius:2px;margin:0 0 20px 0"></div>
     <div style="color:#ffffff;font-size:34px;font-weight:700;line-height:1.2;margin:0 0 16px 0;max-width:640px">
       Free module. Install it and read every PDF that already carries its text.
     </div>
@@ -46,13 +63,13 @@
 
   <!-- ============ ETIQUETAS ============ -->
   <div style="margin:0 0 32px 0">
-    <span style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">NO ENTERPRISE NEEDED</span>
-    <span style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">IVA &middot; RECARGO &middot; IRPF</span>
-    <span style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">BATCHES &middot; WEBHOOKS &middot; PHONE PAGE</span>
+    <span class="bg-black" style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">NO ENTERPRISE NEEDED</span>
+    <span class="bg-black" style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">IVA &middot; RECARGO &middot; IRPF</span>
+    <span class="bg-black" style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">BATCHES &middot; WEBHOOKS &middot; PHONE PAGE</span>
   </div>
 
   <!-- ============ CITA ============ -->
-  <div style="border-left:4px solid #DBAB04;background:#FFFBF0;padding:20px 24px;margin:0 0 40px 0;border-radius:0 8px 8px 0">
+  <div class="bg-light" style="border-left:4px solid #DBAB04;background:#FFFBF0;padding:20px 24px;margin:0 0 40px 0;border-radius:0 8px 8px 0">
     <div style="font-size:17px;line-height:1.6;color:#3D3222">
       Most supplier invoices arrive by email as a PDF that already carries its text. Those are
       read in your own browser: no account, no key, no quota, and not a cent for the reading.
@@ -82,7 +99,7 @@
   </div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;margin:0 0 40px 0">
-    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+    <div class="bg-light" style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
       <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 12px 0;padding-left:12px;border-left:3px solid #DBAB04">
         Free, and it stays free
       </div>
@@ -94,7 +111,7 @@
         <li>Making the bill or the credit note, with its lines, its taxes and its payment.</li>
       </ul>
     </div>
-    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+    <div class="bg-light" style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
       <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 12px 0;padding-left:12px;border-left:3px solid #DBAB04">
         Only if you also want scans and photographs
       </div>
@@ -133,27 +150,27 @@
   <div style="color:#000000;font-size:24px;font-weight:600;margin:0 0 20px 0">What it does</div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px;margin:0 0 40px 0">
-    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+    <div class="bg-light" style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
       <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Reads the document</div>
       <div style="font-size:13px;line-height:1.7;color:#666">Supplier, tax number, document number, dates, totals and lines are read from the file, and shown for review and correction before any bill is made.</div>
     </div>
-    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+    <div class="bg-light" style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
       <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Remembers each supplier</div>
       <div style="font-size:13px;line-height:1.7;color:#666">A supplier that sends the same layout every month only has to be set up once. Its boxes are saved as a template, so the same fields are read again and the review gets shorter over time.</div>
     </div>
-    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+    <div class="bg-light" style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
       <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Builds the entry</div>
       <div style="font-size:13px;line-height:1.7;color:#666">One click turns the document into a supplier bill, with its lines and its taxes. The supplier is matched by tax number, or created from what was read. A credit note becomes a vendor credit note instead.</div>
     </div>
-    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+    <div class="bg-light" style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
       <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Reads many at once</div>
       <div style="font-size:13px;line-height:1.7;color:#666">Drop a whole folder and let it run. Each document keeps its own state, so the ones that are ready can be turned into bills while the rest are still going.</div>
     </div>
-    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+    <div class="bg-light" style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
       <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Tells your Odoo when it is done</div>
       <div style="font-size:13px;line-height:1.7;color:#666">The reading does not have to be watched: the service calls back when a document is ready, and every call is written down so you can see what came in, and when.</div>
     </div>
-    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+    <div class="bg-light" style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
       <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Spanish taxes as they are</div>
       <div style="font-size:13px;line-height:1.7;color:#666">IVA, the equivalence surcharge and IRPF arrive on the lines, and a rectificativa becomes a vendor credit note with its entries the other way round.</div>
     </div>
@@ -222,19 +239,19 @@
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,450px),1fr));gap:16px;margin:0 0 40px 0">
     <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
-      <div style="display:inline-block;width:28px;height:28px;background:#DBAB04;color:#000000;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">1</div>
+      <div class="bg-black" style="display:inline-block;width:28px;height:28px;background:#000000;color:#DBAB04;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">1</div>
       <div style="font-size:13px;line-height:1.7;color:#666">Open <b>Apps</b> in your Odoo and search for <b>EasyOCR</b>.</div>
     </div>
     <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
-      <div style="display:inline-block;width:28px;height:28px;background:#DBAB04;color:#000000;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">2</div>
+      <div class="bg-black" style="display:inline-block;width:28px;height:28px;background:#000000;color:#DBAB04;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">2</div>
       <div style="font-size:13px;line-height:1.7;color:#666">Press <b>Install</b>. It asks for nothing you do not already have: Odoo Community 16.0, 17.0, 18.0, 19.0 or 20.0, no Enterprise, and nothing else to buy.</div>
     </div>
     <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
-      <div style="display:inline-block;width:28px;height:28px;background:#DBAB04;color:#000000;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">3</div>
+      <div class="bg-black" style="display:inline-block;width:28px;height:28px;background:#000000;color:#DBAB04;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">3</div>
       <div style="font-size:13px;line-height:1.7;color:#666">Start using it. A PDF that already carries its text is read straight away, with nothing to configure.</div>
     </div>
     <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
-      <div style="display:inline-block;width:28px;height:28px;background:#DBAB04;color:#000000;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">4</div>
+      <div class="bg-black" style="display:inline-block;width:28px;height:28px;background:#000000;color:#DBAB04;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">4</div>
       <div style="font-size:13px;line-height:1.7;color:#666">Only for scans and photographs. In <b>Settings &rsaquo; EasyOCR</b>, paste the address of the reading service and your API key. The key comes with an account, and the sign-up at <a href="https://app.easyocr.es/register" target="_blank" rel="noopener noreferrer" style="color:#333;font-weight:600">app.easyocr.es/register</a> starts on a free plan (0 EUR a month, 10 pages a month, no card). The button beside them checks the key without spending a reading.</div>
     </div>
   </div>
@@ -269,8 +286,8 @@
   </div>
 
   <!-- ============ NOVEDAD ============ -->
-  <div style="background:#FFFBF0;border:1px solid #F0E2BC;border-radius:12px;padding:24px 32px;margin:0 0 40px 0">
-    <div style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 0 16px 0">VERSION 1.0.15 &middot; 13 OCTOBER 2026</div>
+  <div class="bg-light" style="background:#FFFBF0;border:1px solid #F0E2BC;border-radius:12px;padding:24px 32px;margin:0 0 40px 0">
+    <div class="bg-black" style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 0 16px 0">VERSION 1.0.16 &middot; 13 OCTOBER 2026</div>
     <div style="font-size:24px;font-weight:600;color:#000000;margin:0 0 16px 0">It now says, at the top, that it is free</div>
     <div style="font-size:15px;line-height:1.75;color:#333">
       The page opens with the one thing that was buried before: the module costs nothing, and a

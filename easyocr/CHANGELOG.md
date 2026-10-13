@@ -11,6 +11,20 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.16] - 2026-10-13
+
+### Fixed
+
+- **The published description was showing its own headline in white on white.** The Odoo
+  Apps Store sanitises the description and drops every `background` written inside a
+  `style` attribute while keeping `color`, so the black band of the header arrived without
+  its fill and the 34px white headline sat on the store's white page, invisible. The amber
+  rule and the black labels went the same way. The dark blocks and the light panels now
+  take their fill from classes (`bg-black`, `bg-light`), which survive the sanitiser, and
+  the amber rule is drawn as a border, which also survives. The rest of what the sheet
+  relies on, the padding, the radius, the colours and the other borders, was already coming
+  through untouched.
+
 ## [1.0.15] - 2026-10-13
 
 ### Changed
