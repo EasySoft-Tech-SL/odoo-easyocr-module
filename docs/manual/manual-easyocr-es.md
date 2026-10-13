@@ -136,7 +136,7 @@ manda ningún documento. Por eso se puede pulsar tantas veces como haga falta.
 
 | Ajuste | Qué hace |
 |---|---|
-| **Crear facturas como borrador** | Deja la factura en borrador en lugar de validarla al crearla. Apagado viene, como en Dolibarr: la factura se valida, se contabiliza y recibe su número. Si al validar falla algo, la factura se queda en borrador con el motivo escrito en ella. En la pantalla de resultado se puede elegir otra cosa para una factura concreta. |
+| **Crear facturas como borrador** | Deja la factura en borrador en lugar de validarla al crearla. Apagado viene: la factura se valida, se contabiliza y recibe su número. Si al validar falla algo, la factura se queda en borrador con el motivo escrito en ella. En la pantalla de resultado se puede elegir otra cosa para una factura concreta. |
 | **Crear productos automáticamente** | Cuando una línea trae una referencia de proveedor que no casa con ningún producto, lo crea. Apagado viene, para que el catálogo no crezca solo. |
 | **Aceptar nuestra propia empresa como proveedor** | Permite contabilizar un documento cuyo NIF sea el suyo. Apagado viene, porque casi siempre es un documento que se ha leído al revés. |
 | **Preguntar antes de leer un documento ya leído** | Antes de enviar un archivo al servicio, busca otro documento con el mismo contenido que ya se haya leído y le pregunta si quiere leerlo otra vez. Encendido viene: leerlo otra vez cuesta una lectura, y dejarlo no cuesta nada. |
@@ -559,10 +559,10 @@ deuda con ese proveedor baje en vez de subir.
   de IVA o descuentos por línea.
 - **La fecha y la referencia.** Son las del documento original.
 
-La factura se crea **validada**, como en Dolibarr, salvo que tenga encendido
-**Crear facturas como borrador** en los ajustes o elija **Borrador** en la
-ventana de resultado. En borrador no se ha contabilizado nada: puede editarla
-con calma y validarla cuando esté conforme.
+La factura se crea **validada**, salvo que tenga encendido **Crear facturas como
+borrador** en los ajustes o elija **Borrador** en la ventana de resultado. En
+borrador no se ha contabilizado nada: puede editarla con calma y validarla cuando
+esté conforme.
 
 El mismo documento no se puede facturar dos veces: si ya tiene factura, el botón
 desaparece de la ficha.
