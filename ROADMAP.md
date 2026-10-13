@@ -127,7 +127,8 @@ The module talks to the same service the Dolibarr module uses
 
 - [x] Settings screen; every option changes real behaviour.
 - [x] Per-record rules on top of the group rules.
-- [x] Eight languages, matching the Dolibarr module.
+- [x] Seven translations besides the English it is written in (ca, de, es, fr,
+      gl, it, pt), the same set as the Dolibarr module.
 
 ## Phase 8 — Packaging and release · in progress
 
@@ -145,8 +146,9 @@ The module talks to the same service the Dolibarr module uses
       approved first: the scan is what publishes. Odoo reviews the page
       afterwards and scores it on 5 criteria, which decides the order in the
       catalogue, and a page that breaks the seller guidelines gets unpublished
-      until it is fixed. Steps and the rules that cost a rejection are in
-      `docs/PUBLICAR-EN-ODOO-APPS.md`.
+      until it is fixed. The steps and the rules that cost a rejection are
+      notes about the store rather than about the module, so they are kept
+      outside this repository.
 - [x] Runs on the five series, 16.0 to 20.0, from version 1.0.13 (12-oct-2026):
       three branches added to the two that were there, and the differences a series
       brings measured on each one instead of assumed.
@@ -165,6 +167,12 @@ The module talks to the same service the Dolibarr module uses
       is: 10 pages a month, no card. The page for photographing a receipt says
       the same thing from the other side: with the switch on and no key pasted it
       used to promise a reading it could not do.
+- [x] The store page says it is free, 1.0.15 (13-oct-2026). What a subscription
+      pays for was explained in the README and in the licence, and the settings
+      screen asked for a key without saying where it came from, but the page the
+      store shows opened with the features and left the price to be worked out.
+      It opens with it now, and follows the black-and-amber scheme of the
+      company's own product sheets so both catalogues look like one brand.
 
 ## Phase 9 — Parity with the Dolibarr module · done
 

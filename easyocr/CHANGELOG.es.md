@@ -9,7 +9,22 @@ del módulo sin la serie (1.0.9 es 19.0.1.0.9 en 19.0 y 18.0.1.0.9 en 18.0, amba
 publicadas el mismo día) y el día en que se publicó.
 
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
-la configuración del módulo. Junto a él va una traducción al español, en `CHANGELOG.es.md`.
+la configuración del módulo. Es la traducción al español de `CHANGELOG.md`.
+
+## [1.0.15] - 2026-10-13
+
+### Cambiado
+
+- **La página de la Odoo Apps Store dice, arriba, que el módulo es gratis.** El README lo
+  dice, la licencia lo dice y los ajustes lo dicen, pero la descripción que muestra la
+  tienda empezaba contando lo que hace el módulo y dejaba que el precio lo dedujera quien
+  la leyera. Ahora empieza por ahí: no hay nada que pagar, y un PDF que ya trae su texto se
+  lee sin cuenta, sin clave API, sin cuota y sin suscripción. El servicio de lectura, que
+  es lo único que paga una suscripción, se presenta como lo que es: la forma de leer
+  escaneos y fotografías, con un plan gratuito para empezar.
+- **Esa descripción sigue ahora el esquema visual de las fichas propias de la empresa**: la
+  misma cabecera negra, los mismos acentos ámbar y la misma escala tipográfica que usan sus
+  módulos de Dolibarr, para que los dos catálogos se lean como una sola marca.
 
 ## [1.0.14] - 2026-10-13
 
