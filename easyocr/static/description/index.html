@@ -1,369 +1,292 @@
-<section class="oe_container">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan" style="color: #002c3c;">EasyOCR Invoice Capture</h2>
-            <h3 class="oe_slogan">A supplier invoice becomes an accounting entry without anyone retyping it</h3>
-        </div>
-        <div class="col-12 text-center">
-            <span class="badge bg-light text-dark border mb-2 me-1">Free, LGPL-3</span>
-            <span class="badge bg-light text-dark border mb-2 me-1">Odoo Community 16.0 to 20.0</span>
-            <span class="badge bg-light text-dark border mb-2 me-1">PDF with text: unlimited and no service</span>
-            <span class="badge bg-light text-dark border mb-2 me-1">Eight languages</span>
-            <span class="badge bg-light text-dark border mb-2 me-1">Version 1.0.14</span>
-        </div>
-        <div class="col-12">
-            <p class="oe_mt32">
-                Drop a supplier invoice or an expense receipt and review what was read from it
-                before it becomes an entry. The file stays on the screen the whole time, so a
-                document that was read badly is corrected where it was read, and one that failed
-                is sent again instead of being lost.
-            </p>
-        </div>
-    </div>
-</section>
+<!-- =============================================================================
+     Ficha del modulo en la Odoo Apps Store.
+     Mismo sistema visual que PLANTILLA_FICHA.html (Dolistore): negro #000000 con
+     acentos #DBAB04, tipografia 34/25/24/17/15/13/11.5, cremas #FFFBF0 y #FCFBF9.
+     NUNCA #DBAB04 sobre fondo claro: los numeros en ambar van siempre sobre negro.
+     Todo el texto con estilo va en <div>: la tienda de Dolibarr borra el style de
+     h2/h3/p/strong/span y aqui se escribe igual para que valga en las dos.
+     ============================================================================= -->
 
 <section class="oe_container">
-    <div class="row oe_spaced">
-        <div class="col-12">
-            <div class="border rounded p-2 bg-white shadow-sm">
-                <img src="flow.gif" class="img-fluid" alt="A document, the fields drawn on it, and the bill it becomes"/>
-            </div>
-            <p class="small text-muted mt-2 mb-0">Figure 1. From the file to the entry, in three steps.</p>
-        </div>
-        <div class="col-12">
-            <p class="oe_mt32">
-                Three steps, from the file to the entry: the document opens in the viewer, each
-                field is marked once over the text, and the bill is built from what was read.
-            </p>
-        </div>
-    </div>
-</section>
 
-<section class="oe_container oe_dark">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan">The module is free, and here is what is not</h2>
-        </div>
-        <div class="col-12">
-            <table class="table bg-white">
-                <thead>
-                    <tr>
-                        <th scope="col">Free, and it stays free</th>
-                        <th scope="col">Needs the EasyOCR reading service</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>The module itself. Install it, use it, and read all the documents you want.</td>
-                        <td>Scans and photographs, which are an image and carry no text inside.</td>
-                    </tr>
-                    <tr>
-                        <td>A PDF that already carries its text, read inside your browser. Most invoices that arrive by email are this.</td>
-                        <td>An address and an API key, typed once in the settings.</td>
-                    </tr>
-                    <tr>
-                        <td>Drawing the boxes over a text PDF, and keeping them as a supplier template.</td>
-                        <td>A plan with a monthly page quota, plus a wallet balance for the pages you go past it.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-12">
-            <p class="oe_mt32">
-                <b>A PDF that already carries its text</b> is read inside your browser, with no
-                service, no account and no cost. Most invoices that arrive by email are this.
-            </p>
-            <p>
-                <b>Scans and photographs</b> need the EasyOCR reading service: an address and an
-                API key, typed once in the settings. The service works on a plan with a monthly
-                page quota, plus a wallet balance for the pages you go past it. Nothing is
-                charged for the module itself, and there is no surprise line on the bill: what is
-                left of the month is shown on the same screen you read documents on.
-            </p>
-            <p>
-                <b>The key comes with an EasyOCR account.</b> Accounts are self-service: the
-                sign-up at
-                <a href="https://app.easyocr.es/register" target="_blank" rel="noopener">app.easyocr.es/register</a>
-                starts on a free plan (0 EUR a month, 10 pages a month, no card), and it is only
-                needed for scans and photographs.
-            </p>
-        </div>
+  <!-- ============ CABECERA ============ -->
+  <div style="background:#000000;border-radius:14px;padding:32px 40px;margin:0 0 32px 0">
+    <div style="color:#DBAB04;font-size:11.5px;font-weight:700;letter-spacing:2px;margin:0 0 10px 0">EASYOCR INVOICE CAPTURE &middot; ODOO COMMUNITY</div>
+    <div style="width:52px;height:4px;background:#DBAB04;border-radius:2px;margin:0 0 20px 0"></div>
+    <div style="color:#ffffff;font-size:34px;font-weight:700;line-height:1.2;margin:0 0 16px 0;max-width:640px">
+      Free module. Install it and read every PDF that already carries its text.
     </div>
+    <div style="color:#C9C9C9;font-size:17px;line-height:1.65;margin:0 0 24px 0;max-width:640px">
+      No account, no API key, no monthly quota and no subscription: a PDF with text inside is
+      read in your own browser, without a limit and at no cost. Most invoices that arrive by
+      email are exactly that. The reading service is only needed for scans and photographs,
+      and it starts on a free plan.
+    </div>
+    <table style="width:100%;border-collapse:collapse;border-top:1px solid #2A2A2A">
+      <tr>
+        <td style="padding:20px 12px 0 0;vertical-align:top;width:25%">
+          <div style="color:#DBAB04;font-size:25px;font-weight:700;line-height:1">0 &euro;</div>
+          <div style="color:#9A9A9A;font-size:13px;line-height:1.45;margin-top:6px">the module, free for ever</div>
+        </td>
+        <td style="padding:20px 12px 0 12px;vertical-align:top;width:25%">
+          <div style="color:#DBAB04;font-size:25px;font-weight:700;line-height:1">No limit</div>
+          <div style="color:#9A9A9A;font-size:13px;line-height:1.45;margin-top:6px">PDFs that carry their text</div>
+        </td>
+        <td style="padding:20px 12px 0 12px;vertical-align:top;width:25%">
+          <div style="color:#DBAB04;font-size:25px;font-weight:700;line-height:1">10 pages</div>
+          <div style="color:#9A9A9A;font-size:13px;line-height:1.45;margin-top:6px">a month free, for scans</div>
+        </td>
+        <td style="padding:20px 0 0 12px;vertical-align:top;width:25%">
+          <div style="color:#DBAB04;font-size:25px;font-weight:700;line-height:1">16.0&ndash;20.0</div>
+          <div style="color:#9A9A9A;font-size:13px;line-height:1.45;margin-top:6px">Odoo Community</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ============ ETIQUETAS ============ -->
+  <div style="margin:0 0 32px 0">
+    <span style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">NO ENTERPRISE NEEDED</span>
+    <span style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">IVA &middot; RECARGO &middot; IRPF</span>
+    <span style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 6px 8px 0">BATCHES &middot; WEBHOOKS &middot; PHONE PAGE</span>
+  </div>
+
+  <!-- ============ CITA ============ -->
+  <div style="border-left:4px solid #DBAB04;background:#FFFBF0;padding:20px 24px;margin:0 0 40px 0;border-radius:0 8px 8px 0">
+    <div style="font-size:17px;line-height:1.6;color:#3D3222">
+      Most supplier invoices arrive by email as a PDF that already carries its text. Those are
+      read in your own browser: no account, no key, no quota, and not a cent for the reading.
+      Nothing is decided by the calendar either: the module has no trial and no expiry date.
+    </div>
+  </div>
+
+  <!-- ============ EL FLUJO ============ -->
+  <div style="margin:0 0 40px 0">
+    <img src="flow.gif" alt="A document, the fields drawn on it, and the bill it becomes" style="width:100%;height:auto;display:block;border:1px solid #E8E6E1;border-radius:10px">
+    <div style="font-size:13px;color:#666;margin-top:8px;text-align:center">From the file to the entry, in three steps.</div>
+  </div>
+  <div style="font-size:15px;line-height:1.75;color:#333;margin:0 0 40px 0">
+    Three steps, from the file to the entry: the document opens in the viewer, each field is
+    marked once over the text, and the bill is built from what was read.
+  </div>
+
 </section>
 
 <section class="oe_container">
-    <div class="row oe_spaced">
-        <div class="col-12">
-            <div class="border rounded p-2 bg-white shadow-sm">
-                <img src="shot-1-workbench.jpg" class="img-fluid" alt="Reading a supplier invoice in the viewer"/>
-            </div>
-            <p class="small text-muted mt-2 mb-0">Figure 2. The workbench, with the document on the left and the fields drawn over it.</p>
-        </div>
-        <div class="col-12">
-            <p class="oe_mt32">
-                The workbench: the document on the left, and on the right everything that can be
-                done to it. Draw a rectangle over each field once and the text under it is read
-                from the file itself, which costs nothing. Save the rectangles under that
-                supplier and their next invoice opens with them already in place.
-            </p>
-        </div>
-    </div>
-</section>
 
-<section class="oe_container oe_dark">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan">What it does</h2>
-        </div>
-        <div class="col-lg-4 col-12 mb-4">
-            <div class="h-100 bg-white rounded shadow-sm p-3">
-                <h3 class="h5 mt-0"><i class="fa fa-eye me-2" style="color: #002c3c;"></i>Reads the document</h3>
-                <p class="mb-0">
-                    Supplier, tax number, document number, dates, totals and lines are read from
-                    the file, and shown for review and correction before any bill is made.
-                </p>
-            </div>
-        </div>
-        <div class="col-lg-4 col-12 mb-4">
-            <div class="h-100 bg-white rounded shadow-sm p-3">
-                <h3 class="h5 mt-0"><i class="fa fa-users me-2" style="color: #002c3c;"></i>Remembers each supplier</h3>
-                <p class="mb-0">
-                    A supplier that sends the same layout every month only has to be set up once.
-                    Its boxes are saved as a template, so the same fields are read again and the
-                    review gets shorter over time.
-                </p>
-            </div>
-        </div>
-        <div class="col-lg-4 col-12 mb-4">
-            <div class="h-100 bg-white rounded shadow-sm p-3">
-                <h3 class="h5 mt-0"><i class="fa fa-list-alt me-2" style="color: #002c3c;"></i>Builds the entry</h3>
-                <p class="mb-0">
-                    One click turns the document into a supplier bill, with its lines and its
-                    taxes. The supplier is matched by tax number, or created from what was read.
-                    A credit note becomes a vendor credit note instead.
-                </p>
-            </div>
-        </div>
-        <div class="w-100"></div>
-        <div class="col-lg-4 col-12 mb-4">
-            <div class="h-100 bg-white rounded shadow-sm p-3">
-                <h3 class="h5 mt-0"><i class="fa fa-tasks me-2" style="color: #002c3c;"></i>Reads many at once</h3>
-                <p class="mb-0">
-                    Drop a whole folder and let it run. Each document keeps its own state, so the
-                    ones that are ready can be turned into bills while the rest are still going.
-                </p>
-            </div>
-        </div>
-        <div class="col-lg-4 col-12 mb-4">
-            <div class="h-100 bg-white rounded shadow-sm p-3">
-                <h3 class="h5 mt-0"><i class="fa fa-bell me-2" style="color: #002c3c;"></i>Tells your Odoo when it is done</h3>
-                <p class="mb-0">
-                    The reading does not have to be watched: the service calls back when a
-                    document is ready, and every call is written down so you can see what came
-                    in, and when.
-                </p>
-            </div>
-        </div>
-        <div class="col-lg-4 col-12 mb-4">
-            <div class="h-100 bg-white rounded shadow-sm p-3">
-                <h3 class="h5 mt-0"><i class="fa fa-percent me-2" style="color: #002c3c;"></i>Spanish taxes as they are</h3>
-                <p class="mb-0">
-                    IVA, the equivalence surcharge and IRPF arrive on the lines, and a
-                    rectificativa becomes a vendor credit note with its entries the other way
-                    round.
-                </p>
-            </div>
-        </div>
+  <!-- ============ QUE CUESTA ============ -->
+  <div style="color:#000000;font-size:24px;font-weight:600;margin:0 0 8px 0">What it costs</div>
+  <div style="color:#666;font-size:15px;line-height:1.6;margin:0 0 20px 0">
+    Free, and it stays free. The one thing that is contracted separately is the reading
+    service, and only for the documents that are an image rather than a PDF with text.
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;margin:0 0 40px 0">
+    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 12px 0;padding-left:12px;border-left:3px solid #DBAB04">
+        Free, and it stays free
+      </div>
+      <ul style="line-height:1.8;padding-left:18px;font-size:13px;color:#666;margin:0">
+        <li>The module itself: install it, use it and update it.</li>
+        <li>A PDF that already carries its text: as many as you want, read in the browser.</li>
+        <li>Drawing the boxes over a text PDF, and keeping them as a supplier template.</li>
+        <li>Batches, the inbox, the webhook log, the phone page and the sixteen settings.</li>
+        <li>Making the bill or the credit note, with its lines, its taxes and its payment.</li>
+      </ul>
     </div>
+    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 12px 0;padding-left:12px;border-left:3px solid #DBAB04">
+        Only if you also want scans and photographs
+      </div>
+      <ul style="line-height:1.8;padding-left:18px;font-size:13px;color:#666;margin:0 0 12px 0">
+        <li>The service address and an API key, typed once in the settings.</li>
+        <li>A plan with a monthly page quota, plus a wallet balance for the pages past it.</li>
+        <li>
+          The account is self-service and its free plan is 10 pages a month, no card:
+          <a href="https://app.easyocr.es/register" target="_blank" rel="noopener noreferrer" style="color:#333;font-weight:600">app.easyocr.es/register</a>.
+        </li>
+      </ul>
+      <div style="font-size:13px;line-height:1.7;color:#9A9A9A">
+        The module never charges anything by itself, and what is left of the month is shown on
+        the same screen you read documents on.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ EL BANCO DE TRABAJO ============ -->
+  <div style="margin:0 0 40px 0">
+    <img src="shot-1-workbench.jpg" alt="Reading a supplier invoice in the viewer" style="width:100%;height:auto;display:block;border:1px solid #E8E6E1;border-radius:10px">
+    <div style="font-size:13px;color:#666;margin-top:8px;text-align:center">The workbench, with the document on the left and the fields drawn over it.</div>
+  </div>
+  <div style="font-size:15px;line-height:1.75;color:#333;margin:0 0 40px 0">
+    The document on the left, and on the right everything that can be done to it. Draw a
+    rectangle over each field once and the text under it is read from the file itself, which
+    costs nothing. Save the rectangles under that supplier and their next invoice opens with
+    them already in place.
+  </div>
+
 </section>
 
 <section class="oe_container">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan">Who it is for</h2>
-        </div>
-        <div class="col-lg-4 col-12 mb-4">
-            <h3 class="h5">Accounting, in house or for your clients</h3>
-            <p class="mb-0">
-                The supplier invoices of the month stop being typed in: they are dropped as
-                files, checked where they were read, and turned into bills. Those that arrive
-                by email as a PDF with text cost nothing to read, which is most of them.
-            </p>
-        </div>
-        <div class="col-lg-4 col-12 mb-4">
-            <h3 class="h5">Purchasing and administration</h3>
-            <p class="mb-0">
-                Whoever receives the invoice can put it in Odoo the moment it arrives, instead
-                of holding it for someone else to key in. A scan needs the reading service; a
-                PDF that already carries its text does not.
-            </p>
-        </div>
-        <div class="col-lg-4 col-12 mb-4">
-            <h3 class="h5">The one who pays and photographs the receipt</h3>
-            <p class="mb-0">
-                A receipt paid out of pocket is photographed on the phone and leaves the ticket
-                in Odoo, as an employee expense if the settings say so, for whoever approves
-                expenses. Nobody approves their own expense.
-            </p>
-        </div>
+
+  <!-- ============ QUE HACE ============ -->
+  <div style="color:#000000;font-size:24px;font-weight:600;margin:0 0 20px 0">What it does</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px;margin:0 0 40px 0">
+    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Reads the document</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">Supplier, tax number, document number, dates, totals and lines are read from the file, and shown for review and correction before any bill is made.</div>
     </div>
+    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Remembers each supplier</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">A supplier that sends the same layout every month only has to be set up once. Its boxes are saved as a template, so the same fields are read again and the review gets shorter over time.</div>
+    </div>
+    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Builds the entry</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">One click turns the document into a supplier bill, with its lines and its taxes. The supplier is matched by tax number, or created from what was read. A credit note becomes a vendor credit note instead.</div>
+    </div>
+    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Reads many at once</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">Drop a whole folder and let it run. Each document keeps its own state, so the ones that are ready can be turned into bills while the rest are still going.</div>
+    </div>
+    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Tells your Odoo when it is done</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">The reading does not have to be watched: the service calls back when a document is ready, and every call is written down so you can see what came in, and when.</div>
+    </div>
+    <div style="background:#FCFBF9;border:1px solid #EDECEA;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Spanish taxes as they are</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">IVA, the equivalence surcharge and IRPF arrive on the lines, and a rectificativa becomes a vendor credit note with its entries the other way round.</div>
+    </div>
+  </div>
+
+  <!-- ============ PARA QUIEN ============ -->
+  <div style="color:#000000;font-size:24px;font-weight:600;margin:0 0 20px 0">Who it is for</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px;margin:0 0 40px 0">
+    <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Accounting, in house or for your clients</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">The supplier invoices of the month stop being typed in: they are dropped as files, checked where they were read, and turned into bills. Those that arrive by email as a PDF with text cost nothing to read, which is most of them.</div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">Purchasing and administration</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">Whoever receives the invoice can put it in Odoo the moment it arrives, instead of holding it for someone else to key in. A scan needs the reading service; a PDF that already carries its text does not.</div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
+      <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0;padding-left:12px;border-left:3px solid #DBAB04">The one who pays and photographs the receipt</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">A receipt paid out of pocket is photographed on the phone and leaves the ticket in Odoo, as an employee expense if the settings say so, for whoever approves expenses. Nobody approves their own expense.</div>
+    </div>
+  </div>
+
 </section>
 
 <section class="oe_container">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan">A reading ends on the screen that says what was read</h2>
-        </div>
-        <div class="col-12">
-            <div class="border rounded p-2 bg-white shadow-sm">
-                <img src="shot-2-reading.jpg" class="img-fluid" alt="The AI result, with the lines and the bill options"/>
-            </div>
-            <p class="small text-muted mt-2 mb-0">Figure 3. The result of a reading, with its cost and the choices for the bill.</p>
-        </div>
-        <div class="col-12">
-            <p class="oe_mt32">
-                The confidence and what it cost, one card per part of the document, the lines
-                with their VAT, surcharge and withholding ready to correct, a warning when they
-                do not add up, and the choice of draft or validated, journal and payment. From
-                there, one button makes the bill.
-            </p>
-        </div>
-    </div>
-</section>
 
-<section class="oe_container oe_dark">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan">From the file to the entry</h2>
-        </div>
-        <div class="col-lg-6 col-12 mb-4">
-            <div class="border rounded p-2 bg-white shadow-sm">
-                <img src="shot-3-document.jpg" class="img-fluid" alt="A document with the values read from it"/>
-            </div>
-            <p class="small text-muted mt-2">Figure 4. The document, with the values read from it.</p>
-            <p class="oe_mt32">
-                The document keeps what was read, next to the fields it came from, so anything
-                wrong is fixed here and not on the bill afterwards.
-            </p>
-        </div>
-        <div class="col-lg-6 col-12 mb-4">
-            <div class="border rounded p-2 bg-white shadow-sm">
-                <img src="shot-4-bill.jpg" class="img-fluid" alt="The supplier bill created from the document"/>
-            </div>
-            <p class="small text-muted mt-2">Figure 5. The supplier bill built from that document.</p>
-            <p class="oe_mt32">
-                And the supplier bill, with one line per line read, its products, its
-                discounts and its taxes.
-            </p>
-        </div>
+  <!-- ============ EL RESULTADO ============ -->
+  <div style="color:#000000;font-size:24px;font-weight:600;margin:0 0 8px 0">A reading ends on the screen that says what was read</div>
+  <div style="margin:20px 0 16px 0">
+    <img src="shot-2-reading.jpg" alt="The AI result, with the lines and the bill options" style="width:100%;height:auto;display:block;border:1px solid #E8E6E1;border-radius:10px">
+    <div style="font-size:13px;color:#666;margin-top:8px;text-align:center">The result of a reading, with its cost and the choices for the bill.</div>
+  </div>
+  <div style="font-size:15px;line-height:1.75;color:#333;margin:0 0 40px 0">
+    The confidence and what it cost, one card per part of the document, the lines with their
+    VAT, surcharge and withholding ready to correct, a warning when they do not add up, and
+    the choice of draft or validated, journal and payment. From there, one button makes the
+    bill.
+  </div>
+
+  <!-- ============ DEL FICHERO AL ASIENTO ============ -->
+  <div style="color:#000000;font-size:24px;font-weight:600;margin:0 0 20px 0">From the file to the entry</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;margin:0 0 40px 0">
+    <div>
+      <img src="shot-3-document.jpg" alt="A document with the values read from it" style="width:100%;height:auto;display:block;border:1px solid #E8E6E1;border-radius:10px">
+      <div style="font-size:13px;color:#666;margin-top:8px;text-align:center">The document, with the values read from it.</div>
+      <div style="font-size:13px;line-height:1.7;color:#666;margin-top:12px">The document keeps what was read, next to the fields it came from, so anything wrong is fixed here and not on the bill afterwards.</div>
     </div>
+    <div>
+      <img src="shot-4-bill.jpg" alt="The supplier bill created from the document" style="width:100%;height:auto;display:block;border:1px solid #E8E6E1;border-radius:10px">
+      <div style="font-size:13px;color:#666;margin-top:8px;text-align:center">The supplier bill built from that document.</div>
+      <div style="font-size:13px;line-height:1.7;color:#666;margin-top:12px">And the supplier bill, with one line per line read, its products, its discounts and its taxes.</div>
+    </div>
+  </div>
+
 </section>
 
 <section class="oe_container">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan">Install it</h2>
-        </div>
-        <div class="col-12">
-            <ol class="oe_mt32">
-                <li>Open <b>Apps</b> in your Odoo and search for <b>EasyOCR</b>.</li>
-                <li>
-                    Press <b>Install</b>. It asks for nothing you do not already have: <b>Odoo
-                    Community 16.0, 17.0, 18.0, 19.0 or 20.0</b>, no Enterprise, and nothing
-                    else to buy.
-                </li>
-                <li>
-                    Step 3 is only for scans and photographs: a PDF that already carries its
-                    text is read without configuring anything. Open <b>Settings</b>, look for
-                    <b>EasyOCR</b>, and paste the address of the reading service and your API
-                    key. The key comes with an EasyOCR account, and accounts are self-service:
-                    the sign-up at
-                    <a href="https://app.easyocr.es/register" target="_blank" rel="noopener">app.easyocr.es/register</a>
-                    starts on a free plan (0 EUR a month, 10 pages a month, no card). The
-                    button beside them checks the key without spending a reading.
-                </li>
-                <li>
-                    Open the <b>EasyOCR</b> menu, drop a document, and read what came back.
-                </li>
-            </ol>
-            <p>
-                The module is translated into Spanish, Catalan, Galician, German, French, Italian
-                and Portuguese besides English, and the reading is returned in the language of
-                the screen.
-            </p>
-        </div>
-    </div>
-</section>
 
-<section class="oe_container oe_dark">
-    <div class="row oe_spaced">
-        <div class="col-12">
-            <div class="border rounded p-2 bg-white shadow-sm">
-                <img src="shot-5-settings.jpg" class="img-fluid" alt="The module settings"/>
-            </div>
-            <p class="small text-muted mt-2 mb-0">Figure 6. The settings that steer the service and say what a reading may become.</p>
-            <p class="oe_mt32">
-                Sixteen switches over the service, over what a document becomes and over what a
-                webhook may do on its own, and a button that checks your key without spending a
-                reading.
-            </p>
-        </div>
-    </div>
-</section>
+  <!-- ============ PUESTA EN MARCHA ============ -->
+  <div style="color:#000000;font-size:24px;font-weight:600;margin:0 0 8px 0">Install it</div>
+  <div style="color:#666;font-size:15px;line-height:1.6;margin:0 0 20px 0">
+    Three steps and it is working. The fourth is only for scans and photographs.
+  </div>
 
-<section class="oe_container">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan">What it does not do</h2>
-        </div>
-        <div class="col-12">
-            <ul class="oe_mt32">
-                <li>
-                    <b>Scans and photographs</b> are not read without the service. A PDF that
-                    carries its text is.
-                </li>
-                <li>
-                    <b>IGIC</b>, the Canary Islands tax, is not handled. IVA, the equivalence
-                    surcharge and IRPF are.
-                </li>
-                <li>
-                    <b>XML invoices</b> (UBL, CII, Factur-X) are left to Odoo, which already
-                    imports them without this module.
-                </li>
-                <li>
-                    <b>A rate your company has no purchase tax for</b> leaves the line without
-                    tax, so it is worth a look before validating the bill.
-                </li>
-            </ul>
-            <p>
-                It is listed here because finding it out afterwards is worse. A reading that
-                fails is not lost either: the document keeps its state and the reason, and can be
-                sent again.
-            </p>
-        </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,450px),1fr));gap:16px;margin:0 0 40px 0">
+    <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
+      <div style="display:inline-block;width:28px;height:28px;background:#DBAB04;color:#000000;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">1</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">Open <b>Apps</b> in your Odoo and search for <b>EasyOCR</b>.</div>
     </div>
-</section>
+    <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
+      <div style="display:inline-block;width:28px;height:28px;background:#DBAB04;color:#000000;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">2</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">Press <b>Install</b>. It asks for nothing you do not already have: Odoo Community 16.0, 17.0, 18.0, 19.0 or 20.0, no Enterprise, and nothing else to buy.</div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
+      <div style="display:inline-block;width:28px;height:28px;background:#DBAB04;color:#000000;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">3</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">Start using it. A PDF that already carries its text is read straight away, with nothing to configure.</div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #E8E6E1;border-radius:10px;padding:20px 24px">
+      <div style="display:inline-block;width:28px;height:28px;background:#DBAB04;color:#000000;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin:0 0 12px 0">4</div>
+      <div style="font-size:13px;line-height:1.7;color:#666">Only for scans and photographs. In <b>Settings &rsaquo; EasyOCR</b>, paste the address of the reading service and your API key. The key comes with an account, and the sign-up at <a href="https://app.easyocr.es/register" target="_blank" rel="noopener noreferrer" style="color:#333;font-weight:600">app.easyocr.es/register</a> starts on a free plan (0 EUR a month, 10 pages a month, no card). The button beside them checks the key without spending a reading.</div>
+    </div>
+  </div>
 
-<section class="oe_container oe_dark">
-    <div class="row oe_spaced">
-        <div class="col-12 text-center">
-            <h2 class="oe_slogan">Latest</h2>
-        </div>
-        <div class="col-12">
-            <p class="oe_mt32">
-                <b>1.0.14</b>, 13 October 2026: the module now says where the key of the reading
-                service comes from, and the sign-up is self-service with a free plan. It runs on
-                Odoo Community 16.0 to 20.0, one branch per series, and it is called EasyOCR
-                Invoice Capture.
-            </p>
-        </div>
-        <div class="col-12">
-            <h4>Need help?</h4>
-            <p>
-                Write to <a href="mailto:info@easysoft.es">info@easysoft.es</a> with your Odoo
-                series, what you were doing, and the document if a reading went wrong.
-                Made by <a href="https://easysoft.es">EasySoft Tech S.L.</a>
-            </p>
-        </div>
+  <div style="font-size:15px;line-height:1.75;color:#333;margin:0 0 40px 0">
+    The module is translated into Spanish, Catalan, Galician, German, French, Italian and
+    Portuguese besides English, and the reading is returned in the language of the screen.
+  </div>
+
+  <!-- ============ AJUSTES ============ -->
+  <div style="margin:0 0 40px 0">
+    <img src="shot-5-settings.jpg" alt="The module settings" style="width:100%;height:auto;display:block;border:1px solid #E8E6E1;border-radius:10px">
+    <div style="font-size:13px;color:#666;margin-top:8px;text-align:center">The settings that steer the service and say what a reading may become.</div>
+  </div>
+  <div style="font-size:15px;line-height:1.75;color:#333;margin:0 0 40px 0">
+    Sixteen switches over the service, over what a document becomes and over what a webhook
+    may do on its own, and a button that checks your key without spending a reading.
+  </div>
+
+  <!-- ============ QUE NO HACE ============ -->
+  <div style="color:#000000;font-size:24px;font-weight:600;margin:0 0 20px 0">What it does not do</div>
+
+  <ul style="line-height:1.9;padding-left:20px;font-size:15px;color:#333;margin:0 0 20px 0">
+    <li><b>Scans and photographs</b> are not read without the service. A PDF that carries its text is.</li>
+    <li><b>IGIC</b>, the Canary Islands tax, is not handled. IVA, the equivalence surcharge and IRPF are.</li>
+    <li><b>XML invoices</b> (UBL, CII, Factur-X) are left to Odoo, which already imports them without this module.</li>
+    <li><b>A rate your company has no purchase tax for</b> leaves the line without tax, so it is worth a look before validating the bill.</li>
+  </ul>
+  <div style="font-size:15px;line-height:1.75;color:#333;margin:0 0 40px 0">
+    It is listed here because finding it out afterwards is worse. A reading that fails is not
+    lost either: the document keeps its state and the reason, and can be sent again.
+  </div>
+
+  <!-- ============ NOVEDAD ============ -->
+  <div style="background:#FFFBF0;border:1px solid #F0E2BC;border-radius:12px;padding:24px 32px;margin:0 0 40px 0">
+    <div style="display:inline-block;background:#000000;color:#FFFFFF;padding:4px 12px;border-radius:16px;font-size:11.5px;font-weight:700;letter-spacing:1px;margin:0 0 16px 0">VERSION 1.0.15 &middot; 13 OCTOBER 2026</div>
+    <div style="font-size:24px;font-weight:600;color:#000000;margin:0 0 16px 0">It now says, at the top, that it is free</div>
+    <div style="font-size:15px;line-height:1.75;color:#333">
+      The page opens with the one thing that was buried before: the module costs nothing, and a
+      PDF that already carries its text is read without any service, account or subscription.
+      The reading service, with its free plan, is only for scans and photographs.
     </div>
+  </div>
+
+  <!-- ============ CONTACTO ============ -->
+  <div style="border-top:1px solid #E8E6E1;padding-top:24px">
+    <div style="font-size:17px;font-weight:700;color:#000000;margin:0 0 8px 0">Need help?</div>
+    <div style="font-size:15px;line-height:1.7;color:#666">
+      Write to <a href="mailto:info@easysoft.es" style="color:#333;font-weight:600">info@easysoft.es</a>
+      with your Odoo series, what you were doing, and the document if a reading went wrong.
+      Made by <a href="https://easysoft.es" target="_blank" rel="noopener noreferrer" style="color:#333;font-weight:600">EasySoft Tech S.L.</a>
+    </div>
+  </div>
+
 </section>
