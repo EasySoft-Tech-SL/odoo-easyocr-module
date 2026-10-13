@@ -11,6 +11,21 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.15] - 2026-10-13
+
+### Changed
+
+- **The page in the Odoo Apps Store says, at the top, that the module is free.** The
+  README says it, the licence says it and the settings say it, but the description the
+  store shows opened with what the module does and left the price for the reader to work
+  out on their own. It opens with it now: nothing to pay, and a PDF that already carries
+  its text is read with no account, no API key, no quota and no subscription. The reading
+  service, which is the one thing a subscription pays for, is presented as what it is: the
+  way to read scans and photographs, with a free plan to start on.
+- **That description now follows the visual scheme of the company's own product sheets**:
+  the same black header, the same amber accents and the same type scale its Dolibarr
+  modules use, so both catalogues read as one brand.
+
 ## [1.0.14] - 2026-10-13
 
 ### Added

@@ -1,14 +1,12 @@
 # Entorno de desarrollo Odoo Community para el port del modulo EasyOCR.
 #
-# Puertos elegidos a proposito, medidos en esta maquina el 2026-10-07:
-#   80/443  httpd de Laragon          8080  nginx        5432  PostgreSQL nativo
-#   5433    reservado por docker-pg-db-1 (otro proyecto)
-#   8088    reservado por docker-pg-dolibarr-1
-# Por eso, uno por serie: 8069 Odoo 19, 8070 Odoo 18, 8071 Odoo 20, 8072 Odoo 17
-# y 8073 Odoo 16. PostgreSQL interno en 5434.
+# Un servicio por serie, cada uno en su puerto, para poder tener los cinco
+# levantados a la vez: 8069 Odoo 19, 8070 Odoo 18, 8071 Odoo 20, 8072 Odoo 17
+# y 8073 Odoo 16. PostgreSQL interno en 5434. Si alguno choca con algo que ya
+# tengas corriendo, se cambia aqui y en el README.
 #
-# restart: "no" a proposito. En esta maquina ya hay 10 contenedores
-# unless-stopped que se levantan solos y se comen la RAM de la WSL.
+# restart: "no" a proposito: son instancias de trabajo, no un servicio que deba
+# volver solo tras un reinicio.
 #
 # UN SOLO FICHERO, IDENTICO EN TODAS LAS RAMAS. Ninguna linea depende de en cual
 # estas: cada servicio monta su checkout por la carpeta hermana, y `../odoo-easyocr-18`
@@ -16,7 +14,7 @@
 # (`odoo-easyocr-18/../odoo-easyocr-18` es ella misma). Asi una copia vale para
 # todas y no hay una linea que se quede atras.
 #
-# ⚠️ Se levanta SIEMPRE desde el arbol principal, D:/GIT/odoo-easyocr: los
+# ⚠️ Se levanta SIEMPRE desde el arbol principal, el clon que queda en 19.0: los
 # contenedores y los volumenes tienen nombre fijado, y compose se niega a
 # recrear un contenedor que pertenece a otro proyecto. Lanzarlo desde el
 # worktree de otra serie da "container name is already in use".
@@ -43,12 +41,12 @@ services:
   #
   # One container per series, because one folder cannot hold two branches at
   # once, and Odoo refuses a module whose version does not match its series
-  # ("incompatible version, setting installable=False"). Created with:
-  #   git worktree add D:/GIT/odoo-easyocr-16 -b 16.0
-  #   git worktree add D:/GIT/odoo-easyocr-17 -b 17.0
-  #   git worktree add D:/GIT/odoo-easyocr-18 18.0
-  #   git worktree add D:/GIT/odoo-easyocr-20 -b 20.0
-  #   D:/GIT/odoo-easyocr        es el arbol principal, en 19.0
+  # ("incompatible version, setting installable=False"). The other four are
+  # checkouts of their own, next to the main one (which stays on 19.0):
+  #   git worktree add ../odoo-easyocr-16 -b 16.0
+  #   git worktree add ../odoo-easyocr-17 -b 17.0
+  #   git worktree add ../odoo-easyocr-18 18.0
+  #   git worktree add ../odoo-easyocr-20 -b 20.0
 
   odoo16:
     image: odoo:16.0
