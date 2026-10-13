@@ -43,6 +43,9 @@ escaneos y fotografías necesita el servicio EasyOCR: activa la extracción con 
 rellena la dirección del servicio y la clave API, y usa *Probar la conexión*, que
 no gasta ninguna lectura. Los ajustes son por compañía.
 
+La clave sale de una cuenta en el servicio, y las pantallas que la piden abren la
+puerta a una: es gratis, no pide tarjeta y trae 10 páginas al mes.
+
 Problemas conocidos / Hoja de ruta
 ==================================
 

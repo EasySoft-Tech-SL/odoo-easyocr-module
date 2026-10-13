@@ -1,8 +1,8 @@
 ---
 title: EasyOCR para Odoo — Guía de usuario
 subtitle: Leer facturas de proveedor y tickets desde Odoo
-version: 1.0.13 (Odoo Community 16.0 a 20.0)
-date: 2026-10-12
+version: 1.0.14 (Odoo Community 16.0 a 20.0)
+date: 2026-10-13
 author: EasySoft Tech S.L.
 ---
 
@@ -43,8 +43,13 @@ archivo adjunto intacto, y puede leerlo a mano o volver a intentarlo más tarde.
 El módulo es **software libre**, con la misma licencia que el propio Odoo. No
 hay nada que pagar por él y el código fuente completo va con cada versión.
 
-Lo que se contrata aparte es **el servicio de lectura**. Si trabaja solo con PDF
-que ya traen texto, no necesita contratar nada.
+Lo que se paga aparte es **el servicio de lectura**. Si trabaja solo con PDF que
+ya traen texto, no necesita contratar nada.
+
+Para leer escaneos y fotos hace falta una cuenta en el servicio. Se abre
+**gratis y sin tarjeta**, y trae **10 páginas al mes**: escaneos de sobra para
+probarlo con los suyos. El enlace para abrirla está dentro del propio módulo,
+justo debajo de la casilla donde se pega la clave.
 
 # 2. Instalación
 
@@ -106,10 +111,20 @@ primera, **Configuración**, es la de los ajustes y viene en cuatro bloques.
 |---|---|
 | **Habilitar IA OCR** | Enciende o apaga el envío de documentos al servicio. Mientras está apagado, el módulo no manda nada a ningún sitio. |
 | **URL del servicio OCR** | La dirección del servicio de EasyOCR. Se escribe sin nada más: el módulo añade por su cuenta la parte final de la dirección. |
-| **Clave API** | La clave que identifica su cuenta ante el servicio. Se la da EasyOCR al contratar el servicio. |
+| **Clave API** | La clave que identifica su cuenta ante el servicio. La da el servicio al abrir la cuenta, y debajo de la casilla tiene el enlace para abrirla gratis. |
 | **Probar la conexión** | Comprueba la clave contra el servicio y dice si vale. Está justo debajo de la clave y **no gasta ninguna lectura**. |
 | **Tiempo de espera** | Cuántos segundos espera Odoo la respuesta antes de darse por vencido. Una página escaneada puede tardar, así que conviene dejarlo generoso. |
 | **Decirle al servicio quiénes somos** | Añade el nombre y el NIF de su empresa a la petición, para que el servicio distinga las dos partes del documento y no le devuelva su propia empresa como proveedor. |
+
+### Abrir la cuenta y copiar la clave
+
+La clave no se inventa: se copia de la cuenta del servicio. Si todavía no tiene
+una, se abre gratis desde el enlace **Crear cuenta gratis** que está debajo de la
+casilla de la clave, en esta misma pantalla. Son [app.easyocr.es](https://app.easyocr.es/register),
+10 páginas al mes y no pide tarjeta.
+
+Dentro de la cuenta, copie la clave y péguela en la casilla **Clave API**. El
+módulo la guarda tapada, así que nadie la lee por encima del hombro.
 
 ### Probar la conexión
 
@@ -600,9 +615,10 @@ pantalla de inicio del teléfono y usarse como una aplicación.
 2. La foto se encoge en el propio móvil antes de salir, para no gastar datos.
 3. Al enviarla, queda en la bandeja de entrada, con origen `expense-capture`.
 
-Si la lectura con IA está encendida, además se lee en el acto y la propia página
-le enseña lo que se ha sacado del ticket. Si está apagada —como en la imagen—,
-la foto se guarda igual y se lee a mano.
+Si la lectura con IA está encendida y la clave está puesta, la foto se lee en el
+acto y la propia página le enseña lo que se ha sacado del ticket. Si no lo está,
+la foto se guarda igual y se lee a mano, y la página lo avisa antes de disparar:
+conviene que el empleado no espere una lectura que no va a llegar.
 
 Si en **Ajustes > EasyOCR** ha puesto que un ticket fotografiado acabe en un
 **gasto de empleado**, la página lo dirá y el gasto quedará creado a nombre de
@@ -727,6 +743,9 @@ texto, en cambio, se lee sin configurar nada.
 
 Sí, para PDF que ya llevan texto. El módulo se instala, se usa y se lee igual;
 lo único que no hará es leer fotos ni escaneos.
+
+Para esos, la cuenta del servicio se abre gratis y trae 10 páginas al mes: puede
+probar la lectura de escaneos sin pagar nada.
 
 ## He guardado la plantilla y no se aplica en el siguiente documento
 

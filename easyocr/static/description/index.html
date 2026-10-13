@@ -1,8 +1,17 @@
 <section class="oe_container">
-    <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan" style="color: #002c3c;">EasyOCR Invoice Capture</h2>
-        <h3 class="oe_slogan">A supplier invoice becomes an accounting entry without anyone retyping it</h3>
-        <div class="oe_span12">
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
+            <h2 class="oe_slogan" style="color: #002c3c;">EasyOCR Invoice Capture</h2>
+            <h3 class="oe_slogan">A supplier invoice becomes an accounting entry without anyone retyping it</h3>
+        </div>
+        <div class="col-12 text-center">
+            <span class="badge bg-light text-dark border mb-2 me-1">Free, LGPL-3</span>
+            <span class="badge bg-light text-dark border mb-2 me-1">Odoo Community 16.0 to 20.0</span>
+            <span class="badge bg-light text-dark border mb-2 me-1">PDF with text: unlimited and no service</span>
+            <span class="badge bg-light text-dark border mb-2 me-1">Eight languages</span>
+            <span class="badge bg-light text-dark border mb-2 me-1">Version 1.0.14</span>
+        </div>
+        <div class="col-12">
             <p class="oe_mt32">
                 Drop a supplier invoice or an expense receipt and review what was read from it
                 before it becomes an entry. The file stays on the screen the whole time, so a
@@ -14,11 +23,14 @@
 </section>
 
 <section class="oe_container">
-    <div class="oe_row oe_spaced">
-        <div class="oe_span12">
-            <img src="flow.gif" class="img-fluid" alt="A document, the fields drawn on it, and the bill it becomes"/>
+    <div class="row oe_spaced">
+        <div class="col-12">
+            <div class="border rounded p-2 bg-white shadow-sm">
+                <img src="flow.gif" class="img-fluid" alt="A document, the fields drawn on it, and the bill it becomes"/>
+            </div>
+            <p class="small text-muted mt-2 mb-0">Figure 1. From the file to the entry, in three steps.</p>
         </div>
-        <div class="oe_span12">
+        <div class="col-12">
             <p class="oe_mt32">
                 Three steps, from the file to the entry: the document opens in the viewer, each
                 field is marked once over the text, and the bill is built from what was read.
@@ -28,14 +40,36 @@
 </section>
 
 <section class="oe_container oe_dark">
-    <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">The module is free, and here is what is not</h2>
-        <div class="oe_span12">
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
+            <h2 class="oe_slogan">The module is free, and here is what is not</h2>
+        </div>
+        <div class="col-12">
+            <table class="table bg-white">
+                <thead>
+                    <tr>
+                        <th scope="col">Free, and it stays free</th>
+                        <th scope="col">Needs the EasyOCR reading service</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>The module itself. Install it, use it, and read all the documents you want.</td>
+                        <td>Scans and photographs, which are an image and carry no text inside.</td>
+                    </tr>
+                    <tr>
+                        <td>A PDF that already carries its text, read inside your browser. Most invoices that arrive by email are this.</td>
+                        <td>An address and an API key, typed once in the settings.</td>
+                    </tr>
+                    <tr>
+                        <td>Drawing the boxes over a text PDF, and keeping them as a supplier template.</td>
+                        <td>A plan with a monthly page quota, plus a wallet balance for the pages you go past it.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12">
             <p class="oe_mt32">
-                <b>The module is free and stays free.</b> Install it, use it, and read all the
-                documents you want.
-            </p>
-            <p>
                 <b>A PDF that already carries its text</b> is read inside your browser, with no
                 service, no account and no cost. Most invoices that arrive by email are this.
             </p>
@@ -46,16 +80,26 @@
                 charged for the module itself, and there is no surprise line on the bill: what is
                 left of the month is shown on the same screen you read documents on.
             </p>
+            <p>
+                <b>The key comes with an EasyOCR account.</b> Accounts are self-service: the
+                sign-up at
+                <a href="https://app.easyocr.es/register" target="_blank" rel="noopener">app.easyocr.es/register</a>
+                starts on a free plan (0 EUR a month, 10 pages a month, no card), and it is only
+                needed for scans and photographs.
+            </p>
         </div>
     </div>
 </section>
 
 <section class="oe_container">
-    <div class="oe_row oe_spaced">
-        <div class="oe_span12">
-            <img src="shot-1-workbench.jpg" class="img-fluid" alt="Reading a supplier invoice in the viewer"/>
+    <div class="row oe_spaced">
+        <div class="col-12">
+            <div class="border rounded p-2 bg-white shadow-sm">
+                <img src="shot-1-workbench.jpg" class="img-fluid" alt="Reading a supplier invoice in the viewer"/>
+            </div>
+            <p class="small text-muted mt-2 mb-0">Figure 2. The workbench, with the document on the left and the fields drawn over it.</p>
         </div>
-        <div class="oe_span12">
+        <div class="col-12">
             <p class="oe_mt32">
                 The workbench: the document on the left, and on the right everything that can be
                 done to it. Draw a rectangle over each field once and the text under it is read
@@ -67,63 +111,116 @@
 </section>
 
 <section class="oe_container oe_dark">
-    <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">What it does</h2>
-        <div class="oe_span4">
-            <h3>Reads the document</h3>
-            <p>
-                Supplier, tax number, document number, dates, totals and lines are read from the
-                file, and shown for review and correction before any bill is made.
-            </p>
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
+            <h2 class="oe_slogan">What it does</h2>
         </div>
-        <div class="oe_span4">
-            <h3>Remembers each supplier</h3>
-            <p>
-                A supplier that sends the same layout every month only has to be set up once. The
-                same fields are read from it again, so the review gets shorter over time.
-            </p>
+        <div class="col-lg-4 col-12 mb-4">
+            <div class="h-100 bg-white rounded shadow-sm p-3">
+                <h3 class="h5 mt-0"><i class="fa fa-eye me-2" style="color: #002c3c;"></i>Reads the document</h3>
+                <p class="mb-0">
+                    Supplier, tax number, document number, dates, totals and lines are read from
+                    the file, and shown for review and correction before any bill is made.
+                </p>
+            </div>
         </div>
-        <div class="oe_span4">
-            <h3>Builds the entry</h3>
-            <p>
-                One click turns the document into a supplier bill, with its lines and its
-                taxes. The supplier is matched by tax number, or created from what was read.
-                A credit note becomes a vendor credit note instead.
-            </p>
+        <div class="col-lg-4 col-12 mb-4">
+            <div class="h-100 bg-white rounded shadow-sm p-3">
+                <h3 class="h5 mt-0"><i class="fa fa-users me-2" style="color: #002c3c;"></i>Remembers each supplier</h3>
+                <p class="mb-0">
+                    A supplier that sends the same layout every month only has to be set up once.
+                    Its boxes are saved as a template, so the same fields are read again and the
+                    review gets shorter over time.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-12 mb-4">
+            <div class="h-100 bg-white rounded shadow-sm p-3">
+                <h3 class="h5 mt-0"><i class="fa fa-list-alt me-2" style="color: #002c3c;"></i>Builds the entry</h3>
+                <p class="mb-0">
+                    One click turns the document into a supplier bill, with its lines and its
+                    taxes. The supplier is matched by tax number, or created from what was read.
+                    A credit note becomes a vendor credit note instead.
+                </p>
+            </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col-lg-4 col-12 mb-4">
+            <div class="h-100 bg-white rounded shadow-sm p-3">
+                <h3 class="h5 mt-0"><i class="fa fa-tasks me-2" style="color: #002c3c;"></i>Reads many at once</h3>
+                <p class="mb-0">
+                    Drop a whole folder and let it run. Each document keeps its own state, so the
+                    ones that are ready can be turned into bills while the rest are still going.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-12 mb-4">
+            <div class="h-100 bg-white rounded shadow-sm p-3">
+                <h3 class="h5 mt-0"><i class="fa fa-bell me-2" style="color: #002c3c;"></i>Tells your Odoo when it is done</h3>
+                <p class="mb-0">
+                    The reading does not have to be watched: the service calls back when a
+                    document is ready, and every call is written down so you can see what came
+                    in, and when.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-12 mb-4">
+            <div class="h-100 bg-white rounded shadow-sm p-3">
+                <h3 class="h5 mt-0"><i class="fa fa-percent me-2" style="color: #002c3c;"></i>Spanish taxes as they are</h3>
+                <p class="mb-0">
+                    IVA, the equivalence surcharge and IRPF arrive on the lines, and a
+                    rectificativa becomes a vendor credit note with its entries the other way
+                    round.
+                </p>
+            </div>
         </div>
     </div>
-    <div class="oe_row oe_spaced">
-        <div class="oe_span4">
-            <h3>Reads many at once</h3>
-            <p>
-                Drop a whole folder and let it run. Each document keeps its own state, so the
-                ones that are ready can be turned into bills while the rest are still going.
+</section>
+
+<section class="oe_container">
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
+            <h2 class="oe_slogan">Who it is for</h2>
+        </div>
+        <div class="col-lg-4 col-12 mb-4">
+            <h3 class="h5">Accounting, in house or for your clients</h3>
+            <p class="mb-0">
+                The supplier invoices of the month stop being typed in: they are dropped as
+                files, checked where they were read, and turned into bills. Those that arrive
+                by email as a PDF with text cost nothing to read, which is most of them.
             </p>
         </div>
-        <div class="oe_span4">
-            <h3>Tells your Odoo when it is done</h3>
-            <p>
-                The reading does not have to be watched: the service calls back when a document
-                is ready, and every call is written down so you can see what came in, and when.
+        <div class="col-lg-4 col-12 mb-4">
+            <h3 class="h5">Purchasing and administration</h3>
+            <p class="mb-0">
+                Whoever receives the invoice can put it in Odoo the moment it arrives, instead
+                of holding it for someone else to key in. A scan needs the reading service; a
+                PDF that already carries its text does not.
             </p>
         </div>
-        <div class="oe_span4">
-            <h3>Spanish taxes as they are</h3>
-            <p>
-                IVA, the equivalence surcharge and IRPF arrive on the lines, and a rectificativa
-                becomes a vendor credit note with its entries the other way round.
+        <div class="col-lg-4 col-12 mb-4">
+            <h3 class="h5">The one who pays and photographs the receipt</h3>
+            <p class="mb-0">
+                A receipt paid out of pocket is photographed on the phone and leaves the ticket
+                in Odoo, as an employee expense if the settings say so, for whoever approves
+                expenses. Nobody approves their own expense.
             </p>
         </div>
     </div>
 </section>
 
 <section class="oe_container">
-    <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">A reading ends on the screen that says what was read</h2>
-        <div class="oe_span12">
-            <img src="shot-2-reading.jpg" class="img-fluid" alt="The AI result, with the lines and the bill options"/>
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
+            <h2 class="oe_slogan">A reading ends on the screen that says what was read</h2>
         </div>
-        <div class="oe_span12">
+        <div class="col-12">
+            <div class="border rounded p-2 bg-white shadow-sm">
+                <img src="shot-2-reading.jpg" class="img-fluid" alt="The AI result, with the lines and the bill options"/>
+            </div>
+            <p class="small text-muted mt-2 mb-0">Figure 3. The result of a reading, with its cost and the choices for the bill.</p>
+        </div>
+        <div class="col-12">
             <p class="oe_mt32">
                 The confidence and what it cost, one card per part of the document, the lines
                 with their VAT, surcharge and withholding ready to correct, a warning when they
@@ -135,17 +232,25 @@
 </section>
 
 <section class="oe_container oe_dark">
-    <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">From the file to the entry</h2>
-        <div class="oe_span6">
-            <img src="shot-3-document.jpg" class="img-fluid" alt="A document with the values read from it"/>
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
+            <h2 class="oe_slogan">From the file to the entry</h2>
+        </div>
+        <div class="col-lg-6 col-12 mb-4">
+            <div class="border rounded p-2 bg-white shadow-sm">
+                <img src="shot-3-document.jpg" class="img-fluid" alt="A document with the values read from it"/>
+            </div>
+            <p class="small text-muted mt-2">Figure 4. The document, with the values read from it.</p>
             <p class="oe_mt32">
                 The document keeps what was read, next to the fields it came from, so anything
                 wrong is fixed here and not on the bill afterwards.
             </p>
         </div>
-        <div class="oe_span6">
-            <img src="shot-4-bill.jpg" class="img-fluid" alt="The supplier bill created from the document"/>
+        <div class="col-lg-6 col-12 mb-4">
+            <div class="border rounded p-2 bg-white shadow-sm">
+                <img src="shot-4-bill.jpg" class="img-fluid" alt="The supplier bill created from the document"/>
+            </div>
+            <p class="small text-muted mt-2">Figure 5. The supplier bill built from that document.</p>
             <p class="oe_mt32">
                 And the supplier bill, with one line per line read, its products, its
                 discounts and its taxes.
@@ -155,9 +260,11 @@
 </section>
 
 <section class="oe_container">
-    <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">Install it</h2>
-        <div class="oe_span12">
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
+            <h2 class="oe_slogan">Install it</h2>
+        </div>
+        <div class="col-12">
             <ol class="oe_mt32">
                 <li>Open <b>Apps</b> in your Odoo and search for <b>EasyOCR</b>.</li>
                 <li>
@@ -166,9 +273,14 @@
                     else to buy.
                 </li>
                 <li>
-                    Open <b>Settings</b>, look for <b>EasyOCR</b>, and paste the address of the
-                    reading service and your API key. The button beside them checks the key
-                    without spending a reading.
+                    Step 3 is only for scans and photographs: a PDF that already carries its
+                    text is read without configuring anything. Open <b>Settings</b>, look for
+                    <b>EasyOCR</b>, and paste the address of the reading service and your API
+                    key. The key comes with an EasyOCR account, and accounts are self-service:
+                    the sign-up at
+                    <a href="https://app.easyocr.es/register" target="_blank" rel="noopener">app.easyocr.es/register</a>
+                    starts on a free plan (0 EUR a month, 10 pages a month, no card). The
+                    button beside them checks the key without spending a reading.
                 </li>
                 <li>
                     Open the <b>EasyOCR</b> menu, drop a document, and read what came back.
@@ -184,9 +296,12 @@
 </section>
 
 <section class="oe_container oe_dark">
-    <div class="oe_row oe_spaced">
-        <div class="oe_span12">
-            <img src="shot-5-settings.jpg" class="img-fluid" alt="The module settings"/>
+    <div class="row oe_spaced">
+        <div class="col-12">
+            <div class="border rounded p-2 bg-white shadow-sm">
+                <img src="shot-5-settings.jpg" class="img-fluid" alt="The module settings"/>
+            </div>
+            <p class="small text-muted mt-2 mb-0">Figure 6. The settings that steer the service and say what a reading may become.</p>
             <p class="oe_mt32">
                 Sixteen switches over the service, over what a document becomes and over what a
                 webhook may do on its own, and a button that checks your key without spending a
@@ -197,9 +312,11 @@
 </section>
 
 <section class="oe_container">
-    <div class="oe_row oe_spaced">
-        <h2 class="oe_slogan">What it does not do</h2>
-        <div class="oe_span12">
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
+            <h2 class="oe_slogan">What it does not do</h2>
+        </div>
+        <div class="col-12">
             <ul class="oe_mt32">
                 <li>
                     <b>Scans and photographs</b> are not read without the service. A PDF that
@@ -228,16 +345,19 @@
 </section>
 
 <section class="oe_container oe_dark">
-    <div class="oe_row oe_spaced">
-        <div class="oe_span12">
+    <div class="row oe_spaced">
+        <div class="col-12 text-center">
             <h2 class="oe_slogan">Latest</h2>
+        </div>
+        <div class="col-12">
             <p class="oe_mt32">
-                <b>1.0.13</b>, 12 October 2026: the module runs on Odoo 16 to 20, one branch
-                per series, and it is called EasyOCR Invoice Capture. The list version by
-                version is in the CHANGELOG of the repository.
+                <b>1.0.14</b>, 13 October 2026: the module now says where the key of the reading
+                service comes from, and the sign-up is self-service with a free plan. It runs on
+                Odoo Community 16.0 to 20.0, one branch per series, and it is called EasyOCR
+                Invoice Capture.
             </p>
         </div>
-        <div class="oe_span12">
+        <div class="col-12">
             <h4>Need help?</h4>
             <p>
                 Write to <a href="mailto:info@easysoft.es">info@easysoft.es</a> with your Odoo
