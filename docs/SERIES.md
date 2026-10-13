@@ -123,14 +123,15 @@ Without compose, the same thing by hand:
 
 ```bash
 docker run --rm --network odoo-easyocr_default \
-  -v D:/GIT/odoo-easyocr-<NN>:/mnt/extra-addons \
-  -v D:/GIT/odoo-easyocr-<NN>/config/odoo<NN>.conf:/etc/odoo/odoo.conf:ro \
+  -v "$PWD/../odoo-easyocr-<NN>":/mnt/extra-addons \
+  -v "$PWD/../odoo-easyocr-<NN>/config/odoo<NN>.conf":/etc/odoo/odoo.conf:ro \
   -v odoo-easyocr_odoo<NN>-data:/var/lib/odoo \
   odoo:<NN>.0 odoo -c /etc/odoo/odoo.conf -d odoo<NN> \
   --test-enable --test-tags /easyocr --stop-after-init
 ```
 
-`MSYS_NO_PATHCONV=1` is needed on this machine, or the paths arrive mangled.
+`MSYS_NO_PATHCONV=1` is needed on Git Bash for Windows, or the mounted paths
+arrive mangled.
 
 ### A data record is not rewritten by `-u`
 
