@@ -24,6 +24,18 @@ MODULE_ROOTS = (REPO_ROOT, REPO_ROOT / 'addons')
 # a file that is meant to be absent (a release asset, a page of the wiki).
 MARKDOWN_IMAGE = re.compile(r'!\[[^\]]*\]\(\s*<?([^)>\s]+)')
 
+# The sheet the store shows. The Odoo Apps Store sanitises
+# static/description/index.html and strips the `background` property out of every
+# inline style while keeping `color` and the rest, so a fill that lives only in
+# `style` arrives colourless. See check_store_description.
+DESCRIPTION_INDEX = ('static', 'description', 'index.html')
+TAG = re.compile(r'<(\w+)([^>]*)>')
+STYLE_ATTRIBUTE = re.compile(r'style="([^"]*)"')
+CLASS_ATTRIBUTE = re.compile(r'class="([^"]*)"')
+INLINE_BACKGROUND = re.compile(r'background(?:-color)?\s*:\s*([^;"]+)')
+WHITE_BACKGROUND = re.compile(r'^\s*(#fff|#ffffff|white)\s*$', re.IGNORECASE)
+BACKGROUND_CLASS = re.compile(r'\bbg-[a-z-]+\b')
+
 REQUIRED_KEYS = (
     'name',
     'version',
@@ -129,6 +141,42 @@ def check_documentation_images(root):
     return errors
 
 
+def check_store_description(module_dir):
+    """A block that paints itself in `style` also has to paint itself with a class.
+
+    The store drops the `background` property from inline styles and keeps the
+    rest, so a black band written only as `background:#000000` loses its fill and
+    the white text over it turns invisible on the store's white page. It happened
+    with the 1.0.15 sheet: the headline of the published page was white on white
+    and the page could not be read, and nothing else noticed, because the file is
+    perfectly valid HTML and no other check reads it. The fill therefore goes in a
+    class (`bg-black`, `bg-light`) as well, and this is what notices when a new
+    block forgets to. White needs no class: it is white on white either way.
+    """
+    index = module_dir.joinpath(*DESCRIPTION_INDEX)
+    if not index.is_file():
+        return []
+
+    errors = []
+    for tag in TAG.finditer(index.read_text(encoding='utf-8')):
+        attributes = tag.group(2)
+        style = STYLE_ATTRIBUTE.search(attributes)
+        if not style:
+            continue
+        background = INLINE_BACKGROUND.search(style.group(1))
+        if not background or WHITE_BACKGROUND.match(background.group(1)):
+            continue
+        classes = CLASS_ATTRIBUTE.search(attributes)
+        if classes and BACKGROUND_CLASS.search(classes.group(1)):
+            continue
+        errors.append(
+            f'{index.relative_to(REPO_ROOT).as_posix()}: a block with '
+            f'background:{background.group(1).strip()} carries no bg-* class, '
+            'and the store drops the inline one'
+        )
+    return errors
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -148,6 +196,7 @@ def main():
     errors = []
     for module_dir in modules:
         errors.extend(check_module(module_dir, args.branch))
+        errors.extend(check_store_description(module_dir))
     errors.extend(check_documentation_images(REPO_ROOT))
 
     for error in errors:
