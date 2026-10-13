@@ -11,6 +11,15 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Es la traducción al español de `CHANGELOG.md`.
 
+## [1.0.17] - 2026-10-13
+
+### Cambiado
+
+- **El origen de la ficha de la tienda ya no lleva notas internas.** La descripción
+  publicada tenía notas de trabajo escritas entre su marcado, sobre cómo está montada la
+  ficha y de dónde viene su disposición. Ya no están. Nada de lo que ve el usuario cambia:
+  la ficha, las capturas y el comportamiento son los mismos que en la 1.0.16.
+
 ## [1.0.16] - 2026-10-13
 
 ### Corregido
