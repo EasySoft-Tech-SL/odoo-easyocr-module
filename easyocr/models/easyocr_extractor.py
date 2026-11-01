@@ -600,6 +600,11 @@ class EasyocrDocument(models.Model):
         if supplier.get('tax_id'):
             values['partner_vat'] = supplier['tax_id']
 
+        # Who the paper is addressed to: a bill is only made when it is us.
+        customer = data.get('customer') or {}
+        if customer.get('tax_id'):
+            values['customer_vat'] = str(customer['tax_id']).strip()
+
         if data.get('document_number'):
             values['ref'] = data['document_number']
 

@@ -147,6 +147,11 @@ class EasyocrDocument(models.Model):
     )
     partner_vat = fields.Char(string='Tax Number', help='Read from the document.')
     partner_name = fields.Char(string='Vendor Name', help='Read from the document.')
+    customer_vat = fields.Char(
+        string='Customer Tax Number',
+        help='Read from the document: the tax number of whoever it is addressed '
+             'to. A bill is only made when it is your own company.',
+    )
     move_id = fields.Many2one(
         comodel_name='account.move',
         string='Bill',
@@ -280,6 +285,77 @@ class EasyocrDocument(models.Model):
         """Drop what people type by hand: spaces, dashes and dots."""
         return ''.join(character for character in (vat or '') if character.isalnum()).upper()
 
+    @api.model
+    def _same_vat(self, first, second):
+        """Whether two tax numbers are the same one, written either way.
+
+        The paper prints ``B12345678`` and the company file holds
+        ``ESB12345678``, or the other way round: a two-letter country prefix on
+        one side and not on the other is still the same number.
+        """
+        first, second = self._normalize_vat(first), self._normalize_vat(second)
+        if not first or not second:
+            return False
+        if first == second:
+            return True
+        for longer, shorter in ((first, second), (second, first)):
+            if len(longer) > 2 and longer[:2].isalpha() and longer[2:] == shorter:
+                return True
+        return False
+
+    def _reading_customer_vat(self):
+        """The tax number of whoever the document is addressed to.
+
+        Stored on the document when it is read; a document read before that
+        field existed still has it in the reading itself.
+        """
+        self.ensure_one()
+        if self.customer_vat:
+            return self.customer_vat.strip()
+        try:
+            answer = json.loads(self.last_extraction or '{}')
+        except (ValueError, TypeError):
+            return ''
+        customer = (answer.get('structured_data') or {}).get('customer') or {}
+        return str(customer.get('tax_id') or '').strip()
+
+    @api.model
+    def _foreign_customer_vat(self, vat, company=None, allowed=()):
+        """The customer's tax number when it is not ours, or an empty string.
+
+        Empty means nothing stands in the way: no tax number was read, the
+        company has none to compare with, the company has said it books these
+        anyway, or the number is the company's own (or one of ``allowed``).
+        """
+        company = company or self.env.company
+        if not self._normalize_vat(vat) or company.easyocr_allow_foreign_customer:
+            return ''
+        own_vat = company.partner_id.vat or company.vat
+        if not self._normalize_vat(own_vat):
+            return ''
+        for candidate in (own_vat,) + tuple(allowed):
+            if self._same_vat(vat, candidate):
+                return ''
+        return vat.strip()
+
+    def _check_addressed_to_us(self, allowed=()):
+        """Refuse a document whose customer is somebody else.
+
+        A partner uploading the insurance policy of one of their own clients is
+        the case this is for: the paper is a real invoice, the supplier is real,
+        and nothing else in the way would stop it becoming our bill.
+        """
+        self.ensure_one()
+        foreign = self._foreign_customer_vat(
+            self._reading_customer_vat(), self.company_id, allowed,
+        )
+        if foreign:
+            raise UserError(_(
+                "This document is addressed to another company (tax number %s), "
+                "not to yours, so it cannot be booked.",
+                foreign,
+            ))
+
     def _resolve_partner(self):
         """The vendor of the document: by tax number first, by name after."""
         self.ensure_one()
@@ -384,6 +460,9 @@ class EasyocrDocument(models.Model):
         self._apply_overrides(overrides or {})
         if is_refund is not None:
             self.is_refund = bool(is_refund)
+        # Before the supplier: a supplier created from the reading of a paper
+        # that is not ours would be left behind by the refusal.
+        self._check_addressed_to_us()
 
         partner = self._resolve_partner() or self._create_partner_from_reading(
             (overrides or {}).get('supplier') or {},
@@ -788,6 +867,15 @@ class EasyocrDocument(models.Model):
                 "an expense. Ask whoever administers your Odoo to create one for "
                 "you, or file it as a supplier bill."
             ))
+        # The same guard as the bill, because a receipt made out to another
+        # company is not this company's expense either. The one difference: an
+        # invoice made out to the employee in person (a hotel that asks for an
+        # ID) is a normal thing to claim, so their own number is accepted too.
+        self._check_addressed_to_us(allowed=tuple(filter(None, (
+            # sudo: the field is HR's, and the employee reading it is not.
+            employee.sudo().identification_id,
+            user.partner_id.vat,
+        ))))
 
         # hr.expense has no field for the document's own number, so it goes into
         # the name the approver reads, next to who the receipt is from.

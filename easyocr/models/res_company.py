@@ -68,6 +68,11 @@ class ResCompany(models.Model):
         help='Book a document whose tax number is ours. Off by default: it is '
              'almost always a document that was read the wrong way round.',
     )
+    easyocr_allow_foreign_customer = fields.Boolean(
+        string='Accept documents addressed to another company',
+        help='Book a document whose customer tax number is not ours. Off by '
+             "default: it is almost always somebody else's invoice.",
+    )
     easyocr_duplicate_check = fields.Boolean(
         string='Ask before reading a document already read',
         default=True,

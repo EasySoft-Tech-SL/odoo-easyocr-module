@@ -361,6 +361,11 @@ export class OCRResultDialog extends Component {
         return this.state.products[item.code.trim()] || "";
     }
 
+    /** Why the bill will be refused: the paper is addressed to somebody else. */
+    foreignCustomer() {
+        return this.state.data?.foreign_customer || "";
+    }
+
     /** The gap between the lines and the totals printed on the document. */
     mismatch() {
         if (!this.state.items.length) {

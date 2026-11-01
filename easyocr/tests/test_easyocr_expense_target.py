@@ -171,3 +171,30 @@ class TestEasyocrExpenseTarget(TransactionCase):
 
         self.assertTrue(document.move_id)
         self.assertFalse(self.env['hr.expense'].search([('name', '=', document.name)]))
+
+    # ------------------------------------------------------------------
+    # A receipt addressed to somebody else
+    # ------------------------------------------------------------------
+    def _addressed_to(self, customer_vat):
+        # The tax numbers are not real ones, so the format check is skipped.
+        self.company.partner_id.with_context(no_vat_validation=True).vat = 'ESB12345678'
+        self.company.easyocr_allow_foreign_customer = False
+        return self._document(customer_vat=customer_vat)
+
+    def test_a_receipt_made_out_to_another_company_is_not_an_expense(self):
+        document = self._addressed_to('B87654321')
+
+        with self.assertRaises(UserError):
+            document._become_expense()
+
+        self.assertFalse(self.env['hr.expense'].search([('name', '=', document.partner_name)]))
+
+    def test_a_receipt_made_out_to_the_employee_in_person_is_an_expense(self):
+        """A hotel asks for an ID; that invoice is the employee's to claim."""
+        self.employee.sudo().identification_id = '12345678Z'
+        document = self._addressed_to('12345678-Z')
+
+        self.assertTrue(document._become_expense())
+
+    def test_a_receipt_made_out_to_the_company_is_an_expense(self):
+        self.assertTrue(self._addressed_to('B12345678')._become_expense())

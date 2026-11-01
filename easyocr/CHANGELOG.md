@@ -11,6 +11,22 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.18] - 2026-11-01
+
+### Fixed
+
+- **A document addressed to another company no longer becomes your bill.** The module
+  only looked at the supplier, so a partner uploading an invoice made out to one of their
+  own clients got it booked as a supplier bill without a word. Now the customer's tax
+  number read from the paper is compared with your company's, with or without the country
+  prefix and whatever the separators. When it is someone else's, the bill is refused with
+  the reason, and the result dialog says so before the button is pressed. The same applies
+  to bills created by the webhook and to receipts filed as employee expenses, where an
+  invoice made out to the employee in person is still accepted. A document with no
+  customer tax number, or a company without one, works as before. Companies that do need
+  to book these can turn on *Accept documents addressed to another company* in the
+  settings.
+
 ## [1.0.17] - 2026-10-13
 
 ### Changed
