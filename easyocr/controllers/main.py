@@ -240,6 +240,16 @@ class EasyocrWebhook(http.Controller):
             if parsed:
                 values[field_name] = parsed
 
+        # Who the paper is addressed to, flat or under ``customer`` as the
+        # reading sends it: the bill this call may create is refused when it
+        # is not us.
+        customer = structured_data.get('customer')
+        customer_vat = (
+            customer.get('tax_id') if isinstance(customer, dict) else None
+        ) or structured_data.get('customer_vat')
+        if customer_vat:
+            values['customer_vat'] = str(customer_vat).strip()
+
         values['name'] = (
             values.get('ref')
             or ((data or {}).get('filename') or '').strip()

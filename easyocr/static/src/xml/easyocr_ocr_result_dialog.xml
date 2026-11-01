@@ -101,6 +101,12 @@
                         <i class="fa fa-circle-o-notch fa-spin me-2" aria-hidden="true"/>Loading…
                     </div>
 
+                    <div t-if="foreignCustomer()" class="o_easyocr_result_warning" role="alert">
+                        <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"/>
+                        <strong>Addressed to another company</strong>
+                        <span class="ms-1"><t t-out="foreignCustomer()"/></span>
+                    </div>
+
                     <div t-if="mismatch()" class="o_easyocr_result_warning" role="alert">
                         <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"/>
                         <strong>Lines do not match document totals</strong>

@@ -241,10 +241,26 @@ class EasyocrReadingResult(models.TransientModel):
             'supplier_match': self.document_id.action_check_supplier(
                 supplier.get('tax_id') or '', supplier.get('name') or '',
             ),
+            # Said before the button is pressed, in the words the refusal
+            # will use: the bill is refused when the customer is not us.
+            'foreign_customer': self._foreign_customer_warning(customer.get('tax_id'), company),
             'invoice_draft': bool(company.easyocr_invoice_draft),
             'is_refund': bool(self.document_id.is_refund),
             'raw': answer,
         }
+
+    def _foreign_customer_warning(self, vat, company):
+        """The sentence the bill will be refused with, or an empty string."""
+        foreign = self.env['easyocr.document']._foreign_customer_vat(
+            str(vat or ''), company,
+        )
+        if not foreign:
+            return ''
+        return _(
+            "This document is addressed to another company (tax number %s), "
+            "not to yours, so it cannot be booked.",
+            foreign,
+        )
 
     def _document_type_label(self, value):
         """The kind of document, in words, for the types the service names."""
