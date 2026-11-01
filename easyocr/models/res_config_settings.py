@@ -48,6 +48,10 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.easyocr_allow_self_vendor',
         readonly=False,
     )
+    easyocr_allow_foreign_customer = fields.Boolean(
+        related='company_id.easyocr_allow_foreign_customer',
+        readonly=False,
+    )
     easyocr_duplicate_check = fields.Boolean(
         related='company_id.easyocr_duplicate_check',
         readonly=False,

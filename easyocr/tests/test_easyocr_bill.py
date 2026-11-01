@@ -1,6 +1,8 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
+import json
+
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -317,3 +319,130 @@ class TestEasyocrBill(TransactionCase):
 
         self.assertTrue(document.move_id)
         self.assertEqual(document.move_id.payment_state, 'not_paid')
+
+    # ------------------------------------------------------------------
+    # A document addressed to somebody else
+    #
+    # A partner uploaded the insurance policy of one of their own clients and
+    # it became our bill. The supplier was real and the amounts were right:
+    # the only thing wrong with it was who the paper was made out to.
+    # ------------------------------------------------------------------
+    OWN_VAT = 'ESB12345678'
+
+    def _addressed_to(self, customer_vat, **values):
+        # The tax numbers are not real ones, so the format check is skipped.
+        self.env.company.partner_id.with_context(no_vat_validation=True).vat = self.OWN_VAT
+        self.env.company.easyocr_allow_foreign_customer = False
+        self.env.company.easyocr_invoice_draft = True
+        values.setdefault('partner_id', self.partner.id)
+        values.setdefault('amount_untaxed', 100.0)
+        values.setdefault('amount_total', 121.0)
+        return self._document(customer_vat=customer_vat, **values)
+
+    def test_a_document_addressed_to_another_company_is_refused(self):
+        document = self._addressed_to('B87654321')
+
+        with self.assertRaises(UserError) as caught:
+            document.action_create_bill()
+
+        self.assertIn('B87654321', str(caught.exception))
+        self.assertFalse(document.move_id)
+
+    def test_the_refusal_leaves_no_supplier_behind(self):
+        """Refused before the supplier is made, not after."""
+        document = self._addressed_to(
+            'B87654321', partner_id=False,
+            partner_name='Aseguradora que nadie tiene SA', partner_vat='A11111111',
+        )
+
+        with self.assertRaises(UserError):
+            document.action_create_bill()
+
+        self.assertFalse(self.env['res.partner'].search([
+            ('name', '=', 'Aseguradora que nadie tiene SA'),
+        ]))
+
+    def test_our_own_tax_number_as_customer_is_billed(self):
+        document = self._addressed_to(self.OWN_VAT)
+
+        document.action_create_bill()
+
+        self.assertTrue(document.move_id)
+
+    def test_our_tax_number_without_the_country_is_still_ours(self):
+        document = self._addressed_to('B12345678')
+
+        document.action_create_bill()
+
+        self.assertTrue(document.move_id)
+
+    def test_our_tax_number_with_separators_is_still_ours(self):
+        document = self._addressed_to('es-b.123 456-78')
+
+        document.action_create_bill()
+
+        self.assertTrue(document.move_id)
+
+    def test_a_country_on_the_paper_and_not_on_file_is_still_ours(self):
+        document = self._addressed_to('ES-B12345678')
+        self.env.company.partner_id.with_context(no_vat_validation=True).vat = 'B12345678'
+
+        document.action_create_bill()
+
+        self.assertTrue(document.move_id)
+
+    def test_a_document_with_no_customer_read_is_billed(self):
+        document = self._addressed_to(False)
+
+        document.action_create_bill()
+
+        self.assertTrue(document.move_id)
+
+    def test_a_company_without_a_tax_number_bills_as_before(self):
+        document = self._addressed_to('B87654321')
+        self.env.company.partner_id.vat = False
+
+        document.action_create_bill()
+
+        self.assertTrue(document.move_id)
+
+    def test_the_company_can_book_documents_addressed_to_others(self):
+        document = self._addressed_to('B87654321')
+        self.env.company.easyocr_allow_foreign_customer = True
+
+        document.action_create_bill()
+
+        self.assertTrue(document.move_id)
+
+    def test_a_document_read_before_the_field_existed_is_checked_too(self):
+        """The customer is still in the reading the document keeps."""
+        document = self._addressed_to(False, last_extraction=json.dumps({
+            'structured_data': {'customer': {'tax_id': 'B87654321'}},
+        }))
+
+        with self.assertRaises(UserError):
+            document.action_create_bill()
+
+    def test_the_webhook_does_not_bill_a_document_addressed_to_others(self):
+        document = self._addressed_to('B87654321', state='processed')
+        self.env.company.easyocr_webhook_create_bill = True
+
+        note = document._settle_webhook()
+
+        self.assertFalse(document.move_id)
+        self.assertIn('B87654321', note)
+
+    def test_the_reading_records_who_it_is_addressed_to(self):
+        document = self._document()
+
+        document._apply_extraction({'customer': {'tax_id': ' B87654321 '}})
+
+        self.assertEqual(document.customer_vat, 'B87654321')
+
+    def test_the_dialog_warns_before_the_bill_is_refused(self):
+        document = self._addressed_to(False, last_extraction=json.dumps({
+            'structured_data': {'customer': {'tax_id': 'B87654321'}},
+        }))
+        result = self.env['easyocr.reading.result'].create({'document_id': document.id})
+
+        self.assertIn('B87654321', result.action_result_data()['foreign_customer'])
