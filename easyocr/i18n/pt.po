@@ -111,6 +111,20 @@ msgstr ""
 "campo, para que o seguinte seja lido sem voltar a desenhar nada."
 
 #. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_allow_foreign_customer
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_allow_foreign_customer
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Accept documents addressed to another company"
+msgstr "Aceitar documentos dirigidos a outra empresa"
+
+#. module: easyocr
+#. odoo-javascript
+#: code:addons/easyocr/static/src/xml/easyocr_ocr_result_dialog.xml:0
+#, python-format
+msgid "Addressed to another company"
+msgstr "Dirigido a outra empresa"
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_ai_enabled
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_ai_enabled
 msgid "AI Extraction"
@@ -394,6 +408,17 @@ msgid "Body of the call, trimmed if it was too long."
 msgstr "Corpo da chamada, truncado se era demasiado longo."
 
 #. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_company__easyocr_allow_foreign_customer
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_allow_foreign_customer
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Book a document whose customer tax number is not ours. Off by default: it is"
+" almost always somebody else's invoice."
+msgstr ""
+"Contabilizar um documento cujo NIF do cliente não seja o nosso. Desativado "
+"por omissão: quase sempre é a fatura de outra pessoa."
+
+#. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_allow_self_vendor
 #: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_allow_self_vendor
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
@@ -623,6 +648,11 @@ msgstr "Nota de crédito"
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_reading_result__currency_id
 msgid "Currency"
 msgstr "Moeda"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_document__customer_vat
+msgid "Customer Tax Number"
+msgstr "NIF do cliente"
 
 #. module: easyocr
 #. odoo-javascript
@@ -1958,6 +1988,15 @@ msgid "Read from the document."
 msgstr "Lido do documento."
 
 #. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_easyocr_document__customer_vat
+msgid ""
+"Read from the document: the tax number of whoever it is addressed to. A bill"
+" is only made when it is your own company."
+msgstr ""
+"Lido do documento: o NIF de quem é o destinatário. A fatura só é criada "
+"quando é a sua própria empresa."
+
+#. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "Read from the receipt"
@@ -3054,6 +3093,18 @@ msgstr ""
 #: code:addons/easyocr/models/easyocr_extractor.py:0
 msgid "This document has no file attached."
 msgstr "Este documento não tem ficheiro anexado."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+#: code:addons/easyocr/models/easyocr_reading_result.py:0
+#, python-format
+msgid ""
+"This document is addressed to another company (tax number %s), not to yours,"
+" so it cannot be booked."
+msgstr ""
+"Este documento é dirigido a outra empresa (NIF %s), não à sua, por isso não "
+"pode ser contabilizado."
 
 #. module: easyocr
 #. odoo-python

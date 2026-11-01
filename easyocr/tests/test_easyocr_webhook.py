@@ -103,6 +103,15 @@ class TestEasyocrWebhook(HttpCase):
         self.assertAlmostEqual(document.amount_total, 121.0, places=2)
         self.assertEqual(document.state, 'processed')
 
+    def test_a_completed_document_keeps_who_it_is_addressed_to(self):
+        """The bill the webhook may create is refused when it is not us."""
+        payload = self._completed_payload()
+        payload['data']['structured_data']['customer'] = {'tax_id': 'B87654321'}
+
+        body = self._call(payload).json()
+
+        self.assertEqual(self.Document.browse(body['document_id']).customer_vat, 'B87654321')
+
     def test_a_completed_document_leaves_a_log(self):
         self._call(self._completed_payload())
 

@@ -11,6 +11,22 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Es la traducción al español de `CHANGELOG.md`.
 
+## [1.0.18] - 2026-11-01
+
+### Corregido
+
+- **Un documento dirigido a otra empresa ya no se convierte en su factura.** El módulo
+  solo miraba al proveedor, así que un socio que subía una factura a nombre de un cliente
+  suyo la veía contabilizada como factura de proveedor sin ningún aviso. Ahora el NIF del
+  cliente leído en el papel se compara con el de su empresa, con o sin prefijo de país y
+  con cualquier separador. Si es de otro, la factura se rechaza explicando el motivo, y el
+  diálogo del resultado lo avisa antes de pulsar el botón. Vale también para las facturas
+  que crea el webhook y para los tickets que se archivan como gasto de empleado, donde una
+  factura a nombre del propio empleado se sigue aceptando. Un documento sin NIF de
+  cliente, o una empresa sin NIF, funciona como antes. Las empresas que sí necesiten
+  contabilizarlos pueden activar *Aceptar documentos dirigidos a otra empresa* en los
+  ajustes.
+
 ## [1.0.17] - 2026-10-13
 
 ### Cambiado

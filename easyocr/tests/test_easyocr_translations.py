@@ -180,6 +180,10 @@ MESSAGE_STRINGS = (
     "This file has already been read: %(document)s.",
     "It was read on %s.",
     "It became %s.",
+    # Why a bill is refused when the paper is addressed to somebody else. The
+    # dialog shows the same sentence before the button is pressed.
+    "This document is addressed to another company (tax number %s), "
+    "not to yours, so it cannot be booked.",
     # The reading summary, which Python puts together and a dialog shows: the
     # badges above, and the vendor details the document has no field for.
     "Confidence %s%%",
