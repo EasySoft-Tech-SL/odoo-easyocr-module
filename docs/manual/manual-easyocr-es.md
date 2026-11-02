@@ -185,6 +185,8 @@ factura nada.
 | **Cuenta bancaria del pago** | Dónde se registra ese pago. |
 | **Forma de pago** | Cómo se registra en esa cuenta. Si se deja vacío, Odoo coge el que la cuenta tenga por defecto. |
 
+Cuando el servicio crea la factura por esta vía, el módulo busca el proveedor primero por el NIF, lleve o no el prefijo `ES`, y si no lo encuentra, por el nombre exacto (sin contar S.L., S.A. y similares). La factura se queda en borrador, aunque esté configurado confirmarla, y no se marca como pagada cuando hay algo que una persona debe mirar: un NIF que no es válido (por ejemplo, un 5 leído como S), un proveedor encontrado por el nombre y no por el NIF, varios contactos posibles o unos totales que no cuadran. Los motivos quedan en el historial de la factura y en **Logs de Webhook**. Si el pago automático falla, se deshace y la factura queda pendiente de pago, con el motivo en esos mismos sitios.
+
 Cuando termine, pulse **Guardar**. El botón **Descartar** deja todo como estaba.
 
 **Nada de esto hace falta si solo va a leer PDF que ya traen texto.** Deje
