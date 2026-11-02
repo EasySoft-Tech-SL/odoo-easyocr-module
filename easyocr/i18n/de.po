@@ -5838,3 +5838,105 @@ msgstr "EasyOCR-Konfigurationsseiten"
 #: code:addons/easyocr/models/easyocr_admin.py:0
 msgid "Only EasyOCR managers can see the module's configuration."
 msgstr "Nur EasyOCR-Verantwortliche können die Modulkonfiguration sehen."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"Several contacts share the tax number %(vat)s (%(names)s): %(chosen)s was "
+"used."
+msgstr ""
+"Mehrere Kontakte haben die Steuernummer %(vat)s (%(names)s): %(chosen)s "
+"wurde verwendet."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "Several vendors are named %(name)s (%(names)s): %(chosen)s was used."
+msgstr ""
+"Mehrere Lieferanten heißen %(name)s (%(names)s): %(chosen)s wurde verwendet."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The tax number read (%(vat)s) is not valid: the vendor was found by its "
+"name."
+msgstr ""
+"Die gelesene Steuernummer (%(vat)s) ist ungültig: Der Lieferant wurde über "
+"seinen Namen gefunden."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The vendor was found by its name (%(name)s), not by the tax number %(vat)s, "
+"which it does not have: check it is the same company and add the tax number "
+"to it."
+msgstr ""
+"Der Lieferant wurde über seinen Namen (%(name)s) gefunden, nicht über die "
+"Steuernummer %(vat)s, die er nicht hat: Prüfen Sie, ob es dasselbe "
+"Unternehmen ist, und ergänzen Sie die Steuernummer."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"No tax number was read: the vendor was found only by its name (%(name)s). "
+"Check it is the right one."
+msgstr ""
+"Es wurde keine Steuernummer gelesen: Der Lieferant wurde nur über seinen "
+"Namen (%(name)s) gefunden. Prüfen Sie, ob es der richtige ist."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"Base plus taxes (%(computed)s) does not match the document total "
+"(%(total)s)."
+msgstr ""
+"Nettobetrag plus Steuern (%(computed)s) ergibt nicht den Gesamtbetrag des "
+"Dokuments (%(total)s)."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "The lines add up to %(lines)s and the document's base is %(base)s."
+msgstr ""
+"Die Positionen ergeben %(lines)s, der Nettobetrag des Dokuments ist "
+"%(base)s."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The tax number read (%(vat)s) is not valid and no vendor has that name: a "
+"new one was created with it as read. Check its tax number."
+msgstr ""
+"Die gelesene Steuernummer (%(vat)s) ist ungültig und kein Lieferant trägt "
+"diesen Namen: Es wurde ein neuer mit der Nummer wie gelesen angelegt. Prüfen"
+" Sie seine Steuernummer."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "The bill was left in draft for review, and not paid: %(reasons)s"
+msgstr ""
+"Die Rechnung wurde zur Prüfung als Entwurf belassen und nicht bezahlt: "
+"%(reasons)s"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "EasyOCR left this bill in draft for review:"
+msgstr "EasyOCR hat diese Rechnung zur Prüfung als Entwurf belassen:"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"EasyOCR could not register the payment of this bill (%(error)s): it is left "
+"pending payment."
+msgstr ""
+"EasyOCR konnte die Zahlung dieser Rechnung nicht erfassen (%(error)s): Sie "
+"bleibt offen."

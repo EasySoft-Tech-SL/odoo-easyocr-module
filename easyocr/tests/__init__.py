@@ -22,5 +22,7 @@ from . import test_easyocr_upload
 from . import test_easyocr_viewer_layout
 from . import test_easyocr_views
 from . import test_easyocr_translations
+from . import test_easyocr_unattended_vendor
 from . import test_easyocr_webhook
 from . import test_easyocr_webhook_payment
+from . import test_easyocr_webhook_review
