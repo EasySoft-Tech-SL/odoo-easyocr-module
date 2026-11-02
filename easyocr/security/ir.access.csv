@@ -15,3 +15,4 @@ access_easyocr_batch_user,easyocr.batch.user,easyocr.batch,easyocr.group_easyocr
 access_easyocr_batch_manager,easyocr.batch.manager,easyocr.batch,easyocr.group_easyocr_manager,crud,
 access_easyocr_reprocess_wizard_user,easyocr.reprocess.wizard.user,easyocr.reprocess.wizard,easyocr.group_easyocr_user,crud,
 access_easyocr_reading_result_user,easyocr.reading.result.user,easyocr.reading.result,easyocr.group_easyocr_user,crud,
+access_easyocr_vendor_claim_manager,easyocr.vendor.claim.manager,easyocr.vendor.claim,easyocr.group_easyocr_manager,r,

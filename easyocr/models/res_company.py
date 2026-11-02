@@ -1,11 +1,22 @@
 # Copyright 2026 EasySoft Tech S.L. <https://easysoft.es>
 # License LGPL-3 (see LICENSE file).
 
-from odoo import fields, models
+import hmac
+import secrets
+
+from odoo import api, fields, models
+
+from .easyocr_values import param_value, set_param_value
 
 # The public EasyOCR service, so a fresh company only has to add its key.
 DEFAULT_AI_URL = 'https://app.easyocr.es'
 DEFAULT_AI_TIMEOUT = 120
+
+# Where each company keeps the token that opens its webhook: one parameter per
+# company, so the call says by itself which company it is for. Random, made
+# here, and never a value of the system (the database id, a password): one that
+# shows anywhere else would open the door too.
+WEBHOOK_TOKEN_PARAM = 'easyocr.webhook_token.%s'
 
 
 class ResCompany(models.Model):
@@ -150,3 +161,48 @@ class ResCompany(models.Model):
         """
         self.ensure_one()
         return bool(self.easyocr_ai_enabled) and bool((self.easyocr_ai_apikey or '').strip())
+
+    # --------------------------------------------------------------
+    # The token that opens the webhook of each company
+    # --------------------------------------------------------------
+    def _easyocr_webhook_token(self, create=False):
+        """The company's webhook token; made the first time it is asked for."""
+        self.ensure_one()
+        key = WEBHOOK_TOKEN_PARAM % self.id
+        token = param_value(self.env, key)
+        if not token and create:
+            token = secrets.token_urlsafe(32)
+            set_param_value(self.env, key, token)
+        return token
+
+    def _easyocr_new_webhook_token(self):
+        """Replace the token: the address given out before stops working."""
+        self.ensure_one()
+        token = secrets.token_urlsafe(32)
+        set_param_value(self.env, WEBHOOK_TOKEN_PARAM % self.id, token)
+        return token
+
+    def _easyocr_webhook_url(self, create=False):
+        """The address the service calls back on for this company, or ''."""
+        self.ensure_one()
+        token = self._easyocr_webhook_token(create=create)
+        base = param_value(self.env, 'web.base.url').strip().rstrip('/')
+        if not token or not base:
+            return ''
+        return '%s/easyocr/webhook?token=%s' % (base, token)
+
+    @api.model
+    def _easyocr_company_of_webhook_token(self, provided):
+        """The company whose token this is, compared in constant time, or none."""
+        provided = (provided or '').strip()
+        if not provided:
+            return self.browse()
+        for parameter in self.env['ir.config_parameter'].sudo().search([
+            ('key', '=like', WEBHOOK_TOKEN_PARAM % '%'),
+        ]):
+            if parameter.value and hmac.compare_digest(
+                    provided.encode('utf-8'), parameter.value.encode('utf-8')):
+                company_id = parameter.key.rsplit('.', 1)[-1]
+                if company_id.isdigit():
+                    return self.sudo().browse(int(company_id)).exists()
+        return self.browse()

@@ -192,17 +192,29 @@ Cuando termine, pulse **Guardar**. El botón **Descartar** deja todo como estaba
 **Nada de esto hace falta si solo va a leer PDF que ya traen texto.** Deje
 «Extraer con IA» apagado y el módulo funcionará igual.
 
-## Un ajuste que no está en esta pantalla
+## La dirección del webhook
 
 Si va a recibir documentos desde el servicio por la vía automática —sin nadie
-delante— hay un quinto ajuste que no tiene casilla en la pantalla: el **secreto
-compartido**. Se guarda como parámetro del sistema, con el nombre
-`easyocr.webhook_secret`.
+delante—, el último bloque de la pantalla, **Pago automático (Webhook)**,
+muestra la **Dirección del webhook** de la empresa. Es la que hay que dar al
+servicio EasyOCR. Lleva un token aleatorio que solo es de esa empresa: cada
+empresa tiene el suyo, y el aviso que llega con él se archiva en esa empresa y
+no en otra.
 
-Mientras ese valor no exista, la dirección que recibe los avisos del servicio
-rechaza **todas** las llamadas. Es deliberado: un secreto con un valor por
-defecto no es un secreto, así que el módulo prefiere quedarse cerrado antes que
-abierto. Si no va a usar esta vía, no tiene que hacer nada.
+Si la dirección todavía no aparece, pulse **Crear una dirección nueva**. El
+mismo botón sirve para cambiarla si cree que se ha filtrado; la anterior deja
+de funcionar en ese momento. Los lotes no necesitan nada: llevan la dirección
+de su empresa de forma automática.
+
+Las versiones anteriores usaban un **secreto compartido** guardado como
+parámetro del sistema (`easyocr.webhook_secret`). Se sigue aceptando durante
+**30 días** contados desde la primera llamada que lo use, pero esas llamadas
+nunca registran pagos. Pasado ese plazo se rechazan. Si lo tenía configurado,
+cambie la dirección en el servicio por la que muestra esta pantalla.
+
+El registro de llamadas del webhook se borra solo a los 30 días (el parámetro
+`easyocr.webhook_log_days` cambia el plazo) y solo guarda el contenido completo
+de una llamada cuando falló o dejó algo para revisar.
 
 ## Las otras pestañas
 

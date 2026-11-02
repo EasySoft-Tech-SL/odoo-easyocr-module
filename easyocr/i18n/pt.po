@@ -143,6 +143,12 @@ msgstr ""
 "A extração com IA está desativada. Ative-a nas configurações do EasyOCR."
 
 #. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/main.py:0
+msgid "Already received: nothing was done again."
+msgstr "Já tinha sido recebido: nada foi feito novamente."
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_res_company__easyocr_ai_apikey
 #: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_ai_apikey
 #: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr:0
@@ -403,8 +409,12 @@ msgstr "Faturas"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_easyocr_webhook_log__payload
-msgid "Body of the call, trimmed if it was too long."
-msgstr "Corpo da chamada, truncado se era demasiado longo."
+msgid ""
+"Body of the call, trimmed if it was too long. Kept only for a call that "
+"failed or left something to review."
+msgstr ""
+"Corpo da chamada, cortado se era demasiado longo. Só é guardado quando a "
+"chamada falhou ou deixou algo para rever."
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_allow_foreign_customer
@@ -517,6 +527,11 @@ msgstr "Escolha as faturas que quer ler, ou arraste-as para aqui."
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
 msgid "City"
 msgstr "Cidade"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_vendor_claim__claimed_at
+msgid "Claimed At"
+msgstr "Reservado em"
 
 #. module: easyocr
 #. odoo-javascript
@@ -880,6 +895,11 @@ msgid "EasyOCR: collect finished batches"
 msgstr "EasyOCR: recolher os lotes terminados"
 
 #. module: easyocr
+#: model:ir.actions.server,name:easyocr.ir_cron_easyocr_webhook_log_purge_ir_actions_server
+msgid "EasyOCR: forget old webhook calls"
+msgstr "EasyOCR: esquecer as chamadas antigas do webhook"
+
+#. module: easyocr
 #. odoo-python
 #. odoo-javascript
 #: code:addons/easyocr/models/easyocr_reading_result.py:0
@@ -1090,6 +1110,19 @@ msgid "Give the template a name."
 msgstr "Dê um nome ao modelo."
 
 #. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"Give this address to the EasyOCR service so it tells this company when a "
+"document is read. It carries a token of this company alone: keep it to "
+"yourself, and make a new one if it gets out. The old shared secret is "
+"accepted for 30 days from its first use, and never records payments."
+msgstr ""
+"Dá este endereço ao serviço EasyOCR para que avise esta empresa quando ler "
+"um documento. Leva um token só desta empresa: não o partilhes, e cria um "
+"novo se for divulgado. O segredo partilhado antigo é aceite durante 30 dias "
+"desde a primeira utilização, e nunca regista pagamentos."
+
+#. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__has_message
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_inbox_item__has_message
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_template__has_message
@@ -1267,6 +1300,12 @@ msgstr "Tornou-se %s."
 
 #. module: easyocr
 #. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "it could not be confirmed (%(error)s)"
+msgstr "não foi possível validá-la (%(error)s)"
+
+#. module: easyocr
+#. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "It could not be filed as an expense."
 msgstr "Não foi possível arquivá-lo como despesa."
@@ -1279,11 +1318,21 @@ msgid "It was read on %s."
 msgstr "Foi lido em %s."
 
 #. module: easyocr
+#: model:ir.model,name:easyocr.model_account_move
+msgid "Journal Entry"
+msgstr "Lançamento contabilístico"
+
+#. module: easyocr
 #. odoo-javascript
 #: code:addons/easyocr/static/src/xml/easyocr_batch.xml:0
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_batch__include_extracted_text
 msgid "Keep the text it read"
 msgstr "Guardar o texto que leu"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_easyocr_vendor_claim__key
+msgid "Key"
+msgstr "Chave"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_company__easyocr_ai_apikey
@@ -1428,6 +1477,11 @@ msgstr "A carregar o documento..."
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_batch_form
 msgid "Look again"
 msgstr "Ver de novo"
+
+#. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Make a new address"
+msgstr "Criar um endereço novo"
 
 #. module: easyocr
 #: model:res.groups,name:easyocr.group_easyocr_manager
@@ -1711,6 +1765,11 @@ msgstr "Modelo de extração OCR"
 #: model:ir.model,name:easyocr.model_easyocr_inbox_item
 msgid "OCR Inbox Item"
 msgstr "Item da caixa de entrada OCR"
+
+#. module: easyocr
+#: model:ir.model,name:easyocr.model_easyocr_vendor_claim
+msgid "OCR Vendor Claim"
+msgstr "Reserva de fornecedor OCR"
 
 #. module: easyocr
 #: model:ir.model,name:easyocr.model_easyocr_webhook_log
@@ -2554,6 +2613,53 @@ msgstr ""
 "Esse tipo de ficheiro não pode ser lido. Envie um PDF ou uma fotografia."
 
 #. module: easyocr
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid ""
+"The address given to the service until now will stop working. Go ahead?"
+msgstr ""
+"O endereço que o serviço tinha até agora deixará de funcionar. Continuo?"
+
+#. module: easyocr
+#: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_webhook_url
+msgid ""
+"The address to give the EasyOCR service so it tells this company when a "
+"document is read. It carries a token of this company alone: keep it to "
+"yourself, and make a new one if it gets out."
+msgstr ""
+"O endereço que deves dar ao serviço EasyOCR para que avise esta empresa "
+"quando ler um documento. Leva um token só desta empresa: não o partilhes, e "
+"cria um novo se for divulgado."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"the bank account set in the EasyOCR settings belongs to another company"
+msgstr "a conta bancária das definições do EasyOCR pertence a outra empresa"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The bill was created from it. The payment was not registered: the call used "
+"the old shared secret, which never records payments. Give the service the "
+"webhook address shown in the EasyOCR settings."
+msgstr ""
+"A fatura foi criada a partir dele. O pagamento não foi registado: a chamada "
+"usou o segredo partilhado antigo, que nunca regista pagamentos. Dá ao "
+"serviço o endereço do webhook que aparece nas definições do EasyOCR."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The document's totals were not read: the bill takes the sum of its lines "
+"(%(lines)s). Check it against the paper."
+msgstr ""
+"Os totais do documento não foram lidos: a fatura assume a soma das suas "
+"linhas (%(lines)s). Confere-a com o papel."
+
+#. module: easyocr
 #. odoo-python
 #: code:addons/easyocr/models/easyocr_batch.py:0
 #: code:addons/easyocr/models/easyocr_document.py:0
@@ -2933,6 +3039,15 @@ msgstr "A notificação não contém dados estruturados."
 
 #. module: easyocr
 #. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"the payment method set in the EasyOCR settings is not one of that bank "
+"account"
+msgstr ""
+"o método de pagamento das definições do EasyOCR não é dessa conta bancária"
+
+#. module: easyocr
+#. odoo-python
 #: code:addons/easyocr/controllers/expense.py:0
 msgid "The photo arrived empty. Take it again."
 msgstr "A foto chegou vazia. Tire outra."
@@ -3031,6 +3146,17 @@ msgstr "O valor enviado para %s, %s, não é um número."
 
 #. module: easyocr
 #. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The vendor with the tax number %(vat)s, %(name)s, is archived: the bill went"
+" to it instead of to a new one. Check it and restore it if it is still a "
+"vendor."
+msgstr ""
+"O fornecedor com o NIF %(vat)s, %(name)s, está arquivado: a fatura foi para "
+"ele em vez de para um novo. Revê-o e restaura-o se ainda for fornecedor."
+
+#. module: easyocr
+#. odoo-python
 #: code:addons/easyocr/models/easyocr_inbox.py:0
 msgid "There is no file on this item."
 msgstr "Este item não tem nenhum ficheiro."
@@ -3074,6 +3200,18 @@ msgstr "Esta chave API atingiu o seu limite mensal."
 #: code:addons/easyocr/models/easyocr_batch.py:0
 msgid "This batch has already been sent."
 msgstr "Este lote já foi enviado."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/controllers/main.py:0
+msgid ""
+"This call used the old shared secret, which is accepted for %(days)s days "
+"from its first use and never records payments: give the service the webhook "
+"address shown in the EasyOCR settings."
+msgstr ""
+"Esta chamada usou o segredo partilhado antigo, que é aceite durante %(days)s"
+" dias desde a primeira utilização e nunca regista pagamentos: dá ao serviço "
+"o endereço do webhook que aparece nas definições do EasyOCR."
 
 #. module: easyocr
 #. odoo-python
@@ -3306,6 +3444,12 @@ msgstr "Em espera"
 #: code:addons/easyocr/static/src/js/easyocr_home.js:0
 msgid "Waiting to be looked at, handed over by other modules"
 msgstr "À espera de ser vistos, entregues por outros módulos"
+
+#. module: easyocr
+#: model:ir.model.fields,field_description:easyocr.field_res_config_settings__easyocr_webhook_url
+#: model_terms:ir.ui.view,arch_db:easyocr.res_config_settings_view_form_easyocr
+msgid "Webhook address"
+msgstr "Endereço do webhook"
 
 #. module: easyocr
 #: model_terms:ir.ui.view,arch_db:easyocr.view_easyocr_webhook_log_form
