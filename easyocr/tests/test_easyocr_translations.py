@@ -210,6 +210,23 @@ MESSAGE_STRINGS = (
     "no bank account is set in the EasyOCR settings",
     "the bill is not confirmed, so there is nothing to pay yet",
     "the bill has nothing left to pay",
+    # Why a webhook bill was left in draft for a person, and a payment undone.
+    "Several contacts share the tax number %(vat)s (%(names)s): %(chosen)s was used.",
+    "Several vendors are named %(name)s (%(names)s): %(chosen)s was used.",
+    "The tax number read (%(vat)s) is not valid: the vendor was found by its name.",
+    "The vendor was found by its name (%(name)s), not by the tax number "
+    "%(vat)s, which it does not have: check it is the same company and "
+    "add the tax number to it.",
+    "No tax number was read: the vendor was found only by its name "
+    "(%(name)s). Check it is the right one.",
+    "Base plus taxes (%(computed)s) does not match the document total (%(total)s).",
+    "The lines add up to %(lines)s and the document's base is %(base)s.",
+    "The tax number read (%(vat)s) is not valid and no vendor has that "
+    "name: a new one was created with it as read. Check its tax number.",
+    "The bill was left in draft for review, and not paid: %(reasons)s",
+    "EasyOCR left this bill in draft for review:",
+    "EasyOCR could not register the payment of this bill (%(error)s): "
+    "it is left pending payment.",
     # What the capture flow answers when the receipt becomes an expense.
     "You have no employee record, so the receipt cannot be filed as an expense. "
     "Ask whoever administers your Odoo to create one for you, or file it as a "

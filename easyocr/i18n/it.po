@@ -5825,3 +5825,103 @@ msgstr "Pagine di configurazione di EasyOCR"
 msgid "Only EasyOCR managers can see the module's configuration."
 msgstr ""
 "Solo i responsabili di EasyOCR possono vedere la configurazione del modulo."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"Several contacts share the tax number %(vat)s (%(names)s): %(chosen)s was "
+"used."
+msgstr ""
+"Più contatti condividono la partita IVA %(vat)s (%(names)s): è stato usato "
+"%(chosen)s."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "Several vendors are named %(name)s (%(names)s): %(chosen)s was used."
+msgstr ""
+"Ci sono più fornitori chiamati %(name)s (%(names)s): è stato usato "
+"%(chosen)s."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The tax number read (%(vat)s) is not valid: the vendor was found by its "
+"name."
+msgstr ""
+"La partita IVA letta (%(vat)s) non è valida: il fornitore è stato trovato "
+"per nome."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The vendor was found by its name (%(name)s), not by the tax number %(vat)s, "
+"which it does not have: check it is the same company and add the tax number "
+"to it."
+msgstr ""
+"Il fornitore è stato trovato per nome (%(name)s), non per la partita IVA "
+"%(vat)s, che non ha: verifica che sia la stessa azienda e aggiungigli la "
+"partita IVA."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"No tax number was read: the vendor was found only by its name (%(name)s). "
+"Check it is the right one."
+msgstr ""
+"Non è stata letta nessuna partita IVA: il fornitore è stato trovato solo per"
+" nome (%(name)s). Verifica che sia quello giusto."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"Base plus taxes (%(computed)s) does not match the document total "
+"(%(total)s)."
+msgstr ""
+"L'imponibile più le imposte (%(computed)s) non corrisponde al totale del "
+"documento (%(total)s)."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "The lines add up to %(lines)s and the document's base is %(base)s."
+msgstr "Le righe sommano %(lines)s e l'imponibile del documento è %(base)s."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"The tax number read (%(vat)s) is not valid and no vendor has that name: a "
+"new one was created with it as read. Check its tax number."
+msgstr ""
+"La partita IVA letta (%(vat)s) non è valida e nessun fornitore ha quel nome:"
+" ne è stato creato uno nuovo con la partita IVA così come è stata letta. "
+"Controllala."
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "The bill was left in draft for review, and not paid: %(reasons)s"
+msgstr ""
+"La fattura è stata lasciata in bozza da rivedere, e non pagata: %(reasons)s"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid "EasyOCR left this bill in draft for review:"
+msgstr "EasyOCR ha lasciato questa fattura in bozza da rivedere:"
+
+#. module: easyocr
+#. odoo-python
+#: code:addons/easyocr/models/easyocr_document.py:0
+msgid ""
+"EasyOCR could not register the payment of this bill (%(error)s): it is left "
+"pending payment."
+msgstr ""
+"EasyOCR non è riuscito a registrare il pagamento di questa fattura "
+"(%(error)s): resta da pagare."
