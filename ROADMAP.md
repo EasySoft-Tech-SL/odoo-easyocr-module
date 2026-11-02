@@ -438,10 +438,18 @@ These are deliberate, not gaps:
 - **What 2.8.2 and 2.8.3 do around the bank and the disk is not ported.** The
   advisory locks taken before looking the vendor up do not help under Odoo's
   snapshot isolation, where the second call has already read the database before
-  the lock; the warning about a cash account paid by card has no counterpart, since
+  the lock. Since the 2.9.0 port, two webhooks of one new vendor are kept apart
+  by writing a row keyed by its tax number and its name (`easyocr.vendor.claim`):
+  the second call waits on it, Postgres refuses it once the first commits, and
+  it is answered 503 with Retry-After so it comes back with a fresh snapshot.
+  The warning about a cash account paid by card has no counterpart, since
   Odoo's own payment register decides that; the webhook writes no debug files to
   disk, its log is a table; and the duplicates report is Odoo's own *Merge
   contacts*, which groups by tax number and by name. Decided on 2-nov-2026.
+- **The webhook opens with a token per company**, kept as a system parameter
+  and shown on the settings screen. The old shared secret is accepted for 30
+  days from its first use and never records payments. Decided on 2-nov-2026, in
+  the 2.9.0 port.
 
 ## Not planned
 

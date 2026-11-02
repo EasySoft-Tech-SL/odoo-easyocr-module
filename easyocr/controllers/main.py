@@ -4,16 +4,57 @@
 import hmac
 import json
 import logging
+import re
+from datetime import timedelta
 
 from odoo import _, fields, http
 from odoo.http import request
 
+from odoo.addons.easyocr.models.easyocr_values import (
+    is_concurrency_error, param_value, set_param_value,
+)
+
 _logger = logging.getLogger(__name__)
 
-# Where the shared secret lives. It is set on the settings screen and never
-# shipped with the module: a secret with a default value is no secret at all,
-# and an empty one closes the endpoint instead of opening it.
+# The old way in: one shared secret for the whole database, set by hand as a
+# system parameter. Each company now has a token of its own (see res.company);
+# the secret is still taken for LEGACY_DAYS from the first call that used it,
+# never to record a payment, and refused after that.
 WEBHOOK_SECRET_PARAM = 'easyocr.webhook_secret'
+LEGACY_SINCE_PARAM = 'easyocr.webhook_legacy_since'
+LEGACY_DAYS = 30
+
+# What a retry is told to wait, in seconds, when another call is creating the
+# same vendor.
+RETRY_AFTER = 5
+
+# A token or a secret in an address, as the access log would print it.
+SECRET_IN_URL = re.compile(r'((?:token|secret)=)[^&\s"]+', re.IGNORECASE)
+
+
+class RedactWebhookSecrets(logging.Filter):
+    """Keep the webhook token out of the access log.
+
+    The service is only ever given an address, so the token travels in it, and
+    the server prints every address it serves. This blanks it before the line
+    is written.
+    """
+
+    def filter(self, record):
+        try:
+            message = record.getMessage()
+        except Exception:  # noqa: BLE001 - a log line must never break a request
+            return True
+        if 'token=' in message.lower() or 'secret=' in message.lower():
+            record.msg = SECRET_IN_URL.sub(r'\1***', message)
+            record.args = ()
+        return True
+
+
+for _logger_name in ('werkzeug', 'odoo.http'):
+    _target = logging.getLogger(_logger_name)
+    if not any(isinstance(item, RedactWebhookSecrets) for item in _target.filters):
+        _target.addFilter(RedactWebhookSecrets())
 
 # The only event that carries a finished reading. Anything else is recorded and
 # dropped, so an event we do not handle yet never looks like a failure.
@@ -50,8 +91,10 @@ AMOUNT_FIELDS = ('amount_untaxed', 'amount_total')
 class EasyocrWebhook(http.Controller):
     """The call the OCR service makes when it has finished reading a document.
 
-    The caller has no Odoo session and no user: it authenticates with a shared
-    secret sent in a header, and everything it writes goes through sudo.
+    The caller has no Odoo session and no user: it authenticates with the
+    token of one company, in the X-Webhook-Token header or in the address, and
+    everything it writes goes through sudo, in that company. A refused call is
+    answered with a bare 403 that says nothing of why.
 
     A failure the sender could fix by sending the same body again (a bad secret,
     a body that is not a JSON object) is answered with 400 or 403. Anything that
@@ -76,12 +119,10 @@ class EasyocrWebhook(http.Controller):
         save_session=False,
     )
     def easyocr_webhook(self, **kwargs):
-        if not self._secret_is_valid():
-            _logger.warning("EasyOCR webhook: rejected a call with a bad or missing secret.")
-            return self._answer(
-                {'status': 'forbidden', 'message': 'Invalid or missing webhook secret.'},
-                status=403,
-            )
+        company, legacy = self._authenticate()
+        if not company:
+            _logger.warning("EasyOCR webhook: rejected a call that did not authenticate.")
+            return self._answer({'status': 'forbidden'}, status=403)
 
         # The werkzeug this series bundles (1.0.1) has no get_json() on the
         # request, and calling it is a 500 on every call: from 17 the method is
@@ -107,22 +148,42 @@ class EasyocrWebhook(http.Controller):
             )
 
         if event in (BATCH_DOCUMENT_EVENT, BATCH_DOCUMENT_FAILED_EVENT):
-            return self._batch_document(event, data)
+            return self._batch_document(event, data, company, legacy)
         if event == BATCH_FINISHED_EVENT:
-            return self._batch_finished(event, data)
+            return self._batch_finished(event, data, company, legacy)
 
         if event != COMPLETED_EVENT:
-            self._keep('ignored', event, data, _('Event "%s" is not handled.', event or ''))
+            self._keep('ignored', event, data, _('Event "%s" is not handled.', event or ''),
+                       company=company)
             return self._answer({'status': 'ignored'})
 
         structured_data = (data or {}).get('structured_data')
         if not isinstance(structured_data, dict) or not structured_data:
-            self._keep('ignored', event, data, _('The notification carries no structured data.'))
+            self._keep('ignored', event, data, _('The notification carries no structured data.'),
+                       company=company)
             return self._answer({'status': 'ignored'})
+
+        Document = request.env['easyocr.document'].sudo().with_company(company)
+        external_id = str((data or {}).get('document_id') or '').strip()
+        if external_id:
+            # The same document sent again -- a retry after a timeout, a
+            # duplicated delivery -- is answered with the one already filed,
+            # and nothing is billed or paid a second time.
+            known = Document.search([
+                ('service_document_id', '=', external_id),
+                ('company_id', '=', company.id),
+            ], limit=1)
+            if known:
+                self._keep('ok', event, data, _('Already received: nothing was done again.'),
+                           known, company=company)
+                return self._answer({'status': 'ok', 'document_id': known.id, 'duplicate': True})
 
         try:
             values = self._document_values(structured_data, data)
-            document = request.env['easyocr.document'].sudo().create(values)
+            values['company_id'] = company.id
+            if external_id:
+                values['service_document_id'] = external_id
+            document = Document.create(values)
             # The service sends the reading nested (supplier, totals, items), the
             # same shape a batch document gets: read it the same way, so the
             # vendor's tax number, the lines and the totals -- surcharge and
@@ -140,22 +201,36 @@ class EasyocrWebhook(http.Controller):
         except ValueError as error:
             # A business failure: sending the same body again would fail the
             # same way, so it is answered with 200 and left in the log.
-            self._keep('error', event, data, str(error))
+            self._keep('error', event, data, str(error), company=company, keep_payload=True)
             return self._answer({'status': 'error', 'message': str(error)})
 
         # What the call may do beyond filing the document lives on the document,
         # where it can be tested without an HTTP request in the way.
-        note = document._settle_webhook()
+        outcome = {}
+        try:
+            note = document._settle_webhook(allow_payment=not legacy, outcome=outcome)
+        except Exception as error:
+            if not is_concurrency_error(error):
+                raise
+            # Another call is creating the same vendor. Nothing of this one is
+            # kept, so the retry files the document once, from a fresh look.
+            request.env.cr.rollback()
+            return request.make_json_response(
+                {'status': 'retry'}, status=503, headers=[('Retry-After', str(RETRY_AFTER))],
+            )
         message = _('Document created from the OCR result.')
         if note:
             message = '%s %s' % (message, note)
-        self._keep('ok', event, data, message, document)
+        if legacy:
+            message = '%s %s' % (message, self._legacy_note())
+        self._keep('ok', event, data, message, document, company=company,
+                   keep_payload=outcome.get('review'))
         return self._answer({'status': 'ok', 'document_id': document.id})
 
     # ------------------------------------------------------------------
     # One document of a batch, and the end of the batch
     # ------------------------------------------------------------------
-    def _batch_document(self, event, data):
+    def _batch_document(self, event, data, company, legacy=False):
         """One document of a batch, read or failed, as the service finishes it.
 
         A reading that could not be made is not an error of this endpoint: it is
@@ -163,26 +238,34 @@ class EasyocrWebhook(http.Controller):
         change nothing.
         """
         try:
-            note = request.env['easyocr.batch'].sudo()._settle_webhook(
+            note = self._batches(company, legacy)._settle_webhook(
                 data, self._batch_reference()
             )
         except ValueError as error:
-            self._keep('error', event, data, str(error))
+            self._keep('error', event, data, str(error), company=company, keep_payload=True)
             return self._answer({'status': 'error', 'message': str(error)})
-        self._keep('ok', event, data, note)
+        self._keep('ok', event, data, note, company=company)
         return self._answer({'status': 'ok'})
 
-    def _batch_finished(self, event, data):
+    def _batch_finished(self, event, data, company, legacy=False):
         """The whole batch is done. Its readings come from the service itself."""
         try:
-            note = request.env['easyocr.batch'].sudo()._finish_webhook(
+            note = self._batches(company, legacy)._finish_webhook(
                 data, self._batch_reference()
             )
         except ValueError as error:
-            self._keep('error', event, data, str(error))
+            self._keep('error', event, data, str(error), company=company, keep_payload=True)
             return self._answer({'status': 'error', 'message': str(error)})
-        self._keep('ok', event, data, note)
+        self._keep('ok', event, data, note, company=company)
         return self._answer({'status': 'ok'})
+
+    @staticmethod
+    def _batches(company, legacy):
+        """The batches a call may touch: with a token, only its company's."""
+        Batch = request.env['easyocr.batch'].sudo().with_company(company)
+        if legacy:
+            return Batch
+        return Batch.with_context(easyocr_webhook_company_id=company.id)
 
     @staticmethod
     def _batch_reference():
@@ -203,24 +286,59 @@ class EasyocrWebhook(http.Controller):
         return request.make_json_response(payload, status=status)
 
     @staticmethod
-    def _secret_is_valid():
-        """Compare the secret with the configured one, in constant time.
+    def _authenticate():
+        """Which company the call is for, and whether it came the old way.
 
-        Two places, because the two callers are not the same shape. A webhook
-        set up by hand on the account can carry a header, and does. A batch made
-        from here cannot: the only thing the service is given is an address, so
-        the secret travels in it -- the same way the module this is a port of
-        carries its instance identifier.
+        Answers ``(company, legacy)``, with no company when the call is
+        refused. The token of a company is looked for in the X-Webhook-Token
+        header and in the address (a batch only ever gives the service an
+        address). The old shared secret, in X-Webhook-Secret or ``secret=``,
+        is taken for LEGACY_DAYS counted from the first call that used it, for
+        the company of the public user as before, and refused after that.
+        Every comparison is made in constant time.
         """
-        expected = request.env['ir.config_parameter'].sudo().get_param(WEBHOOK_SECRET_PARAM) or ''
-        if not expected:
-            return False
-        provided = (
-            request.httprequest.headers.get('X-Webhook-Secret')
-            or request.httprequest.args.get('secret')
+        http_request = request.httprequest
+        Company = request.env['res.company'].sudo()
+        token = (
+            http_request.headers.get('X-Webhook-Token')
+            or http_request.args.get('token')
             or ''
         )
-        return hmac.compare_digest(provided.encode('utf-8'), expected.encode('utf-8'))
+        if token:
+            return Company._easyocr_company_of_webhook_token(token), False
+
+        expected = param_value(request.env, WEBHOOK_SECRET_PARAM)
+        provided = (
+            http_request.headers.get('X-Webhook-Secret')
+            or http_request.args.get('secret')
+            or ''
+        )
+        if not expected or not provided or not hmac.compare_digest(
+                provided.encode('utf-8'), expected.encode('utf-8')):
+            return Company.browse(), False
+
+        now = fields.Datetime.now()
+        try:
+            since = fields.Datetime.to_datetime(param_value(request.env, LEGACY_SINCE_PARAM) or None)
+        except ValueError:
+            since = None
+        if not since:
+            set_param_value(request.env, LEGACY_SINCE_PARAM, fields.Datetime.to_string(now))
+            since = now
+        if now - since > timedelta(days=LEGACY_DAYS):
+            return Company.browse(), False
+        _logger.warning(
+            "EasyOCR webhook: a call used the old shared secret, accepted until %s. "
+            "Give the service the webhook address shown in the EasyOCR settings.",
+            fields.Datetime.to_string(since + timedelta(days=LEGACY_DAYS)),
+        )
+        return request.env.company.sudo(), True
+
+    @staticmethod
+    def _legacy_note():
+        return _("This call used the old shared secret, which is accepted for %(days)s "
+                 "days from its first use and never records payments: give the service "
+                 "the webhook address shown in the EasyOCR settings.", days=LEGACY_DAYS)
 
     @staticmethod
     def _payload_text():
@@ -230,18 +348,28 @@ class EasyocrWebhook(http.Controller):
             body = body[:PAYLOAD_MAX_LENGTH] + '...'
         return body
 
-    def _keep(self, status, event, data, message, document=None):
-        """Record the call. For an ignored one this is its only trace."""
+    def _keep(self, status, event, data, message, document=None, company=None,
+              keep_payload=False):
+        """Record the call. For an ignored one this is its only trace.
+
+        The body is kept only when the call failed or left something for a
+        person to review, which is when somebody will want to see what came
+        in. A call that went through has its outcome on the document; keeping
+        its reading here as well would be a second copy of personal data.
+        """
         data = data if isinstance(data, dict) else {}
-        return request.env['easyocr.webhook.log'].sudo().create({
+        values = {
             'event': event or '',
             'document_id_external': data.get('document_id') or '',
             'filename': data.get('filename') or '',
             'status': status,
             'message': message,
-            'payload': self._payload_text(),
+            'payload': self._payload_text() if keep_payload else False,
             'document_id': document.id if document else False,
-        })
+        }
+        if company:
+            values['company_id'] = company.id
+        return request.env['easyocr.webhook.log'].sudo().create(values)
 
     def _document_values(self, structured_data, data):
         """Turn structured_data into easyocr.document values.

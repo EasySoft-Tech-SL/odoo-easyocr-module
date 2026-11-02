@@ -84,6 +84,24 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.easyocr_webhook_payment_method_line_id',
         readonly=False,
     )
+    easyocr_webhook_url = fields.Char(
+        string='Webhook address',
+        compute='_compute_easyocr_webhook_url',
+        help='The address to give the EasyOCR service so it tells this company when '
+             'a document is read. It carries a token of this company alone: keep it to '
+             'yourself, and make a new one if it gets out.',
+    )
+
+    def _compute_easyocr_webhook_url(self):
+        for settings in self:
+            company = settings.company_id or self.env.company
+            settings.easyocr_webhook_url = company._easyocr_webhook_url()
+
+    def action_easyocr_new_webhook_token(self):
+        """Make the company's webhook token, or a new one in place of the old."""
+        self.ensure_one()
+        (self.company_id or self.env.company)._easyocr_new_webhook_token()
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     # ------------------------------------------------------------------
     # Checking the settings before anything is sent

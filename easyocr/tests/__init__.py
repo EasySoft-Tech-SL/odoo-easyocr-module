@@ -26,3 +26,5 @@ from . import test_easyocr_unattended_vendor
 from . import test_easyocr_webhook
 from . import test_easyocr_webhook_payment
 from . import test_easyocr_webhook_review
+from . import test_easyocr_webhook_token
+from . import test_easyocr_vendor_rules
