@@ -2,6 +2,7 @@
 # License LGPL-3 (see LICENSE file).
 
 import hmac
+import json
 import logging
 
 from odoo import _, fields, http
@@ -122,6 +123,20 @@ class EasyocrWebhook(http.Controller):
         try:
             values = self._document_values(structured_data, data)
             document = request.env['easyocr.document'].sudo().create(values)
+            # The service sends the reading nested (supplier, totals, items), the
+            # same shape a batch document gets: read it the same way, so the
+            # vendor's tax number, the lines and the totals -- surcharge and
+            # withholding included -- are there to check the bill against. Kept
+            # whole as well, without the file, as a reading made from here is.
+            # A block of an odd shape is left out rather than answered with a
+            # 500: the sender would retry and the document be filed twice.
+            try:
+                document._apply_extraction(structured_data)
+            except (AttributeError, TypeError) as error:
+                _logger.warning("EasyOCR webhook: part of the reading was not usable: %s", error)
+            document.last_extraction = json.dumps(
+                {'structured_data': structured_data}, indent=2, ensure_ascii=False, default=str,
+            )
         except ValueError as error:
             # A business failure: sending the same body again would fail the
             # same way, so it is answered with 200 and left in the log.

@@ -1,6 +1,7 @@
 # easyocr_values holds no model: it is the shared reader for the numbers the
 # service sends, and it is imported first so the model modules stay independent.
 from . import easyocr_values
+from . import easyocr_tax_id
 from . import easyocr_document
 from . import easyocr_reprocess_wizard
 from . import easyocr_reading_result

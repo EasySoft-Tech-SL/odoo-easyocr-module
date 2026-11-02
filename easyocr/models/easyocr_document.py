@@ -6,11 +6,14 @@ import json
 import logging
 from datetime import timedelta
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_datetime
 
 from .easyocr_values import to_amount, to_date, to_float
+from . import easyocr_tax_id as tax_ids
 
 _logger = logging.getLogger(__name__)
 
@@ -351,10 +354,7 @@ class EasyocrDocument(models.Model):
                     "The tax number on this document belongs to your own company, "
                     "so it cannot be booked as a supplier bill."
                 ))
-            partner = self.env['res.partner'].search(
-                ['|', ('vat', '=', vat_typed), ('vat', '=', vat_clean)],
-                limit=1,
-            )
+            partner = self._partners_by_vat(vat_typed)[:1]
             if partner:
                 self.partner_id = partner
                 return partner
@@ -385,7 +385,7 @@ class EasyocrDocument(models.Model):
             own_vat = self._normalize_vat(company.partner_id.vat)
             if own_vat and own_vat == vat_clean and not company.easyocr_allow_self_vendor:
                 return {'status': 'own', 'name': company.name, 'id': False}
-            partner = Partner.search(['|', ('vat', '=', vat_typed), ('vat', '=', vat_clean)], limit=1)
+            partner = self._partners_by_vat(vat_typed, company)[:1]
             if partner:
                 return {'status': 'found', 'name': partner.display_name, 'id': partner.id}
         clean_name = (name or '').strip()
@@ -395,6 +395,251 @@ class EasyocrDocument(models.Model):
                 return {'status': 'found', 'name': partner.display_name, 'id': partner.id}
             return {'status': 'new', 'name': clean_name, 'id': False}
         return {'status': 'none', 'name': '', 'id': False}
+
+    # ------------------------------------------------------------------
+    # The vendor when nobody is looking: the webhook
+    # ------------------------------------------------------------------
+    @api.model
+    def _partners_by_vat(self, vat, company=None):
+        """The companies whose tax number is this one, under any of its forms.
+
+        Both sides are compared normalized: the stored one loses spaces, dashes
+        and dots, and the one read is expanded to every form it may be stored
+        under, so ``ESB12345678`` finds a contact kept as ``B-12345678`` and the
+        other way round. A contact person carries the tax number of the company
+        it belongs to, so what is answered is the company, once. Vendors come
+        first, then the oldest record. Contacts of another company are left out:
+        a bill cannot go to them.
+        """
+        variants = tax_ids.tax_id_variants(vat)
+        Partner = self.env['res.partner']
+        if not variants:
+            return Partner
+        company = company or self.company_id or self.env.company
+        self.env['res.partner'].flush_model(['vat', 'active'])
+        self.env.cr.execute(
+            """
+            SELECT id FROM res_partner
+             WHERE active
+               AND vat IS NOT NULL
+               AND regexp_replace(upper(vat), '[^A-Z0-9]', '', 'g') = ANY(%s)
+            """,
+            [variants],
+        )
+        found = Partner.browse([row[0] for row in self.env.cr.fetchall()])
+        companies = found.mapped('commercial_partner_id').filtered(
+            lambda partner: partner.active
+            and (not partner.company_id or partner.company_id == company)
+        )
+        return companies.sorted(lambda partner: (not partner.supplier_rank, partner.id))
+
+    @api.model
+    def _partners_by_exact_name(self, name, company=None):
+        """The companies with this very name, its legal form aside.
+
+        ``ACME SL`` on the paper finds ``Acme, S.L.`` on file. Never a partial
+        name: two vendors that share a word are two vendors. Vendors first, then
+        the oldest.
+        """
+        core = tax_ids.name_core(name)
+        Partner = self.env['res.partner']
+        if len(core) < 3:
+            return Partner
+        company = company or self.company_id or self.env.company
+        # The database narrows it down by the longest word as printed, and the
+        # comparison itself is made here, where the legal form and the accents
+        # can be taken out.
+        words = sorted(tax_ids.name_key(name).split(' '), key=len, reverse=True)
+        raw_words = sorted(
+            [word for word in (name or '').replace(',', ' ').replace('.', ' ').split() if word],
+            key=len, reverse=True,
+        )
+        needle = (raw_words or words or [''])[0]
+        candidates = Partner.search([
+            ('name', 'ilike', needle),
+            ('parent_id', '=', False),
+            ('company_id', 'in', [False, company.id]),
+        ], order='id')
+        matches = candidates.filtered(lambda partner: tax_ids.name_core(partner.name) == core)
+        return matches.sorted(lambda partner: (not partner.supplier_rank, partner.id))
+
+    def _resolve_partner_unattended(self):
+        """Find the vendor of the document with nobody to ask: the webhook path.
+
+        The order is the one of the module this is a port of: the tax number
+        under any of its forms, then the exact name with the legal form left
+        out. It never guesses on part of a name. Among several records it takes
+        the one with the name read, or the oldest, and says so unless the name
+        singles out exactly one. A name match is dropped when the record holds a
+        valid tax number that is not the valid one read: a namesake, another
+        company. A misread number already on file proves nothing either way.
+
+        A tax number with a Spanish shape whose control character is wrong is not
+        searched for at all: it would land on a duplicate made from that same
+        misreading instead of on the real vendor.
+
+        Returns ``(partner, reasons)``: the partner (maybe empty) and the
+        sentences a person should read before trusting the bill. Nothing is
+        created here.
+        """
+        self.ensure_one()
+        company = self.company_id or self.env.company
+        own_country = company.country_id.code or ''
+        vat = (self.partner_vat or '').strip()
+        name = (self.partner_name or '').strip()
+        vendor_country = str(self._reading_supplier().get('country') or '')
+        invalid = tax_ids.tax_id_looks_invalid(vat, vendor_country, own_country)
+        core = tax_ids.name_core(name)
+        reasons = []
+
+        def choose(pool):
+            by_name = pool.filtered(lambda partner: core and tax_ids.name_core(partner.name) == core)
+            chosen = by_name[:1] or pool[:1]
+            ambiguous = len(pool) > 1 and len(by_name) != 1
+            return chosen, ambiguous
+
+        if vat and not invalid:
+            own = company.partner_id.vat or company.vat
+            if (own and tax_ids.tax_id_key(own) == tax_ids.tax_id_key(vat)
+                    and not company.easyocr_allow_self_vendor):
+                raise UserError(_(
+                    "The tax number on this document belongs to your own company, "
+                    "so it cannot be booked as a supplier bill."
+                ))
+            pool = self._partners_by_vat(vat, company)
+            if pool:
+                chosen, ambiguous = choose(pool)
+                if ambiguous:
+                    reasons.append(_(
+                        "Several contacts share the tax number %(vat)s (%(names)s): "
+                        "%(chosen)s was used.",
+                        vat=vat, names=', '.join(pool.mapped('display_name')),
+                        chosen=chosen.display_name,
+                    ))
+                return chosen, reasons
+
+        if not name:
+            return self.env['res.partner'], reasons
+
+        exact = self._partners_by_exact_name(name, company)
+        read_key = tax_ids.tax_id_key(vat) if vat and not invalid else ''
+        if read_key and exact:
+            def same_company(partner):
+                stored = partner.vat or ''
+                if not stored.strip() or tax_ids.tax_id_looks_invalid(stored, '', own_country):
+                    return True
+                return tax_ids.tax_id_key(stored) == read_key
+            exact = exact.filtered(same_company)
+
+        if not exact:
+            return self.env['res.partner'], reasons
+
+        chosen, ambiguous = choose(exact)
+        if ambiguous:
+            reasons.append(_(
+                "Several vendors are named %(name)s (%(names)s): %(chosen)s was used.",
+                name=name, names=', '.join(exact.mapped('display_name')),
+                chosen=chosen.display_name,
+            ))
+        if invalid:
+            reasons.append(_(
+                "The tax number read (%(vat)s) is not valid: the vendor was found by its name.",
+                vat=vat,
+            ))
+        elif vat:
+            reasons.append(_(
+                "The vendor was found by its name (%(name)s), not by the tax number "
+                "%(vat)s, which it does not have: check it is the same company and "
+                "add the tax number to it.",
+                name=name, vat=vat,
+            ))
+        else:
+            reasons.append(_(
+                "No tax number was read: the vendor was found only by its name "
+                "(%(name)s). Check it is the right one.",
+                name=name,
+            ))
+        return chosen, reasons
+
+    def _review_totals(self):
+        """Sentences about amounts of the reading that do not add up.
+
+        Base + tax + equivalence surcharge - withholding has to give the total
+        (the total before the withholding is accepted too, since the paper may
+        print either), and the lines have to add up to the base. The amounts are
+        the service's own, from ``totals``: ``surcharge_total`` and
+        ``withholding_total`` are the names it sends, ``localtax1`` and
+        ``localtax2`` the older ones. IGIC and IPSI come inside ``tax_total``
+        like the VAT does. An amount that was not read is not checked.
+        """
+        self.ensure_one()
+        try:
+            answer = json.loads(self.last_extraction or '{}')
+        except (ValueError, TypeError):
+            answer = {}
+        structured = answer.get('structured_data') if isinstance(answer, dict) else None
+        totals = (structured or {}).get('totals') if isinstance(structured, dict) else None
+        totals = totals if isinstance(totals, dict) else {}
+
+        def amount(*keys):
+            for key in keys:
+                if totals.get(key) not in (None, ''):
+                    return to_float(totals[key], None)
+            return None
+
+        base = amount('net_subtotal', 'subtotal')
+        reasons = []
+        total = amount('total_payable', 'total')
+        computed = tax_ids.header_totals_mismatch(
+            base, amount('tax_total'), total,
+            amount('surcharge_total', 'localtax1') or 0.0,
+            amount('withholding_total', 'localtax2') or 0.0,
+        )
+        if computed is not None:
+            reasons.append(_(
+                "Base plus taxes (%(computed)s) does not match the document total (%(total)s).",
+                computed=computed, total=round(total, 2),
+            ))
+        if base is not None and self.line_ids:
+            lines = round(sum(self.line_ids.mapped('net_amount')), 2)
+            if abs(lines - base) > tax_ids.TOTALS_TOLERANCE:
+                reasons.append(_(
+                    "The lines add up to %(lines)s and the document's base is %(base)s.",
+                    lines=lines, base=round(base, 2),
+                ))
+        return reasons
+
+    def _prepare_unattended_bill(self):
+        """Settle the vendor of a webhook bill, and say what needs a person.
+
+        Finds the vendor the way ``_resolve_partner_unattended`` does and, when
+        there is none, creates it from the reading -- with the tax number as it
+        was read when it is not a valid one, so whoever reviews it sees what the
+        OCR saw. Returns the sentences that keep the bill in draft.
+        """
+        self.ensure_one()
+        # Before the vendor: one created from a paper that is not ours would be
+        # left behind by the refusal.
+        self._check_addressed_to_us()
+        if self.partner_id:
+            return self._review_totals()
+        partner, reasons = self._resolve_partner_unattended()
+        if partner:
+            self.partner_id = partner
+        else:
+            vat = (self.partner_vat or '').strip()
+            company = self.company_id or self.env.company
+            invalid = tax_ids.tax_id_looks_invalid(
+                vat, str(self._reading_supplier().get('country') or ''),
+                company.country_id.code or '',
+            )
+            if self._create_partner_from_reading() and invalid:
+                reasons.append(_(
+                    "The tax number read (%(vat)s) is not valid and no vendor has that "
+                    "name: a new one was created with it as read. Check its tax number.",
+                    vat=vat,
+                ))
+        return reasons + self._review_totals()
 
     @api.model
     def action_resolve_codes(self, partner_id=False, codes=None):
@@ -937,7 +1182,16 @@ class EasyocrDocument(models.Model):
 
         Never raises. Whatever goes wrong comes back as a sentence for the log,
         because answering anything but 200 makes the sender send the same body
-        again and the document ends up filed twice.
+        again and the document ends up filed twice. And whatever went wrong is
+        undone whole: a vendor created for a bill that then failed is not left
+        behind.
+
+        Nobody looks at this bill before it is made, so the vendor is looked up
+        with more care than on screen (``_prepare_unattended_bill``), and when
+        something needs a person -- a tax number that is not valid, a vendor
+        found only by its name or among several, amounts that do not add up --
+        the bill is left in draft with the reasons on it, and it is not paid,
+        whatever the settings say.
         """
         self.ensure_one()
         company = self.company_id
@@ -945,10 +1199,17 @@ class EasyocrDocument(models.Model):
             return ''
 
         try:
-            self.action_create_bill()
+            with self.env.cr.savepoint():
+                reasons = self._prepare_unattended_bill()
+                self.action_create_bill(draft=bool(reasons))
         except Exception as error:  # noqa: BLE001 - the answer has to go back as text
             _logger.warning("EasyOCR webhook: no bill for document %s: %s", self.id, error)
             return _("The bill could not be created (%(error)s).", error=error)
+
+        if reasons:
+            self._note_review(self.move_id, reasons)
+            return _("The bill was left in draft for review, and not paid: %(reasons)s",
+                     reasons=' | '.join(reasons))
 
         if not company.easyocr_webhook_mark_paid:
             return _("The bill was created from it.")
@@ -960,8 +1221,21 @@ class EasyocrDocument(models.Model):
         return _("The bill was created from it and the payment registered.")
 
     @api.model
+    def _note_review(self, move, reasons):
+        """Write on the bill why it was left for a person to look at."""
+        items = Markup('').join(Markup('<li>%s</li>') % reason for reason in reasons)
+        move.message_post(body=Markup('<p>%s</p><ul>%s</ul>') % (
+            _("EasyOCR left this bill in draft for review:"), items,
+        ))
+
+    @api.model
     def _register_webhook_payment(self, move, company):
-        """Record the payment on the bill. Says why not, or nothing at all."""
+        """Record the payment on the bill. Says why not, or nothing at all.
+
+        A payment that fails half way is undone whole, so the bill is never left
+        with a payment that did not reconcile: it stays pending, and the reason
+        is written on it as well as in the log.
+        """
         journal = company.easyocr_webhook_journal_id
         if not journal:
             return _("no bank account is set in the EasyOCR settings")
@@ -975,13 +1249,19 @@ class EasyocrDocument(models.Model):
         if method:
             values['payment_method_line_id'] = method.id
         try:
-            wizard = self.env['account.payment.register'].with_context(
-                active_model='account.move',
-                active_ids=move.ids,
-            ).create(values)
-            wizard.action_create_payments()
+            with self.env.cr.savepoint():
+                wizard = self.env['account.payment.register'].with_context(
+                    active_model='account.move',
+                    active_ids=move.ids,
+                ).create(values)
+                wizard.action_create_payments()
         except Exception as error:  # noqa: BLE001 - the answer has to go back as text
             _logger.warning("EasyOCR webhook: no payment for bill %s: %s", move.id, error)
+            move.message_post(body=_(
+                "EasyOCR could not register the payment of this bill (%(error)s): "
+                "it is left pending payment.",
+                error=error,
+            ))
             return str(error)
         return ''
 

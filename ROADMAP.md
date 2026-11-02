@@ -108,6 +108,13 @@ The module talks to the same service the Dolibarr module uses
       the webhook: a bill in draft has nothing to pay against, so it is the
       company that decides, and a payment that cannot be registered says why
       instead of losing the bill.
+- [x] The vendor of a bill nobody reviews (port of Dolibarr 2.8.2 and 2.8.3): the
+      tax number under any of its forms, then the exact name with the legal form
+      left out; a Spanish number whose control character is wrong is not searched
+      for. Anything doubtful -- a vendor found by its name or among several, a
+      misread number, amounts that do not add up -- leaves the bill in draft and
+      unpaid, with the reasons on the bill and in the log. A payment that fails
+      half way is undone.
 
 ## Phase 6 — Mobile expense capture · done
 
@@ -427,6 +434,14 @@ These are deliberate, not gaps:
   changelog and the README came out with every heading smaller than the text it
   introduces: a screen inside Odoo reads as a foreign body when it borrows the theme
   of the module it was ported from.
+
+- **What 2.8.2 and 2.8.3 do around the bank and the disk is not ported.** The
+  advisory locks taken before looking the vendor up do not help under Odoo's
+  snapshot isolation, where the second call has already read the database before
+  the lock; the warning about a cash account paid by card has no counterpart, since
+  Odoo's own payment register decides that; the webhook writes no debug files to
+  disk, its log is a table; and the duplicates report is Odoo's own *Merge
+  contacts*, which groups by tax number and by name. Decided on 2-nov-2026.
 
 ## Not planned
 
