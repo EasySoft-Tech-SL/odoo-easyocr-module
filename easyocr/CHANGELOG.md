@@ -11,6 +11,44 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.19] - 2026-11-02
+
+### Fixed
+
+This concerns the bills the webhook creates on its own (*Create the bill from a
+webhook* in the settings), which nobody reviews before they are made. A bill made from
+the viewer only gains the first point.
+
+- **The tax number now matches whatever its form.** A paper that printed `ESB12345678`
+  did not find a vendor kept as `B12345678` (or the other way round), so another one was
+  created. Now the prefix can be on either side, spaces, dashes, dots and a label stuck to
+  the number (`CIF: B12345678`) are ignored, and a DNI printed without its leading zero
+  matches too. A contact person of a company no longer counts as a second vendor with
+  the same number.
+- **Without the tax number, the exact name.** Before creating anything, the webhook looks
+  for a vendor with the same name, leaving out the legal form (`S.L.`, `S.A.U.`, `GmbH`…).
+  Never part of a name. A vendor with that name but another valid tax number is another
+  company. A vendor found by its name and not by its tax number leaves the bill for review.
+- **A misread tax number no longer creates a vendor.** Spanish CIF, NIF and NIE numbers
+  carry a control character. When the one read does not check out, it is not searched
+  for: the vendor is looked up by its name, and the bill is left for review. If nobody has
+  that name, the vendor is created with the number as it was read, and the bill is left
+  for review too.
+- **Several vendors with the same number are no longer picked blindly.** The one with the
+  name read is used; when the name does not single out one, the oldest is used and the
+  bill is left for review with the list.
+- **Amounts that do not add up are no longer posted.** Base plus VAT plus equivalence
+  surcharge minus withholding has to give the total (the total before the withholding is
+  accepted too), and the lines have to add up to the base, within five cents. IGIC and
+  IPSI count like the VAT. The webhook now reads the reading in the shape the service
+  sends it, with its lines and its surcharge and withholding totals.
+- When something needs review, the bill stays in **draft**, even if the settings say to
+  confirm it, and it is **not paid**. The reasons are written on the bill and in the
+  webhook log.
+- **A payment that fails half way is undone.** The bill stays pending payment, and the
+  reason is written on it and in the webhook log. A bill whose vendor was created and then
+  could not be made no longer leaves that vendor behind.
+
 ## [1.0.18] - 2026-11-01
 
 ### Fixed

@@ -11,6 +11,44 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Es la traducción al español de `CHANGELOG.md`.
 
+## [1.0.19] - 2026-11-02
+
+### Corregido
+
+Afecta a las facturas que crea el webhook por su cuenta (*Crear la factura desde un
+webhook* en los ajustes), que nadie revisa antes de crearlas. Una factura hecha desde el
+visor solo gana el primer punto.
+
+- **El NIF ya casa lo escriba como lo escriba.** Si el papel traía `ESB12345678` y el
+  proveedor estaba guardado como `B12345678` (o al revés), no se encontraba y se creaba
+  otro. Ahora el prefijo puede estar en cualquiera de los dos lados, se ignoran espacios,
+  guiones, puntos y una etiqueta pegada al número (`CIF: B12345678`), y un DNI impreso sin
+  el cero inicial también casa. Una persona de contacto de una empresa ya no cuenta como
+  un segundo proveedor con el mismo número.
+- **Sin el NIF, el nombre exacto.** Antes de crear nada, el webhook busca un proveedor con
+  el mismo nombre, sin contar la forma jurídica (`S.L.`, `S.A.U.`, `GmbH`…). Nunca una
+  parte del nombre. Un proveedor con ese nombre pero con otro NIF válido es otra empresa.
+  Un proveedor encontrado por el nombre y no por el NIF deja la factura para revisar.
+- **Un NIF mal leído ya no da de alta un proveedor.** Los CIF, NIF y NIE españoles llevan
+  un carácter de control. Si el leído no lo cumple, no se usa para buscar: el proveedor se
+  busca por el nombre y la factura queda para revisar. Si nadie tiene ese nombre, el
+  proveedor se crea con el número tal como se leyó, y la factura también queda para
+  revisar.
+- **Con varios proveedores con el mismo NIF ya no se elige a ciegas.** Se usa el que tiene
+  el nombre leído; si el nombre no deja uno solo, se usa el más antiguo y la factura queda
+  para revisar con la lista.
+- **Los importes que no cuadran ya no se confirman.** La base más el IVA más el recargo de
+  equivalencia menos la retención tiene que dar el total (también se acepta el total antes
+  de la retención), y las líneas tienen que sumar la base, con cinco céntimos de margen.
+  El IGIC y el IPSI cuentan como el IVA. El webhook lee ahora la lectura con la forma en
+  que la manda el servicio, con sus líneas y sus totales de recargo y retención.
+- Cuando algo queda para revisar, la factura se queda en **borrador**, aunque los ajustes
+  digan que se confirme, y **no se paga**. Los motivos quedan escritos en la factura y en
+  el registro del webhook.
+- **Un pago que falla a medias se deshace.** La factura queda pendiente de pago, con el
+  motivo escrito en ella y en el registro del webhook. Una factura cuyo proveedor se creó
+  y que luego no se pudo hacer ya no deja ese proveedor suelto.
+
 ## [1.0.18] - 2026-11-01
 
 ### Corregido
