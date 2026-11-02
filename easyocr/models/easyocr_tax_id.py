@@ -26,8 +26,12 @@ VAT_COUNTRY_PREFIXES = (
 )
 
 # A label stuck to the number. No Spanish id starts with these letters, so a real
-# number is never cut.
-TAX_ID_LABEL = re.compile(r'^(NIFIVA|NIF|CIF|NIE|DNI|VATNO|VAT|IVA|TVA|USTIDNR)([A-Z0-9]{5,})$')
+# number is never cut. Labels come chained too ("NIF/CIF:", "CIF/NIF", "Tax ID:",
+# "VAT Reg. No.", "TIN"): all of them go.
+TAX_ID_LABEL = re.compile(
+    r'^((?:NIFIVA|NIF|CIF|NIE|DNI|VATREGNO|VATREG|VATNO|VATID|VAT|IVA|TVA|USTIDNR|USTID'
+    r'|TAXID|TAXNO|TIN|EIN)+)([A-Z0-9]{5,})$'
+)
 
 SPAIN_NAMES = ('ES', 'ESP', 'ESPANA', 'SPAIN', 'ESPAGNE', 'SPANIEN', 'SPAGNA', 'ESPANHA', 'ESPANYA')
 
@@ -69,10 +73,36 @@ def split_tax_id(value):
         norm = label.group(2)
     country, bare = '', norm
     prefixed = re.match(r'^([A-Z]{2})([A-Z0-9]+)$', norm)
-    if (len(norm) > 4 and prefixed and prefixed.group(1) in VAT_COUNTRY_PREFIXES
+    if (len(norm) > 4 and prefixed
+            and (prefixed.group(1) in VAT_COUNTRY_PREFIXES or prefixed.group(1) == 'GR')
             and re.search(r'[0-9]', prefixed.group(2))):
-        country, bare = prefixed.group(1), prefixed.group(2)
+        # Greek VAT numbers carry EL, but GR is what many people write.
+        country = 'EL' if prefixed.group(1) == 'GR' else prefixed.group(1)
+        bare = prefixed.group(2)
     return norm, country, bare
+
+
+def vat_prefix_of_country(code):
+    """The VAT prefix of a country code: GR is EL, the rest are themselves."""
+    code = (code or '').strip().upper()
+    return 'EL' if code == 'GR' else code
+
+
+def tax_id_is_a_name(value, name):
+    """Whether what is kept as a tax number is a name rather than a number.
+
+    Vendors nobody knows a tax number of (outside the EU, mostly) get their
+    own name, or a word, typed in the field so the contact can be saved. That
+    text is not a number and proves nothing against a real one read from a
+    bill. It is a name when it has no digit, or when it is the contact's own
+    name (names like "3M" do have digits).
+    """
+    norm = normalize_tax_id(value)
+    if not norm or not re.search(r'[0-9]', norm):
+        return True
+    compact = name_key(name).replace(' ', '')
+    core = name_core(name)
+    return bool((compact and norm == compact) or (core and norm == core))
 
 
 def spanish_tax_id_type(bare):
@@ -165,7 +195,7 @@ def tax_id_variants(value):
     if not country and spanish_tax_id_type(bare):
         variants.append('ES' + bare)
     if country == 'EL':
-        variants.append('GR' + bare)
+        variants += ['EL' + bare, 'GR' + bare]
     if country in ('', 'ES'):
         if re.match(r'^[0-9]{7}[A-Z]$', bare):
             variants += ['0' + bare, 'ES0' + bare]
@@ -230,14 +260,16 @@ def header_totals_mismatch(base, tax, total, surcharge=0.0, withholding=0.0,
 
     None when the amounts add up, and also when one of them was not read: an
     amount nobody read cannot be checked. The withholding is accepted both taken
-    off and not, because the paper may print the total before or after it.
+    off and not, because the paper may print the total before or after it. It
+    goes with the sign of the base: it reduces a bill and, on a credit note (a
+    negative base), it reduces the refund, so -100 - 21 + 15 = -106 adds up.
     """
     if base is None or tax is None or total is None:
         return None
     if abs(base) < 0.005 or abs(total) < 0.005:
         return None
     surcharge = surcharge or 0.0
-    withholding = abs(withholding or 0.0)
+    withholding = abs(withholding or 0.0) * (-1 if base < 0 else 1)
     with_withholding = base + tax + surcharge - withholding
     without_withholding = base + tax + surcharge
     if (abs(with_withholding - total) <= tolerance
