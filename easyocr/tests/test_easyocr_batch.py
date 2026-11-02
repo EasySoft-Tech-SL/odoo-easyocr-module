@@ -620,11 +620,12 @@ class TestEasyocrBatch(TransactionCase):
     # ------------------------------------------------------------------
     # Where it is told
     # ------------------------------------------------------------------
-    def test_without_a_secret_the_service_is_told_nothing(self):
-        """An address the endpoint would refuse is worse than no address."""
+    def test_without_an_address_of_its_own_the_service_is_told_nothing(self):
+        """No base URL, no address to call back on."""
+        self.env['ir.config_parameter'].sudo().set_param('web.base.url', '')
         self.assertFalse(self._batch(1)._default_notify_url())
 
-    def test_with_a_secret_the_address_carries_the_batch(self):
+    def test_the_address_carries_the_company_token_and_the_batch(self):
         self.env['ir.config_parameter'].sudo().set_param('easyocr.webhook_secret', 's3cr3t')
         batch = self._batch(1)
 
@@ -632,10 +633,11 @@ class TestEasyocrBatch(TransactionCase):
 
         self.assertIn('/easyocr/webhook', url)
         self.assertIn('batch=%s' % batch.id, url)
-        self.assertIn('secret=s3cr3t', url)
+        self.assertIn('token=%s' % batch.company_id._easyocr_webhook_token(), url)
+        # Never the old shared secret
+        self.assertNotIn('s3cr3t', url)
 
     def test_the_address_travels_with_the_send(self):
-        self.env['ir.config_parameter'].sudo().set_param('easyocr.webhook_secret', 's3cr3t')
         batch = self._batch(1)
 
         with mock.patch(GET, return_value=self._account_ok()), \

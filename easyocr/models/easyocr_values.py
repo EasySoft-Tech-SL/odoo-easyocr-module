@@ -81,3 +81,33 @@ def to_date(text, default=None):
             continue
     return default
 
+
+
+# Postgres codes of the errors a second try can get past: a lock that was not
+# had in time, a write refused because another transaction got there first, and
+# a deadlock. Read from the error itself, so psycopg2 and psycopg 3 both work.
+CONCURRENCY_ERROR_CODES = ('55P03', '40001', '40P01')
+
+
+def is_concurrency_error(error):
+    """Whether the error is one that waiting and trying again would fix."""
+    code = getattr(error, 'pgcode', None) or getattr(error, 'sqlstate', None)
+    return code in CONCURRENCY_ERROR_CODES
+
+
+def param_value(env, key):
+    """A system parameter as text, on every series.
+
+    Odoo 20 reads every parameter as its own type and no longer offers the
+    untyped get_param; the series before it have only get_param.
+    """
+    parameters = env['ir.config_parameter'].sudo()
+    getter = getattr(parameters, 'get_str', None) or parameters.get_param
+    return getter(key) or ''
+
+
+def set_param_value(env, key, value):
+    """Write a system parameter as text, on every series."""
+    parameters = env['ir.config_parameter'].sudo()
+    setter = getattr(parameters, 'set_str', None) or parameters.set_param
+    setter(key, value)

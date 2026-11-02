@@ -27,5 +27,20 @@
             <field name="active" eval="True"/>
         </record>
 
+        <!-- The webhook log is not kept for ever: the calls older than the
+             parameter easyocr.webhook_log_days (30 by default) are deleted. -->
+        <record id="ir_cron_easyocr_webhook_log_purge" model="ir.cron">
+            <field name="name">EasyOCR: forget old webhook calls</field>
+            <field name="model_id" ref="model_easyocr_webhook_log"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_purge()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <!-- Up to 17 a cron runs once unless told otherwise. -->
+            <field name="numbercall" eval="-1"/>
+            <field name="active" eval="True"/>
+        </record>
+
     </data>
 </odoo>

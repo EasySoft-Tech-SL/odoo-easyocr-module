@@ -356,25 +356,20 @@ class EasyocrBatch(models.Model):
         return names
 
     def _default_notify_url(self):
-        """This installation's own webhook, with the batch it is about.
+        """This company's own webhook, with the batch it is about.
 
-        Built here rather than stored, and not built at all when the endpoint is
-        closed: the secret is what opens it, so an address without one would be
-        an address the service calls and this side refuses. The batch is named
-        in the address because not every event carries one in its body, and the
-        secret travels in it for the same reason the module this is a port of
-        carries its instance identifier there: an address is the only thing the
-        service is given to call back on.
+        Built here rather than stored. It carries the token of the batch's
+        company, made the first time it is needed, so the call coming back says
+        by itself which company it is for -- and never the old shared secret.
+        The batch is named in the address because not every event carries one
+        in its body: an address is the only thing the service is given to call
+        back on.
         """
         self.ensure_one()
-        parameters = self.env['ir.config_parameter'].sudo()
-        secret = parameters.get_param('easyocr.webhook_secret') or ''
-        if not secret:
+        url = (self.company_id or self.env.company).sudo()._easyocr_webhook_url(create=True)
+        if not url:
             return ''
-        base = (parameters.get_param('web.base.url') or '').strip().rstrip('/')
-        if not base:
-            return ''
-        return '%s/easyocr/webhook?batch=%s&secret=%s' % (base, self.id, secret)
+        return '%s&batch=%s' % (url, self.id)
 
     def _instructions(self):
         """What to tell the service, in one block, for the whole stack.
@@ -623,7 +618,13 @@ class EasyocrBatch(models.Model):
         )
         if not reference:
             return self.browse()
-        return self.search([('service_uuid', '=', reference)], limit=1)
+        return self.search([('service_uuid', '=', reference)] + self._webhook_company_domain(), limit=1)
+
+    @api.model
+    def _webhook_company_domain(self):
+        """Only the batches of the company whose token the call carried."""
+        company_id = self.env.context.get('easyocr_webhook_company_id')
+        return [('company_id', '=', company_id)] if company_id else []
 
     @api.model
     def _document_of_payload(self, batch, data):
@@ -636,7 +637,7 @@ class EasyocrBatch(models.Model):
         service_id = data.get('document_id')
         if service_id:
             known = self.env['easyocr.document'].search(
-                [('service_document_id', '=', service_id)], limit=1
+                [('service_document_id', '=', service_id)] + self._webhook_company_domain(), limit=1
             )
             if known:
                 return known

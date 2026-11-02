@@ -100,6 +100,10 @@
                         <setting id="easyocr_webhook_payment_method_line_id" string="Payment method" help="How the payment is recorded on that bank account. Left empty, Odoo takes the one the account has by default.">
                             <field name="easyocr_webhook_payment_method_line_id"/>
                         </setting>
+                        <setting id="easyocr_webhook_url" string="Webhook address" help="Give this address to the EasyOCR service so it tells this company when a document is read. It carries a token of this company alone: keep it to yourself, and make a new one if it gets out. The old shared secret is accepted for 30 days from its first use, and never records payments.">
+                            <field name="easyocr_webhook_url" readonly="1"/>
+                            <button name="action_easyocr_new_webhook_token" type="object" string="Make a new address" class="btn-link" confirm="The address given to the service until now will stop working. Go ahead?"/>
+                        </setting>
                     </block>
                 </app>
             </xpath>

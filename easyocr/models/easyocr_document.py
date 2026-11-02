@@ -9,13 +9,17 @@ from datetime import timedelta
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import format_datetime
 
-from .easyocr_values import to_amount, to_date, to_float
+from .easyocr_values import is_concurrency_error, param_value, to_amount, to_date, to_float
 from . import easyocr_tax_id as tax_ids
 
 _logger = logging.getLogger(__name__)
+
+# How long a webhook waits for another one creating the same vendor, in
+# seconds, before it is told to come back later.
+LOCK_TIMEOUT = 10
 
 # What the service says each line is. Anything it does not name is put under
 # "Other" rather than dropped, so a line is never lost for being odd.
@@ -177,6 +181,19 @@ class EasyocrDocument(models.Model):
         if 'attachment_id' in values:
             self._refresh_file_hash()
         return result
+
+    def unlink(self):
+        """A document deleted takes with it the copy of the call that filed it.
+
+        The log line stays, so the call is still on record, but the body it
+        kept -- the whole reading, names and tax numbers included -- has no
+        purpose once the document is gone.
+        """
+        self.env['easyocr.webhook.log'].sudo().search([
+            ('document_id', 'in', self.ids),
+            ('payload', '!=', False),
+        ]).write({'payload': False})
+        return super().unlink()
 
     def _refresh_file_hash(self):
         for document in self:
@@ -400,7 +417,7 @@ class EasyocrDocument(models.Model):
     # The vendor when nobody is looking: the webhook
     # ------------------------------------------------------------------
     @api.model
-    def _partners_by_vat(self, vat, company=None):
+    def _partners_by_vat(self, vat, company=None, active=True):
         """The companies whose tax number is this one, under any of its forms.
 
         Both sides are compared normalized: the stored one loses spaces, dashes
@@ -410,25 +427,42 @@ class EasyocrDocument(models.Model):
         it belongs to, so what is answered is the company, once. Vendors come
         first, then the oldest record. Contacts of another company are left out:
         a bill cannot go to them.
+
+        A foreign number kept without its prefix on a contact of that country
+        (``501234567`` on a Portuguese vendor) is found when it is read with the
+        prefix (``PT501234567``). The same digits behind another country's
+        prefix are another company's number and find nothing.
+
+        ``active=False`` looks among the archived contacts only.
         """
         variants = tax_ids.tax_id_variants(vat)
         Partner = self.env['res.partner']
         if not variants:
             return Partner
+        _norm, country, bare = tax_ids.split_tax_id(vat)
+        country_codes = []
+        if country and country != 'ES':
+            country_codes = ['GR', 'EL'] if country == 'EL' else [country]
         company = company or self.company_id or self.env.company
-        self.env['res.partner'].flush_model(['vat', 'active'])
+        self.env['res.partner'].flush_model(['vat', 'active', 'country_id'])
         self.env.cr.execute(
             """
-            SELECT id FROM res_partner
-             WHERE active
-               AND vat IS NOT NULL
-               AND regexp_replace(upper(vat), '[^A-Z0-9]', '', 'g') = ANY(%s)
+            SELECT partner.id
+              FROM res_partner partner
+              LEFT JOIN res_country country ON country.id = partner.country_id
+             WHERE partner.active = %s
+               AND partner.vat IS NOT NULL
+               AND (regexp_replace(upper(partner.vat), '[^A-Z0-9]', '', 'g') = ANY(%s)
+                    OR (regexp_replace(upper(partner.vat), '[^A-Z0-9]', '', 'g') = %s
+                        AND upper(country.code) = ANY(%s)))
             """,
-            [variants],
+            [bool(active), variants, bare if country_codes else '', country_codes],
         )
-        found = Partner.browse([row[0] for row in self.env.cr.fetchall()])
+        found = Partner.with_context(active_test=False).browse(
+            [row[0] for row in self.env.cr.fetchall()]
+        )
         companies = found.mapped('commercial_partner_id').filtered(
-            lambda partner: partner.active
+            lambda partner: partner.active == bool(active)
             and (not partner.company_id or partner.company_id == company)
         )
         return companies.sorted(lambda partner: (not partner.supplier_rank, partner.id))
@@ -507,6 +541,11 @@ class EasyocrDocument(models.Model):
                     "so it cannot be booked as a supplier bill."
                 ))
             pool = self._partners_by_vat(vat, company)
+            # An archived contact with the number is still that company: it is
+            # used, and said, only when no active one has it, instead of
+            # creating it a second time.
+            archived = not pool and self._partners_by_vat(vat, company, active=False)
+            pool = pool or archived
             if pool:
                 chosen, ambiguous = choose(pool)
                 if ambiguous:
@@ -515,6 +554,13 @@ class EasyocrDocument(models.Model):
                         "%(chosen)s was used.",
                         vat=vat, names=', '.join(pool.mapped('display_name')),
                         chosen=chosen.display_name,
+                    ))
+                if archived:
+                    reasons.append(_(
+                        "The vendor with the tax number %(vat)s, %(name)s, is archived: "
+                        "the bill went to it instead of to a new one. Check it and "
+                        "restore it if it is still a vendor.",
+                        vat=vat, name=chosen.display_name,
                     ))
                 return chosen, reasons
 
@@ -526,7 +572,11 @@ class EasyocrDocument(models.Model):
         if read_key and exact:
             def same_company(partner):
                 stored = partner.vat or ''
-                if not stored.strip() or tax_ids.tax_id_looks_invalid(stored, '', own_country):
+                # Neither a misread number nor a name typed in the field (what
+                # a vendor with no known tax number gets, so it can be saved)
+                # says it is another company.
+                if (not stored.strip() or tax_ids.tax_id_is_a_name(stored, partner.name)
+                        or tax_ids.tax_id_looks_invalid(stored, '', own_country)):
                     return True
                 return tax_ids.tax_id_key(stored) == read_key
             exact = exact.filtered(same_company)
@@ -600,6 +650,20 @@ class EasyocrDocument(models.Model):
                 "Base plus taxes (%(computed)s) does not match the document total (%(total)s).",
                 computed=computed, total=round(total, 2),
             ))
+        # Totals that were not read (missing, or 0) with lines that carry an
+        # amount: the bill is made from the lines, so it keeps their sum and
+        # nothing is forced to zero, but a person checks it against the paper.
+        def read(value):
+            return value is not None and abs(value) >= 0.005
+
+        lines_total = round(sum(self.line_ids.mapped('net_amount')), 2) if self.line_ids else 0.0
+        if (abs(lines_total) >= 0.005
+                and not any(read(value) for value in (base, total, self.amount_untaxed, self.amount_total))):
+            reasons.append(_(
+                "The document's totals were not read: the bill takes the sum of its "
+                "lines (%(lines)s). Check it against the paper.",
+                lines=lines_total,
+            ))
         if base is not None and self.line_ids:
             lines = round(sum(self.line_ids.mapped('net_amount')), 2)
             if abs(lines - base) > tax_ids.TOTALS_TOLERANCE:
@@ -623,6 +687,7 @@ class EasyocrDocument(models.Model):
         self._check_addressed_to_us()
         if self.partner_id:
             return self._review_totals()
+        self._claim_vendor()
         partner, reasons = self._resolve_partner_unattended()
         if partner:
             self.partner_id = partner
@@ -640,6 +705,49 @@ class EasyocrDocument(models.Model):
                     vat=vat,
                 ))
         return reasons + self._review_totals()
+
+    def _claim_vendor(self):
+        """Hold the vendor of this document until the transaction ends.
+
+        Two webhooks of one new vendor arriving together would each find nobody
+        and each create it. An advisory lock does not stop that here: Odoo reads
+        under snapshot isolation, so the second call has already taken its
+        snapshot before the lock and would not see the vendor the first one
+        created. Writing a row keyed by the tax number and by the name does:
+        the second call waits on that row and, once the first commits, Postgres
+        refuses its write as a concurrent update. The caller answers that, and
+        a wait longer than ``easyocr.webhook_lock_timeout`` seconds (10 by
+        default), with 503 and Retry-After, and the retry starts from a fresh
+        snapshot that sees the vendor.
+        """
+        self.ensure_one()
+        company = self.company_id or self.env.company
+        keys = set()
+        vat_key = tax_ids.tax_id_key(self.partner_vat or '')
+        if vat_key:
+            keys.add('vat:' + vat_key)
+        core = tax_ids.name_core(self.partner_name or '')
+        if core:
+            keys.add('name:' + core)
+        if not keys:
+            return
+        try:
+            timeout = int(param_value(self.env, 'easyocr.webhook_lock_timeout') or LOCK_TIMEOUT)
+        except ValueError:
+            timeout = LOCK_TIMEOUT
+        cr = self.env.cr
+        cr.execute("SET LOCAL lock_timeout = %s", ['%ss' % max(timeout, 1)])
+        # Sorted, so two calls wanting the same two keys take them in one order.
+        for key in sorted(keys):
+            cr.execute(
+                """
+                INSERT INTO easyocr_vendor_claim (company_id, key, claimed_at)
+                VALUES (%s, %s, now() at time zone 'UTC')
+                ON CONFLICT (company_id, key) DO UPDATE SET claimed_at = EXCLUDED.claimed_at
+                """,
+                [company.id, key[:200]],
+            )
+        cr.execute("SET LOCAL lock_timeout TO DEFAULT")
 
     @api.model
     def action_resolve_codes(self, partner_id=False, codes=None):
@@ -1169,7 +1277,7 @@ class EasyocrDocument(models.Model):
             lambda product: product.default_code == EXPENSE_PRODUCT_CODE
         )[:1] or products[:1]
 
-    def _settle_webhook(self):
+    def _settle_webhook(self, allow_payment=True, outcome=None):
         """Bill the document, and pay it, when the company has asked for it.
 
         Off unless the company says so. A webhook is a message from outside, and
@@ -1189,9 +1297,21 @@ class EasyocrDocument(models.Model):
         something needs a person -- a tax number that is not valid, a vendor
         found only by its name or among several, amounts that do not add up --
         the bill is left in draft with the reasons on it, and it is not paid,
-        whatever the settings say.
+        whatever the settings say. So is a bill Odoo refuses to confirm: it
+        stays in draft with the reason on it and is answered as one to review.
+
+        ``allow_payment`` is False for a call that came in with the old shared
+        secret: it may still file and bill, but never record money going out.
+        ``outcome``, when given, is told whether a person has to look
+        (``review``), which decides how much of the call the log keeps.
+
+        The one exception it lets through is a concurrency error -- another
+        call holding the same new vendor -- because that one is answered with
+        503 so the sender retries, instead of being written off as a failure.
         """
         self.ensure_one()
+        outcome = outcome if outcome is not None else {}
+        outcome['review'] = False
         company = self.company_id
         if not company.easyocr_webhook_create_bill:
             return ''
@@ -1199,18 +1319,33 @@ class EasyocrDocument(models.Model):
         try:
             with self.env.cr.savepoint():
                 reasons = self._prepare_unattended_bill()
-                self.action_create_bill(draft=bool(reasons))
+                self.action_create_bill(draft=True)
         except Exception as error:  # noqa: BLE001 - the answer has to go back as text
+            if is_concurrency_error(error):
+                raise
+            outcome['review'] = True
             _logger.warning("EasyOCR webhook: no bill for document %s: %s", self.id, error)
             return _("The bill could not be created (%(error)s).", error=error)
 
         if reasons:
+            outcome['review'] = True
             self._note_review(self.move_id, reasons)
             return _("The bill was left in draft for review, and not paid: %(reasons)s",
                      reasons=' | '.join(reasons))
 
+        failure = self._confirm_bill(self.move_id)
+        if failure:
+            outcome['review'] = True
+            return _("The bill was left in draft for review, and not paid: %(reasons)s",
+                     reasons=_("it could not be confirmed (%(error)s)", error=failure))
+
         if not company.easyocr_webhook_mark_paid:
             return _("The bill was created from it.")
+
+        if not allow_payment:
+            return _("The bill was created from it. The payment was not registered: the "
+                     "call used the old shared secret, which never records payments. "
+                     "Give the service the webhook address shown in the EasyOCR settings.")
 
         reason = self._register_webhook_payment(self.move_id, company)
         if reason:
@@ -1237,6 +1372,8 @@ class EasyocrDocument(models.Model):
         journal = company.easyocr_webhook_journal_id
         if not journal:
             return _("no bank account is set in the EasyOCR settings")
+        if journal.company_id != move.company_id:
+            return _("the bank account set in the EasyOCR settings belongs to another company")
         if move.state != 'posted':
             return _("the bill is not confirmed, so there is nothing to pay yet")
         if not move.amount_residual:
@@ -1244,6 +1381,8 @@ class EasyocrDocument(models.Model):
 
         values = {'journal_id': journal.id}
         method = company.easyocr_webhook_payment_method_line_id
+        if method and method.journal_id != journal:
+            return _("the payment method set in the EasyOCR settings is not one of that bank account")
         if method:
             values['payment_method_line_id'] = method.id
         try:
@@ -1271,13 +1410,22 @@ class EasyocrDocument(models.Model):
         posting fails -- a missing account, a tax Odoo cannot work out -- the
         bill stays in draft with the reason written on it. A bill that could not
         be confirmed is worth a great deal more than no bill at all.
+
+        Answers why it could not be posted, or an empty string. Whatever the
+        failure is -- not only the ones Odoo words for a person -- the posting is
+        undone whole and the draft kept, so a webhook never ends with an error
+        and no bill to point at.
         """
         self.ensure_one()
         if self.company_id.easyocr_invoice_draft:
-            return
+            return ''
         try:
-            move.action_post()
-        except (UserError, ValidationError) as error:
+            with self.env.cr.savepoint():
+                move.action_post()
+        except Exception as error:  # noqa: BLE001 - a draft is worth more than nothing
+            if is_concurrency_error(error):
+                raise
+            move.invalidate_recordset()
             _logger.warning(
                 "EasyOCR: bill %s of document %s stayed in draft: %s",
                 move.id, self.id, error,
@@ -1287,6 +1435,8 @@ class EasyocrDocument(models.Model):
                 "(%(error)s). Review it and confirm it by hand.",
                 error=error,
             ))
+            return str(error) or error.__class__.__name__
+        return ''
 
     def action_open_viewer(self):
         """Open the viewer on this document, keeping Odoo's own navigation.
