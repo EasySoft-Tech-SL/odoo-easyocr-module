@@ -121,7 +121,9 @@ class TestEasyocrWebhook(HttpCase):
         self.assertEqual(log.event, COMPLETED_EVENT)
         self.assertEqual(log.filename, 'invoice.pdf')
         self.assertTrue(log.document_id)
-        self.assertIn('structured_data', log.payload)
+        # A call that went through keeps no copy of the reading: only a failed
+        # one, or one left to review, does.
+        self.assertFalse(log.payload)
 
     # ------------------------------------------------------------------
     # What is not acted on
