@@ -11,6 +11,57 @@ published the same day) and the day it was published.
 This file ships inside the module: it is what the ChangeLog page of the module's
 configuration shows. A Spanish translation sits next to it, in `CHANGELOG.es.md`.
 
+## [1.0.20] - 2026-11-03
+
+### Added
+
+- **Each company has its own webhook address.** The settings screen shows it under
+  *Webhook address*, with a random token of that company alone, and *Make a new address*
+  replaces it if it gets out (the old one stops working at once). The service can send the
+  token in the `X-Webhook-Token` header or in the address (`?token=`), and the call is
+  filed in that company and no other. Batches get the address of their company on their
+  own, and a call only touches the batches of the company of its token. A refused call is
+  answered with a bare 403, and the token is blanked out of the access log.
+- **The old shared secret has 30 days to go.** The `easyocr.webhook_secret` parameter is
+  still accepted for 30 days counted from the first call that uses it, and refused after
+  that. Those calls may still file the document and make the bill, but they never record
+  a payment, and the webhook log says so.
+- **The webhook log forgets.** A daily task deletes the calls older than 30 days (the
+  `easyocr.webhook_log_days` parameter changes it; 0 or less keeps them for ever). The
+  full body of a call is kept only when it failed or left something to review, and it is
+  cleared when the document or the bill it was kept for is deleted.
+
+### Fixed
+
+This concerns the bills the webhook creates on its own, as in 1.0.19.
+
+- **The same document sent twice is billed once.** A call that carries a `document_id`
+  already received is answered with the document already filed, and nothing is billed or
+  paid again.
+- **Two calls of one new vendor no longer create it twice.** The second one waits for the
+  first; when the first has created the vendor, the second is answered 503 with
+  `Retry-After`, and its retry finds the vendor.
+- **Tax number labels in any combination.** Chained labels such as `NIF IVA`, `NIF/CIF:`,
+  `Tax ID:`, `VAT Reg. No.` or `TIN` are left out before the number is compared. A Greek
+  number written with `GR` matches one kept with `EL`.
+- **A name typed in the tax number field is not a tax number.** A vendor saved with its
+  own name, or a word with no digit, in that field (what a vendor with no known number
+  gets) no longer counts as another company against the number read from the bill.
+- **Archived vendors are used, not duplicated.** When no active vendor has the number, an
+  archived one that has it gets the bill, which is left for review with a note to restore
+  it if it is still a vendor.
+- **A foreign number kept without its prefix matches.** `501234567` on a Portuguese vendor
+  is found when the bill reads `PT501234567`; the same digits behind another country's
+  prefix find nothing.
+- **Totals that were not read go to review.** When the document came with lines but
+  without totals, the bill takes the sum of its lines and is left for review, to be
+  checked against the paper.
+- **A bill Odoo refuses to confirm stays in draft for review**, with the reason on it,
+  instead of ending the call with an error. It is not paid.
+- **The withholding on a credit note** reduces the refund, so its amounts add up.
+- **A bank account or payment method of another company** set in the settings is said,
+  and no payment is made with it.
+
 ## [1.0.19] - 2026-11-02
 
 ### Fixed
