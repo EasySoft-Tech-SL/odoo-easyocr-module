@@ -1122,11 +1122,11 @@ msgid ""
 "yourself, and make a new one if it gets out. The old shared secret is "
 "accepted for 30 days from its first use, and never records payments."
 msgstr ""
-"Donne cette adresse au service EasyOCR pour qu'il prévienne cette société "
+"Donnez cette adresse au service EasyOCR pour qu'il prévienne cette société "
 "quand il lit un document. Elle porte un jeton propre à cette société : "
-"garde-la pour toi, et crées-en une nouvelle si elle fuite. L'ancien secret "
-"partagé est accepté 30 jours après sa première utilisation, et n'enregistre "
-"jamais de paiement."
+"gardez-la pour vous, et créez-en une nouvelle si elle fuite. L'ancien "
+"secret partagé est accepté 30 jours après sa première utilisation, et "
+"n'enregistre jamais de paiement."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__has_message
@@ -2625,7 +2625,7 @@ msgstr "Ce type de fichier ne peut pas être lu. Envoyez un PDF ou une photo."
 msgid ""
 "The address given to the service until now will stop working. Go ahead?"
 msgstr ""
-"L'adresse donnée au service jusqu'ici cessera de fonctionner. Je continue ?"
+"L'adresse donnée au service jusqu'ici cessera de fonctionner. Continuer ?"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_webhook_url
@@ -2636,7 +2636,7 @@ msgid ""
 msgstr ""
 "L'adresse à donner au service EasyOCR pour qu'il prévienne cette société "
 "quand il lit un document. Elle porte un jeton propre à cette société : "
-"garde-la pour toi, et crées-en une nouvelle si elle fuite."
+"gardez-la pour vous, et créez-en une nouvelle si elle fuite."
 
 #. module: easyocr
 #. odoo-python
@@ -2656,8 +2656,8 @@ msgid ""
 msgstr ""
 "La facture a été créée à partir de celui-ci. Le paiement n'a pas été "
 "enregistré : l'appel a utilisé l'ancien secret partagé, qui n'enregistre "
-"jamais de paiement. Donne au service l'adresse du webhook affichée dans les "
-"paramètres d'EasyOCR."
+"jamais de paiement. Donnez au service l'adresse du webhook affichée dans "
+"les paramètres d'EasyOCR."
 
 #. module: easyocr
 #. odoo-python
@@ -2667,7 +2667,7 @@ msgid ""
 "(%(lines)s). Check it against the paper."
 msgstr ""
 "Les totaux du document n'ont pas été lus : la facture reprend la somme de "
-"ses lignes (%(lines)s). Vérifie-la sur le papier."
+"ses lignes (%(lines)s). Vérifiez-la sur le papier."
 
 #. module: easyocr
 #. odoo-python
@@ -3172,8 +3172,8 @@ msgid ""
 "vendor."
 msgstr ""
 "Le fournisseur au numéro fiscal %(vat)s, %(name)s, est archivé : la facture "
-"lui a été attribuée au lieu d'en créer un nouveau. Vérifie-le et restaure-le"
-" s'il est toujours fournisseur."
+"lui a été attribuée au lieu d'en créer un nouveau. Vérifiez-le et "
+"restaurez-le s'il est toujours fournisseur."
 
 #. module: easyocr
 #. odoo-python
@@ -3229,8 +3229,8 @@ msgid ""
 "from its first use and never records payments: give the service the webhook "
 "address shown in the EasyOCR settings."
 msgstr ""
-"Cet appel a utilisé l'ancien secret partagé, accepté %(days)s jours après sa"
-" première utilisation et qui n'enregistre jamais de paiement : donne au "
+"Cet appel a utilisé l'ancien secret partagé, accepté %(days)s jours après "
+"sa première utilisation et qui n'enregistre jamais de paiement : donnez au "
 "service l'adresse du webhook affichée dans les paramètres d'EasyOCR."
 
 #. module: easyocr
