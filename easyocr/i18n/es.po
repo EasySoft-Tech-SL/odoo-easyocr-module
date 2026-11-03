@@ -1117,10 +1117,10 @@ msgid ""
 "yourself, and make a new one if it gets out. The old shared secret is "
 "accepted for 30 days from its first use, and never records payments."
 msgstr ""
-"Da esta dirección al servicio EasyOCR para que avise a esta empresa cuando "
-"lea un documento. Lleva un token solo de esta empresa: no la compartas, y "
-"crea una nueva si se filtra. El secreto compartido antiguo se acepta 30 días"
-" desde su primer uso, y nunca registra pagos."
+"Dé esta dirección al servicio EasyOCR para que avise a esta empresa cuando "
+"lea un documento. Lleva un token solo de esta empresa: no la comparta, y "
+"cree una nueva si se filtra. El secreto compartido antiguo se acepta 30 "
+"días desde su primer uso, y nunca registra pagos."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__has_message
@@ -2615,7 +2615,8 @@ msgstr "Ese tipo de archivo no se puede leer. Envíe un PDF o una foto."
 msgid ""
 "The address given to the service until now will stop working. Go ahead?"
 msgstr ""
-"La dirección que tenía el servicio hasta ahora dejará de funcionar. ¿Sigo?"
+"La dirección que tenía el servicio hasta ahora dejará de funcionar. "
+"¿Continuar?"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_webhook_url
@@ -2624,9 +2625,9 @@ msgid ""
 "document is read. It carries a token of this company alone: keep it to "
 "yourself, and make a new one if it gets out."
 msgstr ""
-"La dirección que debes dar al servicio EasyOCR para que avise a esta empresa"
-" cuando lea un documento. Lleva un token solo de esta empresa: no la "
-"compartas, y crea una nueva si se filtra."
+"La dirección que debe dar al servicio EasyOCR para que avise a esta empresa "
+"cuando lea un documento. Lleva un token solo de esta empresa: no la "
+"comparta, y cree una nueva si se filtra."
 
 #. module: easyocr
 #. odoo-python
@@ -2644,7 +2645,7 @@ msgid ""
 "webhook address shown in the EasyOCR settings."
 msgstr ""
 "Se ha creado la factura a partir de él. El pago no se ha registrado: la "
-"llamada usó el secreto compartido antiguo, que nunca registra pagos. Da al "
+"llamada usó el secreto compartido antiguo, que nunca registra pagos. Dé al "
 "servicio la dirección del webhook que aparece en los ajustes de EasyOCR."
 
 #. module: easyocr
@@ -2655,7 +2656,7 @@ msgid ""
 "(%(lines)s). Check it against the paper."
 msgstr ""
 "No se han leído los totales del documento: la factura toma la suma de sus "
-"líneas (%(lines)s). Compruébala con el papel."
+"líneas (%(lines)s). Compruébela con el papel."
 
 #. module: easyocr
 #. odoo-python
@@ -3154,8 +3155,8 @@ msgid ""
 " to it instead of to a new one. Check it and restore it if it is still a "
 "vendor."
 msgstr ""
-"El proveedor con el CIF/NIF %(vat)s, %(name)s, está archivado: la factura ha"
-" ido a él en vez de a uno nuevo. Revísalo y restáuralo si sigue siendo "
+"El proveedor con el CIF/NIF %(vat)s, %(name)s, está archivado: la factura "
+"ha ido a él en vez de a uno nuevo. Revíselo y restáurelo si sigue siendo "
 "proveedor."
 
 #. module: easyocr
@@ -3213,7 +3214,7 @@ msgid ""
 "address shown in the EasyOCR settings."
 msgstr ""
 "Esta llamada usó el secreto compartido antiguo, que se acepta %(days)s días "
-"desde su primer uso y nunca registra pagos: da al servicio la dirección del "
+"desde su primer uso y nunca registra pagos: dé al servicio la dirección del "
 "webhook que aparece en los ajustes de EasyOCR."
 
 #. module: easyocr
