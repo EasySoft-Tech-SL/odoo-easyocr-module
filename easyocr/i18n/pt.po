@@ -1120,7 +1120,7 @@ msgid ""
 "accepted for 30 days from its first use, and never records payments."
 msgstr ""
 "Dá este endereço ao serviço EasyOCR para que avise esta empresa quando ler "
-"um documento. Leva um token só desta empresa: não o partilhes, e cria um "
+"um documento. Leva um token só desta empresa: não o partilhe, e crie um "
 "novo se for divulgado. O segredo partilhado antigo é aceite durante 30 dias "
 "desde a primeira utilização, e nunca regista pagamentos."
 
@@ -2635,7 +2635,7 @@ msgstr ""
 msgid ""
 "The address given to the service until now will stop working. Go ahead?"
 msgstr ""
-"O endereço que o serviço tinha até agora deixará de funcionar. Continuo?"
+"O endereço que o serviço tinha até agora deixará de funcionar. Continuar?"
 
 #. module: easyocr
 #: model:ir.model.fields,help:easyocr.field_res_config_settings__easyocr_webhook_url
@@ -2644,9 +2644,9 @@ msgid ""
 "document is read. It carries a token of this company alone: keep it to "
 "yourself, and make a new one if it gets out."
 msgstr ""
-"O endereço que deves dar ao serviço EasyOCR para que avise esta empresa "
-"quando ler um documento. Leva um token só desta empresa: não o partilhes, e "
-"cria um novo se for divulgado."
+"O endereço que deve dar ao serviço EasyOCR para que avise esta empresa "
+"quando ler um documento. Leva um token só desta empresa: não o partilhe, e "
+"crie um novo se for divulgado."
 
 #. module: easyocr
 #. odoo-python
@@ -2678,7 +2678,7 @@ msgid ""
 "(%(lines)s). Check it against the paper."
 msgstr ""
 "Os totais do documento não foram lidos: a fatura assume a soma das suas "
-"linhas (%(lines)s). Confere-a com o papel."
+"linhas (%(lines)s). Confira-a com o papel."
 
 #. module: easyocr
 #. odoo-python
@@ -3176,7 +3176,7 @@ msgid ""
 "vendor."
 msgstr ""
 "O fornecedor com o NIF %(vat)s, %(name)s, está arquivado: a fatura foi para "
-"ele em vez de para um novo. Revê-o e restaura-o se ainda for fornecedor."
+"ele em vez de para um novo. Reveja-o e restaure-o se ainda for fornecedor."
 
 #. module: easyocr
 #. odoo-python
