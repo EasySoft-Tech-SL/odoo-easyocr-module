@@ -1123,11 +1123,11 @@ msgid ""
 "yourself, and make a new one if it gets out. The old shared secret is "
 "accepted for 30 days from its first use, and never records payments."
 msgstr ""
-"Gib diese Adresse dem EasyOCR-Dienst, damit er dieses Unternehmen "
+"Geben Sie diese Adresse dem EasyOCR-Dienst, damit er dieses Unternehmen "
 "benachrichtigt, wenn er ein Dokument gelesen hat. Sie enthält ein Token nur "
-"dieses Unternehmens: Behalte sie für dich und erstelle eine neue, falls sie "
-"bekannt wird. Das alte gemeinsame Geheimnis wird 30 Tage ab der ersten "
-"Verwendung akzeptiert und erfasst nie Zahlungen."
+"dieses Unternehmens: Behalten Sie sie für sich und erstellen Sie eine neue, "
+"falls sie bekannt wird. Das alte gemeinsame Geheimnis wird 30 Tage ab der "
+"ersten Verwendung akzeptiert und erfasst nie Zahlungen."
 
 #. module: easyocr
 #: model:ir.model.fields,field_description:easyocr.field_easyocr_document__has_message
@@ -2641,10 +2641,10 @@ msgid ""
 "document is read. It carries a token of this company alone: keep it to "
 "yourself, and make a new one if it gets out."
 msgstr ""
-"Die Adresse, die du dem EasyOCR-Dienst gibst, damit er dieses Unternehmen "
+"Die Adresse, die Sie dem EasyOCR-Dienst geben, damit er dieses Unternehmen "
 "benachrichtigt, wenn er ein Dokument gelesen hat. Sie enthält ein Token nur "
-"dieses Unternehmens: Behalte sie für dich und erstelle eine neue, falls sie "
-"bekannt wird."
+"dieses Unternehmens: Behalten Sie sie für sich und erstellen Sie eine neue, "
+"falls sie bekannt wird."
 
 #. module: easyocr
 #. odoo-python
@@ -2667,7 +2667,8 @@ msgid ""
 msgstr ""
 "Die Rechnung wurde daraus erstellt. Die Zahlung wurde nicht erfasst: Der "
 "Aufruf hat das alte gemeinsame Geheimnis verwendet, das nie Zahlungen "
-"erfasst. Gib dem Dienst die Webhook-Adresse aus den EasyOCR-Einstellungen."
+"erfasst. Geben Sie dem Dienst die Webhook-Adresse aus den "
+"EasyOCR-Einstellungen."
 
 #. module: easyocr
 #. odoo-python
@@ -2678,7 +2679,7 @@ msgid ""
 "(%(lines)s). Check it against the paper."
 msgstr ""
 "Die Summen des Dokuments wurden nicht gelesen: Die Rechnung übernimmt die "
-"Summe ihrer Zeilen (%(lines)s). Prüfe sie anhand des Papiers."
+"Summe ihrer Zeilen (%(lines)s). Prüfen Sie sie anhand des Papiers."
 
 #. module: easyocr
 #. odoo-python
@@ -3186,8 +3187,8 @@ msgid ""
 "vendor."
 msgstr ""
 "Der Lieferant mit der Steuernummer %(vat)s, %(name)s, ist archiviert: Die "
-"Rechnung wurde ihm statt einem neuen zugeordnet. Prüfe ihn und stelle ihn "
-"wieder her, wenn er noch Lieferant ist."
+"Rechnung wurde ihm statt einem neuen zugeordnet. Prüfen Sie ihn und stellen "
+"Sie ihn wieder her, wenn er noch Lieferant ist."
 
 #. module: easyocr
 #. odoo-python
@@ -3244,9 +3245,9 @@ msgid ""
 "from its first use and never records payments: give the service the webhook "
 "address shown in the EasyOCR settings."
 msgstr ""
-"Dieser Aufruf hat das alte gemeinsame Geheimnis verwendet, das %(days)s Tage"
-" ab der ersten Verwendung akzeptiert wird und nie Zahlungen erfasst: Gib dem"
-" Dienst die Webhook-Adresse aus den EasyOCR-Einstellungen."
+"Dieser Aufruf hat das alte gemeinsame Geheimnis verwendet, das %(days)s "
+"Tage ab der ersten Verwendung akzeptiert wird und nie Zahlungen erfasst: "
+"Geben Sie dem Dienst die Webhook-Adresse aus den EasyOCR-Einstellungen."
 
 #. module: easyocr
 #. odoo-python

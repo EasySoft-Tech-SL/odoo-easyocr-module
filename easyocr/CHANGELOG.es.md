@@ -11,6 +11,60 @@ publicadas el mismo día) y el día en que se publicó.
 Este fichero viaja dentro del módulo: es lo que muestra la página Historial de cambios de
 la configuración del módulo. Es la traducción al español de `CHANGELOG.md`.
 
+## [1.0.20] - 2026-11-03
+
+### Añadido
+
+- **Cada empresa tiene su propia dirección del webhook.** La pantalla de ajustes la muestra
+  en *Dirección del webhook*, con un token aleatorio solo de esa empresa, y *Crear una
+  dirección nueva* la cambia si se filtra (la anterior deja de funcionar en ese momento).
+  El servicio puede mandar el token en la cabecera `X-Webhook-Token` o en la dirección
+  (`?token=`), y la llamada se archiva en esa empresa y en ninguna otra. Los lotes llevan
+  la dirección de su empresa de forma automática, y una llamada solo toca los lotes de la
+  empresa de su token. Una llamada rechazada recibe un 403 sin más detalle, y el token se
+  borra del registro de accesos.
+- **El secreto compartido antiguo tiene 30 días.** El parámetro `easyocr.webhook_secret`
+  se sigue aceptando durante 30 días contados desde la primera llamada que lo use, y
+  después se rechaza. Esas llamadas pueden archivar el documento y crear la factura, pero
+  nunca registran un pago, y el registro del webhook lo dice.
+- **El registro del webhook olvida.** Una tarea diaria borra las llamadas de más de 30
+  días (el parámetro `easyocr.webhook_log_days` cambia el plazo; 0 o menos las guarda para
+  siempre). El cuerpo completo de una llamada solo se guarda cuando falló o dejó algo para
+  revisar, y se borra cuando se elimina el documento o la factura para la que se guardó.
+
+### Corregido
+
+Afecta a las facturas que crea el webhook por su cuenta, como en la 1.0.19.
+
+- **El mismo documento enviado dos veces se factura una.** Una llamada con un
+  `document_id` ya recibido se contesta con el documento ya archivado, y no se vuelve a
+  facturar ni a pagar nada.
+- **Dos llamadas de un mismo proveedor nuevo ya no lo crean dos veces.** La segunda espera
+  a la primera; cuando la primera ha creado el proveedor, la segunda recibe un 503 con
+  `Retry-After`, y al reintentar encuentra el proveedor.
+- **Etiquetas del NIF en cualquier combinación.** Las etiquetas encadenadas como
+  `NIF IVA`, `NIF/CIF:`, `Tax ID:`, `VAT Reg. No.` o `TIN` se quitan antes de comparar el
+  número. Un número griego escrito con `GR` casa con uno guardado con `EL`.
+- **Un nombre escrito en el campo del NIF no es un NIF.** Un proveedor guardado con su
+  propio nombre, o con una palabra sin dígitos, en ese campo (lo que recibe un proveedor
+  del que no se conoce el número) ya no cuenta como otra empresa frente al NIF leído en la
+  factura.
+- **Los proveedores archivados se usan, no se duplican.** Si ningún proveedor activo tiene
+  el NIF, la factura va al archivado que lo tiene y queda para revisar, con un aviso para
+  restaurarlo si sigue siendo proveedor.
+- **Un NIF extranjero guardado sin prefijo casa.** `501234567` en un proveedor portugués
+  se encuentra cuando la factura dice `PT501234567`; los mismos dígitos detrás del prefijo
+  de otro país no encuentran nada.
+- **Los totales no leídos van a revisión.** Si el documento llegó con líneas pero sin
+  totales, la factura toma la suma de sus líneas y queda para revisar, para compararla con
+  el papel.
+- **Una factura que Odoo no deja validar se queda en borrador para revisar**, con el motivo
+  escrito en ella, en vez de terminar la llamada con un error. No se paga.
+- **La retención de una factura rectificativa** reduce el abono, así que sus importes
+  cuadran.
+- **Una cuenta bancaria o una forma de pago de otra empresa** puesta en los ajustes se
+  avisa, y no se paga con ella.
+
 ## [1.0.19] - 2026-11-02
 
 ### Corregido
